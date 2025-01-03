@@ -18,6 +18,10 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        prompt: ["var(--prompt)"],
+        roboto_Flex: ["var(--roboto_Flex)"],
+      },
     },
   },
   plugins: [],
