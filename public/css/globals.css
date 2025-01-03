@@ -10,3 +10,33 @@ body {
     font-family: var(--prompt), sans-serif;
   }
   
+  body {
+    @apply bg-[#FFFFFF] text-[#171A1B];
+  
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+  
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(13deg, #76D755 14%, #76D755 64%);
+      border-radius: 10px;
+    }
+  
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(13deg, #76D755 14%, #76D755 64%);
+    }
+  
+    ::-webkit-scrollbar-track {
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: inset 7px 10px 12px #ffffff;
+    }
+  
+    ::selection {
+      background: #171A1B;
+      color: #ffffff;
+      text-shadow: none;
+    }
+  }
+  
