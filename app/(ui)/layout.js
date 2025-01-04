@@ -35,9 +35,12 @@ function MenuHeader({ icons, text }) {
   );
 }
 
-function MenuHeaderHide({ icons }) {
+function MenuHeaderHide({ icons, onClick }) {
   return (
-    <div className="xl:hidden flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+    <div
+      className="xl:hidden flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed cursor-pointer"
+      onClick={onClick}
+    >
       <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
         {icons}
       </span>
@@ -92,7 +95,11 @@ function MenuMainOther({ icons, onClick }) {
 export default function UiLayout({ children }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const [isMobileHeaderOpen, setIsMobileHeaderOpen] = useState(false);
+
   const sideMenuRef = useRef(null);
+  const mobileHeaderRef = useRef(null);
 
   const handleToggleMenu = () => {
     setIsCollapsed((prev) => !prev);
@@ -100,6 +107,10 @@ export default function UiLayout({ children }) {
 
   const handleOpenMobileMenu = () => {
     setIsMobileMenuOpen((prev) => !prev);
+  };
+
+  const toggleHeaderMenu = () => {
+    setIsMobileHeaderOpen((prev) => !prev);
   };
 
   useEffect(() => {
@@ -111,18 +122,26 @@ export default function UiLayout({ children }) {
       ) {
         setIsMobileMenuOpen(false);
       }
+      if (
+        isMobileHeaderOpen &&
+        mobileHeaderRef.current &&
+        !mobileHeaderRef.current.contains(event.target)
+      ) {
+        setIsMobileHeaderOpen(false);
+      }
     }
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isMobileMenuOpen]);
+  }, [isMobileMenuOpen, isMobileHeaderOpen]);
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
       <div className="flex flex-row items-center justify-between w-full h-20 p-2 gap-4 border-2 border-dark border-dashed">
         <div
-          className="flex items-center justify-center h-full px-4 gap-2 border-2 border-dark border-dashed bg-white rounded-full cursor-pointer xl:hidden"
+          className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full cursor-pointer xl:hidden"
           onClick={handleOpenMobileMenu}
         >
           <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -140,8 +159,8 @@ export default function UiLayout({ children }) {
             CIS
           </div>
         </div>
-        <div className="flex flex-row items-center justify-between w-full h-full px-8 py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
-          <MenuHeaderHide icons={<Hidden />} />
+        <div className="hidden xl:flex flex-row items-center justify-between w-full h-full px-8 py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
+          <MenuHeaderHide icons={<Hidden />} onClick={toggleHeaderMenu} />
           <MenuHeader icons={<Company />} text="Cne" />
           <MenuHeader icons={<CneSystem />} text="System" />
           <MenuHeader icons={<CneCloud />} text="Cloud" />
@@ -149,7 +168,35 @@ export default function UiLayout({ children }) {
           <MenuHeader icons={<Logo />} text="Logo" />
           <MenuHeader icons={<Contact />} text="Contact" />
         </div>
-        <div className="flex flex-row items-center justify-center h-full px-8 py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
+        <div className="xl:hidden flex flex-col relative">
+          <MenuHeaderHide icons={<Hidden />} onClick={toggleHeaderMenu} />
+          {isMobileHeaderOpen && (
+            <div
+              className="absolute top-[110%] right-0 flex flex-col items-center justify-center w-[212] p-2 mt-[10px] gap-2 bg-white border-2 border-dark border-dashed z-50"
+              ref={mobileHeaderRef}
+            >
+              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                <MenuHeader icons={<Company />} text="Cne" />
+              </div>
+              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                <MenuHeader icons={<CneSystem />} text="System" />
+              </div>
+              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                <MenuHeader icons={<CneCloud />} text="Cloud" />
+              </div>
+              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                <MenuHeader icons={<LeaveWork />} text="Day Off" />
+              </div>
+              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                <MenuHeader icons={<Logo />} text="Logo" />
+              </div>
+              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                <MenuHeader icons={<Contact />} text="Contact" />
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="flex flex-row items-center justify-center h-full p-2 xl:px-8 xl:py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
           <div className="xl:flex hidden items-center justify-center w-60 h-full p-2 gap-2 border-2 border-dark border-dashed">
             <Input
               type="text"
@@ -182,7 +229,7 @@ export default function UiLayout({ children }) {
             xl:flex 
             flex-col items-center justify-between
             ${isCollapsed ? "xl:w-[15%]" : "xl:w-[25%]"}
-            w-[30%] 
+            w-[80%] 
             h-full p-2 gap-2 border-2 border-dark border-dashed 
             overflow-auto bg-white rounded-3xl fixed xl:static
             top-0 left-0 z-50
