@@ -168,7 +168,7 @@ export default function UiLayout({ children }) {
           <MenuHeader icons={<Logo />} text="Logo" />
           <MenuHeader icons={<Contact />} text="Contact" />
         </div>
-        <div className="xl:hidden flex flex-col relative">
+        <div className="xl:hidden flex flex-col relative w-full h-full p-2 gap-2 bg-white border-2 border-dark border-dashed rounded-full">
           <MenuHeaderHide icons={<Hidden />} onClick={toggleHeaderMenu} />
           {isMobileHeaderOpen && (
             <div
