@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
         className={`${roboto_Flex.variable} ${prompt.variable} antialiased`}
       >
         {/* <Provider> */}
-        <div className="flex flex-col items-center justify-center w-full h-screen p-2 gap-2 border-2 border-dark border-dashed bg-default text-dark">
+        <div className="flex items-center justify-center w-full min-h-screen p-2 gap-2 border-2 border-dark border-dashed bg-default text-dark">
           {children}
         </div>
         {/* </Provider> */}
