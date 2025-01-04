@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Input } from "@nextui-org/react";
+import { Input, Tooltip } from "@nextui-org/react";
 import Image from "next/image";
 import {
   Ac,
@@ -51,9 +51,20 @@ function MenuHeaderHide({ icons, text }) {
 function MenuMain({ icons, text, isCollapsed }) {
   return (
     <div className="flex items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed">
-      <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
-        {icons}
-      </span>
+      <Tooltip
+        content={isCollapsed ? text : ""}
+        size="lg"
+        color="primary"
+        radius="lg"
+        shadow="lg"
+        placement="right"
+        showArrow={true}
+        delay={300}
+      >
+        <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+          {icons}
+        </span>
+      </Tooltip>
       {!isCollapsed && (
         <>
           <span className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
