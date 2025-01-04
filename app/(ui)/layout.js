@@ -228,7 +228,7 @@ export default function UiLayout({ children }) {
             ${isMobileMenuOpen ? "flex" : "hidden"}
             xl:flex 
             flex-col items-center justify-between
-            ${isCollapsed ? "xl:w-[15%]" : "xl:w-[25%]"}
+            ${isCollapsed ? "xl:w-[10%]" : "xl:w-[25%]"}
             w-[80%] 
             h-full p-2 gap-2 border-2 border-dark border-dashed 
             overflow-auto bg-white rounded-3xl fixed xl:static
@@ -264,7 +264,7 @@ export default function UiLayout({ children }) {
           className={`
             flex flex-col items-center justify-between
             ${!isMobileMenuOpen ? "w-[100%]" : "w-[100%]"}
-            xl:${isCollapsed ? "w-[85%]" : "w-[75%]"}
+            xl:${isCollapsed ? "w-[90%]" : "w-[75%]"}
             h-full p-2 gap-2 border-2 border-dark border-dashed 
             overflow-auto bg-white rounded-3xl
             transition-all
