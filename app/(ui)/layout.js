@@ -24,11 +24,11 @@ import {
 
 function MenuHeader({ icons, text }) {
   return (
-    <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
-      <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+    <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <span className="flex items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         {icons}
       </span>
-      <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <span className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         {text}
       </span>
     </div>
@@ -208,25 +208,25 @@ export default function UiLayout({ children }) {
           <MenuHeaderHide icons={<Hidden />} onClick={toggleHeaderMenu} />
           {isMobileHeaderOpen && (
             <div
-              className="absolute top-[100%] right-0 flex flex-col items-center justify-center w-[222px] p-2 mt-[16px] gap-2 bg-white border-2 border-dark border-dashed z-50"
+              className="absolute top-[100%] right-0 flex flex-col items-center justify-center w-[256px] p-2 mt-[20px] gap-2 bg-white border-2 border-dark border-dashed z-50"
               ref={mobileHeaderRef}
             >
-              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 <MenuHeader icons={<Company />} text="Cne" />
               </div>
-              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 <MenuHeader icons={<CneSystem />} text="System" />
               </div>
-              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 <MenuHeader icons={<CneCloud />} text="Cloud" />
               </div>
-              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 <MenuHeader icons={<LeaveWork />} text="Day Off" />
               </div>
-              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 <MenuHeader icons={<Logo />} text="Logo" />
               </div>
-              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 <MenuHeader icons={<Contact />} text="Contact" />
               </div>
             </div>
