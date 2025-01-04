@@ -93,29 +93,20 @@ function MenuMainOther({ icons, onClick }) {
 }
 
 export default function UiLayout({ children }) {
-  // State สำหรับย่อ/ขยายเมนู (ฝั่ง Desktop)
   const [isCollapsed, setIsCollapsed] = useState(false);
-
-  // State สำหรับเปิด/ปิดเมนู (ฝั่ง Mobile)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  // สร้าง ref สำหรับจับ DOM ของ Side Menu
   const sideMenuRef = useRef(null);
 
-  // ฟังก์ชันสำหรับคลิกปุ่มย่อ/ขยาย (Desktop)
   const handleToggleMenu = () => {
     setIsCollapsed((prev) => !prev);
   };
 
-  // ฟังก์ชันสำหรับกดปุ่ม CIS เพื่อเปิด/ปิด Mobile Menu
   const handleOpenMobileMenu = () => {
     setIsMobileMenuOpen((prev) => !prev);
   };
 
-  // ดักฟังการคลิกนอก Side Menu เพื่อหุบเมนู (บน Mobile)
   useEffect(() => {
     function handleClickOutside(event) {
-      // ถ้าเมนูเปิดอยู่ + sideMenuRef มีค่า + คลิกนอก sideMenuRef => หุบเมนู
       if (
         isMobileMenuOpen &&
         sideMenuRef.current &&
@@ -124,7 +115,6 @@ export default function UiLayout({ children }) {
         setIsMobileMenuOpen(false);
       }
     }
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -133,26 +123,26 @@ export default function UiLayout({ children }) {
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-      {/* --------------------- Header --------------------- */}
       <div className="flex flex-row items-center justify-between w-full h-20 p-2 gap-4 border-2 border-dark border-dashed">
-        {/* ปุ่ม Cis ไว้ด้านซ้ายสุด เพื่อกดเปิด Mobile Menu */}
         <div
           className="flex items-center justify-center h-full px-4 gap-2 border-2 border-dark border-dashed bg-white rounded-full cursor-pointer xl:hidden"
           onClick={handleOpenMobileMenu}
         >
-          <Cis />
-          <span>CIS</span>
-        </div>
-
-        {/* กรอบโลโก้ CIS แบบเดิม (แสดงเฉพาะจอใหญ่) */}
-        <div className="hidden xl:flex flex-row items-center justify-center h-full px-8 py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
-          <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed ">
+          <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
             <Cis />
           </div>
-          <div>CIS</div>
+          <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            CIS
+          </div>
         </div>
-
-        {/* Menu Header (บริษัท / system / cloud / ... ) */}
+        <div className="hidden xl:flex flex-row items-center justify-center h-full px-8 py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
+          <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <Cis />
+          </div>
+          <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            CIS
+          </div>
+        </div>
         <div className="flex flex-row items-center justify-between w-full h-full px-8 py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
           <MenuHeaderHide icons={<Hidden />} text="Hide" />
           <MenuHeader icons={<Company />} text="Cne" />
@@ -162,8 +152,6 @@ export default function UiLayout({ children }) {
           <MenuHeader icons={<Logo />} text="Logo" />
           <MenuHeader icons={<Contact />} text="Contact" />
         </div>
-
-        {/* ส่วน Notification / Avatar */}
         <div className="flex flex-row items-center justify-center h-full px-8 py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
           <div className="xl:flex hidden items-center justify-center w-60 h-full p-2 gap-2 border-2 border-dark border-dashed">
             <Input
@@ -189,22 +177,14 @@ export default function UiLayout({ children }) {
           </div>
         </div>
       </div>
-      {/* --------------------- /Header --------------------- */}
-
-      {/* --------------------- Content (Main + Sidebar) --------------------- */}
       <div className="flex flex-row items-start justify-center w-full h-full p-2 gap-6 border-2 border-dark border-dashed overflow-auto">
-        {/* Side Menu */}
         <div
           ref={sideMenuRef}
           className={`
-            // ซ่อนบนจอเล็ก ถ้า isMobileMenuOpen === false
             ${isMobileMenuOpen ? "flex" : "hidden"}
-            // แต่ถ้าเป็นจอใหญ่ xl ให้โชว์ตลอด (flex)
             xl:flex 
             flex-col items-center justify-between
-            // กำหนดความกว้าง desktop
             ${isCollapsed ? "xl:w-[15%]" : "xl:w-[25%]"}
-            // ถ้าเป็น mobile แล้วเปิดเมนู ใช้ขนาดกว้างตามต้องการ (ตัวอย่าง 35%)
             w-[30%] 
             h-full p-2 gap-2 border-2 border-dark border-dashed 
             overflow-auto bg-white rounded-3xl fixed xl:static
@@ -236,14 +216,10 @@ export default function UiLayout({ children }) {
           </div>
           <MenuMainOther icons={<Logout />} />
         </div>
-
-        {/* ส่วน Main Content */}
         <div
           className={`
             flex flex-col items-center justify-between
-            // ถ้าบนจอเล็ก แต่เมนูไม่เปิด => w-full
-            ${!isMobileMenuOpen ? "w-[100%]" : "w-0"}
-            // ส่วนบนจอใหญ่ => ใช้เงื่อนไขแสดงตาม isCollapsed
+            ${!isMobileMenuOpen ? "w-[100%]" : "w-[100%]"}
             xl:${isCollapsed ? "w-[85%]" : "w-[75%]"}
             h-full p-2 gap-2 border-2 border-dark border-dashed 
             overflow-auto bg-white rounded-3xl
@@ -255,7 +231,6 @@ export default function UiLayout({ children }) {
           </div>
         </div>
       </div>
-      {/* --------------------- /Content --------------------- */}
     </div>
   );
 }
