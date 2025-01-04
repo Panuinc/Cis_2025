@@ -28,9 +28,11 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="icon" href="/images/company_logo/company_logo.png" />
       </head>
-      <body className={`${roboto_Flex.variable} ${prompt.variable} antialiased`}>
+      <body
+        className={`${roboto_Flex.variable} ${prompt.variable} antialiased`}
+      >
         {/* <Provider> */}
-        <div className="flex flex-col items-center justify-center w-full h-screen p-4 gap-6 bg-default font-prompt">
+        <div className="flex flex-col items-center justify-center w-full h-screen p-2 gap-2 border-2 border-dark border-dashed bg-default text-dark">
           {children}
         </div>
         {/* </Provider> */}
