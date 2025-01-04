@@ -18,9 +18,36 @@ import {
   Logo,
   Logout,
   Pu,
+  Search,
 } from "@/components/icons/icons";
 
 function MenuHeader({ icons, text }) {
+  return (
+    <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+        {icons}
+      </span>
+      <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+        {text}
+      </span>
+    </div>
+  );
+}
+
+function MenuHeaderHide({ icons, text }) {
+  return (
+    <div className="xl:hidden flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+        {icons}
+      </span>
+      <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+        {text}
+      </span>
+    </div>
+  );
+}
+
+function MenuMain({ icons, text }) {
   return (
     <div className="flex items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed">
       <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -39,8 +66,8 @@ function MenuHeader({ icons, text }) {
 export default function UiLayout({ children }) {
   return (
     <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-      <div className="flex flex-row items-center justify-center w-full h-20 p-2 gap-2 border-2 border-dark border-dashed">
-        <div className="flex flex-row items-center justify-center h-full px-8 py-2 gap-2 border-2 border-danger border-dashed rounded-full bg-white">
+      <div className="flex flex-row items-center justify-between w-full h-20 p-2 gap-4 border-2 border-dark border-dashed">
+        <div className="flex flex-row items-center justify-center h-full px-8 py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
           <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed ">
             <Cis />
           </div>
@@ -48,30 +75,16 @@ export default function UiLayout({ children }) {
             CIS
           </div>
         </div>
-        <div className="flex flex-row items-center justify-evenly w-full h-full p-2 gap-2 border-2 border-danger border-dashed rounded-full bg-white">
-          <div className="xl:hidden flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <Hidden />
-          </div>
-          <div className="xl:flex hidden items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <Company /> Web Cne
-          </div>
-          <div className="xl:flex hidden items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <CneSystem /> Cen System
-          </div>
-          <div className="xl:flex hidden items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <CneCloud /> Cne Cloud
-          </div>
-          <div className="xl:flex hidden items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <LeaveWork /> Leave Work
-          </div>
-          <div className="xl:flex hidden items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <Logo /> Logo
-          </div>
-          <div className="xl:flex hidden items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <Contact /> Contact
-          </div>
+        <div className="flex flex-row items-center justify-between w-full h-full px-8 py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
+          <MenuHeaderHide icons={<Hidden />} text="Hide" />
+          <MenuHeader icons={<Company />} text="Cne" />
+          <MenuHeader icons={<CneSystem />} text="System" />
+          <MenuHeader icons={<CneCloud />} text="Cloud" />
+          <MenuHeader icons={<LeaveWork />} text="Day Off" />
+          <MenuHeader icons={<Logo />} text="Logo" />
+          <MenuHeader icons={<Contact />} text="Contact" />
         </div>
-        <div className="flex flex-row items-center justify-center h-full px-8 py-2 gap-2 border-2 border-danger border-dashed rounded-full bg-white">
+        <div className="flex flex-row items-center justify-center h-full px-8 py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
           <div className="xl:flex hidden items-center justify-center w-60 h-full p-2 gap-2 border-2 border-dark border-dashed">
             <Input
               type="text"
@@ -79,16 +92,13 @@ export default function UiLayout({ children }) {
               size="sm"
               radius="full"
               variant="bordered"
-              // startContent={<User />}
-              // value={userUsername}
-              // onChange={(e) => setUserUsername(e.target.value)}
-              // isRequired={true}
+              startContent={<Search />}
             />
           </div>
-          <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <div className="flex items-center justify-center w-10 h-10 p-2 gap-2 border-2 border-dark border-dashed bg-default rounded-full">
             <Bell />
           </div>
-          <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed bg-opacity-50 bg-success">
+          <div className="flex items-center justify-center w-10 h-10 p-2 gap-2 border-2 border-dark border-dashed bg-success rounded-full">
             <Image
               width={25}
               height={25}
@@ -107,10 +117,10 @@ export default function UiLayout({ children }) {
             </span>
           </div>
           <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <MenuHeader icons={<Hr />} text="Human Resources" />
-            <MenuHeader icons={<IT />} text="Technology" />
-            <MenuHeader icons={<Ac />} text="Account" />
-            <MenuHeader icons={<Pu />} text="Purchase" />
+            <MenuMain icons={<Hr />} text="Human Resources" />
+            <MenuMain icons={<IT />} text="Technology" />
+            <MenuMain icons={<Ac />} text="Account" />
+            <MenuMain icons={<Pu />} text="Purchase" />
           </div>
           <div className="flex items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed">
             <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -118,8 +128,8 @@ export default function UiLayout({ children }) {
             </span>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed overflow-auto bg-white rounded-3xl">
-          <div className="flex items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex flex-col items-center justify-between w-full h-full p-2 gap-2 border-2 border-dark border-dashed overflow-auto bg-white rounded-3xl">
+          <div className="flex flex-col items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed">
             {children}
           </div>
         </div>
