@@ -10,7 +10,7 @@ export default {
       colors: {
         white: "#FFFFFF",
         dark: "#171A1B",
-        default: "#F3F6F4",
+        default: "#F5F5F5",
         primary: "#967BDE",
         success: "#76D755",
         warning: "#FFAE2B",
