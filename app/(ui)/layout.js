@@ -59,7 +59,7 @@ function MenuMain({ icons, text, isCollapsed }) {
         shadow="lg"
         placement="right"
         showArrow={true}
-        delay={300}
+        delay={100}
       >
         <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
           {icons}
