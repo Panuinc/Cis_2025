@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Input, Tooltip } from "@nextui-org/react";
 import Image from "next/image";
 import {
@@ -79,24 +79,50 @@ function MenuMainOther({ icons, onClick }) {
 }
 
 export default function UiLayout({ children }) {
-  // สอง State ที่เราจะใช้
-  const [isCollapsed, setIsCollapsed] = useState(false);    // สำหรับย่อ/ขยายเมนู (ฝั่ง Desktop)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // สำหรับเปิด/ปิดเมนู (ฝั่ง Mobile)
+  // State สำหรับย่อ/ขยายเมนู (ฝั่ง Desktop)
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
+  // State สำหรับเปิด/ปิดเมนู (ฝั่ง Mobile)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // สร้าง ref สำหรับจับ DOM ของ Side Menu
+  const sideMenuRef = useRef(null);
+
+  // ฟังก์ชันสำหรับคลิกปุ่มย่อ/ขยาย (Desktop)
   const handleToggleMenu = () => {
     setIsCollapsed((prev) => !prev);
   };
 
-  // กดปุ่ม CIS เพื่อเปิด/ปิด Mobile Menu
+  // ฟังก์ชันสำหรับกดปุ่ม CIS เพื่อเปิด/ปิด Mobile Menu
   const handleOpenMobileMenu = () => {
     setIsMobileMenuOpen((prev) => !prev);
   };
+
+  // ดักฟังการคลิกนอก Side Menu เพื่อหุบเมนู (บน Mobile)
+  useEffect(() => {
+    function handleClickOutside(event) {
+      // ถ้าเมนูเปิดอยู่ + sideMenuRef มีค่า + คลิกนอก sideMenuRef => หุบเมนู
+      if (
+        isMobileMenuOpen && 
+        sideMenuRef.current && 
+        !sideMenuRef.current.contains(event.target)
+      ) {
+        setIsMobileMenuOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMobileMenuOpen]);
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
 
       {/* --------------------- Header --------------------- */}
       <div className="flex flex-row items-center justify-between w-full h-20 p-2 gap-4 border-2 border-dark border-dashed">
+        
         {/* ปุ่ม Cis ไว้ด้านซ้ายสุด เพื่อกดเปิด Mobile Menu */}
         <div 
           className="flex items-center justify-center h-full px-4 gap-2 border-2 border-dark border-dashed bg-white rounded-full cursor-pointer xl:hidden"
@@ -157,12 +183,9 @@ export default function UiLayout({ children }) {
       {/* --------------------- Content (Main + Sidebar) --------------------- */}
       <div className="flex flex-row items-start justify-center w-full h-full p-2 gap-6 border-2 border-dark border-dashed overflow-auto">
 
-        {/* 
-          Side Menu 
-          - จอใหญ่ (xl ขึ้นไป): ให้เป็น Sidebar ปกติ (ใช้ isCollapsed ควบคุมความกว้าง)
-          - จอเล็ก: ซ่อนเป็นค่าเริ่มต้น ถ้ากดปุ่ม Cis จะให้โผล่เต็มความกว้างที่เราต้องการ
-        */}
+        {/* Side Menu */}
         <div
+          ref={sideMenuRef} 
           className={`
             // ซ่อนบนจอเล็ก ถ้า isMobileMenuOpen === false
             ${isMobileMenuOpen ? "flex" : "hidden"}
@@ -171,7 +194,7 @@ export default function UiLayout({ children }) {
             flex-col items-center justify-between
             // กำหนดความกว้าง desktop
             ${isCollapsed ? "xl:w-[10%]" : "xl:w-[20%]"}
-            // ถ้าเป็น mobile แล้วเปิดเมนู ใช้ขนาดกว้างสัก 80% (หรือ 100% ตามต้องการ)
+            // ถ้าเป็น mobile แล้วเปิดเมนู ใช้ขนาดกว้างตามต้องการ (ตัวอย่าง 35%)
             w-[35%] 
             h-full p-2 gap-2 border-2 border-dark border-dashed 
             overflow-auto bg-white rounded-3xl fixed xl:static
@@ -188,16 +211,13 @@ export default function UiLayout({ children }) {
           <MenuMainOther icons={<Logout />} />
         </div>
 
-        {/* ส่วน Main Content
-            - ถ้าเป็นจอเล็ก (Mobile) และเมนูถูกปิด => ให้เต็ม 100%
-            - ถ้าเป็นจอใหญ่ (xl) => ใช้เงื่อนไขแสดงตาม isCollapsed
-        */}
+        {/* ส่วน Main Content */}
         <div
           className={`
             flex flex-col items-center justify-between
             // ถ้าบนจอเล็ก แต่เมนูไม่เปิด => w-full
             ${!isMobileMenuOpen ? "w-[100%]" : "w-0"}
-            // ส่วนบนจอใหญ่ก็ให้เป็นแบบเดิม (80% หรือ 90%)
+            // ส่วนบนจอใหญ่ => ใช้เงื่อนไขแสดงตาม isCollapsed
             xl:${isCollapsed ? "w-[90%]" : "w-[80%]"}
             h-full p-2 gap-2 border-2 border-dark border-dashed 
             overflow-auto bg-white rounded-3xl
