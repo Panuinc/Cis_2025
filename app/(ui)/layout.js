@@ -25,7 +25,7 @@ import {
 function MenuHeader({ icons, text }) {
   return (
     <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-      <span className="flex items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
         {icons}
       </span>
       <span className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
