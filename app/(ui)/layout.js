@@ -53,11 +53,21 @@ function MenuMain({ icons, text }) {
       <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
         {icons}
       </span>
-      <span className="xl:flex hidden items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <span className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         {text}
       </span>
-      <span className="xl:flex hidden items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
         <Down />
+      </span>
+    </div>
+  );
+}
+
+function MenuMainOther({ icons }) {
+  return (
+    <div className="flex items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed">
+      <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+        {icons}
       </span>
     </div>
   );
@@ -110,25 +120,17 @@ export default function UiLayout({ children }) {
         </div>
       </div>
       <div className="flex flex-row items-center justify-center w-full h-full p-2 gap-6 border-2 border-dark border-dashed overflow-auto">
-        <div className="flex flex-col items-center justify-between w-full h-full p-2 gap-2 border-2 border-dark border-dashed overflow-auto bg-white rounded-3xl">
-          <div className="flex items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed">
-            <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <Hide />
-            </span>
-          </div>
+        <div className="flex flex-col items-center justify-between w-[20%] h-full p-2 gap-2 border-2 border-dark border-dashed overflow-auto bg-white rounded-3xl">
+          <MenuMainOther icons={<Hide />} />
           <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <MenuMain icons={<Hr />} text="Human Resources" />
+            <MenuMain icons={<Hr />} text="Human" />
             <MenuMain icons={<IT />} text="Technology" />
             <MenuMain icons={<Ac />} text="Account" />
             <MenuMain icons={<Pu />} text="Purchase" />
           </div>
-          <div className="flex items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed">
-            <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <Logout />
-            </span>
-          </div>
+          <MenuMainOther icons={<Logout />} />
         </div>
-        <div className="flex flex-col items-center justify-between w-full h-full p-2 gap-2 border-2 border-dark border-dashed overflow-auto bg-white rounded-3xl">
+        <div className="flex flex-col items-center justify-between w-[80%] h-full p-2 gap-2 border-2 border-dark border-dashed overflow-auto bg-white rounded-3xl">
           <div className="flex flex-col items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed">
             {children}
           </div>
