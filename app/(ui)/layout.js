@@ -172,7 +172,7 @@ export default function UiLayout({ children }) {
           <MenuHeaderHide icons={<Hidden />} onClick={toggleHeaderMenu} />
           {isMobileHeaderOpen && (
             <div
-              className="absolute top-[110%] right-0 flex flex-col items-center justify-center w-[212] p-2 mt-[10px] gap-2 bg-white border-2 border-dark border-dashed z-50"
+              className="absolute top-[100%] right-0 flex flex-col items-center justify-center w-[222px] p-2 mt-[16px] gap-2 bg-white border-2 border-dark border-dashed z-50"
               ref={mobileHeaderRef}
             >
               <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
