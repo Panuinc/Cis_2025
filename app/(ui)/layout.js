@@ -25,8 +25,12 @@ import {
 function MenuHeader({ icons, text }) {
   return (
     <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
-      <span>{icons}</span>
-      <span>{text}</span>
+      <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+        {icons}
+      </span>
+      <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+        {text}
+      </span>
     </div>
   );
 }
@@ -34,15 +38,19 @@ function MenuHeader({ icons, text }) {
 function MenuHeaderHide({ icons, text }) {
   return (
     <div className="xl:hidden flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
-      <span>{icons}</span>
-      <span>{text}</span>
+      <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+        {icons}
+      </span>
+      <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+        {text}
+      </span>
     </div>
   );
 }
 
 function MenuMain({ icons, text, isCollapsed }) {
   return (
-    <div className="flex items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
+    <div className="flex items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed">
       <Tooltip
         content={isCollapsed ? text : ""}
         size="lg"
@@ -53,12 +61,16 @@ function MenuMain({ icons, text, isCollapsed }) {
         showArrow={true}
         delay={300}
       >
-        <span>{icons}</span>
+        <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+          {icons}
+        </span>
       </Tooltip>
       {!isCollapsed && (
         <>
-          <span className="flex-1">{text}</span>
-          <span>
+          <span className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            {text}
+          </span>
+          <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
             <Down />
           </span>
         </>
@@ -70,10 +82,12 @@ function MenuMain({ icons, text, isCollapsed }) {
 function MenuMainOther({ icons, onClick }) {
   return (
     <div
-      className="flex items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed cursor-pointer"
+      className="flex items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed cursor-pointer"
       onClick={onClick}
     >
-      <span>{icons}</span>
+      <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+        {icons}
+      </span>
     </div>
   );
 }
@@ -103,8 +117,8 @@ export default function UiLayout({ children }) {
     function handleClickOutside(event) {
       // ถ้าเมนูเปิดอยู่ + sideMenuRef มีค่า + คลิกนอก sideMenuRef => หุบเมนู
       if (
-        isMobileMenuOpen && 
-        sideMenuRef.current && 
+        isMobileMenuOpen &&
+        sideMenuRef.current &&
         !sideMenuRef.current.contains(event.target)
       ) {
         setIsMobileMenuOpen(false);
@@ -119,12 +133,10 @@ export default function UiLayout({ children }) {
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-
       {/* --------------------- Header --------------------- */}
       <div className="flex flex-row items-center justify-between w-full h-20 p-2 gap-4 border-2 border-dark border-dashed">
-        
         {/* ปุ่ม Cis ไว้ด้านซ้ายสุด เพื่อกดเปิด Mobile Menu */}
-        <div 
+        <div
           className="flex items-center justify-center h-full px-4 gap-2 border-2 border-dark border-dashed bg-white rounded-full cursor-pointer xl:hidden"
           onClick={handleOpenMobileMenu}
         >
@@ -179,13 +191,11 @@ export default function UiLayout({ children }) {
       </div>
       {/* --------------------- /Header --------------------- */}
 
-
       {/* --------------------- Content (Main + Sidebar) --------------------- */}
       <div className="flex flex-row items-start justify-center w-full h-full p-2 gap-6 border-2 border-dark border-dashed overflow-auto">
-
         {/* Side Menu */}
         <div
-          ref={sideMenuRef} 
+          ref={sideMenuRef}
           className={`
             // ซ่อนบนจอเล็ก ถ้า isMobileMenuOpen === false
             ${isMobileMenuOpen ? "flex" : "hidden"}
@@ -193,9 +203,9 @@ export default function UiLayout({ children }) {
             xl:flex 
             flex-col items-center justify-between
             // กำหนดความกว้าง desktop
-            ${isCollapsed ? "xl:w-[10%]" : "xl:w-[20%]"}
+            ${isCollapsed ? "xl:w-[15%]" : "xl:w-[25%]"}
             // ถ้าเป็น mobile แล้วเปิดเมนู ใช้ขนาดกว้างตามต้องการ (ตัวอย่าง 35%)
-            w-[35%] 
+            w-[30%] 
             h-full p-2 gap-2 border-2 border-dark border-dashed 
             overflow-auto bg-white rounded-3xl fixed xl:static
             top-0 left-0 z-50
@@ -203,10 +213,26 @@ export default function UiLayout({ children }) {
         >
           <MenuMainOther icons={<Hide />} onClick={handleToggleMenu} />
           <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <MenuMain icons={<Hr />} text="HR Department" isCollapsed={isCollapsed} />
-            <MenuMain icons={<IT />} text="IT Department" isCollapsed={isCollapsed} />
-            <MenuMain icons={<Ac />} text="AC Department" isCollapsed={isCollapsed} />
-            <MenuMain icons={<Pu />} text="PU Department" isCollapsed={isCollapsed} />
+            <MenuMain
+              icons={<Hr />}
+              text="HR Department"
+              isCollapsed={isCollapsed}
+            />
+            <MenuMain
+              icons={<IT />}
+              text="IT Department"
+              isCollapsed={isCollapsed}
+            />
+            <MenuMain
+              icons={<Ac />}
+              text="AC Department"
+              isCollapsed={isCollapsed}
+            />
+            <MenuMain
+              icons={<Pu />}
+              text="PU Department"
+              isCollapsed={isCollapsed}
+            />
           </div>
           <MenuMainOther icons={<Logout />} />
         </div>
@@ -218,7 +244,7 @@ export default function UiLayout({ children }) {
             // ถ้าบนจอเล็ก แต่เมนูไม่เปิด => w-full
             ${!isMobileMenuOpen ? "w-[100%]" : "w-0"}
             // ส่วนบนจอใหญ่ => ใช้เงื่อนไขแสดงตาม isCollapsed
-            xl:${isCollapsed ? "w-[90%]" : "w-[80%]"}
+            xl:${isCollapsed ? "w-[85%]" : "w-[75%]"}
             h-full p-2 gap-2 border-2 border-dark border-dashed 
             overflow-auto bg-white rounded-3xl
             transition-all
@@ -230,7 +256,6 @@ export default function UiLayout({ children }) {
         </div>
       </div>
       {/* --------------------- /Content --------------------- */}
-
     </div>
   );
 }
