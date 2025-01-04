@@ -24,7 +24,7 @@ import {
 
 function MenuHeader({ icons, text }) {
   return (
-    <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+    <div className="flex  items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
       <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
         {icons}
       </span>
@@ -35,14 +35,11 @@ function MenuHeader({ icons, text }) {
   );
 }
 
-function MenuHeaderHide({ icons, text }) {
+function MenuHeaderHide({ icons }) {
   return (
     <div className="xl:hidden flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
       <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
         {icons}
-      </span>
-      <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
-        {text}
       </span>
     </div>
   );
@@ -144,7 +141,7 @@ export default function UiLayout({ children }) {
           </div>
         </div>
         <div className="flex flex-row items-center justify-between w-full h-full px-8 py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
-          <MenuHeaderHide icons={<Hidden />} text="Hide" />
+          <MenuHeaderHide icons={<Hidden />} />
           <MenuHeader icons={<Company />} text="Cne" />
           <MenuHeader icons={<CneSystem />} text="System" />
           <MenuHeader icons={<CneCloud />} text="Cloud" />
