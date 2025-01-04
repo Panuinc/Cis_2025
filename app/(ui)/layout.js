@@ -48,37 +48,59 @@ function MenuHeaderHide({ icons, onClick }) {
   );
 }
 
-function MenuMain({ icons, text, isCollapsed }) {
+function MenuSub({ options, isOpen }) {
   return (
-    <div className="flex items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed">
-      <Tooltip
-        content={isCollapsed ? text : ""}
-        size="lg"
-        color="primary"
-        radius="lg"
-        shadow="lg"
-        placement="right"
-        showArrow={true}
-        delay={100}
-      >
-        <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
-          {icons}
-        </span>
-      </Tooltip>
-      {!isCollapsed && (
-        <>
-          <span className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            {text}
-          </span>
-          <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <Down />
-          </span>
-        </>
-      )}
-    </div>
+    isOpen && (
+      <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        {options.map((option, index) => (
+          <div
+            key={index}
+            className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed cursor-pointer"
+          >
+            {option}
+          </div>
+        ))}
+      </div>
+    )
   );
 }
 
+function MenuMain({ icons, text, isCollapsed, options, isOpen, onToggle }) {
+  return (
+    <div className="flex flex-col items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed">
+      <div className="flex items-center justify-center w-full gap-2 cursor-pointer">
+        <Tooltip
+          content={isCollapsed ? text : ""}
+          size="lg"
+          color="primary"
+          radius="lg"
+          shadow="lg"
+          placement="right"
+          showArrow={true}
+          delay={100}
+        >
+          <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+            {icons}
+          </span>
+        </Tooltip>
+        {!isCollapsed && (
+          <span className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            {text}
+          </span>
+        )}
+        {!isCollapsed && (
+          <span
+            className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed cursor-pointer"
+            onClick={onToggle}
+          >
+            <Down />
+          </span>
+        )}
+      </div>
+      <MenuSub options={options} isOpen={isOpen} />
+    </div>
+  );
+}
 function MenuMainOther({ icons, onClick }) {
   return (
     <div
@@ -111,6 +133,20 @@ export default function UiLayout({ children }) {
 
   const toggleHeaderMenu = () => {
     setIsMobileHeaderOpen((prev) => !prev);
+  };
+
+  const [menuState, setMenuState] = useState({
+    HR: false,
+    IT: false,
+    AC: false,
+    PU: false,
+  });
+
+  const toggleMenu = (menu) => {
+    setMenuState((prev) => ({
+      ...prev,
+      [menu]: !prev[menu],
+    }));
   };
 
   useEffect(() => {
@@ -236,26 +272,38 @@ export default function UiLayout({ children }) {
           `}
         >
           <MenuMainOther icons={<Hide />} onClick={handleToggleMenu} />
-          <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed overflow-auto">
             <MenuMain
               icons={<Hr />}
               text="HR Department"
               isCollapsed={isCollapsed}
+              options={["Branch", "Site", "Division"]}
+              isOpen={menuState.HR}
+              onToggle={() => toggleMenu("HR")}
             />
             <MenuMain
               icons={<IT />}
               text="IT Department"
               isCollapsed={isCollapsed}
+              options={["Backup", "Network"]}
+              isOpen={menuState.IT}
+              onToggle={() => toggleMenu("IT")}
             />
             <MenuMain
               icons={<Ac />}
               text="AC Department"
               isCollapsed={isCollapsed}
+              options={["Option A", "Option B"]}
+              isOpen={menuState.AC}
+              onToggle={() => toggleMenu("AC")}
             />
             <MenuMain
               icons={<Pu />}
               text="PU Department"
               isCollapsed={isCollapsed}
+              options={["Option X", "Option Y"]}
+              isOpen={menuState.PU}
+              onToggle={() => toggleMenu("PU")}
             />
           </div>
           <MenuMainOther icons={<Logout />} />
