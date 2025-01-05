@@ -70,7 +70,7 @@ function MenuSub({ options, isOpen }) {
     isOpen && (
       <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         {options.map((option, index) => {
-          const isActive = pathname === option.href;
+          const isActive = pathname === option.href || pathname.startsWith(option.href);
           return (
             <Link
               key={index}
@@ -90,8 +90,9 @@ function MenuSub({ options, isOpen }) {
 
 function MenuMain({ icons, text, isCollapsed, options, isOpen, onToggle }) {
   const pathname = usePathname();
-  const isActive = options.some((option) => pathname === option.href);
-
+  const isActive = options.some(
+    (option) => pathname === option.href || pathname.startsWith(option.href)
+  );
   const [userTriggered, setUserTriggered] = useState(false);
 
   useEffect(() => {
