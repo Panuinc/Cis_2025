@@ -32,7 +32,7 @@ function MenuHeader({ icons, text, href }) {
     <Link
       href={href}
       className={`flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ${
-        isActive ? "bg-blue-500 text-white" : "bg-white text-dark"
+        isActive ? "bg-opacity-50 bg-default text-success" : "bg-white text-dark"
       }`}
       target="blank"
     >
@@ -72,7 +72,7 @@ function MenuSub({ options, isOpen }) {
               key={index}
               href={option.href}
               className={`flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed cursor-pointer ${
-                isActive ? "bg-blue-500 text-white" : "bg-white text-dark"
+                isActive ? "bg-opacity-50 bg-default text-success" : "bg-white text-dark"
               }`}
             >
               {option.label}
@@ -105,7 +105,7 @@ function MenuMain({ icons, text, isCollapsed, options, isOpen, onToggle }) {
     <div className="flex flex-col items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed">
       <div
         className={`flex items-center justify-center w-full gap-2 cursor-pointer ${
-          isActive ? "bg-blue-500 text-white" : "bg-white text-dark"
+          isActive ? "bg-opacity-50 bg-default text-success" : "bg-white text-dark"
         }`}
         onClick={handleMenuClick}
       >
@@ -264,44 +264,28 @@ export default function UiLayout({ children }) {
               className="absolute top-[100%] right-0 flex flex-col items-center justify-center w-[256px] p-2 mt-[20px] gap-2 bg-white border-2 border-dark border-dashed z-50"
               ref={mobileHeaderRef}
             >
-              <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                <MenuHeader
-                  href="https://channakorn.co.th/"
-                  icons={<Company />}
-                  text="Cne"
-                />
-              </div>
-              <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                <MenuHeader
-                  href="http://49.0.66.19:8023/Main/"
-                  icons={<CneSystem />}
-                  text="System"
-                />
-              </div>
-              <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                <MenuHeader
-                  href="http://cnecloud01.myqnapcloud.com:8011/"
-                  icons={<CneCloud />}
-                  text="Cloud"
-                />
-              </div>
-              <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                <MenuHeader
-                  href="http://49.0.64.242:8088/LoginERS/login.aspx"
-                  icons={<LeaveWork />}
-                  text="Day Off"
-                />
-              </div>
-              <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                <MenuHeader href="/logo" icons={<Logo />} text="Logo" />
-              </div>
-              <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                <MenuHeader
-                  href="/contact"
-                  icons={<Contact />}
-                  text="Contact"
-                />
-              </div>
+              <MenuHeader
+                href="https://channakorn.co.th/"
+                icons={<Company />}
+                text="Cne"
+              />
+              <MenuHeader
+                href="http://49.0.66.19:8023/Main/"
+                icons={<CneSystem />}
+                text="System"
+              />
+              <MenuHeader
+                href="http://cnecloud01.myqnapcloud.com:8011/"
+                icons={<CneCloud />}
+                text="Cloud"
+              />
+              <MenuHeader
+                href="http://49.0.64.242:8088/LoginERS/login.aspx"
+                icons={<LeaveWork />}
+                text="Day Off"
+              />
+              <MenuHeader href="/logo" icons={<Logo />} text="Logo" />
+              <MenuHeader href="/contact" icons={<Contact />} text="Contact" />
             </div>
           )}
         </div>
