@@ -63,23 +63,40 @@ function MenuHeaderHide({ icons, onClick }) {
   );
 }
 
-function MenuSub({ options, isOpen }) {
+function MenuSub({ options, isOpen, isCollapsed }) {
   const pathname = usePathname();
 
   return (
     isOpen && (
       <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         {options.map((option, index) => {
-          const isActive = pathname === option.href || pathname.startsWith(option.href);
+          const isActive =
+            pathname === option.href || pathname.startsWith(option.href);
           return (
             <Link
               key={index}
               href={option.href}
               className={`flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed cursor-pointer ${
-                isActive ? "  text-success" : "bg-white text-dark"
+                isActive ? "text-success" : "bg-white text-dark"
               }`}
             >
-              <Record /> {option.label}
+              <Record />
+              {isCollapsed ? (
+                <Tooltip
+                  content={option.label}
+                  size="lg"
+                  color="primary"
+                  radius="lg"
+                  shadow="lg"
+                  placement="right"
+                  showArrow={true}
+                  delay={100}
+                >
+                  {option.label.charAt(0).toUpperCase()}
+                </Tooltip>
+              ) : (
+                option.label
+              )}
             </Link>
           );
         })}
@@ -139,7 +156,7 @@ function MenuMain({ icons, text, isCollapsed, options, isOpen, onToggle }) {
           </span>
         )}
       </div>
-      <MenuSub options={options} isOpen={isOpen} />
+      <MenuSub options={options} isOpen={isOpen} isCollapsed={isCollapsed} />
     </div>
   );
 }
