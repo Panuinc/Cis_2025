@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { Input, Tooltip } from "@nextui-org/react";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import {
   Ac,
@@ -24,10 +25,15 @@ import {
 import Link from "next/link";
 
 function MenuHeader({ icons, text, href }) {
+  const pathname = usePathname();
+  const isActive = pathname === href;
+
   return (
     <Link
       href={href}
-      className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
+      className={`flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ${
+        isActive ? "bg-blue-500 text-white" : "bg-white text-dark"
+      }`}
       target="blank"
     >
       <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -54,27 +60,41 @@ function MenuHeaderHide({ icons, onClick }) {
 }
 
 function MenuSub({ options, isOpen }) {
+  const pathname = usePathname();
+
   return (
     isOpen && (
       <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-        {options.map((option, index) => (
-          <Link
-            key={index}
-            href={option.href}
-            className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed cursor-pointer"
-          >
-            {option.label}
-          </Link>
-        ))}
+        {options.map((option, index) => {
+          const isActive = pathname === option.href;
+          return (
+            <Link
+              key={index}
+              href={option.href}
+              className={`flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed cursor-pointer ${
+                isActive ? "bg-blue-500 text-white" : "bg-white text-dark"
+              }`}
+            >
+              {option.label}
+            </Link>
+          );
+        })}
       </div>
     )
   );
 }
 
 function MenuMain({ icons, text, isCollapsed, options, isOpen, onToggle }) {
+  const pathname = usePathname();
+  const isActive = options.some((option) => pathname === option.href);
+
   return (
     <div className="flex flex-col items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed">
-      <div className="flex items-center justify-center w-full gap-2 cursor-pointer">
+      <div
+        className={`flex items-center justify-center w-full gap-2 cursor-pointer ${
+          isActive ? "bg-blue-500 text-white" : "bg-white text-dark"
+        }`}
+      >
         <Tooltip
           content={isCollapsed ? text : ""}
           size="lg"
