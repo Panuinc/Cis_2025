@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  font-family: var(--roboto_Flex), var(--prompt);
+  font-family: var(--sulphur_Point), var(--prompt);
 }
 
 [lang|="th"] {

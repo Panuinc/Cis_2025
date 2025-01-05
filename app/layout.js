@@ -1,4 +1,4 @@
-import { Prompt, Roboto_Flex } from "next/font/google";
+import { Prompt, Sulphur_Point } from "next/font/google";
 import "@/public/css/globals.css";
 // import Provider from "@/components/NextUIProvider";
 // import { CustomProviders } from "@/components/provider";
@@ -10,10 +10,10 @@ const prompt = Prompt({
   display: "swap",
 });
 
-const roboto_Flex = Roboto_Flex({
+const sulphur_Point = Sulphur_Point({
   subsets: ["latin"],
-  variable: "--roboto_Flex",
-  weight: "300",
+  variable: "--sulphur_Point",
+  weight: "400",
   display: "swap",
 });
 export const metadata = {
@@ -29,7 +29,7 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/images/company_logo/company_logo.png" />
       </head>
       <body
-        className={`${roboto_Flex.variable} ${prompt.variable} antialiased`}
+        className={`${sulphur_Point.variable} ${prompt.variable} antialiased`}
       >
         {/* <Provider> */}
         <div className="flex items-center justify-center w-full h-screen bg-default text-dark">

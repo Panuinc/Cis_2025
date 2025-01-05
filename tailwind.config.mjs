@@ -23,7 +23,7 @@ export default {
       },
       fontFamily: {
         prompt: ["var(--prompt)"],
-        roboto_Flex: ["var(--roboto_Flex)"],
+        sulphur_Point: ["var(--sulphur_Point)"],
       },
     },
   },
