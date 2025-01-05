@@ -21,17 +21,21 @@ import {
   Pu,
   Search,
 } from "@/components/icons/icons";
+import Link from "next/link";
 
-function MenuHeader({ icons, text }) {
+function MenuHeader({ icons, text, href }) {
   return (
-    <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+    <Link
+      href={href}
+      className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed" target="blank"
+    >
       <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
         {icons}
       </span>
       <span className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         {text}
       </span>
-    </div>
+    </Link>
   );
 }
 
@@ -197,12 +201,28 @@ export default function UiLayout({ children }) {
         </div>
         <div className="hidden xl:flex flex-row items-center justify-between w-full h-full px-8 py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
           <MenuHeaderHide icons={<Hidden />} onClick={toggleHeaderMenu} />
-          <MenuHeader icons={<Company />} text="Cne" />
-          <MenuHeader icons={<CneSystem />} text="System" />
-          <MenuHeader icons={<CneCloud />} text="Cloud" />
-          <MenuHeader icons={<LeaveWork />} text="Day Off" />
-          <MenuHeader icons={<Logo />} text="Logo" />
-          <MenuHeader icons={<Contact />} text="Contact" />
+          <MenuHeader
+            href="https://channakorn.co.th/"
+            icons={<Company />}
+            text="Cne"
+          />
+          <MenuHeader
+            href="http://49.0.66.19:8023/Main/"
+            icons={<CneSystem />}
+            text="System"
+          />
+          <MenuHeader
+            href="http://cnecloud01.myqnapcloud.com:8011/"
+            icons={<CneCloud />}
+            text="Cloud"
+          />
+          <MenuHeader
+            href="http://49.0.64.242:8088/LoginERS/login.aspx"
+            icons={<LeaveWork />}
+            text="Day Off"
+          />
+          <MenuHeader href="/" icons={<Logo />} text="Logo" />
+          <MenuHeader href="/" icons={<Contact />} text="Contact" />
         </div>
         <div className="xl:hidden flex flex-col relative w-full h-full p-2 gap-2 bg-white border-2 border-dark border-dashed rounded-full">
           <MenuHeaderHide icons={<Hidden />} onClick={toggleHeaderMenu} />
@@ -212,22 +232,38 @@ export default function UiLayout({ children }) {
               ref={mobileHeaderRef}
             >
               <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                <MenuHeader icons={<Company />} text="Cne" />
+                <MenuHeader
+                  href="https://channakorn.co.th/"
+                  icons={<Company />}
+                  text="Cne"
+                />
               </div>
               <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                <MenuHeader icons={<CneSystem />} text="System" />
+                <MenuHeader
+                  href="http://49.0.66.19:8023/Main/"
+                  icons={<CneSystem />}
+                  text="System"
+                />
               </div>
               <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                <MenuHeader icons={<CneCloud />} text="Cloud" />
+                <MenuHeader
+                  href="http://cnecloud01.myqnapcloud.com:8011/"
+                  icons={<CneCloud />}
+                  text="Cloud"
+                />
               </div>
               <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                <MenuHeader icons={<LeaveWork />} text="Day Off" />
+                <MenuHeader
+                  href="http://49.0.64.242:8088/LoginERS/login.aspx"
+                  icons={<LeaveWork />}
+                  text="Day Off"
+                />
               </div>
               <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                <MenuHeader icons={<Logo />} text="Logo" />
+                <MenuHeader href="/" icons={<Logo />} text="Logo" />
               </div>
               <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                <MenuHeader icons={<Contact />} text="Contact" />
+                <MenuHeader href="/" icons={<Contact />} text="Contact" />
               </div>
             </div>
           )}
