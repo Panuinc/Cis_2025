@@ -58,12 +58,13 @@ function MenuSub({ options, isOpen }) {
     isOpen && (
       <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         {options.map((option, index) => (
-          <div
+          <Link
             key={index}
+            href={option.href}
             className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed cursor-pointer"
           >
-            {option}
-          </div>
+            {option.label}
+          </Link>
         ))}
       </div>
     )
@@ -318,7 +319,11 @@ export default function UiLayout({ children }) {
               icons={<Hr />}
               text="HR Department"
               isCollapsed={isCollapsed}
-              options={["Branch", "Site", "Division"]}
+              options={[
+                { label: "Branch", href: "/branch" },
+                { label: "Site", href: "/site" },
+                { label: "Division", href: "/division" },
+              ]}
               isOpen={menuState.HR}
               onToggle={() => toggleMenu("HR")}
             />
@@ -326,7 +331,10 @@ export default function UiLayout({ children }) {
               icons={<IT />}
               text="IT Department"
               isCollapsed={isCollapsed}
-              options={["Backup", "Network"]}
+              options={[
+                { label: "Backup", href: "/it/backup" },
+                { label: "Network", href: "/it/network" },
+              ]}
               isOpen={menuState.IT}
               onToggle={() => toggleMenu("IT")}
             />
@@ -334,7 +342,10 @@ export default function UiLayout({ children }) {
               icons={<Ac />}
               text="AC Department"
               isCollapsed={isCollapsed}
-              options={["Option A", "Option B"]}
+              options={[
+                { label: "Option A", href: "/ac/OptionA" },
+                { label: "Option B", href: "/ac/OptionB" },
+              ]}
               isOpen={menuState.AC}
               onToggle={() => toggleMenu("AC")}
             />
@@ -342,7 +353,10 @@ export default function UiLayout({ children }) {
               icons={<Pu />}
               text="PU Department"
               isCollapsed={isCollapsed}
-              options={["Option X", "Option Y"]}
+              options={[
+                { label: "Option C", href: "/pu/OptionC" },
+                { label: "Option D", href: "/pu/OptionD" },
+              ]}
               isOpen={menuState.PU}
               onToggle={() => toggleMenu("PU")}
             />
