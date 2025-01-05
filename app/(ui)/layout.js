@@ -27,7 +27,8 @@ function MenuHeader({ icons, text, href }) {
   return (
     <Link
       href={href}
-      className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed" target="blank"
+      className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
+      target="blank"
     >
       <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
         {icons}
@@ -221,8 +222,8 @@ export default function UiLayout({ children }) {
             icons={<LeaveWork />}
             text="Day Off"
           />
-          <MenuHeader href="/" icons={<Logo />} text="Logo" />
-          <MenuHeader href="/" icons={<Contact />} text="Contact" />
+          <MenuHeader href="/logo" icons={<Logo />} text="Logo" />
+          <MenuHeader href="/contact" icons={<Contact />} text="Contact" />
         </div>
         <div className="xl:hidden flex flex-col relative w-full h-full p-2 gap-2 bg-white border-2 border-dark border-dashed rounded-full">
           <MenuHeaderHide icons={<Hidden />} onClick={toggleHeaderMenu} />
@@ -260,10 +261,14 @@ export default function UiLayout({ children }) {
                 />
               </div>
               <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                <MenuHeader href="/" icons={<Logo />} text="Logo" />
+                <MenuHeader href="/logo" icons={<Logo />} text="Logo" />
               </div>
               <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                <MenuHeader href="/" icons={<Contact />} text="Contact" />
+                <MenuHeader
+                  href="/contact"
+                  icons={<Contact />}
+                  text="Contact"
+                />
               </div>
             </div>
           )}
