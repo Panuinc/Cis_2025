@@ -88,11 +88,18 @@ function MenuMain({ icons, text, isCollapsed, options, isOpen, onToggle }) {
   const pathname = usePathname();
   const isActive = options.some((option) => pathname === option.href);
 
+  const [userTriggered, setUserTriggered] = useState(false);
+
   useEffect(() => {
-    if (isActive && !isOpen) {
+    if (isActive && !isOpen && !userTriggered) {
       onToggle();
     }
-  }, [pathname, isActive, isOpen, onToggle]);
+  }, [pathname, isActive, isOpen, userTriggered, onToggle]);
+
+  const handleMenuClick = () => {
+    setUserTriggered(true);
+    onToggle();
+  };
 
   return (
     <div className="flex flex-col items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed">
@@ -100,6 +107,7 @@ function MenuMain({ icons, text, isCollapsed, options, isOpen, onToggle }) {
         className={`flex items-center justify-center w-full gap-2 cursor-pointer ${
           isActive ? "bg-blue-500 text-white" : "bg-white text-dark"
         }`}
+        onClick={handleMenuClick}
       >
         <Tooltip
           content={isCollapsed ? text : ""}
@@ -121,10 +129,7 @@ function MenuMain({ icons, text, isCollapsed, options, isOpen, onToggle }) {
           </span>
         )}
         {!isCollapsed && (
-          <span
-            className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed cursor-pointer"
-            onClick={onToggle}
-          >
+          <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
             <Down />
           </span>
         )}
