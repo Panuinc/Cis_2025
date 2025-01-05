@@ -2,10 +2,10 @@ import TopicHeader from "@/components/form/TopicHeader";
 import Link from "next/link";
 import React from "react";
 
-export default function BranchPage() {
+export default function BranchCreate() {
   return (
     <>
-      <TopicHeader topic="BranchPage" />
+      <TopicHeader topic="BranchCreate" />
       <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
