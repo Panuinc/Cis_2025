@@ -31,7 +31,7 @@ function MenuHeader({ icons, text, href }) {
   return (
     <Link
       href={href}
-      className={`flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ${
+      className={`flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed rounded-full ${
         isActive ? "bg-opacity-50 bg-default text-success" : "bg-white text-dark"
       }`}
       target="blank"
@@ -224,7 +224,7 @@ export default function UiLayout({ children }) {
             CIS
           </div>
         </div>
-        <div className="hidden xl:flex flex-row items-center justify-center h-full px-8 py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
+        <div className="hidden xl:flex flex-row items-center justify-center h-full px-4 py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
           <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
             <Cis />
           </div>
@@ -232,7 +232,7 @@ export default function UiLayout({ children }) {
             CIS
           </div>
         </div>
-        <div className="hidden xl:flex flex-row items-center justify-between w-full h-full px-8 py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
+        <div className="hidden xl:flex flex-row items-center justify-between w-full h-full px-4 py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
           <MenuHeaderHide icons={<Hidden />} onClick={toggleHeaderMenu} />
           <MenuHeader
             href="https://channakorn.co.th/"
@@ -289,7 +289,7 @@ export default function UiLayout({ children }) {
             </div>
           )}
         </div>
-        <div className="flex flex-row items-center justify-center h-full p-2 xl:px-8 xl:py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
+        <div className="flex flex-row items-center justify-center h-full p-2 xl:px-4 xl:py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
           <div className="xl:flex hidden items-center justify-center w-60 h-full p-2 gap-2 border-2 border-dark border-dashed">
             <Input
               type="text"
