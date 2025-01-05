@@ -33,9 +33,7 @@ function MenuHeader({ icons, text, href }) {
     <Link
       href={href}
       className={`flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed rounded-full ${
-        isActive
-          ? "bg-opacity-50 bg-default text-success"
-          : "bg-white text-dark"
+        isActive ? "  text-success" : "bg-white text-dark"
       }`}
       target="blank"
     >
@@ -75,9 +73,7 @@ function MenuSub({ options, isOpen }) {
               key={index}
               href={option.href}
               className={`flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed cursor-pointer ${
-                isActive
-                  ? "bg-opacity-50 bg-default text-success"
-                  : "bg-white text-dark"
+                isActive ? "  text-success" : "bg-white text-dark"
               }`}
             >
               {option.label}
@@ -110,9 +106,7 @@ function MenuMain({ icons, text, isCollapsed, options, isOpen, onToggle }) {
     <div className="flex flex-col items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed">
       <div
         className={`flex items-center justify-center w-full gap-2 cursor-pointer ${
-          isActive
-            ? "bg-opacity-50 bg-default text-success"
-            : "bg-white text-dark"
+          isActive ? "  text-success" : "bg-white text-dark"
         }`}
         onClick={handleMenuClick}
       >
