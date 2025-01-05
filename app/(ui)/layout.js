@@ -22,6 +22,7 @@ import {
   Pu,
   Search,
   Dashboard,
+  Record,
 } from "@/components/icons/icons";
 import Link from "next/link";
 
@@ -76,7 +77,7 @@ function MenuSub({ options, isOpen }) {
                 isActive ? "  text-success" : "bg-white text-dark"
               }`}
             >
-              {option.label}
+              <Record /> {option.label}
             </Link>
           );
         })}
