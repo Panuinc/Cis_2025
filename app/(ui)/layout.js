@@ -88,6 +88,12 @@ function MenuMain({ icons, text, isCollapsed, options, isOpen, onToggle }) {
   const pathname = usePathname();
   const isActive = options.some((option) => pathname === option.href);
 
+  useEffect(() => {
+    if (isActive && !isOpen) {
+      onToggle();
+    }
+  }, [pathname, isActive, isOpen, onToggle]);
+
   return (
     <div className="flex flex-col items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed">
       <div
