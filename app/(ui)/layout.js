@@ -142,7 +142,7 @@ function MenuMain({ icons, text, isCollapsed, options, isOpen, onToggle }) {
     </div>
   );
 }
-function MenuMainOther({ icons, onClick }) {
+function MenuMainOther({ icons, text, onClick, isCollapsed }) {
   return (
     <div
       className="flex items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed cursor-pointer"
@@ -151,6 +151,11 @@ function MenuMainOther({ icons, onClick }) {
       <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
         {icons}
       </span>
+      {!isCollapsed && (
+        <span className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed font-[600]">
+          {text}
+        </span>
+      )}
     </div>
   );
 }
@@ -349,7 +354,12 @@ export default function UiLayout({ children }) {
             top-0 left-0 z-50
           `}
         >
-          <MenuMainOther icons={<Hide />} onClick={handleToggleMenu} />
+          <MenuMainOther
+            icons={<Hide />}
+            text="Channakorn Engineer"
+            isCollapsed={isCollapsed}
+            onClick={handleToggleMenu}
+          />
           <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed overflow-auto">
             <MenuMain
               icons={<Dashboard />}
@@ -427,7 +437,11 @@ export default function UiLayout({ children }) {
               onToggle={() => toggleMenu("SETTING")}
             />
           </div>
-          <MenuMainOther icons={<Logout />} />
+          <MenuMainOther
+            icons={<Logout />}
+            text="Logout"
+            isCollapsed={isCollapsed}
+          />
         </div>
         <div
           className={`
