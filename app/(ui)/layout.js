@@ -24,6 +24,7 @@ import {
   Search,
   Dashboard,
   Record,
+  En,
 } from "@/components/icons/icons";
 
 function MenuHeader({ icons, text, href }) {
@@ -175,10 +176,12 @@ export default function UiLayout({ children }) {
   };
 
   const [menuState, setMenuState] = useState({
+    Dashboard: false,
     HR: false,
     IT: false,
     AC: false,
     PU: false,
+    EN: false,
   });
 
   const toggleMenu = (menu) => {
@@ -213,24 +216,24 @@ export default function UiLayout({ children }) {
   }, [isMobileMenuOpen, isMobileHeaderOpen]);
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-      <div className="flex flex-row items-center justify-between w-full h-20 p-2 gap-4 border-2 border-dark border-dashed">
+    <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2">
+      <div className="flex flex-row items-center justify-between w-full h-20 p-2 gap-4">
         <div
-          className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full cursor-pointer xl:hidden"
+          className="xl:hidden flex items-center justify-center h-full p-2 gap-2 bg-white rounded-full"
           onClick={handleOpenMobileMenu}
         >
-          <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <div className="flex items-center justify-center w-full h-full p-2 gap-2">
             <Cis />
           </div>
-          <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <div className="flex items-center justify-center w-full h-full p-2 gap-2 font-[600] text-xl text-success">
             CIS
           </div>
         </div>
-        <div className="hidden xl:flex flex-row items-center justify-center h-full px-4 py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
-          <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="hidden xl:flex flex-row items-center justify-center h-full px-4 py-2 gap-2 bg-white rounded-full">
+          <div className="flex items-center justify-center w-full h-full p-2 gap-2">
             <Cis />
           </div>
-          <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <div className="flex items-center justify-center w-full h-full p-2 gap-2 font-[600] text-xl text-success">
             CIS
           </div>
         </div>
@@ -305,8 +308,8 @@ export default function UiLayout({ children }) {
             </div>
           )}
         </div>
-        <div className="flex flex-row items-center justify-center h-full p-2 xl:px-4 xl:py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
-          <div className="xl:flex hidden items-center justify-center w-60 h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex flex-row items-center justify-center h-full p-2 xl:px-4 xl:py-2 gap-2 bg-white rounded-full">
+          <div className="xl:flex hidden items-center justify-center w-60 h-full p-2 gap-2">
             <Input
               type="text"
               placeholder="Search"
@@ -316,10 +319,10 @@ export default function UiLayout({ children }) {
               startContent={<Search />}
             />
           </div>
-          <div className="flex items-center justify-center w-10 h-10 p-2 gap-2 border-2 border-dark border-dashed bg-default rounded-full">
+          <div className="flex items-center justify-center w-10 h-10 p-2 gap-2 bg-default rounded-full">
             <Bell />
           </div>
-          <div className="flex items-center justify-center w-10 h-10 p-2 gap-2 border-2 border-dark border-dashed bg-success rounded-full">
+          <div className="flex items-center justify-center w-10 h-10 p-2 gap-2 bg-success rounded-full">
             <Image
               width={25}
               height={25}
@@ -371,8 +374,8 @@ export default function UiLayout({ children }) {
               text="IT Department"
               isCollapsed={isCollapsed}
               options={[
-                { label: "Backup", href: "/it/backup" },
-                { label: "Network", href: "/it/network" },
+                { label: "Backup", href: "/backup" },
+                { label: "Network", href: "/network" },
               ]}
               isOpen={menuState.IT}
               onToggle={() => toggleMenu("IT")}
@@ -382,8 +385,8 @@ export default function UiLayout({ children }) {
               text="AC Department"
               isCollapsed={isCollapsed}
               options={[
-                { label: "Option A", href: "/ac/OptionA" },
-                { label: "Option B", href: "/ac/OptionB" },
+                { label: "Option A", href: "/OptionA" },
+                { label: "Option B", href: "/OptionB" },
               ]}
               isOpen={menuState.AC}
               onToggle={() => toggleMenu("AC")}
@@ -393,11 +396,22 @@ export default function UiLayout({ children }) {
               text="PU Department"
               isCollapsed={isCollapsed}
               options={[
-                { label: "Option C", href: "/pu/OptionC" },
-                { label: "Option D", href: "/pu/OptionD" },
+                { label: "Option C", href: "/OptionC" },
+                { label: "Option D", href: "/OptionD" },
               ]}
               isOpen={menuState.PU}
               onToggle={() => toggleMenu("PU")}
+            />
+            <MenuMain
+              icons={<En />}
+              text="EN Department"
+              isCollapsed={isCollapsed}
+              options={[
+                { label: "Option E", href: "/OptionE" },
+                { label: "Option F", href: "/OptionF" },
+              ]}
+              isOpen={menuState.EN}
+              onToggle={() => toggleMenu("EN")}
             />
           </div>
           <MenuMainOther icons={<Logout />} />
