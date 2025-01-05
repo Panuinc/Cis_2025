@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { Input, Tooltip } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import {
   Ac,
   Bell,
@@ -24,7 +25,6 @@ import {
   Dashboard,
   Record,
 } from "@/components/icons/icons";
-import Link from "next/link";
 
 function MenuHeader({ icons, text, href }) {
   const pathname = usePathname();
@@ -33,10 +33,10 @@ function MenuHeader({ icons, text, href }) {
   return (
     <Link
       href={href}
-      className={`flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed rounded-full ${
+      className={`flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ${
         isActive ? "  text-success" : "bg-white text-dark"
       }`}
-      target="blank"
+      target="_blank"
     >
       <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
         {icons}
@@ -240,24 +240,38 @@ export default function UiLayout({ children }) {
             href="https://channakorn.co.th/"
             icons={<Company />}
             text="Cne"
+            target="_blank"
           />
           <MenuHeader
             href="http://49.0.66.19:8023/Main/"
             icons={<CneSystem />}
             text="System"
+            target="_blank"
           />
           <MenuHeader
             href="http://cnecloud01.myqnapcloud.com:8011/"
             icons={<CneCloud />}
             text="Cloud"
+            target="_blank"
           />
           <MenuHeader
             href="http://49.0.64.242:8088/LoginERS/login.aspx"
             icons={<LeaveWork />}
             text="Day Off"
+            target="_blank"
           />
-          <MenuHeader href="/logo" icons={<Logo />} text="Logo" />
-          <MenuHeader href="/contact" icons={<Contact />} text="Contact" />
+          <MenuHeader
+            href="/logo"
+            icons={<Logo />}
+            text="Logo"
+            target="_blank"
+          />
+          <MenuHeader
+            href="/contact"
+            icons={<Contact />}
+            text="Contact"
+            target="_blank"
+          />
         </div>
         <div className="xl:hidden flex flex-col relative w-full h-full p-2 gap-2 bg-white border-2 border-dark border-dashed rounded-full">
           <MenuHeaderHide icons={<Hidden />} onClick={toggleHeaderMenu} />
