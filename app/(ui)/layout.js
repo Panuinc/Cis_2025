@@ -25,6 +25,7 @@ import {
   Dashboard,
   Record,
   En,
+  Setting,
 } from "@/components/icons/icons";
 
 function MenuHeader({ icons, text, href }) {
@@ -182,6 +183,7 @@ export default function UiLayout({ children }) {
     AC: false,
     PU: false,
     EN: false,
+    SETTING: false,
   });
 
   const toggleMenu = (menu) => {
@@ -412,6 +414,17 @@ export default function UiLayout({ children }) {
               ]}
               isOpen={menuState.EN}
               onToggle={() => toggleMenu("EN")}
+            />
+            <MenuMain
+              icons={<Setting />}
+              text="Setting"
+              isCollapsed={isCollapsed}
+              options={[
+                { label: "Option G", href: "/OptionG" },
+                { label: "Option H", href: "/OptionH" },
+              ]}
+              isOpen={menuState.SETTING}
+              onToggle={() => toggleMenu("SETTING")}
             />
           </div>
           <MenuMainOther icons={<Logout />} />
