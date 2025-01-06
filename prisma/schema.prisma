@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +5,76 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+enum Title {
+  Mr
+  Ms
+  Mrs
+}
+
+enum Gender {
+  Male
+  FeMale
+}
+
+enum Citizen {
+  Thai
+  Cambodian
+  Lao
+  Burmese
+  Vietnamese
+}
+
+enum Level {
+  SuperAdmin
+  Admin
+  User
+}
+
+enum Status {
+  Active
+  InActive
+}
+
+model Employee {
+  employeeId        Int       @id @default(autoincrement())
+  employeeTitle     Title
+  employeeFirstname String    @db.VarChar(255)
+  employeeLastname  String    @db.VarChar(255)
+  employeeNickname  String    @db.VarChar(255)
+  employeeEmail     String    @db.VarChar(255)
+  employeeTel       String    @db.VarChar(255)
+  employeeIdCard    String    @db.VarChar(255)
+  employeeGender    Gender
+  employeeLevel     Level     @default(User)
+  employeeBirthday  DateTime
+  employeeStatus    Status    @default(InActive)
+  employeeCreateBy  Int
+  employeeCreateAt  DateTime  @default(now()) @db.Timestamp()
+  employeeUpdateBy  Int?
+  employeeUpdateAt  DateTime?
+
+  EmployeeCreateBy Employee? @relation("CreateEmployeeBy", fields: [employeeCreateBy], references: [employeeId])
+  EmployeeUpdateBy Employee? @relation("UpdateEmployeeBy", fields: [employeeUpdateBy], references: [employeeId])
+
+  createEmployee Employee[] @relation("CreateEmployeeBy")
+  updateEmployee Employee[] @relation("UpdateEmployeeBy")
+
+  createUser User[] @relation("CreateUserBy")
+  updateUser User[] @relation("UpdateUserBy")
+}
+
+model User {
+  userId         Int       @id @default(autoincrement())
+  userEmployeeId Int
+  userUsername   String    @db.VarChar(255)
+  userPassword   String    @db.VarChar(255)
+  userCreateBy   Int
+  userCreateAt   DateTime  @default(now()) @db.Timestamp()
+  userUpdateBy   Int?
+  userUpdateAt   DateTime?
+
+  UserCreateBy User? @relation("CreateUserBy", fields: [userCreateBy], references: [employeeId])
+  UserUpdateBy User? @relation("UpdateUserBy", fields: [userUpdateBy], references: [employeeId])
 }
