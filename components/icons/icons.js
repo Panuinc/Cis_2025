@@ -427,3 +427,35 @@ export function Logout() {
     </svg>
   );
 }
+
+export function Database() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={24}
+      height={24}
+      viewBox="0 0 24 24"
+    >
+      <g fill="none" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" d="M4 18V6m16 0v12"></path>
+        <path d="M12 10c4.418 0 8-1.79 8-4s-3.582-4-8-4s-8 1.79-8 4s3.582 4 8 4Zm8 2c0 2.21-3.582 4-8 4s-8-1.79-8-4m16 6c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
+      </g>
+    </svg>
+  );
+}
+
+export function Cancel() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={24}
+      height={24}
+      viewBox="0 0 24 24"
+    >
+      <g fill="none" stroke="currentColor" strokeWidth={1.5}>
+        <circle cx={12} cy={12} r={10}></circle>
+        <path strokeLinecap="round" d="m14.5 9.5l-5 5m0-5l5 5"></path>
+      </g>
+    </svg>
+  );
+}

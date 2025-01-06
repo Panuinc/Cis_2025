@@ -1,94 +1,67 @@
-import TopicHeader from "@/components/form/TopicHeader";
-import Link from "next/link";
+"use client";
 import React from "react";
+import TopicHeader from "@/components/form/TopicHeader";
+import { Input, Button } from "@nextui-org/react";
+import { Cancel, Database } from "@/components/icons/icons";
 
 export default function BranchCreate() {
   return (
     <>
       <TopicHeader topic="BranchCreate" />
       <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-        <div className="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            Search
+            <Input
+              type="text"
+              label="Text"
+              placeholder="Please Enter Data"
+              labelPlacement="outside"
+              size="lg"
+              variant="bordered"
+              // value={userUsername}
+              // onChange={(e) => setUserUsername(e.target.value)}
+              // isRequired={true}
+            />
           </div>
-          <Link
-            href="/branch/create"
-            className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
-          >
-            Add New
-          </Link>
+          <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <Input
+              type="text"
+              label="Text"
+              placeholder="Please Enter Data"
+              labelPlacement="outside"
+              size="lg"
+              variant="bordered"
+              // value={userUsername}
+              // onChange={(e) => setUserUsername(e.target.value)}
+              // isRequired={true}
+            />
+          </div>
         </div>
-        <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <div className="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              Total Row
-            </div>
-            <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              Select Row Show
-            </div>
+        <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <Input
+              type="text"
+              label="Text"
+              placeholder="Please Enter Data"
+              labelPlacement="outside"
+              size="lg"
+              variant="bordered"
+              // value={userUsername}
+              // onChange={(e) => setUserUsername(e.target.value)}
+              // isRequired={true}
+            />
           </div>
-          <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div className="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                Header Table 1
-              </div>
-              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                Header Table 2
-              </div>
-              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                Header Table 3
-              </div>
-              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                Header Table 4
-              </div>
-              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                Header Table 5
-              </div>
-            </div>
-            <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <div className="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                  Body Table 1
-                </div>
-                <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                  Body Table 2
-                </div>
-                <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                  Body Table 3
-                </div>
-                <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                  Body Table 4
-                </div>
-                <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                  Body Table 5
-                </div>
-              </div>
-              <div className="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                  Body Table 1
-                </div>
-                <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                  Body Table 2
-                </div>
-                <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                  Body Table 3
-                </div>
-                <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                  Body Table 4
-                </div>
-                <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                  Body Table 5
-                </div>
-              </div>
-            </div>
+        </div>
+        <div className="flex xl:flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <Button size="md" color="success" type="submit">
+              <Database /> Submit
+            </Button>
           </div>
-          <div className="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              xxx Row Form xxx Row
-            </div>
-            <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              Paginations
-            </div>
+          <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <Button size="md" color="danger" type="submit">
+              <Cancel /> Cancel
+            </Button>
           </div>
         </div>
       </div>
