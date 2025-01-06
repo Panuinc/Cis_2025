@@ -37,6 +37,17 @@ enum Status {
   InActive
 }
 
+enum WorkStatus {
+  CurrentEmployee
+  Resign
+}
+
+enum EmploymentType {
+  DAILY_WAGE
+  MONTHLY_SALARY
+  MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES
+}
+
 model Employee {
   employeeId        Int       @id @default(autoincrement())
   employeeTitle     Title
@@ -46,6 +57,7 @@ model Employee {
   employeeEmail     String    @db.VarChar(255)
   employeeTel       String    @db.VarChar(255)
   employeeIdCard    String    @db.VarChar(255)
+  employeeCitizen   Citizen
   employeeGender    Gender
   employeeLevel     Level     @default(User)
   employeeBirthday  DateTime
@@ -61,8 +73,14 @@ model Employee {
   createEmployee Employee[] @relation("CreateEmployeeBy")
   updateEmployee Employee[] @relation("UpdateEmployeeBy")
 
-  createUser User[] @relation("CreateUserBy")
-  updateUser User[] @relation("UpdateUserBy")
+  employeeUser User[] @relation("UserEmployeeBy")
+  createdUser  User[] @relation("UserCreatedBy")
+  updatedUser  User[] @relation("UserUpdatedBy")
+
+  employeeEmployment Employment[] @relation("EmploymentEmployeeBy")
+  parentEmployment   Employment[] @relation("EmploymentParentBy")
+  createdEmployment  Employment[] @relation("EmploymentCreatedBy")
+  updatedEmployment  Employment[] @relation("EmploymentUpdatedBy")
 }
 
 model User {
@@ -75,6 +93,56 @@ model User {
   userUpdateBy   Int?
   userUpdateAt   DateTime?
 
-  UserCreateBy User? @relation("CreateUserBy", fields: [userCreateBy], references: [employeeId])
-  UserUpdateBy User? @relation("UpdateUserBy", fields: [userUpdateBy], references: [employeeId])
+  UserEmployeeBy Employee? @relation("UserEmployeeBy", fields: [userEmployeeId], references: [employeeId])
+  UserCreateBy   Employee? @relation("UserCreatedBy", fields: [userCreateBy], references: [employeeId])
+  UserUpdateBy   Employee? @relation("UserUpdatedBy", fields: [userUpdateBy], references: [employeeId])
+}
+
+model Employment {
+  employmentId                  Int         @id @default(autoincrement())
+  employmentEmployeeId          Int
+  employmentNumber              String?     @db.VarChar(255)
+  employmentCardNumber          String?     @db.VarChar(255)
+  employmentType                String?     @db.VarChar(255)
+  employmentBranchId            Int?
+  employmentSiteId              Int?
+  employmentDivisionId          Int?
+  employmentDepartmentId        Int?
+  employmentPositionId          Int?
+  employmentRoleId              Int?
+  employmentParentId            Int?
+  employmentStartWork           DateTime?
+  employmentEnterType           String?     @db.VarChar(255)
+  employmentPassportNumber      String?     @db.VarChar(255)
+  employmentPassportStartDate   DateTime?
+  employmentPassportEndDate     DateTime?
+  employmentPassportIssuedBy    String?     @db.VarChar(255)
+  employmentPlaceOfBirth        String?     @db.VarChar(255)
+  employmentEnterCheckPoint     String?     @db.VarChar(255)
+  employmentEnterDate           DateTime?
+  employmentImmigration         String?     @db.VarChar(255)
+  employmentTypeOfVisa          String?     @db.VarChar(255)
+  employmentVisaNumber          String?     @db.VarChar(255)
+  employmentVisaIssuedBy        String?     @db.VarChar(255)
+  employmentWorkPermitNumber    String?     @db.VarChar(255)
+  employmentWorkPermitStartDate DateTime?
+  employmentWorkPermitEndDate   DateTime?
+  employmentWorkPermitIssuedBy  String?     @db.VarChar(255)
+  employmentSsoNumber           String?     @db.VarChar(255)
+  employmentSsoHospital         String?     @db.VarChar(255)
+  employmentWorkStatus          WorkStatus? @default(CurrentEmployee)
+  employmentCreateBy            Int?
+  employmentCreateAt            DateTime?   @default(now()) @db.Timestamp()
+  employmentUpdateBy            Int?
+  employmentUpdateAt            DateTime?
+
+  EmploymentEmployeeBy Employee? @relation("EmploymentEmployeeBy", fields: [employmentEmployeeId], references: [employeeId])
+  EmploymentParentBy   Employee? @relation("EmploymentParentBy", fields: [employmentParentId], references: [employeeId])
+  EmploymentCreateBy   Employee? @relation("EmploymentCreatedBy", fields: [employmentCreateBy], references: [employeeId])
+  EmploymentUpdateBy   Employee? @relation("EmploymentUpdatedBy", fields: [employmentUpdateBy], references: [employeeId])
+}
+
+model EmpDocument {
+  empDocumentId Int @id @default(autoincrement())
+  empDocumentEmployeeId Int
 }
