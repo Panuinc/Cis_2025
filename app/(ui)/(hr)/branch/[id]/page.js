@@ -6,7 +6,7 @@ import FormBranch from "@/components/form/hr/branch/FormBranch";
 export default function BranchUpdate() {
   return (
     <>
-      <TopicHeader topic="BranchUpdate" />
+      <TopicHeader topic="Branch Update" />
       <FormBranch />
     </>
   );

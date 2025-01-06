@@ -6,7 +6,7 @@ import FormBranch from "@/components/form/hr/branch/FormBranch";
 export default function BranchCreate() {
   return (
     <>
-      <TopicHeader topic="BranchCreate" />
+      <TopicHeader topic="Branch Create" />
       <FormBranch />
     </>
   );
