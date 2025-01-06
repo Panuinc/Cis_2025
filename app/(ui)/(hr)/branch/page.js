@@ -8,9 +8,9 @@ import { Add, Search } from "@/components/icons/icons";
 export default function BranchPage() {
   return (
     <>
-      <TopicHeader topic="BranchPage" />
+      <TopicHeader topic="Branch List" />
       <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-        <div className="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
             <Input
               type="text"
@@ -25,7 +25,7 @@ export default function BranchPage() {
           </div>
           <Link
             href="/branch/create"
-            className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed"
+            className="flex items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
           >
             <Button size="lg" color="primary">
               <Add /> Add New
@@ -60,23 +60,6 @@ export default function BranchPage() {
               </div>
             </div>
             <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <div className="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                  Body Table 1
-                </div>
-                <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                  Body Table 2
-                </div>
-                <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                  Body Table 3
-                </div>
-                <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                  Body Table 4
-                </div>
-                <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                  Body Table 5
-                </div>
-              </div>
               <div className="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                   Body Table 1
