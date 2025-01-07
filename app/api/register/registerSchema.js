@@ -10,5 +10,5 @@ export const registerSchema = z.object({
   employeeIdCard: z.string().min(1, { message: "Please Enter ID Card" }),
   employeeCitizen: z.enum(["Thai", "Cambodian", "Lao", "Burmese", "Vietnamese"], {errorMap: () => ({ message: "Citizen must be either 'Thai' or 'Cambodian' or 'Lao' or 'Burmese' or 'Vietnamese'" }),}),  
   employeeGender: z.enum(["Male", "FeMale"], {errorMap: () => ({ message: "Gender must be either 'Male' or 'FeMale'" }),}),  
-  employeeBirthday: z.string().min(1, { message: "Please Enter Birthday" }),
+  employeeBirthday: z.union([z.string(), z.date()]).refine((val) => {const date = typeof val === "string" ? new Date(val) : val;return date <= new Date();}, {message: "Birthday must be a valid date and not in the future",}),
 });

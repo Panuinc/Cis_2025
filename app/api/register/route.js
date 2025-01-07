@@ -26,8 +26,7 @@ export async function POST(request) {
 
     const parsedData = registerSchema.parse({
       ...data,
-
-      employeeBirthday: new Date(data.employeeBirthday).toISOString(),
+      employeeBirthday: new Date(data.employeeBirthday),
     });
 
     logger.info({
