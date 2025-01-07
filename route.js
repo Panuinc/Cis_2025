@@ -27,7 +27,17 @@ export const authOptions = {
           const user = await prisma.user.findFirst({
             where: { userUsername: credentials.userUsername },
             include: {
-              UserEmployeeBy: true,
+              employee: true,
+              // employment: {
+              //   include: {
+              //     branch: { select: { branchName: true } },
+              //     site: { select: { siteName: true } },
+              //     division: { select: { divisionName: true } },
+              //     department: { select: { departmentName: true } },
+              //     position: { select: { positionName: true } },
+              //     role: { select: { roleName: true } },
+              //   },
+              // },
             },
           });
 
@@ -46,20 +56,26 @@ export const authOptions = {
             throw new Error("Incorrect password");
           }
 
-          if (
-            !user.UserEmployeeBy ||
-            user.UserEmployeeBy.employeeStatus !== "Active"
-          ) {
-            throw new Error(
-              "The account is not active. Please contact the administrator"
-            );
-          }
+          //   if (user.userStatus !== "Active") {
+          //     throw new Error(
+          //       "The account is not active. Please contact the administrator"
+          //     );
+          //   }
 
           return {
             userId: user.userId,
             userUsername: user.userUsername,
             userPassword: user.userPassword,
-            employee: user.UserEmployeeBy,
+            employee: user.employee,
+            // employment: user.employment.map((employment) => ({
+            //   ...employment,
+            //   branch: employment.branch?.branchName || null,
+            //   site: employment.site?.siteName || null,
+            //   division: employment.division?.divisionName || null,
+            //   department: employment.department?.departmentName || null,
+            //   position: employment.position?.positionName || null,
+            //   role: employment.role?.roleName || null,
+            // })),
           };
         } catch (error) {
           throw error;
@@ -76,6 +92,7 @@ export const authOptions = {
         token.userUsername = user.userUsername;
         token.userPassword = user.userPassword;
         token.employee = user.employee;
+        // token.employment = user.employment;
       }
       return token;
     },
@@ -85,6 +102,7 @@ export const authOptions = {
         userUsername: token.userUsername,
         userPassword: token.userPassword,
         employee: token.employee,
+        // employment: token.employment,
       };
       return session;
     },
