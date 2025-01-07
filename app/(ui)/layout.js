@@ -184,6 +184,7 @@ function MenuMainOther({ icons, text, onClick, isCollapsed }) {
 
 export default function UiLayout({ children }) {
   const { data: session, status } = useSession();
+  const userData = session?.user || {};
   const router = useRouter();
 
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -407,7 +408,7 @@ export default function UiLayout({ children }) {
           >
             <MenuMainOther
               icons={<Hide />}
-              text="Channakorn Engineer"
+              text={`${userData.employee?.employeeFirstname || ""} ${userData.employee?.employeeLastname || ""}`}
               isCollapsed={isCollapsed}
               onClick={handleToggleMenu}
             />
