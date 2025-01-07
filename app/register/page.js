@@ -43,8 +43,8 @@ export default function Index() {
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
-            type="Lastname"
-            label="Username"
+            type="text"
+            label="Lastname"
             placeholder="Please Enter Data"
             labelPlacement="outside"
             size="lg"
