@@ -29,22 +29,14 @@ export async function GET(request, context) {
       include: {
         BranchCreateBy: {
           select: {
-            employee: {
-              select: {
-                employeeFirstname: true,
-                employeeLastname: true,
-              },
-            },
+            employeeFirstname: true,
+            employeeLastname: true,
           },
         },
-        BranchUpdateByv: {
+        BranchUpdateBy: {
           select: {
-            employee: {
-              select: {
-                employeeFirstname: true,
-                employeeLastname: true,
-              },
-            },
+            employeeFirstname: true,
+            employeeLastname: true,
           },
         },
       },

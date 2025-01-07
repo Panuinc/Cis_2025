@@ -108,8 +108,8 @@ model Employee {
 model User {
   userId         Int       @id @default(autoincrement())
   userEmployeeId Int
-  userUsername   String?    @db.VarChar(255)
-  userPassword   String?    @db.VarChar(255)
+  userUsername   String?   @db.VarChar(255)
+  userPassword   String?   @db.VarChar(255)
   userCreateBy   Int
   userCreateAt   DateTime  @default(now()) @db.Timestamp()
   userUpdateBy   Int?
@@ -202,7 +202,7 @@ model EmpDocument {
 model Branch {
   branchId       Int       @id @default(autoincrement())
   branchName     String    @db.VarChar(255)
-  branchStatus   Status
+  branchStatus   Status    @default(Active)
   branchCreateBy Int
   branchCreateAt DateTime  @default(now()) @db.Timestamp()
   branchUpdateBy Int?
@@ -221,7 +221,7 @@ model Branch {
 model Role {
   roleId       Int       @id @default(autoincrement())
   roleName     String    @db.VarChar(255)
-  roleStatus   Status
+  roleStatus   Status    @default(Active)
   roleCreateBy Int
   roleCreateAt DateTime  @default(now()) @db.Timestamp()
   roleUpdateBy Int?
@@ -237,7 +237,7 @@ model Site {
   siteId       Int       @id @default(autoincrement())
   siteBranchId Int
   siteName     String    @db.VarChar(255)
-  siteStatus   Status
+  siteStatus   Status    @default(Active)
   siteCreateBy Int
   siteCreateAt DateTime  @default(now()) @db.Timestamp()
   siteUpdateBy Int?
@@ -254,7 +254,7 @@ model Division {
   divisionId       Int       @id @default(autoincrement())
   divisionBranchId Int
   divisionName     String    @db.VarChar(255)
-  divisionStatus   Status
+  divisionStatus   Status    @default(Active)
   divisionCreateBy Int
   divisionCreateAt DateTime  @default(now()) @db.Timestamp()
   divisionUpdateBy Int?
@@ -274,7 +274,7 @@ model Department {
   departmentBranchId   Int
   departmentDivisionId Int
   departmentName       String    @db.VarChar(255)
-  departmentStatus     Status
+  departmentStatus     Status    @default(Active)
   departmentCreateBy   Int
   departmentCreateAt   DateTime  @default(now()) @db.Timestamp()
   departmentUpdateBy   Int?
@@ -295,7 +295,7 @@ model Position {
   positionDivisionId   Int
   positionDepartmentId Int
   positionName         String    @db.VarChar(255)
-  positionStatus       Status
+  positionStatus       Status    @default(Active)
   positionCreateBy     Int
   positionCreateAt     DateTime  @default(now()) @db.Timestamp()
   positionUpdateBy     Int?
