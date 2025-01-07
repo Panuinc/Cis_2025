@@ -18,7 +18,7 @@ export default function Index() {
         />
       </div>
       <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-        Channakorn Internal System
+        Register
       </div>
       <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <Input
