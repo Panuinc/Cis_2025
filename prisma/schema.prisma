@@ -81,6 +81,16 @@ model Employee {
   parentEmployment   Employment[] @relation("EmploymentParentBy")
   createdEmployment  Employment[] @relation("EmploymentCreatedBy")
   updatedEmployment  Employment[] @relation("EmploymentUpdatedBy")
+
+  employeeEmpDocument EmpDocument[] @relation("EmpDocumentEmployeeBy")
+  createdEmpDocument  EmpDocument[] @relation("EmpDocumentCreateBy")
+  updatedEmpDocument  EmpDocument[] @relation("EmpDocumentUpdateBy")
+
+  createdBranch Branch[] @relation("BranchCreateBy")
+  updatedBranch Branch[] @relation("BranchUpdateBy")
+
+  createdSite Site[] @relation("SiteCreateBy")
+  updatedSite Site[] @relation("SiteUpdateBy")
 }
 
 model User {
@@ -131,8 +141,8 @@ model Employment {
   employmentSsoNumber           String?     @db.VarChar(255)
   employmentSsoHospital         String?     @db.VarChar(255)
   employmentWorkStatus          WorkStatus? @default(CurrentEmployee)
-  employmentCreateBy            Int?
-  employmentCreateAt            DateTime?   @default(now()) @db.Timestamp()
+  employmentCreateBy            Int
+  employmentCreateAt            DateTime    @default(now()) @db.Timestamp()
   employmentUpdateBy            Int?
   employmentUpdateAt            DateTime?
 
@@ -143,6 +153,56 @@ model Employment {
 }
 
 model EmpDocument {
-  empDocumentId Int @id @default(autoincrement())
-  empDocumentEmployeeId Int
+  empDocumentId              Int       @id @default(autoincrement())
+  empDocumentEmployeeId      Int
+  empDocumentIdCardFile      String?   @db.VarChar(255)
+  empDocumentHomeFile        String?   @db.VarChar(255)
+  empDocumentSumFile         String?   @db.VarChar(255)
+  empDocumentPassportFile    String?   @db.VarChar(255)
+  empDocumentImmigrationFile String?   @db.VarChar(255)
+  empDocumentVisa1File       String?   @db.VarChar(255)
+  empDocumentVisa2File       String?   @db.VarChar(255)
+  empDocumentVisa3File       String?   @db.VarChar(255)
+  empDocumentVisa4File       String?   @db.VarChar(255)
+  empDocumentVisa5File       String?   @db.VarChar(255)
+  empDocumentWorkPermit1File String?   @db.VarChar(255)
+  empDocumentWorkPermit2File String?   @db.VarChar(255)
+  empDocumentWorkPermit3File String?   @db.VarChar(255)
+  empDocumentWorkPermit4File String?   @db.VarChar(255)
+  empDocumentWorkPermit5File String?   @db.VarChar(255)
+  empDocumentCreateBy        Int
+  empDocumentCreateAt        DateTime  @default(now()) @db.Timestamp()
+  empDocumentUpdateBy        Int?
+  empDocumentUpdateAt        DateTime?
+
+  EmpDocumentEmployeeBy Employee? @relation("EmpDocumentEmployeeBy", fields: [empDocumentEmployeeId], references: [employeeId])
+  EmpDocumentCreateBy   Employee? @relation("EmpDocumentCreateBy", fields: [empDocumentCreateBy], references: [employeeId])
+  EmpDocumentUpdateBy   Employee? @relation("EmpDocumentUpdateBy", fields: [empDocumentUpdateBy], references: [employeeId])
+}
+
+model Branch {
+  branchId       Int       @id @default(autoincrement())
+  branchName     String    @db.VarChar(255)
+  branchStatus   Status
+  branchCreateBy Int
+  branchCreateAt DateTime  @default(now()) @db.Timestamp()
+  branchUpdateBy Int?
+  branchUpdateAt DateTime?
+
+  BranchCreateBy Employee? @relation("BranchCreateBy", fields: [branchCreateBy], references: [employeeId])
+  BranchUpdateBy Employee? @relation("BranchUpdateBy", fields: [branchUpdateBy], references: [employeeId])
+}
+
+model Site {
+  siteId       Int       @id @default(autoincrement())
+  siteBranchId Int
+  siteName     String    @db.VarChar(255)
+  siteStatus   Status
+  siteCreateBy Int
+  siteCreateAt DateTime  @default(now()) @db.Timestamp()
+  siteUpdateBy Int?
+  siteUpdateAt DateTime?
+
+  SiteCreateBy Employee? @relation("SiteCreateBy", fields: [siteCreateBy], references: [employeeId])
+  SiteUpdateBy Employee? @relation("SiteUpdateBy", fields: [siteUpdateBy], references: [employeeId])
 }
