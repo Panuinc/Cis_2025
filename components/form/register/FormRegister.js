@@ -204,7 +204,7 @@ export default function FormRegister({
             labelPlacement="outside"
             size="lg"
             variant="bordered"
-            startContent={<User />}
+            startContent={<Gender />}
             value={formData.employeeGender || ""}
             selectedKeys={[formData.employeeGender] || ""}
             onChange={handleInputChange("employeeGender")}
