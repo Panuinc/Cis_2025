@@ -57,7 +57,7 @@ function MenuHeader({ icons, text, href }) {
 function MenuHeaderHide({ icons, onClick }) {
   return (
     <div
-      className="xl:hidden flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed  cursor-pointer"
+      className="xl:hidden flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed "
       onClick={onClick}
     >
       <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed ">
@@ -80,7 +80,7 @@ function MenuSub({ options, isOpen, isCollapsed }) {
             <Link
               key={index}
               href={option.href}
-              className={`flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed  cursor-pointer ${
+              className={`flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed  ${
                 isActive ? "text-success" : "bg-white text-dark"
               }`}
             >
@@ -130,7 +130,7 @@ function MenuMain({ icons, text, isCollapsed, options, isOpen, onToggle }) {
   return (
     <div className="flex flex-col items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed ">
       <div
-        className={`flex items-center justify-center w-full gap-2 border-2 border-dark border-dashed cursor-pointer ${
+        className={`flex items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed ${
           isActive ? "  text-success" : "bg-white text-dark"
         }`}
         onClick={handleMenuClick}
@@ -167,7 +167,7 @@ function MenuMain({ icons, text, isCollapsed, options, isOpen, onToggle }) {
 function MenuMainOther({ icons, text, onClick, isCollapsed }) {
   return (
     <div
-      className="flex items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed  cursor-pointer"
+      className="flex items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed "
       onClick={onClick}
     >
       <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed ">
@@ -423,7 +423,7 @@ export default function UiLayout({ children }) {
               />
               <MenuMain
                 icons={<Hr />}
-                text="HR Department"
+                text="HR Dep"
                 isCollapsed={isCollapsed}
                 options={[
                   { label: "Branch", href: "/branch" },
@@ -435,7 +435,7 @@ export default function UiLayout({ children }) {
               />
               <MenuMain
                 icons={<IT />}
-                text="IT Department"
+                text="IT Dep"
                 isCollapsed={isCollapsed}
                 options={[
                   { label: "Backup", href: "/backup" },
@@ -446,7 +446,7 @@ export default function UiLayout({ children }) {
               />
               <MenuMain
                 icons={<Ac />}
-                text="AC Department"
+                text="AC Dep"
                 isCollapsed={isCollapsed}
                 options={[
                   { label: "Option A", href: "/OptionA" },
@@ -457,7 +457,7 @@ export default function UiLayout({ children }) {
               />
               <MenuMain
                 icons={<Pu />}
-                text="PU Department"
+                text="PU Dep"
                 isCollapsed={isCollapsed}
                 options={[
                   { label: "Option C", href: "/OptionC" },
@@ -468,7 +468,7 @@ export default function UiLayout({ children }) {
               />
               <MenuMain
                 icons={<En />}
-                text="EN Department"
+                text="EN Dep"
                 isCollapsed={isCollapsed}
                 options={[
                   { label: "Option E", href: "/OptionE" },
