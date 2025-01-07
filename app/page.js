@@ -7,7 +7,7 @@ import { Logout, User } from "@/components/icons/icons";
 
 export default function Index() {
   return (
-    <div className="flex flex-col items-center justify-center w-full min-h-[500px] xl:w-4/12 p-2 gap-2 border-2 border-dark border-dashed bg-white rounded-3xl shadow-sm">
+    <form className="flex flex-col items-center justify-center w-full min-h-[500px] xl:w-4/12 p-2 gap-2 border-2 border-dark border-dashed bg-white rounded-3xl shadow-sm">
       <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <Image
           width={100}
@@ -64,6 +64,6 @@ export default function Index() {
           Register
         </Link>
       </div>
-    </div>
+    </form>
   );
 }
