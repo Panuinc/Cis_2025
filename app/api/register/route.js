@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
 import prisma from "@/lib/prisma";
 import { registerSchema } from "@/app/api/register/registerSchema";
 import { checkRateLimit } from "@/lib/rateLimit";
