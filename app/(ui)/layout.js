@@ -80,7 +80,7 @@ function MenuSub({ options, isOpen, isCollapsed }) {
             <Link
               key={index}
               href={option.href}
-              className={`flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed  ${
+              className={`flex items-center justify-start w-full h-full px-4 py-2 gap-2 border-2 border-dark border-dashed  ${
                 isActive ? "text-success" : "bg-white text-dark"
               }`}
             >
@@ -128,7 +128,7 @@ function MenuMain({ icons, text, isCollapsed, options, isOpen, onToggle }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed ">
+    <div className="flex flex-col items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed cursor-pointer">
       <div
         className={`flex items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed ${
           isActive ? "  text-success" : "bg-white text-dark"
@@ -167,7 +167,7 @@ function MenuMain({ icons, text, isCollapsed, options, isOpen, onToggle }) {
 function MenuMainOther({ icons, text, onClick, isCollapsed }) {
   return (
     <div
-      className="flex items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed "
+      className="flex items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed cursor-pointer"
       onClick={onClick}
     >
       <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed ">
