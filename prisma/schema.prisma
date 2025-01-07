@@ -89,8 +89,20 @@ model Employee {
   createdBranch Branch[] @relation("BranchCreateBy")
   updatedBranch Branch[] @relation("BranchUpdateBy")
 
+  createdRole Role[] @relation("RoleCreateBy")
+  updatedRole Role[] @relation("RoleUpdateBy")
+
   createdSite Site[] @relation("SiteCreateBy")
   updatedSite Site[] @relation("SiteUpdateBy")
+
+  createdDivision Division[] @relation("DivisionCreateBy")
+  updatedDivision Division[] @relation("DivisionUpdateBy")
+
+  createdDepartment Department[] @relation("DepartmentCreateBy")
+  updatedDepartment Department[] @relation("DepartmentUpdateBy")
+
+  createdPosition Position[] @relation("PositionCreateBy")
+  updatedPosition Position[] @relation("PositionUpdateBy")
 }
 
 model User {
@@ -150,6 +162,13 @@ model Employment {
   EmploymentParentBy   Employee? @relation("EmploymentParentBy", fields: [employmentParentId], references: [employeeId])
   EmploymentCreateBy   Employee? @relation("EmploymentCreatedBy", fields: [employmentCreateBy], references: [employeeId])
   EmploymentUpdateBy   Employee? @relation("EmploymentUpdatedBy", fields: [employmentUpdateBy], references: [employeeId])
+
+  EmploymentBranchId     Branch?     @relation("EmploymentBranchId", fields: [employmentBranchId], references: [branchId])
+  EmploymentRoleId       Role?       @relation("EmploymentRoleId", fields: [employmentRoleId], references: [roleId])
+  EmploymentSiteId       Site?       @relation("EmploymentSiteId", fields: [employmentSiteId], references: [siteId])
+  EmploymentDivisionId   Division?   @relation("EmploymentDivisionId", fields: [employmentDivisionId], references: [divisionId])
+  EmploymentDepartmentId Department? @relation("EmploymentDepartmentId", fields: [employmentDepartmentId], references: [departmentId])
+  EmploymentPositionId   Position?   @relation("EmploymentPositionId", fields: [employmentPositionId], references: [positionId])
 }
 
 model EmpDocument {
@@ -191,6 +210,27 @@ model Branch {
 
   BranchCreateBy Employee? @relation("BranchCreateBy", fields: [branchCreateBy], references: [employeeId])
   BranchUpdateBy Employee? @relation("BranchUpdateBy", fields: [branchUpdateBy], references: [employeeId])
+
+  branchIdEmployment Employment[] @relation("EmploymentBranchId")
+  branchIdSite       Site[]       @relation("SiteBranchId")
+  branchIdDivision   Division[]   @relation("DivisionBranchId")
+  branchIdDepartment Department[] @relation("DepartmentBranchId")
+  branchIdPosition   Position[]   @relation("PositionBranchId")
+}
+
+model Role {
+  roleId       Int       @id @default(autoincrement())
+  roleName     String    @db.VarChar(255)
+  roleStatus   Status
+  roleCreateBy Int
+  roleCreateAt DateTime  @default(now()) @db.Timestamp()
+  roleUpdateBy Int?
+  roleUpdateAt DateTime?
+
+  RoleCreateBy Employee? @relation("RoleCreateBy", fields: [roleCreateBy], references: [employeeId])
+  RoleUpdateBy Employee? @relation("RoleUpdateBy", fields: [roleUpdateBy], references: [employeeId])
+
+  roleIdEmployment Employment[] @relation("EmploymentRoleId")
 }
 
 model Site {
@@ -205,4 +245,67 @@ model Site {
 
   SiteCreateBy Employee? @relation("SiteCreateBy", fields: [siteCreateBy], references: [employeeId])
   SiteUpdateBy Employee? @relation("SiteUpdateBy", fields: [siteUpdateBy], references: [employeeId])
+  SiteBranchId Branch?   @relation("SiteBranchId", fields: [siteBranchId], references: [branchId])
+
+  siteIdEmployment Employment[] @relation("EmploymentSiteId")
+}
+
+model Division {
+  divisionId       Int       @id @default(autoincrement())
+  divisionBranchId Int
+  divisionName     String    @db.VarChar(255)
+  divisionStatus   Status
+  divisionCreateBy Int
+  divisionCreateAt DateTime  @default(now()) @db.Timestamp()
+  divisionUpdateBy Int?
+  divisionUpdateAt DateTime?
+
+  DivisionCreateBy Employee? @relation("DivisionCreateBy", fields: [divisionCreateBy], references: [employeeId])
+  DivisionUpdateBy Employee? @relation("DivisionUpdateBy", fields: [divisionUpdateBy], references: [employeeId])
+  DivisionBranchId Branch?   @relation("DivisionBranchId", fields: [divisionBranchId], references: [branchId])
+
+  divisionIdDepartment Department[] @relation("DepartmentDivisionId")
+  divisionIdPosition   Position[]   @relation("PositionDivisionId")
+  divisionIdEmployment Employment[] @relation("EmploymentDivisionId")
+}
+
+model Department {
+  departmentId         Int       @id @default(autoincrement())
+  departmentBranchId   Int
+  departmentDivisionId Int
+  departmentName       String    @db.VarChar(255)
+  departmentStatus     Status
+  departmentCreateBy   Int
+  departmentCreateAt   DateTime  @default(now()) @db.Timestamp()
+  departmentUpdateBy   Int?
+  departmentUpdateAt   DateTime?
+
+  DepartmentCreateBy   Employee? @relation("DepartmentCreateBy", fields: [departmentCreateBy], references: [employeeId])
+  DepartmentUpdateBy   Employee? @relation("DepartmentUpdateBy", fields: [departmentUpdateBy], references: [employeeId])
+  DepartmentBranchId   Branch?   @relation("DepartmentBranchId", fields: [departmentBranchId], references: [branchId])
+  DepartmentDivisionId Division? @relation("DepartmentDivisionId", fields: [departmentDivisionId], references: [divisionId])
+
+  departmentIdPosition   Position[]   @relation("PositionDepartmentId")
+  departmentIdEmployment Employment[] @relation("EmploymentDepartmentId")
+}
+
+model Position {
+  positionId           Int       @id @default(autoincrement())
+  positionBranchId     Int
+  positionDivisionId   Int
+  positionDepartmentId Int
+  positionName         String    @db.VarChar(255)
+  positionStatus       Status
+  positionCreateBy     Int
+  positionCreateAt     DateTime  @default(now()) @db.Timestamp()
+  positionUpdateBy     Int?
+  positionUpdateAt     DateTime?
+
+  PositionCreateBy     Employee?   @relation("PositionCreateBy", fields: [positionCreateBy], references: [employeeId])
+  PositionUpdateBy     Employee?   @relation("PositionUpdateBy", fields: [positionUpdateBy], references: [employeeId])
+  PositionBranchId     Branch?     @relation("PositionBranchId", fields: [positionBranchId], references: [branchId])
+  PositionDivisionId   Division?   @relation("PositionDivisionId", fields: [positionDivisionId], references: [divisionId])
+  PositionDepartmentId Department? @relation("PositionDepartmentId", fields: [positionDepartmentId], references: [departmentId])
+
+  positionIdEmployment Employment[] @relation("EmploymentPositionId")
 }
