@@ -1,176 +1,98 @@
 "use client";
-import React from "react";
-import { Input, Button, DatePicker } from "@nextui-org/react";
-import Link from "next/link";
-import { Logout, User, Email, Contact, Hr, Gender, LeaveWork } from "@/components/icons/icons";
+import React, { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
+import FormRegister from "@/components/form/register/FormRegister";
 
-export default function Index() {
+export default function Register() {
+  const router = useRouter();
+  const [errors, setErrors] = useState({});
+  const formRef = useRef(null);
+
+  const [formData, setFormData] = useState({
+    employeeTitle: "",
+    employeeFirstname: "",
+    employeeLastname: "",
+    employeeNickname: "",
+    employeeEmail: "",
+    employeeTel: "",
+    employeeIdCard: "",
+    employeeCitizen: "",
+    employeeGender: "",
+    employeeBirthday: "",
+  });
+
+  const handleInputChange = (field) => (e) => {
+    let value;
+    if (e && e.target) {
+      value = e.target.value;
+    } else {
+      value = e;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+
+    if (errors[field]) {
+      setErrors((prev) => ({
+        ...prev,
+        [field]: null,
+      }));
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const formDataObject = new FormData(formRef.current);
+
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        body: formDataObject,
+        headers: {
+          "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
+        },
+      });
+
+      const jsonData = await res.json();
+
+      if (res.ok) {
+        toast.success(jsonData.message);
+        setTimeout(() => {
+          router.push("/");
+        }, 2000);
+      } else {
+        if (jsonData.details) {
+          const fieldErrorObj = {};
+          jsonData.details.forEach((err) => {
+            const fieldName = err.field && err.field[0];
+            if (fieldName) {
+              fieldErrorObj[fieldName] = err.message;
+            }
+          });
+          setErrors(fieldErrorObj);
+        }
+        toast.error(jsonData.error || "Error Register");
+      }
+    } catch (error) {
+      toast.error("Error Register: " + error.message);
+    }
+  };
+
   return (
-    <form className="flex flex-col items-center justify-start w-full h-full xl:w-4/12 p-2 gap-2 border-2 border-dark border-dashed bg-white rounded-3xl shadow-sm overflow-auto">
-      <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-        Register
-      </div>
-      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <Input
-            type="text"
-            label="Title"
-            placeholder="Please Enter Data"
-            labelPlacement="outside"
-            size="lg"
-            variant="bordered"
-            startContent={<User />}
-            // value={userUsername}
-            // onChange={(e) => setUserUsername(e.target.value)}
-            // isRequired={true}
-          />
-        </div>
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <Input
-            type="text"
-            label="Firstname"
-            placeholder="Please Enter Data"
-            labelPlacement="outside"
-            size="lg"
-            variant="bordered"
-            startContent={<User />}
-            // value={userPassword}
-            // onChange={(e) => setUserPassword(e.target.value)}
-            // isRequired={true}
-          />
-        </div>
-      </div>
-      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <Input
-            type="text"
-            label="Lastname"
-            placeholder="Please Enter Data"
-            labelPlacement="outside"
-            size="lg"
-            variant="bordered"
-            startContent={<User />}
-            // value={userUsername}
-            // onChange={(e) => setUserUsername(e.target.value)}
-            // isRequired={true}
-          />
-        </div>
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <Input
-            type="text"
-            label="Nickname"
-            placeholder="Please Enter Data"
-            labelPlacement="outside"
-            size="lg"
-            variant="bordered"
-            startContent={<User />}
-            // value={userPassword}
-            // onChange={(e) => setUserPassword(e.target.value)}
-            // isRequired={true}
-          />
-        </div>
-      </div>
-      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <Input
-            type="email"
-            label="Email"
-            placeholder="Please Enter Data"
-            labelPlacement="outside"
-            size="lg"
-            variant="bordered"
-            startContent={<Email />}
-            // value={userUsername}
-            // onChange={(e) => setUserUsername(e.target.value)}
-            // isRequired={true}
-          />
-        </div>
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <Input
-            type="number"
-            label="Telephone"
-            placeholder="Please Enter Data"
-            labelPlacement="outside"
-            size="lg"
-            variant="bordered"
-            startContent={<Contact />}
-            // value={userPassword}
-            // onChange={(e) => setUserPassword(e.target.value)}
-            // isRequired={true}
-          />
-        </div>
-      </div>
-      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <Input
-            type="number"
-            label="ID Card"
-            placeholder="Please Enter Data"
-            labelPlacement="outside"
-            size="lg"
-            variant="bordered"
-            startContent={<Hr />}
-            // value={userUsername}
-            // onChange={(e) => setUserUsername(e.target.value)}
-            // isRequired={true}
-          />
-        </div>
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <Input
-            type="text"
-            label="Citizen"
-            placeholder="Please Enter Data"
-            labelPlacement="outside"
-            size="lg"
-            variant="bordered"
-            startContent={<User />}
-            // value={userPassword}
-            // onChange={(e) => setUserPassword(e.target.value)}
-            // isRequired={true}
-          />
-        </div>
-      </div>
-      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <Input
-            type="text"
-            label="Gender"
-            placeholder="Please Enter Data"
-            labelPlacement="outside"
-            size="lg"
-            variant="bordered"
-            startContent={<Gender />}
-            // value={userUsername}
-            // onChange={(e) => setUserUsername(e.target.value)}
-            // isRequired={true}
-          />
-        </div>
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <DatePicker
-            type="text"
-            label="Birthday"
-            placeholder="Please Enter Data"
-            labelPlacement="outside"
-            size="lg"
-            variant="bordered"
-            startContent={<LeaveWork />}
-            // value={userPassword}
-            // onChange={(e) => setUserPassword(e.target.value)}
-            // isRequired={true}
-          />
-        </div>
-      </div>
-      <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-        <Button size="lg" color="success" className="w-1/2" type="submit">
-          Register
-        </Button>
-      </div>
-      <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-        If You Have Account
-        <Link href="/" className="font-[600] text-success">
-          Login
-        </Link>
-      </div>
-    </form>
+    <>
+      <Toaster position="top-right" />
+      <FormRegister
+        formRef={formRef}
+        onSubmit={handleSubmit}
+        errors={errors}
+        setErrors={setErrors}
+        formData={formData}
+        handleInputChange={handleInputChange}
+      />
+    </>
   );
 }
