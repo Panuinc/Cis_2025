@@ -4,6 +4,9 @@ import { Input, Tooltip } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import Loading from "@/components/Loading";
 import {
   Ac,
   Bell,
@@ -179,6 +182,9 @@ function MenuMainOther({ icons, text, onClick, isCollapsed }) {
 }
 
 export default function UiLayout({ children }) {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -240,6 +246,26 @@ export default function UiLayout({ children }) {
     };
   }, [isMobileMenuOpen, isMobileHeaderOpen]);
 
+  useEffect(() => {
+    if (!session && status !== "loading") {
+      toast.error("Please log in before making a transaction", {
+        duration: 1000,
+      });
+      router.push("/");
+    }
+  }, [session, status, router]);
+
+  if (status === "loading") {
+    return (
+      <div className="flex items-center justify-center w-full min-h-screen">
+        <Loading />
+      </div>
+    );
+  }
+
+  if (!session) {
+    return null;
+  }
   return (
     <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
       <div className="flex flex-row items-center justify-between w-full h-20 p-2 gap-4 border-2 border-dark border-dashed">
@@ -459,6 +485,11 @@ export default function UiLayout({ children }) {
             icons={<Logout />}
             text="Logout"
             isCollapsed={isCollapsed}
+            onClick={() => {
+              signOut({
+                callbackUrl: "/",
+              });
+            }}
           />
         </div>
         <div
