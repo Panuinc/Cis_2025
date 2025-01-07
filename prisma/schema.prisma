@@ -108,8 +108,8 @@ model Employee {
 model User {
   userId         Int       @id @default(autoincrement())
   userEmployeeId Int
-  userUsername   String    @db.VarChar(255)
-  userPassword   String    @db.VarChar(255)
+  userUsername   String?    @db.VarChar(255)
+  userPassword   String?    @db.VarChar(255)
   userCreateBy   Int
   userCreateAt   DateTime  @default(now()) @db.Timestamp()
   userUpdateBy   Int?

@@ -24,14 +24,18 @@ export async function POST(request) {
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
 
-    const parsedData = registerSchema.parse(data);
+    const parsedData = registerSchema.parse({
+      ...data,
+
+      employeeBirthday: new Date(data.employeeBirthday).toISOString(),
+    });
 
     logger.info({
       message: "Submitted Data",
       parsedData,
     });
 
-    const existingEmployee = await prisma.employee.findUnique({
+    const existingEmployee = await prisma.employee.findFirst({
       where: { employeeIdCard: parsedData.employeeIdCard },
     });
 
