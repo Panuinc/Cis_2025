@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
         className={`${sulphur_Point.variable} ${prompt.variable} antialiased`}
       >
         {/* <Provider> */}
-        <div className="flex items-center justify-center w-full h-screen bg-default text-dark">
+        <div className="flex items-center justify-center w-full h-screen p-2 gap-2 border-2 border-dark border-dashed bg-default text-dark">
           {children}
         </div>
         {/* </Provider> */}

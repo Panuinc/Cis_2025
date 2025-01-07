@@ -35,15 +35,15 @@ function MenuHeader({ icons, text, href }) {
   return (
     <Link
       href={href}
-      className={`flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ${
+      className={`flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed  ${
         isActive ? "  text-success" : "bg-white text-dark"
       }`}
       target="_blank"
     >
-      <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed ">
         {icons}
       </span>
-      <span className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <span className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
         {text}
       </span>
     </Link>
@@ -53,10 +53,10 @@ function MenuHeader({ icons, text, href }) {
 function MenuHeaderHide({ icons, onClick }) {
   return (
     <div
-      className="xl:hidden flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed cursor-pointer"
+      className="xl:hidden flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed  cursor-pointer"
       onClick={onClick}
     >
-      <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed ">
         {icons}
       </span>
     </div>
@@ -68,7 +68,7 @@ function MenuSub({ options, isOpen, isCollapsed }) {
 
   return (
     isOpen && (
-      <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
         {options.map((option, index) => {
           const isActive =
             pathname === option.href || pathname.startsWith(option.href);
@@ -76,7 +76,7 @@ function MenuSub({ options, isOpen, isCollapsed }) {
             <Link
               key={index}
               href={option.href}
-              className={`flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed cursor-pointer ${
+              className={`flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed  cursor-pointer ${
                 isActive ? "text-success" : "bg-white text-dark"
               }`}
             >
@@ -124,9 +124,9 @@ function MenuMain({ icons, text, isCollapsed, options, isOpen, onToggle }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed">
+    <div className="flex flex-col items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed ">
       <div
-        className={`flex items-center justify-center w-full gap-2 cursor-pointer ${
+        className={`flex items-center justify-center w-full gap-2 border-2 border-dark border-dashed cursor-pointer ${
           isActive ? "  text-success" : "bg-white text-dark"
         }`}
         onClick={handleMenuClick}
@@ -141,17 +141,17 @@ function MenuMain({ icons, text, isCollapsed, options, isOpen, onToggle }) {
           showArrow={true}
           delay={100}
         >
-          <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed ">
             {icons}
           </span>
         </Tooltip>
         {!isCollapsed && (
-          <span className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <span className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
             {text}
           </span>
         )}
         {!isCollapsed && (
-          <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed ">
             <Down />
           </span>
         )}
@@ -163,14 +163,14 @@ function MenuMain({ icons, text, isCollapsed, options, isOpen, onToggle }) {
 function MenuMainOther({ icons, text, onClick, isCollapsed }) {
   return (
     <div
-      className="flex items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed cursor-pointer"
+      className="flex items-center justify-center w-full full p-2 gap-2 border-2 border-dark border-dashed  cursor-pointer"
       onClick={onClick}
     >
-      <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <span className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed ">
         {icons}
       </span>
       {!isCollapsed && (
-        <span className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed font-[600]">
+        <span className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed  font-[600]">
           {text}
         </span>
       )}
@@ -241,28 +241,28 @@ export default function UiLayout({ children }) {
   }, [isMobileMenuOpen, isMobileHeaderOpen]);
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2">
-      <div className="flex flex-row items-center justify-between w-full h-20 p-2 gap-4">
+    <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <div className="flex flex-row items-center justify-between w-full h-20 p-2 gap-4 border-2 border-dark border-dashed">
         <div
-          className="xl:hidden flex items-center justify-center h-full p-2 gap-2 bg-white rounded-full"
+          className="xl:hidden flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full"
           onClick={handleOpenMobileMenu}
         >
-          <div className="flex items-center justify-center w-full h-full p-2 gap-2">
+          <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
             <Cis />
           </div>
-          <div className="flex items-center justify-center w-full h-full p-2 gap-2 font-[600] text-xl text-success">
+          <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed font-[600] text-xl text-success">
             CIS
           </div>
         </div>
-        <div className="hidden xl:flex flex-row items-center justify-center h-full px-4 py-2 gap-2 bg-white rounded-full">
-          <div className="flex items-center justify-center w-full h-full p-2 gap-2">
+        <div className="hidden xl:flex flex-row items-center justify-center h-full px-4 py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
+          <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
             <Cis />
           </div>
-          <div className="flex items-center justify-center w-full h-full p-2 gap-2 font-[600] text-xl text-success">
+          <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed font-[600] text-xl text-success">
             CIS
           </div>
         </div>
-        <div className="hidden xl:flex flex-row items-center justify-between w-full h-full px-4 py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
+        <div className="hidden xl:flex flex-row items-center justify-between w-full h-full px-4 py-2 gap-2 border-2 border-dark border-dashed  bg-white rounded-full">
           <MenuHeaderHide icons={<Hidden />} onClick={toggleHeaderMenu} />
           <MenuHeader
             href="https://channakorn.co.th/"
@@ -301,11 +301,11 @@ export default function UiLayout({ children }) {
             target="_blank"
           />
         </div>
-        <div className="xl:hidden flex flex-col relative w-full h-full p-2 gap-2 bg-white border-2 border-dark border-dashed rounded-full">
+        <div className="xl:hidden flex flex-col relative w-full h-full p-2 gap-2 border-2 border-dark border-dashed bg-white  rounded-full">
           <MenuHeaderHide icons={<Hidden />} onClick={toggleHeaderMenu} />
           {isMobileHeaderOpen && (
             <div
-              className="absolute top-[100%] right-0 flex flex-col items-center justify-center w-[256px] p-2 mt-[20px] gap-2 bg-white border-2 border-dark border-dashed z-50"
+              className="absolute top-[100%] right-0 flex flex-col items-center justify-center w-[256px] p-2 mt-[20px] gap-2 border-2 border-dark border-dashed bg-white  z-50"
               ref={mobileHeaderRef}
             >
               <MenuHeader
@@ -333,8 +333,8 @@ export default function UiLayout({ children }) {
             </div>
           )}
         </div>
-        <div className="flex flex-row items-center justify-center h-full p-2 xl:px-4 xl:py-2 gap-2 bg-white rounded-full">
-          <div className="xl:flex hidden items-center justify-center w-60 h-full p-2 gap-2">
+        <div className="flex flex-row items-center justify-center h-full p-2 xl:px-4 xl:py-2 gap-2 border-2 border-dark border-dashed bg-white rounded-full">
+          <div className="xl:flex hidden items-center justify-center w-60 h-full p-2 gap-2 border-2 border-dark border-dashed">
             <Input
               type="text"
               placeholder="Search"
@@ -344,10 +344,10 @@ export default function UiLayout({ children }) {
               startContent={<Search />}
             />
           </div>
-          <div className="flex items-center justify-center w-10 h-10 p-2 gap-2 bg-default rounded-full">
+          <div className="flex items-center justify-center w-10 h-10 p-2 gap-2 border-2 border-dark border-dashed bg-default rounded-full">
             <Bell />
           </div>
-          <div className="flex items-center justify-center w-10 h-10 p-2 gap-2 bg-success rounded-full">
+          <div className="flex items-center justify-center w-10 h-10 p-2 gap-2 border-2 border-dark border-dashed bg-success rounded-full">
             <Image
               width={25}
               height={25}
@@ -367,7 +367,7 @@ export default function UiLayout({ children }) {
             flex-col items-center justify-between
             ${isCollapsed ? "xl:w-[10%]" : "xl:w-[25%]"}
             w-[80%] 
-            h-full p-2 gap-2 border-2 border-dark border-dashed 
+            h-full p-2 gap-2 border-2 border-dark border-dashed  
             overflow-auto bg-white rounded-3xl fixed xl:static
             top-0 left-0 z-50
           `}
@@ -378,7 +378,7 @@ export default function UiLayout({ children }) {
             isCollapsed={isCollapsed}
             onClick={handleToggleMenu}
           />
-          <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed overflow-auto">
+          <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed  overflow-auto">
             <MenuMain
               icons={<Dashboard />}
               text="Dashboard"
@@ -466,12 +466,12 @@ export default function UiLayout({ children }) {
             flex flex-col items-center justify-between
             ${!isMobileMenuOpen ? "w-[100%]" : "w-[100%]"}
             xl:${isCollapsed ? "w-[90%]" : "w-[75%]"}
-            h-full p-2 gap-2 border-2 border-dark border-dashed 
+            h-full p-2 gap-2 border-2 border-dark border-dashed  
             overflow-auto bg-white rounded-3xl
             transition-all
           `}
         >
-          <div className="flex flex-col items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
+          <div className="flex flex-col items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed ">
             {children}
           </div>
         </div>
