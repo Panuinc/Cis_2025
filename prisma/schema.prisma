@@ -121,11 +121,11 @@ model User {
 }
 
 model Employment {
-  employmentId                  Int         @id @default(autoincrement())
+  employmentId                  Int            @id @default(autoincrement())
   employmentEmployeeId          Int
-  employmentNumber              String?     @db.VarChar(255)
-  employmentCardNumber          String?     @db.VarChar(255)
-  employmentType                String?     @db.VarChar(255)
+  employmentNumber              String?        @db.VarChar(255)
+  employmentCardNumber          String?        @db.VarChar(255)
+  employmentType                EmploymentType?
   employmentBranchId            Int?
   employmentSiteId              Int?
   employmentDivisionId          Int?
@@ -134,27 +134,27 @@ model Employment {
   employmentRoleId              Int?
   employmentParentId            Int?
   employmentStartWork           DateTime?
-  employmentEnterType           String?     @db.VarChar(255)
-  employmentPassportNumber      String?     @db.VarChar(255)
+  employmentEnterType           String?        @db.VarChar(255)
+  employmentPassportNumber      String?        @db.VarChar(255)
   employmentPassportStartDate   DateTime?
   employmentPassportEndDate     DateTime?
-  employmentPassportIssuedBy    String?     @db.VarChar(255)
-  employmentPlaceOfBirth        String?     @db.VarChar(255)
-  employmentEnterCheckPoint     String?     @db.VarChar(255)
+  employmentPassportIssuedBy    String?        @db.VarChar(255)
+  employmentPlaceOfBirth        String?        @db.VarChar(255)
+  employmentEnterCheckPoint     String?        @db.VarChar(255)
   employmentEnterDate           DateTime?
-  employmentImmigration         String?     @db.VarChar(255)
-  employmentTypeOfVisa          String?     @db.VarChar(255)
-  employmentVisaNumber          String?     @db.VarChar(255)
-  employmentVisaIssuedBy        String?     @db.VarChar(255)
-  employmentWorkPermitNumber    String?     @db.VarChar(255)
+  employmentImmigration         String?        @db.VarChar(255)
+  employmentTypeOfVisa          String?        @db.VarChar(255)
+  employmentVisaNumber          String?        @db.VarChar(255)
+  employmentVisaIssuedBy        String?        @db.VarChar(255)
+  employmentWorkPermitNumber    String?        @db.VarChar(255)
   employmentWorkPermitStartDate DateTime?
   employmentWorkPermitEndDate   DateTime?
-  employmentWorkPermitIssuedBy  String?     @db.VarChar(255)
-  employmentSsoNumber           String?     @db.VarChar(255)
-  employmentSsoHospital         String?     @db.VarChar(255)
-  employmentWorkStatus          WorkStatus? @default(CurrentEmployee)
+  employmentWorkPermitIssuedBy  String?        @db.VarChar(255)
+  employmentSsoNumber           String?        @db.VarChar(255)
+  employmentSsoHospital         String?        @db.VarChar(255)
+  employmentWorkStatus          WorkStatus?    @default(CurrentEmployee)
   employmentCreateBy            Int
-  employmentCreateAt            DateTime    @default(now()) @db.Timestamp()
+  employmentCreateAt            DateTime       @default(now()) @db.Timestamp()
   employmentUpdateBy            Int?
   employmentUpdateAt            DateTime?
 
