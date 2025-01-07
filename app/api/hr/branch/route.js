@@ -1,9 +1,22 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
-import { branchPosteSchema } from "@/app/api/hr/branch/branchSchema";
+import { handleErrors, handleGetErrors } from "@/lib/errorHandler";
+import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
 import logger from "@/lib/logger";
-import { verifySecretToken } from "@/lib/auth";
+import prisma from "@/lib/prisma";
+
+function formatBranchData(branch) {
+  return branch.map((b) => ({
+    ...b,
+    branchCreateAt: new Date(b.branchCreateAt)
+      .toISOString()
+      .replace("T", " ")
+      .slice(0, 19),
+    branchUpdateAt: b.branchUpdateAt
+      ? new Date(b.branchUpdateAt).toISOString().replace("T", " ").slice(0, 19)
+      : null,
+  }));
+}
 
 export async function GET(request) {
   let ip;
@@ -11,189 +24,74 @@ export async function GET(request) {
     ip = request.headers.get("x-forwarded-for") || request.ip || "unknown";
 
     verifySecretToken(request.headers);
-
     await checkRateLimit(ip);
 
-    const branch = await prisma.branch.findMany({
+    const branches = await prisma.branch.findMany({
       include: {
         BranchCreateBy: {
-          select: {
-            employeeFirstname: true,
-            employeeLastname: true,
-          },
+          select: { employeeFirstname: true, employeeLastname: true },
         },
         BranchUpdateBy: {
-          select: {
-            employeeFirstname: true,
-            employeeLastname: true,
-          },
+          select: { employeeFirstname: true, employeeLastname: true },
         },
       },
     });
 
-    if (!branch || branch.length === 0) {
+    if (!branches || branches.length === 0) {
       return NextResponse.json(
         { error: "No branch data found" },
         { status: 404 }
       );
     }
 
-    const formattedBranch = branch.map((b) => ({
-      ...b,
-      branchCreateAt: new Date(b.branchCreateAt)
-        .toISOString()
-        .replace("T", " ")
-        .slice(0, 19),
-      branchUpdateAt: b.branchUpdateAt
-        ? new Date(b.branchUpdateAt)
-            .toISOString()
-            .replace("T", " ")
-            .slice(0, 19)
-        : null,
-    }));
+    const formattedBranches = formatBranchData(branches);
 
     return NextResponse.json(
       {
         message: "Branch data retrieved successfully",
-        branch: formattedBranch,
+        branches: formattedBranches,
       },
       { status: 200 }
     );
   } catch (error) {
-    return handleGetErrors(error, ip);
+    return handleGetErrors(error, ip, "Error retrieving branch data");
   }
-}
-
-function handleGetErrors(error, ip) {
-  if (error.message === "RateLimitExceeded") {
-    return NextResponse.json(
-      { error: "Too many requests, please try again later" },
-      { status: 429 }
-    );
-  }
-
-  if (error.status === 401) {
-    return NextResponse.json(
-      { error: "Access denied due to missing or invalid token" },
-      { status: 401 }
-    );
-  }
-
-  return NextResponse.json(
-    { error: "An error occurred while retrieving branch data" },
-    { status: 500 }
-  );
 }
 
 export async function POST(request) {
-  let ip;
-  try {
-    ip = request.headers.get("x-forwarded-for") || request.ip || "unknown";
-
-    verifySecretToken(request.headers);
-
-    logger.info({
-      message: "New request received: Creating branch data",
-      ip,
-      route: "/api/hr/branch",
-    });
-
-    await checkRateLimit(ip);
-
-    const formData = await request.formData();
-    const data = Object.fromEntries(formData);
-
-    const parsedData = branchPosteSchema.parse(data);
-
-    logger.info({
-      message: "Received data",
-      parsedData,
-    });
-
-    const existingBranch = await prisma.branch.findFirst({
-      where: { branchName: parsedData.branchName },
-    });
-
-    if (existingBranch) {
-      logger.warn({
-        message: "Branch already exists",
-        branch: parsedData.branchName,
+    let ip;
+    try {
+      ip = request.headers.get("x-forwarded-for") || request.ip || "unknown";
+  
+      verifySecretToken(request.headers);
+      await checkRateLimit(ip);
+  
+      const formData = await request.formData();
+      const data = Object.fromEntries(formData);
+  
+      // แปลงค่า branchCreateBy ให้เป็น Int
+      const parsedData = {
+        ...data,
+        branchCreateBy: parseInt(data.branchCreateBy, 10),
+      };
+  
+      const now = new Date();
+      const offsetMillis = 7 * 60 * 60 * 1000; // Timezone offset for UTC+7
+      const localNow = new Date(now.getTime() + offsetMillis);
+      localNow.setMilliseconds(0);
+  
+      const newBranch = await prisma.branch.create({
+        data: {
+          ...parsedData,
+          branchCreateAt: localNow,
+        },
       });
+  
       return NextResponse.json(
-        { error: "This branch already exists" },
-        { status: 400 }
+        { message: "Successfully created new branch", branch: newBranch },
+        { status: 201 }
       );
+    } catch (error) {
+      return handleErrors(error, ip, "Error creating branch data");
     }
-
-    const now = new Date();
-    const offsetMillis = 7 * 60 * 60 * 1000;
-    const localNow = new Date(now.getTime() + offsetMillis);
-    localNow.setMilliseconds(0);
-
-    const newBranch = await prisma.branch.create({
-      data: {
-        ...parsedData,
-        branchCreateAt: localNow,
-      },
-    });
-
-    logger.info({
-      message: "Successfully created new branch data",
-      BranchName: newBranch.branchName,
-    });
-
-    return NextResponse.json(
-      { message: "Successfully created new branch", branch: newBranch },
-      { status: 201 }
-    );
-  } catch (error) {
-    return handleErrors(error, ip);
   }
-}
-
-function handleErrors(error, ip) {
-  if (error.message === "RateLimitExceeded") {
-    logger.warn({
-      message: "Too many requests, please try again later",
-      ip,
-    });
-    return NextResponse.json(
-      { error: "Too many requests, please try again later" },
-      { status: 429 }
-    );
-  }
-
-  if (error.name === "ZodError") {
-    logger.error({
-      message: "Invalid data submitted",
-      details: error.errors,
-    });
-    return NextResponse.json(
-      {
-        error: "Invalid data submitted",
-        details: error.errors.map((e) => ({
-          field: e.path,
-          message: e.message,
-        })),
-      },
-      { status: 400 }
-    );
-  }
-
-  if (error.status === 401) {
-    return NextResponse.json(
-      { error: "Access denied due to missing or invalid token" },
-      { status: 401 }
-    );
-  }
-
-  logger.error({
-    message: "An error occurred while updating branch data",
-    error: error.message,
-  });
-
-  return NextResponse.json(
-    { error: "An error occurred while updating branch data" },
-    { status: 500 }
-  );
-}
