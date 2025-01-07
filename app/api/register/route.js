@@ -89,7 +89,7 @@ export async function POST(request) {
 
     logger.info({
       message: "Account Registration Successful",
-      EmployeeName: newEmployee.employeeFirstname + employeeLastname,
+      EmployeeFullName: `${newEmployee.employeeFirstname} ${newEmployee.employeeLastname}`,
     });
 
     return NextResponse.json(
