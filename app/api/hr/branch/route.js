@@ -60,25 +60,29 @@ export async function GET(request) {
       { status: 200 }
     );
   } catch (error) {
-    if (error.message === "RateLimitExceeded") {
-      return NextResponse.json(
-        { error: "Too many requests, please try again later" },
-        { status: 429 }
-      );
-    }
+    return handleGetErrors(error, ip);
+  }
+}
 
-    if (error.status === 401) {
-      return NextResponse.json(
-        { error: "Access denied due to missing or invalid token" },
-        { status: 401 }
-      );
-    }
-
+function handleGetErrors(error, ip) {
+  if (error.message === "RateLimitExceeded") {
     return NextResponse.json(
-      { error: "An error occurred while retrieving branch data" },
-      { status: 500 }
+      { error: "Too many requests, please try again later" },
+      { status: 429 }
     );
   }
+
+  if (error.status === 401) {
+    return NextResponse.json(
+      { error: "Access denied due to missing or invalid token" },
+      { status: 401 }
+    );
+  }
+
+  return NextResponse.json(
+    { error: "An error occurred while retrieving branch data" },
+    { status: 500 }
+  );
 }
 
 export async function POST(request) {
@@ -143,49 +147,53 @@ export async function POST(request) {
       { status: 201 }
     );
   } catch (error) {
-    if (error.message === "RateLimitExceeded") {
-      logger.warn({
-        message: "Too many requests, please try again later",
-        ip,
-      });
-      return NextResponse.json(
-        { error: "Too many requests, please try again later" },
-        { status: 429 }
-      );
-    }
+    return handleErrors(error, ip);
+  }
+}
 
-    if (error.name === "ZodError") {
-      logger.error({
-        message: "Invalid data submitted",
-        details: error.errors,
-      });
-      return NextResponse.json(
-        {
-          error: "Invalid data submitted",
-          details: error.errors.map((e) => ({
-            field: e.path,
-            message: e.message,
-          })),
-        },
-        { status: 400 }
-      );
-    }
-
-    if (error.status === 401) {
-      return NextResponse.json(
-        { error: "Access denied due to missing or invalid token" },
-        { status: 401 }
-      );
-    }
-
-    logger.error({
-      message: "An error occurred while creating branch data",
-      error: error.message,
+function handleErrors(error, ip) {
+  if (error.message === "RateLimitExceeded") {
+    logger.warn({
+      message: "Too many requests, please try again later",
+      ip,
     });
-
     return NextResponse.json(
-      { error: "An error occurred while creating branch data" },
-      { status: 500 }
+      { error: "Too many requests, please try again later" },
+      { status: 429 }
     );
   }
+
+  if (error.name === "ZodError") {
+    logger.error({
+      message: "Invalid data submitted",
+      details: error.errors,
+    });
+    return NextResponse.json(
+      {
+        error: "Invalid data submitted",
+        details: error.errors.map((e) => ({
+          field: e.path,
+          message: e.message,
+        })),
+      },
+      { status: 400 }
+    );
+  }
+
+  if (error.status === 401) {
+    return NextResponse.json(
+      { error: "Access denied due to missing or invalid token" },
+      { status: 401 }
+    );
+  }
+
+  logger.error({
+    message: "An error occurred while updating branch data",
+    error: error.message,
+  });
+
+  return NextResponse.json(
+    { error: "An error occurred while updating branch data" },
+    { status: 500 }
+  );
 }
