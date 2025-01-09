@@ -16,21 +16,21 @@ import {
   Chip,
 } from "@nextui-org/react";
 
-const roleStatusColorMap = {
+const departmentStatusColorMap = {
   active: "success",
   inactive: "danger",
 };
 
-export default function RoleList() {
+export default function DepartmentList() {
   const { data: session } = useSession();
   const userData = session?.user || {};
   const isUserLevel = userData?.employeeLevel === "User";
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [role, setRole] = useState([]);
+  const [department, setDepartment] = useState([]);
 
-  const [filterRoleValue, setFilterRoleValue] = useState("");
+  const [filterDepartmentValue, setFilterDepartmentValue] = useState("");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -38,24 +38,28 @@ export default function RoleList() {
     return isUserLevel
       ? [
           { name: "No.", uid: "index" },
-          { name: "Role Name", uid: "roleName" },
+          { name: "Branch Name", uid: "branchName" },
+          { name: "Division Name", uid: "divisionName" },
+          { name: "Department Name", uid: "departmentName" },
         ]
       : [
           { name: "No.", uid: "index" },
-          { name: "Role Name", uid: "roleName" },
+          { name: "Branch Name", uid: "branchName" },
+          { name: "Division Name", uid: "divisionName" },
+          { name: "Department Name", uid: "departmentName" },
           { name: "Create By", uid: "createdBy" },
-          { name: "Create At", uid: "roleCreateAt" },
+          { name: "Create At", uid: "departmentCreateAt" },
           { name: "Update By", uid: "updatedBy" },
-          { name: "Update At", uid: "roleUpdateAt" },
-          { name: "Role Status", uid: "roleStatus" },
+          { name: "Update At", uid: "departmentUpdateAt" },
+          { name: "Department Status", uid: "departmentStatus" },
           { name: "Management", uid: "actions" },
         ];
   }, [isUserLevel]);
 
   useEffect(() => {
-    const fetchRole = async () => {
+    const fetchDepartment = async () => {
       try {
-        const response = await fetch("/api/hr/role", {
+        const response = await fetch("/api/hr/department", {
           method: "GET",
           headers: {
             "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
@@ -68,15 +72,15 @@ export default function RoleList() {
         }
 
         const data = await response.json();
-        let filteredData = data.role || [];
+        let filteredData = data.department || [];
 
         if (isUserLevel) {
           filteredData = filteredData.filter(
-            (item) => item.roleStatus?.toLowerCase() === "active"
+            (item) => item.departmentStatus?.toLowerCase() === "active"
           );
         }
 
-        setRole(filteredData);
+        setDepartment(filteredData);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -84,7 +88,7 @@ export default function RoleList() {
       }
     };
 
-    fetchRole();
+    fetchDepartment();
   }, [isUserLevel]);
 
   const getFullName = useCallback((user) => {
@@ -97,7 +101,7 @@ export default function RoleList() {
 
   const renderChip = useCallback((status) => {
     const statusKey = (status || "").toLowerCase();
-    const color = roleStatusColorMap[statusKey] || "default";
+    const color = departmentStatusColorMap[statusKey] || "default";
     return (
       <Chip
         className="capitalize text-white border-2 border-dark border-dashed"
@@ -114,18 +118,22 @@ export default function RoleList() {
       switch (columnKey) {
         case "index":
           return item._index;
-        case "roleName":
-          return item.roleName || null;
-        case "roleStatus":
-          return renderChip(item.roleStatus);
+        case "branchName":
+          return item.DepartmentBranchId?.branchName || null;
+        case "divisionName":
+          return item.DepartmentDivisionId?.divisionName || null;
+        case "departmentName":
+          return item.departmentName || null;
+        case "departmentStatus":
+          return renderChip(item.departmentStatus);
         case "createdBy":
-          return getFullName(item.RoleCreateBy);
-        case "roleCreateAt":
-          return item.roleCreateAt || null;
+          return getFullName(item.DepartmentCreateBy);
+        case "departmentCreateAt":
+          return item.departmentCreateAt || null;
         case "updatedBy":
-          return getFullName(item.RoleUpdateBy);
-        case "roleUpdateAt":
-          return item.roleUpdateAt || null;
+          return getFullName(item.DepartmentUpdateBy);
+        case "departmentUpdateAt":
+          return item.departmentUpdateAt || null;
         case "actions":
           return (
             <div className="relative flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -137,7 +145,9 @@ export default function RoleList() {
                 </DropdownTrigger>
                 <DropdownMenu>
                   <DropdownItem key="edit" variant="flat" color="warning">
-                    <Link href={`/role/${item.roleId}`}>Update</Link>
+                    <Link href={`/department/${item.departmentId}`}>
+                      Update
+                    </Link>
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
@@ -150,10 +160,10 @@ export default function RoleList() {
     [getFullName, renderChip]
   );
 
-  const debouncedSetFilterRoleValue = useMemo(
+  const debouncedSetFilterDepartmentValue = useMemo(
     () =>
       debounce((value) => {
-        setFilterRoleValue(value);
+        setFilterDepartmentValue(value);
         setPage(1);
       }, 300),
     []
@@ -161,17 +171,19 @@ export default function RoleList() {
 
   const handleSearchChange = useCallback(
     (val) => {
-      debouncedSetFilterRoleValue(val || "");
+      debouncedSetFilterDepartmentValue(val || "");
     },
-    [debouncedSetFilterRoleValue]
+    [debouncedSetFilterDepartmentValue]
   );
 
   const { paginatedItems, pages } = useMemo(() => {
-    const filtered = filterRoleValue
-      ? role.filter((item) =>
-          item.roleName?.toLowerCase().includes(filterRoleValue.toLowerCase())
+    const filtered = filterDepartmentValue
+      ? department.filter((item) =>
+          item.departmentName
+            ?.toLowerCase()
+            .includes(filterDepartmentValue.toLowerCase())
         )
-      : role;
+      : department;
 
     const calculatedPages = Math.ceil(filtered.length / rowsPerPage) || 1;
     const currentPage = page > calculatedPages ? calculatedPages : page;
@@ -184,17 +196,17 @@ export default function RoleList() {
     }));
 
     return { paginatedItems: items, pages: calculatedPages };
-  }, [role, filterRoleValue, page, rowsPerPage]);
+  }, [department, filterDepartmentValue, page, rowsPerPage]);
 
   useEffect(() => {
     return () => {
-      debouncedSetFilterRoleValue.cancel();
+      debouncedSetFilterDepartmentValue.cancel();
     };
-  }, [debouncedSetFilterRoleValue]);
+  }, [debouncedSetFilterDepartmentValue]);
 
   return (
     <>
-      <TopicHeader topic="Role List" />
+      <TopicHeader topic="Department List" />
       <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -204,14 +216,14 @@ export default function RoleList() {
               size="lg"
               variant="bordered"
               startContent={<Search />}
-              onClear={() => setFilterRoleValue("")}
+              onClear={() => setFilterDepartmentValue("")}
               onChange={(e) => handleSearchChange(e.target.value)}
             />
           </div>
           {(userData?.employee?.employeeLevel === "SuperAdmin" ||
             userData?.employee?.employeeLevel === "Admin") && (
             <Link
-              href="/role/create"
+              href="/department/create"
               className="flex items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
             >
               <Button size="lg" color="default">
@@ -230,7 +242,7 @@ export default function RoleList() {
           onPageChange={setPage}
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={setRowsPerPage}
-          emptyContentText="Role Not Found"
+          emptyContentText="Department Not Found"
         />
       </div>
     </>

@@ -224,11 +224,6 @@ export default function DivisionList() {
             </Link>
           )}
         </div>
-        {error && (
-          <div className="text-red-500">
-            <p>Error: {error}</p>
-          </div>
-        )}
         <CommonTable
           columns={columns}
           items={paginatedItems}
