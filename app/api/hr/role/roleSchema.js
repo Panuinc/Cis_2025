@@ -11,8 +11,8 @@ const preprocessInt = (requiredMsg, intMsg) =>
     z.number({ required_error: requiredMsg }).int({ message: intMsg })
   );
 
-export function formatRoleData(rolees) {
-  return rolees.map((role) => ({
+export function formatRoleData(role) {
+  return role.map((role) => ({
     ...role,
     roleCreateAt: formatDate(role.roleCreateAt),
     roleUpdateAt: formatDate(role.roleUpdateAt),

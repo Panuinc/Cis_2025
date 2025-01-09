@@ -11,8 +11,8 @@ const preprocessInt = (requiredMsg, intMsg) =>
     z.number({ required_error: requiredMsg }).int({ message: intMsg })
   );
 
-export function formatBranchData(branches) {
-  return branches.map((branch) => ({
+export function formatBranchData(branch) {
+  return branch.map((branch) => ({
     ...branch,
     branchCreateAt: formatDate(branch.branchCreateAt),
     branchUpdateAt: formatDate(branch.branchUpdateAt),
