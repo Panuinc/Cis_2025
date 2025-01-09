@@ -29,15 +29,6 @@ export async function GET(request, context) {
     const employee = await prisma.employee.findMany({
       where: { employeeId: employeeId },
       include: {
-        EmployeeBranchId: {
-          select: { branchName: true },
-        },
-        EmployeeDivisionId: {
-          select: { divisionName: true },
-        },
-        EmployeeDepartmentId: {
-          select: { departmentName: true },
-        },
         EmployeeCreateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
@@ -91,8 +82,9 @@ export async function PUT(request, context) {
     const parsedData = employeePutSchema.parse({
       ...data,
       employeeId,
+      employeeBirthday: new Date(data.employeeBirthday),
     });
-
+    
     const localNow = getLocalNow();
 
     const updatedEmployee = await prisma.employee.update({

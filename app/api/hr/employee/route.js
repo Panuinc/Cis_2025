@@ -17,16 +17,7 @@ export async function GET(request) {
     await checkRateLimit(ip);
 
     const employee = await prisma.employee.findMany({
-      include: { 
-        EmployeeBranchId: {
-          select: { branchName: true },
-        },
-        EmployeeDivisionId: {
-          select: { divisionName: true },
-        },
-        EmployeeDepartmentId: {
-          select: { departmentName: true },
-        },
+      include: {
         EmployeeCreateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
@@ -68,16 +59,19 @@ export async function POST(request) {
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
 
-    const parsedData = employeePosteSchema.parse(data);
+    const parsedData = employeePosteSchema.parse({
+      ...data,
+      employeeBirthday: new Date(data.employeeBirthday),
+    });
 
     const existingEmployee = await prisma.employee.findFirst({
-      where: { employeeName: parsedData.employeeName },
+      where: { employeeIdCard: parsedData.employeeIdCard },
     });
 
     if (existingEmployee) {
       return NextResponse.json(
         {
-          error: `Employee with name '${parsedData.employeeName}' already exists.`,
+          error: `Employee with name '${parsedData.employeeIdCard}' already exists.`,
         },
         { status: 400 }
       );
@@ -89,6 +83,30 @@ export async function POST(request) {
       data: {
         ...parsedData,
         employeeCreateAt: localNow,
+      },
+    });
+
+    await prisma.user.create({
+      data: {
+        userEmployeeId: newEmployee.employeeId,
+        userCreateBy: newEmployee.employeeCreateBy,
+        userCreateAt: localNow,
+      },
+    });
+
+    await prisma.employment.create({
+      data: {
+        employmentEmployeeId: newEmployee.employeeId,
+        employmentCreateBy: newEmployee.employeeCreateBy,
+        employmentCreateAt: localNow,
+      },
+    });
+
+    await prisma.empDocument.create({
+      data: {
+        empDocumentEmployeeId: newEmployee.employeeId,
+        empDocumentCreateBy: newEmployee.employeeCreateBy,
+        empDocumentCreateAt: localNow,
       },
     });
 
