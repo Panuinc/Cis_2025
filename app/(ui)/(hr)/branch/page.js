@@ -1,9 +1,9 @@
 "use client";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import TopicHeader from "@/components/form/TopicHeader";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { Add, Dot, Search, Setting } from "@/components/icons/icons";
+import { Add, Search, Setting } from "@/components/icons/icons";
 import CommonTable from "@/components/CommonTable";
 import {
   Input,
@@ -23,6 +23,7 @@ const branchStatusColorMap = {
 export default function BranchList() {
   const { data: session } = useSession();
   const userData = session?.user || {};
+  const isUserLevel = userData?.employeeLevel === "User";
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,23 +34,22 @@ export default function BranchList() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const columns = useMemo(() => {
-    if (userData?.employeeLevel === "User") {
-      return [
-        { name: "No.", uid: "index" },
-        { name: "Branch Name", uid: "branchName" },
-      ];
-    }
-    return [
-      { name: "No.", uid: "index" },
-      { name: "Branch Name", uid: "branchName" },
-      { name: "Create By", uid: "createdBy" },
-      { name: "Create At", uid: "branchCreateAt" },
-      { name: "Update By", uid: "updatedBy" },
-      { name: "Update At", uid: "branchUpdateAt" },
-      { name: "Branch Status", uid: "branchStatus" },
-      { name: "Management", uid: "actions" },
-    ];
-  }, [userData?.employeeLevel]);
+    return isUserLevel
+      ? [
+          { name: "No.", uid: "index" },
+          { name: "Branch Name", uid: "branchName" },
+        ]
+      : [
+          { name: "No.", uid: "index" },
+          { name: "Branch Name", uid: "branchName" },
+          { name: "Create By", uid: "createdBy" },
+          { name: "Create At", uid: "branchCreateAt" },
+          { name: "Update By", uid: "updatedBy" },
+          { name: "Update At", uid: "branchUpdateAt" },
+          { name: "Branch Status", uid: "branchStatus" },
+          { name: "Management", uid: "actions" },
+        ];
+  }, [isUserLevel]);
 
   useEffect(() => {
     const fetchBranch = async () => {
@@ -67,9 +67,9 @@ export default function BranchList() {
         }
 
         const data = await response.json();
-
         let filteredData = data.branch || [];
-        if (userData?.employeeLevel === "User") {
+
+        if (isUserLevel) {
           filteredData = filteredData.filter(
             (item) => item.branchStatus?.toLowerCase() === "active"
           );
@@ -84,34 +84,17 @@ export default function BranchList() {
     };
 
     fetchBranch();
-  }, [userData?.employeeLevel]);
+  }, [isUserLevel]);
 
-  const filteredItems = useMemo(() => {
-    if (!filterBranchValue) return branch;
-    return branch.filter((item) =>
-      item.branchName?.toLowerCase().includes(filterBranchValue.toLowerCase())
-    );
-  }, [branch, filterBranchValue]);
-
-  const pages = Math.ceil(filteredItems.length / rowsPerPage);
-  const start = (page - 1) * rowsPerPage;
-  const end = start + rowsPerPage;
-
-  const paginatedItems = useMemo(() => {
-    return filteredItems.slice(start, end).map((item, i) => ({
-      ...item,
-      _index: start + i + 1,
-    }));
-  }, [filteredItems, start, end]);
-
-  const getFullName = (user) => {
+  const getFullName = useCallback((user) => {
     if (!user) return null;
-    return user.employeeFirstname && user.employeeLastname
-      ? `${user.employeeFirstname} ${user.employeeLastname}`
+    const { employeeFirstname, employeeLastname } = user;
+    return employeeFirstname && employeeLastname
+      ? `${employeeFirstname} ${employeeLastname}`
       : null;
-  };
+  }, []);
 
-  const renderChip = (status) => {
+  const renderChip = useCallback((status) => {
     const statusKey = (status || "").toLowerCase();
     const color = branchStatusColorMap[statusKey] || "default";
     return (
@@ -123,47 +106,70 @@ export default function BranchList() {
         {status || null}
       </Chip>
     );
-  };
+  }, []);
 
-  const renderCell = (item, columnKey) => {
-    switch (columnKey) {
-      case "index":
-        return item._index;
-      case "branchName":
-        return item.branchName || null;
-      case "branchStatus":
-        return renderChip(item.branchStatus);
-      case "createdBy":
-        return getFullName(item.BranchCreateBy);
-      case "branchCreateAt":
-        return item.branchCreateAt || null;
-      case "updatedBy":
-        return getFullName(item.BranchUpdateBy);
-      case "branchUpdateAt":
-        return item.branchUpdateAt || null;
-      case "actions":
-        return (
-          <div className="relative flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <Dropdown>
-              <DropdownTrigger>
-                <Button isIconOnly size="md" variant="light" color="warning">
-                  <span>
+  const renderCell = useCallback(
+    (item, columnKey) => {
+      switch (columnKey) {
+        case "index":
+          return item._index;
+        case "branchName":
+          return item.branchName || null;
+        case "branchStatus":
+          return renderChip(item.branchStatus);
+        case "createdBy":
+          return getFullName(item.BranchCreateBy);
+        case "branchCreateAt":
+          return item.branchCreateAt || null;
+        case "updatedBy":
+          return getFullName(item.BranchUpdateBy);
+        case "branchUpdateAt":
+          return item.branchUpdateAt || null;
+        case "actions":
+          return (
+            <div className="relative flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button isIconOnly size="md" variant="light" color="warning">
                     <Setting />
-                  </span>
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem key="edit" variant="flat" color="warning">
-                  <Link href={`/branch/${item.branchId}`}>Update</Link>
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </div>
-        );
-      default:
-        return item[columnKey];
-    }
-  };
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu>
+                  <DropdownItem key="edit" variant="flat" color="warning">
+                    <Link href={`/branch/${item.branchId}`}>Update</Link>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </div>
+          );
+        default:
+          return item[columnKey];
+      }
+    },
+    [getFullName, renderChip]
+  );
+
+  const { paginatedItems, pages } = useMemo(() => {
+    const filtered = filterBranchValue
+      ? branch.filter((item) =>
+          item.branchName
+            ?.toLowerCase()
+            .includes(filterBranchValue.toLowerCase())
+        )
+      : branch;
+
+    const calculatedPages = Math.ceil(filtered.length / rowsPerPage) || 1;
+    const currentPage = page > calculatedPages ? calculatedPages : page;
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    const items = filtered.slice(start, end).map((item, i) => ({
+      ...item,
+      _index: start + i + 1,
+    }));
+
+    return { paginatedItems: items, pages: calculatedPages };
+  }, [branch, filterBranchValue, page, rowsPerPage]);
 
   return (
     <>
