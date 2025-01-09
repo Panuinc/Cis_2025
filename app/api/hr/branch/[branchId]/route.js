@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { handleErrors, handleGetErrors } from "@/lib/errorHandler";
+import { branchPutSchema } from "@/app/api/hr/branch/branchSchema";
 import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
 import logger from "@/lib/logger";
@@ -23,7 +24,9 @@ export async function GET(request, context) {
   try {
     ip = request.headers.get("x-forwarded-for") || request.ip || "unknown";
 
-    const { branchId } = context.params;
+    const params = await context.params;
+    const branchId = parseInt(params.branchId, 10);
+
     if (!branchId) {
       return NextResponse.json(
         { error: "Branch ID is required" },
@@ -34,8 +37,8 @@ export async function GET(request, context) {
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
 
-    const branch = await prisma.branch.findUnique({
-      where: { branchId: parseInt(branchId, 10) },
+    const branch = await prisma.branch.findMany({
+      where: { branchId: branchId },
       include: {
         BranchCreateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
@@ -83,14 +86,12 @@ export async function PUT(request, context) {
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
 
-    // แปลงค่า branchUpdateBy ให้เป็น Int
-    const parsedData = {
+    const parsedData = branchPutSchema.parse({
       ...data,
-      branchUpdateBy: parseInt(data.branchUpdateBy, 10),
-    };
-
+      branchId,
+    });
     const now = new Date();
-    const offsetMillis = 7 * 60 * 60 * 1000; // Timezone offset for UTC+7
+    const offsetMillis = 7 * 60 * 60 * 1000;
     const localNow = new Date(now.getTime() + offsetMillis);
     localNow.setMilliseconds(0);
 
