@@ -39,14 +39,25 @@ export default function DepartmentUpdate({ params: paramsPromise }) {
   const router = useRouter();
   const [errors, setErrors] = useState({});
   const [branch, setBranch] = useState([]);
+  const [division, setDivision] = useState([]);
   const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
+
+  const [filtereddivision, setFilteredDivision] = useState([]);
+
+  const [isbranchselected, setIsBranchSelected] = useState(false);
 
   const formRef = useRef(null);
 
   const fetchData = useCallback(async () => {
     try {
-      const [branchRes, departmentRes] = await Promise.all([
+      const [branchRes, divisionRes, departmentRes] = await Promise.all([
         fetch(`/api/hr/branch`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
+        fetch(`/api/hr/division`, {
           method: "GET",
           headers: {
             "secret-token": SECRET_TOKEN,
@@ -67,6 +78,13 @@ export default function DepartmentUpdate({ params: paramsPromise }) {
         toast.error(branchData.error);
       }
 
+      const divisionData = await divisionRes.json();
+      if (divisionRes.ok) {
+        setDivision(divisionData.division || []);
+      } else {
+        toast.error(divisionData.error);
+      }
+
       const departmentData = await departmentRes.json();
       if (departmentRes.ok) {
         const department = departmentData.department[0];
@@ -82,6 +100,22 @@ export default function DepartmentUpdate({ params: paramsPromise }) {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  useEffect(() => {
+    if (formData.departmentBranchId) {
+      const selectedBranchId = formData.departmentBranchId;
+      const filtered = division.filter(
+        (division) =>
+          division.divisionStatus === "Active" &&
+          division.divisionBranchId == selectedBranchId
+      );
+      setFilteredDivision(filtered);
+      setIsBranchSelected(true);
+    } else {
+      setFilteredDivision([]);
+      setIsBranchSelected(false);
+    }
+  }, [formData.departmentBranchId, division]);
 
   const handleInputChange = useCallback(
     (field) => (e) => {
@@ -157,6 +191,8 @@ export default function DepartmentUpdate({ params: paramsPromise }) {
         onClear={handleClear}
         errors={errors}
         setErrors={setErrors}
+        filtereddivision={filtereddivision}
+        isbranchselected={isbranchselected}
         branch={branch}
         formData={formData}
         handleInputChange={handleInputChange}

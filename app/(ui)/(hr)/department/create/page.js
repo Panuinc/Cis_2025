@@ -13,7 +13,11 @@ import TopicHeader from "@/components/form/TopicHeader";
 import FormDepartment from "@/components/form/hr/department/FormDepartment";
 
 const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
-const DEFAULT_FORM_DATA = { departmentBranchId: "", departmentName: "" };
+const DEFAULT_FORM_DATA = {
+  departmentBranchId: "",
+  departmentDivisionId: "",
+  departmentName: "",
+};
 
 export default function DepartmentCreate() {
   const { data: session } = useSession();
@@ -31,7 +35,12 @@ export default function DepartmentCreate() {
   const router = useRouter();
   const [errors, setErrors] = useState({});
   const [branch, setBranch] = useState([]);
+  const [division, setDivision] = useState([]);
   const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
+
+  const [filtereddivision, setFilteredDivision] = useState([]);
+
+  const [isbranchselected, setIsBranchSelected] = useState(false);
 
   const formRef = useRef(null);
 
@@ -61,6 +70,49 @@ export default function DepartmentCreate() {
 
     fetchBranch();
   }, []);
+
+  useEffect(() => {
+    const fetchDivision = async () => {
+      try {
+        const res = await fetch(`/api/hr/division`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        });
+
+        const jsonData = await res.json();
+        if (res.ok) {
+          const activeDivision = (jsonData.division || []).filter(
+            (division) => division.divisionStatus === "Active"
+          );
+          setDivision(activeDivision);
+        } else {
+          toast.error(jsonData.error);
+        }
+      } catch (error) {
+        toast.error("Error fetching division");
+      }
+    };
+
+    fetchDivision();
+  }, []);
+
+  useEffect(() => {
+    if (formData.departmentBranchId) {
+      const selectedBranchId = formData.departmentBranchId;
+      const filtered = division.filter(
+        (division) =>
+          division.divisionStatus === "Active" &&
+          division.divisionBranchId == selectedBranchId
+      );
+      setFilteredDivision(filtered);
+      setIsBranchSelected(true);
+    } else {
+      setFilteredDivision([]);
+      setIsBranchSelected(false);
+    }
+  }, [formData.departmentBranchId, division]);
 
   const handleInputChange = useCallback(
     (field) => (e) => {
@@ -135,6 +187,8 @@ export default function DepartmentCreate() {
         onClear={handleClear}
         errors={errors}
         setErrors={setErrors}
+        filtereddivision={filtereddivision}
+        isbranchselected={isbranchselected}
         branch={branch}
         formData={formData}
         handleInputChange={handleInputChange}

@@ -8,6 +8,8 @@ export default function FormDepartment({
   onSubmit,
   onClear,
   errors = {},
+  filtereddivision,
+  isbranchselected,
   branch,
   formData,
   handleInputChange,
@@ -44,6 +46,30 @@ export default function FormDepartment({
           </Select>
         </div>
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Select
+            name="departmentDivisionId"
+            label="Division Name"
+            placeholder="Please Select Division Name"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.departmentDivisionId?.toString() || ""}
+            selectedKeys={[formData.departmentDivisionId?.toString() || ""]}
+            onChange={handleInputChange("departmentDivisionId")}
+            isDisabled={isUpdate || !isbranchselected}
+            isInvalid={!!errors.departmentDivisionId}
+            errorMessage={errors.departmentDivisionId}
+          >
+            {filtereddivision.map((division) => (
+              <SelectItem key={division.divisionId} value={division.divisionId}>
+                {division.divisionName}
+              </SelectItem>
+            ))}
+          </Select>
+        </div>
+      </div>
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
             name="departmentName"
             type="text"
@@ -58,9 +84,7 @@ export default function FormDepartment({
             errorMessage={errors.departmentName}
           />
         </div>
-      </div>
-      {isUpdate && (
-        <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        {isUpdate && (
           <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
             <Select
               name="departmentStatus"
@@ -83,8 +107,8 @@ export default function FormDepartment({
               </SelectItem>
             </Select>
           </div>
-        </div>
-      )}
+        )}
+      </div>
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
