@@ -1,6 +1,9 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
+import TopicHeader from "@/components/form/TopicHeader";
+import FormDivision from "@/components/form/hr/division/FormDivision";
 import React, {
   useState,
   useRef,
@@ -9,18 +12,15 @@ import React, {
   useMemo,
   use,
 } from "react";
-import toast, { Toaster } from "react-hot-toast";
-import TopicHeader from "@/components/form/TopicHeader";
-import FormBranch from "@/components/form/hr/branch/FormBranch";
 
 const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
 
 const DEFAULT_FORM_DATA = {
-  branchName: "",
-  branchStatus: "",
+  divisionName: "",
+  divisionStatus: "",
 };
 
-export default function BranchUpdate({ params: paramsPromise }) {
+export default function DivisionUpdate({ params: paramsPromise }) {
   const { data: session } = useSession();
   const userData = session?.user || {};
   const userId = userData?.userId;
@@ -34,18 +34,25 @@ export default function BranchUpdate({ params: paramsPromise }) {
   );
 
   const params = use(paramsPromise);
-  const branchId = params.id;
+  const divisionId = params.id;
 
   const router = useRouter();
   const [errors, setErrors] = useState({});
+  const [branch, setBranch] = useState([]);
   const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
 
   const formRef = useRef(null);
 
   const fetchData = useCallback(async () => {
     try {
-      const [branchRes] = await Promise.all([
-        fetch(`/api/hr/branch/${branchId}`, {
+      const [branchRes, divisionRes] = await Promise.all([
+        fetch(`/api/hr/branch`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
+        fetch(`/api/hr/division/${divisionId}`, {
           method: "GET",
           headers: {
             "secret-token": SECRET_TOKEN,
@@ -55,15 +62,22 @@ export default function BranchUpdate({ params: paramsPromise }) {
 
       const branchData = await branchRes.json();
       if (branchRes.ok) {
-        const branch = branchData.branch[0];
-        setFormData(branch);
+        setBranch(branchData.branch || []);
       } else {
         toast.error(branchData.error);
+      }
+
+      const divisionData = await divisionRes.json();
+      if (divisionRes.ok) {
+        const division = divisionData.division[0];
+        setFormData(division);
+      } else {
+        toast.error(divisionData.error);
       }
     } catch (error) {
       toast.error("Error fetching data");
     }
-  }, [branchId]);
+  }, [divisionId]);
 
   useEffect(() => {
     fetchData();
@@ -89,10 +103,10 @@ export default function BranchUpdate({ params: paramsPromise }) {
       event.preventDefault();
 
       const formDataObject = new FormData(formRef.current);
-      formDataObject.append("branchUpdateBy", userId);
+      formDataObject.append("divisionUpdateBy", userId);
 
       try {
-        const res = await fetch(`/api/hr/branch/${branchId}`, {
+        const res = await fetch(`/api/hr/division/${divisionId}`, {
           method: "PUT",
           body: formDataObject,
           headers: {
@@ -105,7 +119,7 @@ export default function BranchUpdate({ params: paramsPromise }) {
         if (res.ok) {
           toast.success(jsonData.message);
           setTimeout(() => {
-            router.push("/branch");
+            router.push("/division");
           }, 2000);
         } else {
           if (jsonData.details) {
@@ -118,13 +132,13 @@ export default function BranchUpdate({ params: paramsPromise }) {
             }, {});
             setErrors(fieldErrorObj);
           }
-          toast.error(jsonData.error || "Error updating branch");
+          toast.error(jsonData.error || "Error updating division");
         }
       } catch (error) {
-        toast.error("Error updating branch: " + error.message);
+        toast.error("Error updating division: " + error.message);
       }
     },
-    [branchId, router, userId]
+    [divisionId, router, userId]
   );
 
   const handleClear = useCallback(() => {
@@ -135,14 +149,15 @@ export default function BranchUpdate({ params: paramsPromise }) {
 
   return (
     <>
-      <TopicHeader topic="Branch Update" />
+      <TopicHeader topic="Division Update" />
       <Toaster position="top-right" />
-      <FormBranch
+      <FormDivision
         formRef={formRef}
         onSubmit={handleSubmit}
         onClear={handleClear}
         errors={errors}
         setErrors={setErrors}
+        branch={branch}
         formData={formData}
         handleInputChange={handleInputChange}
         isUpdate={true}
