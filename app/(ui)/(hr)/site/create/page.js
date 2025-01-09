@@ -9,6 +9,7 @@ import FormSite from "@/components/form/hr/site/FormSite";
 export default function SiteCreate() {
   const { data: session } = useSession();
   const userData = session?.user || {};
+  const userId = userData?.userId;
 
   const operatedBy = useMemo(
     () =>
@@ -22,7 +23,6 @@ export default function SiteCreate() {
   const [formData, setFormData] = useState({ siteBranchId: "", siteName: "" });
 
   const formRef = useRef(null);
-  const userId = userData?.userId;
 
   useEffect(() => {
     const fetchBranch = async () => {

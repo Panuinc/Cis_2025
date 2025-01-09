@@ -14,6 +14,7 @@ import {
   DropdownItem,
   Chip,
 } from "@nextui-org/react";
+import debounce from "lodash.debounce";
 
 const siteStatusColorMap = {
   active: "success",
@@ -153,6 +154,22 @@ export default function SiteList() {
     [getFullName, renderChip]
   );
 
+  const debouncedSetFilterSiteValue = useMemo(
+    () =>
+      debounce((value) => {
+        setFilterSiteValue(value);
+        setPage(1);
+      }, 300),
+    []
+  );
+
+  const handleSearchChange = useCallback(
+    (val) => {
+      debouncedSetFilterSiteValue(val || "");
+    },
+    [debouncedSetFilterSiteValue]
+  );
+
   const { paginatedItems, pages } = useMemo(() => {
     const filtered = filterSiteValue
       ? site.filter((item) =>
@@ -173,6 +190,12 @@ export default function SiteList() {
     return { paginatedItems: items, pages: calculatedPages };
   }, [site, filterSiteValue, page, rowsPerPage]);
 
+  useEffect(() => {
+    return () => {
+      debouncedSetFilterSiteValue.cancel();
+    };
+  }, [debouncedSetFilterSiteValue]);
+
   return (
     <>
       <TopicHeader topic="Site List" />
@@ -185,9 +208,8 @@ export default function SiteList() {
               size="lg"
               variant="bordered"
               startContent={<Search />}
-              value={filterSiteValue}
               onClear={() => setFilterSiteValue("")}
-              onValueChange={(val) => setFilterSiteValue(val || "")}
+              onChange={(e) => handleSearchChange(e.target.value)}
             />
           </div>
           {(userData?.employee?.employeeLevel === "SuperAdmin" ||
@@ -202,6 +224,11 @@ export default function SiteList() {
             </Link>
           )}
         </div>
+        {error && (
+          <div className="text-red-500">
+            <p>Error: {error}</p>
+          </div>
+        )}
         <CommonTable
           columns={columns}
           items={paginatedItems}
