@@ -1,10 +1,19 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import toast, { Toaster } from "react-hot-toast";
 import TopicHeader from "@/components/form/TopicHeader";
 import FormSite from "@/components/form/hr/site/FormSite";
+
+const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
+const DEFAULT_FORM_DATA = { siteBranchId: "", siteName: "" };
 
 export default function SiteCreate() {
   const { data: session } = useSession();
@@ -13,14 +22,16 @@ export default function SiteCreate() {
 
   const operatedBy = useMemo(
     () =>
-      `${userData?.employee?.employeeFirstname || ""} ${userData?.employee?.employeeLastname || ""}`,
+      `${userData?.employee?.employeeFirstname || ""} ${
+        userData?.employee?.employeeLastname || ""
+      }`,
     [userData]
   );
 
   const router = useRouter();
   const [errors, setErrors] = useState({});
   const [branch, setBranch] = useState([]);
-  const [formData, setFormData] = useState({ siteBranchId: "", siteName: "" });
+  const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
 
   const formRef = useRef(null);
 
@@ -30,7 +41,7 @@ export default function SiteCreate() {
         const res = await fetch(`/api/hr/branch`, {
           method: "GET",
           headers: {
-            "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
+            "secret-token": SECRET_TOKEN,
           },
         });
 
@@ -77,7 +88,7 @@ export default function SiteCreate() {
           method: "POST",
           body: formDataObject,
           headers: {
-            "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
+            "secret-token": SECRET_TOKEN,
           },
         });
 
@@ -90,13 +101,13 @@ export default function SiteCreate() {
           }, 2000);
         } else {
           if (jsonData.details) {
-            const fieldErrorObj = {};
-            jsonData.details.forEach((err) => {
+            const fieldErrorObj = jsonData.details.reduce((acc, err) => {
               const fieldName = err.field && err.field[0];
               if (fieldName) {
-                fieldErrorObj[fieldName] = err.message;
+                acc[fieldName] = err.message;
               }
-            });
+              return acc;
+            }, {});
             setErrors(fieldErrorObj);
           }
           toast.error(jsonData.error || "Error creating site");
@@ -110,12 +121,7 @@ export default function SiteCreate() {
 
   const handleClear = useCallback(() => {
     if (formRef.current) formRef.current.reset();
-    setFormData((prev) =>
-      Object.keys(prev).reduce((acc, key) => {
-        acc[key] = "";
-        return acc;
-      }, {})
-    );
+    setFormData(DEFAULT_FORM_DATA);
     setErrors({});
   }, []);
 

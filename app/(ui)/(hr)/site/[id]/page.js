@@ -2,16 +2,23 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, {
-  use,
   useState,
   useRef,
   useEffect,
   useCallback,
   useMemo,
+  use,
 } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import TopicHeader from "@/components/form/TopicHeader";
 import FormSite from "@/components/form/hr/site/FormSite";
+
+const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
+
+const DEFAULT_FORM_DATA = {
+  siteName: "",
+  siteStatus: "",
+};
 
 export default function SiteUpdate({ params: paramsPromise }) {
   const { data: session } = useSession();
@@ -32,61 +39,49 @@ export default function SiteUpdate({ params: paramsPromise }) {
   const router = useRouter();
   const [errors, setErrors] = useState({});
   const [branch, setBranch] = useState([]);
-  const [formData, setFormData] = useState({
-    siteName: "",
-    siteStatus: "",
-  });
+  const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
 
   const formRef = useRef(null);
 
-  useEffect(() => {
-    const fetchBranch = async () => {
-      try {
-        const res = await fetch(`/api/hr/branch`, {
+  const fetchData = useCallback(async () => {
+    try {
+      const [branchRes, siteRes] = await Promise.all([
+        fetch(`/api/hr/branch`, {
           method: "GET",
           headers: {
-            "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
+            "secret-token": SECRET_TOKEN,
           },
-        });
-
-        const jsonData = await res.json();
-        if (res.ok) {
-          setBranch(jsonData.branch || []);
-        } else {
-          toast.error(jsonData.error);
-        }
-      } catch (error) {
-        toast.error("Error fetching branch");
-      }
-    };
-
-    fetchBranch();
-  }, []);
-
-  useEffect(() => {
-    const fetchSite = async () => {
-      try {
-        const res = await fetch(`/api/hr/site/${siteId}`, {
+        }),
+        fetch(`/api/hr/site/${siteId}`, {
           method: "GET",
           headers: {
-            "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
+            "secret-token": SECRET_TOKEN,
           },
-        });
+        }),
+      ]);
 
-        const jsonData = await res.json();
-        if (res.ok) {
-          const site = jsonData.site[0];
-          setFormData(site);
-        } else {
-          toast.error(jsonData.error);
-        }
-      } catch (error) {
-        toast.error("Error fetching site data");
+      const branchData = await branchRes.json();
+      if (branchRes.ok) {
+        setBranch(branchData.branch || []);
+      } else {
+        toast.error(branchData.error);
       }
-    };
 
-    fetchSite();
+      const siteData = await siteRes.json();
+      if (siteRes.ok) {
+        const site = siteData.site[0];
+        setFormData(site);
+      } else {
+        toast.error(siteData.error);
+      }
+    } catch (error) {
+      toast.error("Error fetching data");
+    }
   }, [siteId]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const handleInputChange = useCallback(
     (field) => (e) => {
@@ -115,7 +110,7 @@ export default function SiteUpdate({ params: paramsPromise }) {
           method: "PUT",
           body: formDataObject,
           headers: {
-            "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
+            "secret-token": SECRET_TOKEN,
           },
         });
 
@@ -128,13 +123,13 @@ export default function SiteUpdate({ params: paramsPromise }) {
           }, 2000);
         } else {
           if (jsonData.details) {
-            const fieldErrorObj = {};
-            jsonData.details.forEach((err) => {
+            const fieldErrorObj = jsonData.details.reduce((acc, err) => {
               const fieldName = err.field && err.field[0];
               if (fieldName) {
-                fieldErrorObj[fieldName] = err.message;
+                acc[fieldName] = err.message;
               }
-            });
+              return acc;
+            }, {});
             setErrors(fieldErrorObj);
           }
           toast.error(jsonData.error || "Error updating site");
@@ -148,12 +143,7 @@ export default function SiteUpdate({ params: paramsPromise }) {
 
   const handleClear = useCallback(() => {
     if (formRef.current) formRef.current.reset();
-    setFormData((prev) =>
-      Object.keys(prev).reduce((acc, key) => {
-        acc[key] = "";
-        return acc;
-      }, {})
-    );
+    setFormData(DEFAULT_FORM_DATA);
     setErrors({});
   }, []);
 

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { Add, Search, Setting } from "@/components/icons/icons";
 import CommonTable from "@/components/CommonTable";
+import debounce from "lodash.debounce";
 import {
   Input,
   Button,
@@ -14,7 +15,6 @@ import {
   DropdownItem,
   Chip,
 } from "@nextui-org/react";
-import debounce from "lodash.debounce";
 
 const siteStatusColorMap = {
   active: "success",
