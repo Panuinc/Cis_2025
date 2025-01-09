@@ -31,7 +31,7 @@ export default function PaginationComponent({
           isCompact
           showControls
           showShadow
-          color="primary"
+          color="success"
           variant="light"
           page={page}
           total={pages}

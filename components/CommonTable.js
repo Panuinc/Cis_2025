@@ -37,7 +37,7 @@ export default function CommonTable({
         <TableHeader columns={columns}>
           {(column) => (
             <TableColumn
-              className="h-14 text-sm bg-primary text-white"
+              className="h-14 text-sm bg-success text-white"
               key={column.uid}
               align={column.uid === "actions" ? "center" : "start"}
             >

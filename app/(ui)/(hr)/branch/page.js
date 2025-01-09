@@ -16,7 +16,7 @@ import {
 } from "@nextui-org/react";
 
 const branchStatusColorMap = {
-  active: "secondary",
+  active: "success",
   inactive: "danger",
 };
 
