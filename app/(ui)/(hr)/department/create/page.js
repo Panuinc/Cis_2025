@@ -38,81 +38,59 @@ export default function DepartmentCreate() {
   const [division, setDivision] = useState([]);
   const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
 
-  const [filtereddivision, setFilteredDivision] = useState([]);
-
-  const [isbranchselected, setIsBranchSelected] = useState(false);
-
   const formRef = useRef(null);
 
-  useEffect(() => {
-    const fetchBranch = async () => {
-      try {
-        const res = await fetch(`/api/hr/branch`, {
+  const fetchData = useCallback(async () => {
+    try {
+      const [branchRes, divisionRes] = await Promise.all([
+        fetch(`/api/hr/branch`, {
           method: "GET",
-          headers: {
-            "secret-token": SECRET_TOKEN,
-          },
-        });
-
-        const jsonData = await res.json();
-        if (res.ok) {
-          const activeBranch = (jsonData.branch || []).filter(
-            (branch) => branch.branchStatus === "Active"
-          );
-          setBranch(activeBranch);
-        } else {
-          toast.error(jsonData.error);
-        }
-      } catch (error) {
-        toast.error("Error fetching branch");
-      }
-    };
-
-    fetchBranch();
-  }, []);
-
-  useEffect(() => {
-    const fetchDivision = async () => {
-      try {
-        const res = await fetch(`/api/hr/division`, {
+          headers: { "secret-token": SECRET_TOKEN },
+        }),
+        fetch(`/api/hr/division`, {
           method: "GET",
-          headers: {
-            "secret-token": SECRET_TOKEN,
-          },
-        });
+          headers: { "secret-token": SECRET_TOKEN },
+        }),
+      ]);
 
-        const jsonData = await res.json();
-        if (res.ok) {
-          const activeDivision = (jsonData.division || []).filter(
-            (division) => division.divisionStatus === "Active"
-          );
-          setDivision(activeDivision);
-        } else {
-          toast.error(jsonData.error);
-        }
-      } catch (error) {
-        toast.error("Error fetching division");
+      const branchData = await branchRes.json();
+      if (branchRes.ok) {
+        const activeBranch = (branchData.branch || []).filter(
+          (branch) => branch.branchStatus === "Active"
+        );
+        setBranch(activeBranch);
+      } else {
+        toast.error(branchData.error);
       }
-    };
 
-    fetchDivision();
-  }, []);
-
-  useEffect(() => {
-    if (formData.departmentBranchId) {
-      const selectedBranchId = formData.departmentBranchId;
-      const filtered = division.filter(
-        (division) =>
-          division.divisionStatus === "Active" &&
-          division.divisionBranchId == selectedBranchId
-      );
-      setFilteredDivision(filtered);
-      setIsBranchSelected(true);
-    } else {
-      setFilteredDivision([]);
-      setIsBranchSelected(false);
+      const divisionData = await divisionRes.json();
+      if (divisionRes.ok) {
+        const activeDivision = (divisionData.division || []).filter(
+          (division) => division.divisionStatus === "Active"
+        );
+        setDivision(activeDivision);
+      } else {
+        toast.error(divisionData.error);
+      }
+    } catch (error) {
+      toast.error("Error fetching data");
     }
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const filtereddivision = useMemo(() => {
+    if (!formData.departmentBranchId) return [];
+    return division.filter(
+      (div) =>
+        div.divisionStatus === "Active" &&
+        div.divisionBranchId == formData.departmentBranchId
+    );
   }, [formData.departmentBranchId, division]);
+
+  const isbranchselected = Boolean(formData.departmentBranchId);
 
   const handleInputChange = useCallback(
     (field) => (e) => {
@@ -139,13 +117,10 @@ export default function DepartmentCreate() {
         const res = await fetch("/api/hr/department", {
           method: "POST",
           body: formDataObject,
-          headers: {
-            "secret-token": SECRET_TOKEN,
-          },
+          headers: { "secret-token": SECRET_TOKEN },
         });
 
         const jsonData = await res.json();
-
         if (res.ok) {
           toast.success(jsonData.message);
           setTimeout(() => {

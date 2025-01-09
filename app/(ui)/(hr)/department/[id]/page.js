@@ -42,10 +42,6 @@ export default function DepartmentUpdate({ params: paramsPromise }) {
   const [division, setDivision] = useState([]);
   const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
 
-  const [filtereddivision, setFilteredDivision] = useState([]);
-
-  const [isbranchselected, setIsBranchSelected] = useState(false);
-
   const formRef = useRef(null);
 
   const fetchData = useCallback(async () => {
@@ -101,21 +97,16 @@ export default function DepartmentUpdate({ params: paramsPromise }) {
     fetchData();
   }, [fetchData]);
 
-  useEffect(() => {
-    if (formData.departmentBranchId) {
-      const selectedBranchId = formData.departmentBranchId;
-      const filtered = division.filter(
-        (division) =>
-          division.divisionStatus === "Active" &&
-          division.divisionBranchId == selectedBranchId
-      );
-      setFilteredDivision(filtered);
-      setIsBranchSelected(true);
-    } else {
-      setFilteredDivision([]);
-      setIsBranchSelected(false);
-    }
+  const filtereddivision = useMemo(() => {
+    if (!formData.departmentBranchId) return [];
+    return division.filter(
+      (d) =>
+        d.divisionStatus === "Active" &&
+        d.divisionBranchId == formData.departmentBranchId
+    );
   }, [formData.departmentBranchId, division]);
+
+  const isbranchselected = !!formData.departmentBranchId;
 
   const handleInputChange = useCallback(
     (field) => (e) => {
