@@ -427,6 +427,7 @@ export default function UiLayout({ children }) {
                 isCollapsed={isCollapsed}
                 options={[
                   { label: "Branch", href: "/branch" },
+                  { label: "Role", href: "/role" },
                   { label: "Site", href: "/site" },
                   { label: "Division", href: "/division" },
                 ]}
