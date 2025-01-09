@@ -92,7 +92,7 @@ export default function FormBranch({
             color="danger"
             startContent={<Cancel />}
             onPress={onClear}
-            type="submit"
+            type="button"
           >
             Cancel
           </Button>
