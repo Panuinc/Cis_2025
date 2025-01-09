@@ -1,7 +1,14 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React, { use, useState, useRef, useEffect, useCallback } from "react";
+import React, {
+  use,
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import toast, { Toaster } from "react-hot-toast";
 import TopicHeader from "@/components/form/TopicHeader";
 import FormSite from "@/components/form/hr/site/FormSite";
@@ -9,9 +16,14 @@ import FormSite from "@/components/form/hr/site/FormSite";
 export default function SiteUpdate({ params: paramsPromise }) {
   const { data: session } = useSession();
   const userData = session?.user || {};
-  const operatedBy = `${userData?.employee?.employeeFirstname || ""} ${
-    userData?.employee?.employeeLastname || ""
-  }`;
+
+  const operatedBy = useMemo(
+    () =>
+      `${userData?.employee?.employeeFirstname || ""} ${
+        userData?.employee?.employeeLastname || ""
+      }`,
+    [userData]
+  );
 
   const params = use(paramsPromise);
   const siteId = params.id;
@@ -25,6 +37,7 @@ export default function SiteUpdate({ params: paramsPromise }) {
   });
 
   const formRef = useRef(null);
+  const userId = userData?.userId;
 
   useEffect(() => {
     const fetchBranch = async () => {
@@ -79,11 +92,15 @@ export default function SiteUpdate({ params: paramsPromise }) {
     (field) => (e) => {
       const value = e.target.value;
       setFormData((prev) => ({ ...prev, [field]: value }));
-      if (errors[field]) {
-        setErrors((prev) => ({ ...prev, [field]: null }));
-      }
+      setErrors((prev) => {
+        if (prev[field]) {
+          const { [field]: _, ...rest } = prev;
+          return rest;
+        }
+        return prev;
+      });
     },
-    [errors]
+    []
   );
 
   const handleSubmit = useCallback(
@@ -91,7 +108,7 @@ export default function SiteUpdate({ params: paramsPromise }) {
       event.preventDefault();
 
       const formDataObject = new FormData(formRef.current);
-      formDataObject.append("siteUpdateBy", userData?.userId);
+      formDataObject.append("siteUpdateBy", userId);
 
       try {
         const res = await fetch(`/api/hr/site/${siteId}`, {
@@ -126,7 +143,7 @@ export default function SiteUpdate({ params: paramsPromise }) {
         toast.error("Error updating site: " + error.message);
       }
     },
-    [siteId, router, userData?.userId]
+    [siteId, router, userId]
   );
 
   const handleClear = useCallback(() => {
