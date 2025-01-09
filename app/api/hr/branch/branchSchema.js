@@ -1,31 +1,48 @@
 import { z } from "zod";
 
-export function formatBranchData(branch) {
-  return branch.map((branch) => ({
+const formatDate = (value) => {
+  if (!value) return null;
+  return new Date(value).toISOString().replace("T", " ").slice(0, 19);
+};
+
+const preprocessInt = (requiredMsg, intMsg) =>
+  z.preprocess(
+    (val) => parseInt(val, 10),
+    z.number({ required_error: requiredMsg }).int({ message: intMsg })
+  );
+
+export function formatBranchData(branches) {
+  return branches.map((branch) => ({
     ...branch,
-    branchCreateAt: branch.branchCreateAt
-      ? new Date(branch.branchCreateAt)
-          .toISOString()
-          .replace("T", " ")
-          .slice(0, 19)
-      : null,
-    branchUpdateAt: branch.branchUpdateAt
-      ? new Date(branch.branchUpdateAt)
-          .toISOString()
-          .replace("T", " ")
-          .slice(0, 19)
-      : null,
+    branchCreateAt: formatDate(branch.branchCreateAt),
+    branchUpdateAt: formatDate(branch.branchUpdateAt),
   }));
 }
 
 export const branchPosteSchema = z.object({
-  branchName: z.string().min(1, { message: "Please Enter Branch Name" }),
-  branchCreateBy: z.preprocess((val) => parseInt(val, 10),z.number().int({ message: "Branch creator ID must be an integer." })),
+  branchName: z
+    .string({ required_error: "Please Enter Branch Name" })
+    .min(1, { message: "Please Enter Branch Name" }),
+  branchCreateBy: preprocessInt(
+    "Branch creator ID must be provided.",
+    "Branch creator ID must be an integer."
+  ),
 });
 
 export const branchPutSchema = z.object({
-  branchId: z.preprocess((val) => parseInt(val, 10), z.number().int()),
-  branchName: z.string().min(1, { message: "Please Enter Branch Name" }),
-  branchStatus: z.enum(["Active", "InActive"], {errorMap: () => ({message: "Branch status must be either 'Active' or 'InActive'.",}),}),
-  branchUpdateBy: z.preprocess((val) => parseInt(val, 10),z.number().int({ message: "Branch updater ID must be an integer." })),
+  branchId: preprocessInt(
+    "Branch ID must be provided.",
+    "Branch ID must be an integer."
+  ),
+  branchName: z
+    .string({ required_error: "Please Enter Branch Name" })
+    .min(1, { message: "Please Enter Branch Name" }),
+  branchStatus: z.enum(["Active", "InActive"], {
+    required_error: "Branch status must be either 'Active' or 'InActive'.",
+    invalid_type_error: "Branch status must be either 'Active' or 'InActive'.",
+  }),
+  branchUpdateBy: preprocessInt(
+    "Branch updater ID must be provided.",
+    "Branch updater ID must be an integer."
+  ),
 });
