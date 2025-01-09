@@ -173,7 +173,9 @@ export default function DivisionList() {
   const { paginatedItems, pages } = useMemo(() => {
     const filtered = filterDivisionValue
       ? division.filter((item) =>
-          item.divisionName?.toLowerCase().includes(filterDivisionValue.toLowerCase())
+          item.divisionName
+            ?.toLowerCase()
+            .includes(filterDivisionValue.toLowerCase())
         )
       : division;
 
