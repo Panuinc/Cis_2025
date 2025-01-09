@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { Add, Search, Setting } from "@/components/icons/icons";
 import CommonTable from "@/components/CommonTable";
+import debounce from "lodash.debounce";
 import {
   Input,
   Button,
@@ -149,12 +150,26 @@ export default function BranchList() {
     [getFullName, renderChip]
   );
 
+  const debouncedSetFilterBranchValue = useMemo(
+    () =>
+      debounce((value) => {
+        setFilterBranchValue(value);
+        setPage(1);
+      }, 300),
+    []
+  );
+
+  const handleSearchChange = useCallback(
+    (val) => {
+      debouncedSetFilterBranchValue(val || "");
+    },
+    [debouncedSetFilterBranchValue]
+  );
+
   const { paginatedItems, pages } = useMemo(() => {
     const filtered = filterBranchValue
       ? branch.filter((item) =>
-          item.branchName
-            ?.toLowerCase()
-            .includes(filterBranchValue.toLowerCase())
+          item.branchName?.toLowerCase().includes(filterBranchValue.toLowerCase())
         )
       : branch;
 
@@ -171,6 +186,12 @@ export default function BranchList() {
     return { paginatedItems: items, pages: calculatedPages };
   }, [branch, filterBranchValue, page, rowsPerPage]);
 
+  useEffect(() => {
+    return () => {
+      debouncedSetFilterBranchValue.cancel();
+    };
+  }, [debouncedSetFilterBranchValue]);
+
   return (
     <>
       <TopicHeader topic="Branch List" />
@@ -183,9 +204,8 @@ export default function BranchList() {
               size="lg"
               variant="bordered"
               startContent={<Search />}
-              value={filterBranchValue}
               onClear={() => setFilterBranchValue("")}
-              onValueChange={(val) => setFilterBranchValue(val || "")}
+              onChange={(e) => handleSearchChange(e.target.value)}
             />
           </div>
           {(userData?.employee?.employeeLevel === "SuperAdmin" ||
@@ -200,6 +220,11 @@ export default function BranchList() {
             </Link>
           )}
         </div>
+        {error && (
+          <div className="text-red-500">
+            <p>Error: {error}</p>
+          </div>
+        )}
         <CommonTable
           columns={columns}
           items={paginatedItems}

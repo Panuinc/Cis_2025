@@ -1,17 +1,37 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React, { use, useState, useRef, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+  use,
+} from "react";
 import toast, { Toaster } from "react-hot-toast";
 import TopicHeader from "@/components/form/TopicHeader";
 import FormDivision from "@/components/form/hr/division/FormDivision";
 
+const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
+
+const DEFAULT_FORM_DATA = {
+  divisionName: "",
+  divisionStatus: "",
+};
+
 export default function DivisionUpdate({ params: paramsPromise }) {
   const { data: session } = useSession();
   const userData = session?.user || {};
-  const operatedBy = `${userData?.employee?.employeeFirstname || ""} ${
-    userData?.employee?.employeeLastname || ""
-  }`;
+  const userId = userData?.userId;
+
+  const operatedBy = useMemo(
+    () =>
+      `${userData?.employee?.employeeFirstname || ""} ${
+        userData?.employee?.employeeLastname || ""
+      }`,
+    [userData]
+  );
 
   const params = use(paramsPromise);
   const divisionId = params.id;
@@ -19,71 +39,63 @@ export default function DivisionUpdate({ params: paramsPromise }) {
   const router = useRouter();
   const [errors, setErrors] = useState({});
   const [branch, setBranch] = useState([]);
-  const [formData, setFormData] = useState({
-    divisionName: "",
-    divisionStatus: "",
-  });
+  const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
 
   const formRef = useRef(null);
 
-  useEffect(() => {
-    const fetchBranch = async () => {
-      try {
-        const res = await fetch(`/api/hr/branch`, {
+  const fetchData = useCallback(async () => {
+    try {
+      const [branchRes, divisionRes] = await Promise.all([
+        fetch(`/api/hr/branch`, {
           method: "GET",
           headers: {
-            "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
+            "secret-token": SECRET_TOKEN,
           },
-        });
-
-        const jsonData = await res.json();
-        if (res.ok) {
-          setBranch(jsonData.branch || []);
-        } else {
-          toast.error(jsonData.error);
-        }
-      } catch (error) {
-        toast.error("Error fetching branch");
-      }
-    };
-
-    fetchBranch();
-  }, []);
-
-  useEffect(() => {
-    const fetchDivision = async () => {
-      try {
-        const res = await fetch(`/api/hr/division/${divisionId}`, {
+        }),
+        fetch(`/api/hr/division/${divisionId}`, {
           method: "GET",
           headers: {
-            "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
+            "secret-token": SECRET_TOKEN,
           },
-        });
+        }),
+      ]);
 
-        const jsonData = await res.json();
-        if (res.ok) {
-          const division = jsonData.division[0];
-          setFormData(division);
-        } else {
-          toast.error(jsonData.error);
-        }
-      } catch (error) {
-        toast.error("Error fetching division data");
+      const branchData = await branchRes.json();
+      if (branchRes.ok) {
+        setBranch(branchData.branch || []);
+      } else {
+        toast.error(branchData.error);
       }
-    };
 
-    fetchDivision();
+      const divisionData = await divisionRes.json();
+      if (divisionRes.ok) {
+        const division = divisionData.division[0];
+        setFormData(division);
+      } else {
+        toast.error(divisionData.error);
+      }
+    } catch (error) {
+      toast.error("Error fetching data");
+    }
   }, [divisionId]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const handleInputChange = useCallback(
     (field) => (e) => {
       const value = e.target.value;
       setFormData((prev) => ({ ...prev, [field]: value }));
-      if (errors[field]) {
-        setErrors((prev) => ({ ...prev, [field]: null }));
-      }
+      setErrors((prev) => {
+        if (prev[field]) {
+          const { [field]: _, ...rest } = prev;
+          return rest;
+        }
+        return prev;
+      });
     },
-    [errors]
+    []
   );
 
   const handleSubmit = useCallback(
@@ -91,14 +103,14 @@ export default function DivisionUpdate({ params: paramsPromise }) {
       event.preventDefault();
 
       const formDataObject = new FormData(formRef.current);
-      formDataObject.append("divisionUpdateBy", userData?.userId);
+      formDataObject.append("divisionUpdateBy", userId);
 
       try {
         const res = await fetch(`/api/hr/division/${divisionId}`, {
           method: "PUT",
           body: formDataObject,
           headers: {
-            "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
+            "secret-token": SECRET_TOKEN,
           },
         });
 
@@ -111,13 +123,13 @@ export default function DivisionUpdate({ params: paramsPromise }) {
           }, 2000);
         } else {
           if (jsonData.details) {
-            const fieldErrorObj = {};
-            jsonData.details.forEach((err) => {
+            const fieldErrorObj = jsonData.details.reduce((acc, err) => {
               const fieldName = err.field && err.field[0];
               if (fieldName) {
-                fieldErrorObj[fieldName] = err.message;
+                acc[fieldName] = err.message;
               }
-            });
+              return acc;
+            }, {});
             setErrors(fieldErrorObj);
           }
           toast.error(jsonData.error || "Error updating division");
@@ -126,17 +138,12 @@ export default function DivisionUpdate({ params: paramsPromise }) {
         toast.error("Error updating division: " + error.message);
       }
     },
-    [divisionId, router, userData?.userId]
+    [divisionId, router, userId]
   );
 
   const handleClear = useCallback(() => {
     if (formRef.current) formRef.current.reset();
-    setFormData((prev) =>
-      Object.keys(prev).reduce((acc, key) => {
-        acc[key] = "";
-        return acc;
-      }, {})
-    );
+    setFormData(DEFAULT_FORM_DATA);
     setErrors({});
   }, []);
 

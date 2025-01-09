@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { Add, Search, Setting } from "@/components/icons/icons";
 import CommonTable from "@/components/CommonTable";
+import debounce from "lodash.debounce";
 import {
   Input,
   Button,
@@ -153,6 +154,22 @@ export default function DivisionList() {
     [getFullName, renderChip]
   );
 
+  const debouncedSetFilterDivisionValue = useMemo(
+    () =>
+      debounce((value) => {
+        setFilterDivisionValue(value);
+        setPage(1);
+      }, 300),
+    []
+  );
+
+  const handleSearchChange = useCallback(
+    (val) => {
+      debouncedSetFilterDivisionValue(val || "");
+    },
+    [debouncedSetFilterDivisionValue]
+  );
+
   const { paginatedItems, pages } = useMemo(() => {
     const filtered = filterDivisionValue
       ? division.filter((item) =>
@@ -173,6 +190,12 @@ export default function DivisionList() {
     return { paginatedItems: items, pages: calculatedPages };
   }, [division, filterDivisionValue, page, rowsPerPage]);
 
+  useEffect(() => {
+    return () => {
+      debouncedSetFilterDivisionValue.cancel();
+    };
+  }, [debouncedSetFilterDivisionValue]);
+
   return (
     <>
       <TopicHeader topic="Division List" />
@@ -185,9 +208,8 @@ export default function DivisionList() {
               size="lg"
               variant="bordered"
               startContent={<Search />}
-              value={filterDivisionValue}
               onClear={() => setFilterDivisionValue("")}
-              onValueChange={(val) => setFilterDivisionValue(val || "")}
+              onChange={(e) => handleSearchChange(e.target.value)}
             />
           </div>
           {(userData?.employee?.employeeLevel === "SuperAdmin" ||
@@ -202,6 +224,11 @@ export default function DivisionList() {
             </Link>
           )}
         </div>
+        {error && (
+          <div className="text-red-500">
+            <p>Error: {error}</p>
+          </div>
+        )}
         <CommonTable
           columns={columns}
           items={paginatedItems}

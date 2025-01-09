@@ -1,22 +1,37 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import toast, { Toaster } from "react-hot-toast";
 import TopicHeader from "@/components/form/TopicHeader";
 import FormDivision from "@/components/form/hr/division/FormDivision";
 
+const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
+const DEFAULT_FORM_DATA = { divisionBranchId: "", divisionName: "" };
+
 export default function DivisionCreate() {
   const { data: session } = useSession();
   const userData = session?.user || {};
-  const operatedBy = `${userData?.employee?.employeeFirstname || ""} ${
-    userData?.employee?.employeeLastname || ""
-  }`;
+  const userId = userData?.userId;
+
+  const operatedBy = useMemo(
+    () =>
+      `${userData?.employee?.employeeFirstname || ""} ${
+        userData?.employee?.employeeLastname || ""
+      }`,
+    [userData]
+  );
 
   const router = useRouter();
   const [errors, setErrors] = useState({});
   const [branch, setBranch] = useState([]);
-  const [formData, setFormData] = useState({ divisionBranchId: "", divisionName: "" });
+  const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
 
   const formRef = useRef(null);
 
@@ -26,7 +41,7 @@ export default function DivisionCreate() {
         const res = await fetch(`/api/hr/branch`, {
           method: "GET",
           headers: {
-            "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
+            "secret-token": SECRET_TOKEN,
           },
         });
 
@@ -51,25 +66,29 @@ export default function DivisionCreate() {
     (field) => (e) => {
       const value = e.target.value;
       setFormData((prev) => ({ ...prev, [field]: value }));
-      if (errors[field]) {
-        setErrors((prev) => ({ ...prev, [field]: null }));
-      }
+      setErrors((prev) => {
+        if (prev[field]) {
+          const { [field]: _, ...rest } = prev;
+          return rest;
+        }
+        return prev;
+      });
     },
-    [errors]
+    []
   );
 
   const handleSubmit = useCallback(
     async (event) => {
       event.preventDefault();
       const formDataObject = new FormData(formRef.current);
-      formDataObject.append("divisionCreateBy", userData?.userId);
+      formDataObject.append("divisionCreateBy", userId);
 
       try {
         const res = await fetch("/api/hr/division", {
           method: "POST",
           body: formDataObject,
           headers: {
-            "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
+            "secret-token": SECRET_TOKEN,
           },
         });
 
@@ -82,13 +101,13 @@ export default function DivisionCreate() {
           }, 2000);
         } else {
           if (jsonData.details) {
-            const fieldErrorObj = {};
-            jsonData.details.forEach((err) => {
+            const fieldErrorObj = jsonData.details.reduce((acc, err) => {
               const fieldName = err.field && err.field[0];
               if (fieldName) {
-                fieldErrorObj[fieldName] = err.message;
+                acc[fieldName] = err.message;
               }
-            });
+              return acc;
+            }, {});
             setErrors(fieldErrorObj);
           }
           toast.error(jsonData.error || "Error creating division");
@@ -97,17 +116,12 @@ export default function DivisionCreate() {
         toast.error("Error creating division: " + error.message);
       }
     },
-    [router, userData?.userId]
+    [router, userId]
   );
 
   const handleClear = useCallback(() => {
     if (formRef.current) formRef.current.reset();
-    setFormData((prev) =>
-      Object.keys(prev).reduce((acc, key) => {
-        acc[key] = "";
-        return acc;
-      }, {})
-    );
+    setFormData(DEFAULT_FORM_DATA);
     setErrors({});
   }, []);
 
