@@ -115,7 +115,11 @@ export default function BranchList() {
     const statusKey = (status || "").toLowerCase();
     const color = branchStatusColorMap[statusKey] || "default";
     return (
-      <Chip className="capitalize text-white border-2 border-dark border-dashed" color={color} size="lg">
+      <Chip
+        className="capitalize text-white border-2 border-dark border-dashed"
+        color={color}
+        size="lg"
+      >
         {status || null}
       </Chip>
     );
@@ -184,7 +188,7 @@ export default function BranchList() {
               href="/branch/create"
               className="flex items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
             >
-              <Button size="lg" color="secondary">
+              <Button size="lg" color="default">
                 <Add /> Add New
               </Button>
             </Link>
