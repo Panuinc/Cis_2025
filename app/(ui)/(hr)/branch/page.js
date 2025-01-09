@@ -3,7 +3,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import TopicHeader from "@/components/form/TopicHeader";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { Add, Dot, Search } from "@/components/icons/icons";
+import { Add, Dot, Search, Setting } from "@/components/icons/icons";
 import CommonTable from "@/components/CommonTable";
 import {
   Input,
@@ -142,14 +142,14 @@ export default function BranchList() {
           <div className="relative flex items-center justify-center w-full h-full p-2 gap-2">
             <Dropdown>
               <DropdownTrigger>
-                <Button isIconOnly size="md" variant="light" color="warning">
+                <Button isIconOnly size="md" variant="light" color="danger">
                   <span>
-                    <Dot />
+                    <Setting />
                   </span>
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem key="edit" variant="flat" color="warning">
+                <DropdownItem key="edit" variant="flat" color="danger">
                   <Link href={`/hr/branch/${item.branchId}`}>Update</Link>
                 </DropdownItem>
               </DropdownMenu>
