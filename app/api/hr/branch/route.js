@@ -14,7 +14,7 @@ export async function GET(request) {
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
 
-    const branches = await prisma.branch.findMany({
+    const branch = await prisma.branch.findMany({
       include: {
         BranchCreateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
@@ -25,19 +25,19 @@ export async function GET(request) {
       },
     });
 
-    if (!branches || branches.length === 0) {
+    if (!branch || branch.length === 0) {
       return NextResponse.json(
         { error: "No branch data found" },
         { status: 404 }
       );
     }
 
-    const formattedBranches = formatBranchData(branches);
+    const formattedBranch = formatBranchData(branch);
 
     return NextResponse.json(
       {
         message: "Branch data retrieved successfully",
-        branches: formattedBranches,
+        branch: formattedBranch,
       },
       { status: 200 }
     );

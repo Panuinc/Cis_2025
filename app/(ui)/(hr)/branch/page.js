@@ -68,7 +68,7 @@ export default function BranchList() {
 
         const data = await response.json();
 
-        let filteredData = data.branches || [];
+        let filteredData = data.branch || [];
         if (userData?.employeeLevel === "User") {
           filteredData = filteredData.filter(
             (item) => item.branchStatus?.toLowerCase() === "active"

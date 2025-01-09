@@ -24,7 +24,7 @@ export async function GET(request, context) {
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
 
-    const branches = await prisma.branch.findMany({
+    const branch = await prisma.branch.findMany({
       where: { branchId: branchId },
       include: {
         BranchCreateBy: {
@@ -36,19 +36,19 @@ export async function GET(request, context) {
       },
     });
 
-    if (!branches || branches.length === 0) {
+    if (!branch || branch.length === 0) {
       return NextResponse.json(
         { error: "No branch data found" },
         { status: 404 }
       );
     }
 
-    const formattedBranches = formatBranchData(branches);
+    const formattedBranch = formatBranchData(branch);
 
     return NextResponse.json(
       {
         message: "Branch data retrieved successfully",
-        branches: formattedBranches,
+        branch: formattedBranch,
       },
       { status: 200 }
     );
@@ -61,7 +61,8 @@ export async function PUT(request, context) {
   try {
     ip = request.headers.get("x-forwarded-for") || request.ip || "unknown";
 
-    const { branchId } = context.params;
+    const params = await context.params;
+    const { branchId } = params;
     if (!branchId) {
       return NextResponse.json(
         { error: "Branch ID is required" },
