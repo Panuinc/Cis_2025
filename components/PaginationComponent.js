@@ -32,7 +32,6 @@ export default function PaginationComponent({
           showControls
           showShadow
           color="success"
-          variant="light"
           page={page}
           total={pages}
           onChange={onPageChange}

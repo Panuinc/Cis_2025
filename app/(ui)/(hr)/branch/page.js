@@ -115,7 +115,7 @@ export default function BranchList() {
     const statusKey = (status || "").toLowerCase();
     const color = branchStatusColorMap[statusKey] || "default";
     return (
-      <Chip className="capitalize text-white" color={color} size="lg">
+      <Chip className="capitalize text-white border-2 border-dark border-dashed" color={color} size="lg">
         {status || null}
       </Chip>
     );

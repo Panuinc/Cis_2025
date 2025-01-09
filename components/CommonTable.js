@@ -31,13 +31,13 @@ export default function CommonTable({
       <Table
         isHeaderSticky
         classNames={{
-          wrapper: "min-h-full shadow-none bg-white",
+          wrapper: "min-h-full shadow-none bg-white border-2 border-dark border-dashed",
         }}
       >
         <TableHeader columns={columns}>
           {(column) => (
             <TableColumn
-              className="h-14 text-sm bg-default text-dark"
+              className="h-14 text-sm bg-default text-dark border-2 border-dark border-dashed"
               key={column.uid}
               align={column.uid === "actions" ? "center" : "start"}
             >
@@ -47,7 +47,7 @@ export default function CommonTable({
         </TableHeader>
         <TableBody items={items} emptyContent={emptyContentText}>
           {(item) => (
-            <TableRow key={item._index} className="border-b">
+            <TableRow key={item._index} className="border-2 border-dark border-dashed">
               {(columnKey) => (
                 <TableCell>{renderCell(item, columnKey)}</TableCell>
               )}
