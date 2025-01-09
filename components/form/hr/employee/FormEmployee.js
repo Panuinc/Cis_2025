@@ -202,20 +202,22 @@ export default function FormEmployee({
             </SelectItem>
           </Select>
         </div>
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <DatePicker
-            name="employeeBirthday"
-            label="Birthday"
-            placeholder="Please Enter Data"
-            labelPlacement="outside"
-            size="lg"
-            variant="bordered"
-            value={formData.employeeBirthday || null}
-            onChange={handleInputChange("employeeBirthday")}
-            isInvalid={!!errors.employeeBirthday}
-            errorMessage={errors.employeeBirthday}
-          />
-        </div>
+        {!isUpdate && (
+          <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <DatePicker
+              name="employeeBirthday"
+              label="Birthday"
+              placeholder="Please Enter Data"
+              labelPlacement="outside"
+              size="lg"
+              variant="bordered"
+              value={formData.employeeBirthday || null}
+              onChange={handleInputChange("employeeBirthday")}
+              isInvalid={!!errors.employeeBirthday}
+              errorMessage={errors.employeeBirthday}
+            />
+          </div>
+        )}
       </div>
       {isUpdate && (
         <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
