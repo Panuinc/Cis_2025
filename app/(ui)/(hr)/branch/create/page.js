@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import TopicHeader from "@/components/form/TopicHeader";
-import FormDivision from "@/components/form/hr/division/FormDivision";
+import FormBranch from "@/components/form/hr/branch/FormBranch";
 import React, {
   useState,
   useRef,
@@ -14,11 +14,10 @@ import React, {
 
 const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
 const DEFAULT_FORM_DATA = {
-  divisionBranchId: "",
-  divisionName: "",
+  branchName: "",
 };
 
-export default function DivisionCreate() {
+export default function BranchCreate() {
   const { data: session } = useSession();
   const userData = session?.user || {};
   const userId = userData?.userId;
@@ -33,37 +32,9 @@ export default function DivisionCreate() {
 
   const router = useRouter();
   const [errors, setErrors] = useState({});
-  const [branch, setBranch] = useState([]);
   const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
 
   const formRef = useRef(null);
-
-  const fetchData = useCallback(async () => {
-    try {
-      const [branchRes] = await Promise.all([
-        fetch(`/api/hr/branch`, {
-          method: "GET",
-          headers: { "secret-token": SECRET_TOKEN },
-        }),
-      ]);
-
-      const branchData = await branchRes.json();
-      if (branchRes.ok) {
-        const activeBranch = (branchData.branch || []).filter(
-          (branch) => branch.branchStatus === "Active"
-        );
-        setBranch(activeBranch);
-      } else {
-        toast.error(branchData.error);
-      }
-    } catch (error) {
-      toast.error("Error fetching data");
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
 
   const handleInputChange = useCallback(
     (field) => (e) => {
@@ -84,10 +55,10 @@ export default function DivisionCreate() {
     async (event) => {
       event.preventDefault();
       const formDataObject = new FormData(formRef.current);
-      formDataObject.append("divisionCreateBy", userId);
+      formDataObject.append("branchCreateBy", userId);
 
       try {
-        const res = await fetch("/api/hr/division", {
+        const res = await fetch("/api/hr/branch", {
           method: "POST",
           body: formDataObject,
           headers: { "secret-token": SECRET_TOKEN },
@@ -97,7 +68,7 @@ export default function DivisionCreate() {
         if (res.ok) {
           toast.success(jsonData.message);
           setTimeout(() => {
-            router.push("/division");
+            router.push("/branch");
           }, 2000);
         } else {
           if (jsonData.details) {
@@ -110,10 +81,10 @@ export default function DivisionCreate() {
             }, {});
             setErrors(fieldErrorObj);
           }
-          toast.error(jsonData.error || "Error creating division");
+          toast.error(jsonData.error || "Error creating branch");
         }
       } catch (error) {
-        toast.error("Error creating division: " + error.message);
+        toast.error("Error creating branch: " + error.message);
       }
     },
     [router, userId]
@@ -127,15 +98,14 @@ export default function DivisionCreate() {
 
   return (
     <>
-      <TopicHeader topic="Division Create" />
+      <TopicHeader topic="Branch Create" />
       <Toaster position="top-right" />
-      <FormDivision
+      <FormBranch
         formRef={formRef}
         onSubmit={handleSubmit}
         onClear={handleClear}
         errors={errors}
         setErrors={setErrors}
-        branch={branch}
         formData={formData}
         handleInputChange={handleInputChange}
         operatedBy={operatedBy}

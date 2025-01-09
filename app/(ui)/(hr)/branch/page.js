@@ -16,21 +16,21 @@ import {
   Chip,
 } from "@nextui-org/react";
 
-const divisionStatusColorMap = {
+const branchStatusColorMap = {
   active: "success",
   inactive: "danger",
 };
 
-export default function DivisionList() {
+export default function BranchList() {
   const { data: session } = useSession();
   const userData = session?.user || {};
   const isUserLevel = userData?.employeeLevel === "User";
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [division, setDivision] = useState([]);
+  const [branch, setBranch] = useState([]);
 
-  const [filterDivisionValue, setFilterDivisionValue] = useState("");
+  const [filterBranchValue, setFilterBranchValue] = useState("");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -39,25 +39,23 @@ export default function DivisionList() {
       ? [
           { name: "No.", uid: "index" },
           { name: "Branch Name", uid: "branchName" },
-          { name: "Division Name", uid: "divisionName" },
         ]
       : [
           { name: "No.", uid: "index" },
           { name: "Branch Name", uid: "branchName" },
-          { name: "Division Name", uid: "divisionName" },
           { name: "Create By", uid: "createdBy" },
-          { name: "Create At", uid: "divisionCreateAt" },
+          { name: "Create At", uid: "branchCreateAt" },
           { name: "Update By", uid: "updatedBy" },
-          { name: "Update At", uid: "divisionUpdateAt" },
-          { name: "Division Status", uid: "divisionStatus" },
+          { name: "Update At", uid: "branchUpdateAt" },
+          { name: "Branch Status", uid: "branchStatus" },
           { name: "Management", uid: "actions" },
         ];
   }, [isUserLevel]);
 
   useEffect(() => {
-    const fetchDivision = async () => {
+    const fetchBranch = async () => {
       try {
-        const response = await fetch("/api/hr/division", {
+        const response = await fetch("/api/hr/branch", {
           method: "GET",
           headers: {
             "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
@@ -70,15 +68,15 @@ export default function DivisionList() {
         }
 
         const data = await response.json();
-        let filteredData = data.division || [];
+        let filteredData = data.branch || [];
 
         if (isUserLevel) {
           filteredData = filteredData.filter(
-            (item) => item.divisionStatus?.toLowerCase() === "active"
+            (item) => item.branchStatus?.toLowerCase() === "active"
           );
         }
 
-        setDivision(filteredData);
+        setBranch(filteredData);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -86,7 +84,7 @@ export default function DivisionList() {
       }
     };
 
-    fetchDivision();
+    fetchBranch();
   }, [isUserLevel]);
 
   const getFullName = useCallback((user) => {
@@ -99,7 +97,7 @@ export default function DivisionList() {
 
   const renderChip = useCallback((status) => {
     const statusKey = (status || "").toLowerCase();
-    const color = divisionStatusColorMap[statusKey] || "default";
+    const color = branchStatusColorMap[statusKey] || "default";
     return (
       <Chip
         className="capitalize text-white border-2 border-dark border-dashed"
@@ -117,19 +115,17 @@ export default function DivisionList() {
         case "index":
           return item._index;
         case "branchName":
-          return item.DivisionBranchId?.branchName || null;
-        case "divisionName":
-          return item.divisionName || null;
-        case "divisionStatus":
-          return renderChip(item.divisionStatus);
+          return item.branchName || null;
+        case "branchStatus":
+          return renderChip(item.branchStatus);
         case "createdBy":
-          return getFullName(item.DivisionCreateBy);
-        case "divisionCreateAt":
-          return item.divisionCreateAt || null;
+          return getFullName(item.BranchCreateBy);
+        case "branchCreateAt":
+          return item.branchCreateAt || null;
         case "updatedBy":
-          return getFullName(item.DivisionUpdateBy);
-        case "divisionUpdateAt":
-          return item.divisionUpdateAt || null;
+          return getFullName(item.BranchUpdateBy);
+        case "branchUpdateAt":
+          return item.branchUpdateAt || null;
         case "actions":
           return (
             <div className="relative flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -141,7 +137,7 @@ export default function DivisionList() {
                 </DropdownTrigger>
                 <DropdownMenu>
                   <DropdownItem key="edit" variant="flat" color="warning">
-                    <Link href={`/division/${item.divisionId}`}>Update</Link>
+                    <Link href={`/branch/${item.branchId}`}>Update</Link>
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
@@ -154,10 +150,10 @@ export default function DivisionList() {
     [getFullName, renderChip]
   );
 
-  const debouncedSetFilterDivisionValue = useMemo(
+  const debouncedSetFilterBranchValue = useMemo(
     () =>
       debounce((value) => {
-        setFilterDivisionValue(value);
+        setFilterBranchValue(value);
         setPage(1);
       }, 300),
     []
@@ -165,19 +161,19 @@ export default function DivisionList() {
 
   const handleSearchChange = useCallback(
     (val) => {
-      debouncedSetFilterDivisionValue(val || "");
+      debouncedSetFilterBranchValue(val || "");
     },
-    [debouncedSetFilterDivisionValue]
+    [debouncedSetFilterBranchValue]
   );
 
   const { paginatedItems, pages } = useMemo(() => {
-    const filtered = filterDivisionValue
-      ? division.filter((item) =>
-          item.divisionName
+    const filtered = filterBranchValue
+      ? branch.filter((item) =>
+          item.branchName
             ?.toLowerCase()
-            .includes(filterDivisionValue.toLowerCase())
+            .includes(filterBranchValue.toLowerCase())
         )
-      : division;
+      : branch;
 
     const calculatedPages = Math.ceil(filtered.length / rowsPerPage) || 1;
     const currentPage = page > calculatedPages ? calculatedPages : page;
@@ -190,17 +186,17 @@ export default function DivisionList() {
     }));
 
     return { paginatedItems: items, pages: calculatedPages };
-  }, [division, filterDivisionValue, page, rowsPerPage]);
+  }, [branch, filterBranchValue, page, rowsPerPage]);
 
   useEffect(() => {
     return () => {
-      debouncedSetFilterDivisionValue.cancel();
+      debouncedSetFilterBranchValue.cancel();
     };
-  }, [debouncedSetFilterDivisionValue]);
+  }, [debouncedSetFilterBranchValue]);
 
   return (
     <>
-      <TopicHeader topic="Division List" />
+      <TopicHeader topic="Branch List" />
       <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -210,14 +206,14 @@ export default function DivisionList() {
               size="lg"
               variant="bordered"
               startContent={<Search />}
-              onClear={() => setFilterDivisionValue("")}
+              onClear={() => setFilterBranchValue("")}
               onChange={(e) => handleSearchChange(e.target.value)}
             />
           </div>
           {(userData?.employee?.employeeLevel === "SuperAdmin" ||
             userData?.employee?.employeeLevel === "Admin") && (
             <Link
-              href="/division/create"
+              href="/branch/create"
               className="flex items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
             >
               <Button size="lg" color="default">
@@ -236,7 +232,7 @@ export default function DivisionList() {
           onPageChange={setPage}
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={setRowsPerPage}
-          emptyContentText="Division Not Found"
+          emptyContentText="Branch Not Found"
         />
       </div>
     </>
