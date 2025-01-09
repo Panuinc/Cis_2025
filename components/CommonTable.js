@@ -31,7 +31,7 @@ export default function CommonTable({
       <Table
         isHeaderSticky
         classNames={{
-          wrapper: "min-h-full shadow-none bg-white border-2 border-dark border-dashed",
+          wrapper: "min-h-full shadow-none border-2 border-dark border-dashed",
         }}
       >
         <TableHeader columns={columns}>
@@ -47,7 +47,7 @@ export default function CommonTable({
         </TableHeader>
         <TableBody items={items} emptyContent={emptyContentText}>
           {(item) => (
-            <TableRow key={item._index} className="border-2 border-dark border-dashed hover:bg-default">
+            <TableRow key={item._index} className="border-2 border-dark border-dashed">
               {(columnKey) => (
                 <TableCell>{renderCell(item, columnKey)}</TableCell>
               )}

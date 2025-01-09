@@ -15,7 +15,7 @@ export default function PaginationComponent({
         <div className="flex flex-row items-center justify-start h-full p-2 gap-2 border-2 border-dark border-dashed">
           Rows per page:
           <select
-            className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed bg-white rounded-xl"
+            className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed rounded-xl"
             onChange={(e) => {
               onRowsPerPageChange(Number(e.target.value));
               onPageChange(1);
