@@ -5,6 +5,11 @@ const formatDate = (value) => {
   return new Date(value).toISOString().replace("T", " ").slice(0, 19);
 };
 
+const formatDateWithoutTime = (value) => {
+  if (!value) return null;
+  return new Date(value).toISOString().split("T")[0];
+};
+
 const preprocessInt = (requiredMsg, intMsg) =>
   z.preprocess(
     (val) => parseInt(val, 10),
@@ -14,10 +19,9 @@ const preprocessInt = (requiredMsg, intMsg) =>
 export function formatEmployeeData(employee) {
   return employee.map((employee) => ({
     ...employee,
-    employeeBirthday: formatDate(employee.employeeBirthday),
+    employeeBirthday: formatDateWithoutTime(employee.employeeBirthday),
     employeeCreateAt: formatDate(employee.employeeCreateAt),
     employeeUpdateAt: formatDate(employee.employeeUpdateAt),
-    
   }));
 }
 
