@@ -1,6 +1,9 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
+import TopicHeader from "@/components/form/TopicHeader";
+import FormDepartment from "@/components/form/hr/department/FormDepartment";
 import React, {
   useState,
   useRef,
@@ -9,9 +12,6 @@ import React, {
   useMemo,
   use,
 } from "react";
-import toast, { Toaster } from "react-hot-toast";
-import TopicHeader from "@/components/form/TopicHeader";
-import FormDepartment from "@/components/form/hr/department/FormDepartment";
 
 const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
 
