@@ -408,7 +408,9 @@ export default function UiLayout({ children }) {
           >
             <MenuMainOther
               icons={<Hide />}
-              text={`${userData.employee?.employeeFirstname || ""} ${userData.employee?.employeeLastname || ""} ( ${userData.employee?.employeeNickname || ""} )`} 
+              text={`${userData.employee?.employeeFirstname || ""} ${
+                userData.employee?.employeeLastname || ""
+              } ( ${userData.employee?.employeeNickname || ""} )`}
               isCollapsed={isCollapsed}
               onClick={handleToggleMenu}
             />
@@ -430,6 +432,8 @@ export default function UiLayout({ children }) {
                   { label: "Role", href: "/role" },
                   { label: "Site", href: "/site" },
                   { label: "Division", href: "/division" },
+                  { label: "Department", href: "/department" },
+                  { label: "Position", href: "/position" },
                 ]}
                 isOpen={menuState.HR}
                 onToggle={() => toggleMenu("HR")}
