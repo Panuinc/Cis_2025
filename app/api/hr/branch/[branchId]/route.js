@@ -3,21 +3,8 @@ import { handleErrors, handleGetErrors } from "@/lib/errorHandler";
 import { branchPutSchema } from "@/app/api/hr/branch/branchSchema";
 import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
-import logger from "@/lib/logger";
 import prisma from "@/lib/prisma";
-
-function formatBranchData(branch) {
-  return branch.map((b) => ({
-    ...b,
-    branchCreateAt: new Date(b.branchCreateAt)
-      .toISOString()
-      .replace("T", " ")
-      .slice(0, 19),
-    branchUpdateAt: b.branchUpdateAt
-      ? new Date(b.branchUpdateAt).toISOString().replace("T", " ").slice(0, 19)
-      : null,
-  }));
-}
+import { formatBranchData } from "@/app/api/hr/branch/branchSchema";
 
 export async function GET(request, context) {
   let ip;
