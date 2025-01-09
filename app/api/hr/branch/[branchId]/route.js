@@ -5,11 +5,13 @@ import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
 import prisma from "@/lib/prisma";
 import { formatBranchData } from "@/app/api/hr/branch/branchSchema";
+import { getRequestIP } from "@/lib/GetRequestIp";
+import { getLocalNow } from "@/lib/GetLocalNow";
 
 export async function GET(request, context) {
   let ip;
   try {
-    ip = request.headers.get("x-forwarded-for") || request.ip || "unknown";
+    ip = getRequestIP(request);
 
     const params = await context.params;
     const branchId = parseInt(params.branchId, 10);
@@ -36,7 +38,7 @@ export async function GET(request, context) {
       },
     });
 
-    if (!branch || branch.length === 0) {
+    if (!branch?.length) {
       return NextResponse.json(
         { error: "No branch data found" },
         { status: 404 }
@@ -56,10 +58,11 @@ export async function GET(request, context) {
     return handleGetErrors(error, ip, "Error retrieving branch data");
   }
 }
+
 export async function PUT(request, context) {
   let ip;
   try {
-    ip = request.headers.get("x-forwarded-for") || request.ip || "unknown";
+    ip = getRequestIP(request);
 
     const params = await context.params;
     const { branchId } = params;
@@ -80,10 +83,8 @@ export async function PUT(request, context) {
       ...data,
       branchId,
     });
-    const now = new Date();
-    const offsetMillis = 7 * 60 * 60 * 1000;
-    const localNow = new Date(now.getTime() + offsetMillis);
-    localNow.setMilliseconds(0);
+
+    const localNow = getLocalNow();
 
     const updatedBranch = await prisma.branch.update({
       where: { branchId: parseInt(branchId, 10) },

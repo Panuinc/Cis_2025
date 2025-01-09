@@ -5,11 +5,13 @@ import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
 import prisma from "@/lib/prisma";
 import { formatBranchData } from "@/app/api/hr/branch/branchSchema";
+import { getRequestIP } from "@/lib/GetRequestIp";
+import { getLocalNow } from "@/lib/GetLocalNow";
 
 export async function GET(request) {
   let ip;
   try {
-    ip = request.headers.get("x-forwarded-for") || request.ip || "unknown";
+    ip = getRequestIP(request);
 
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
@@ -25,7 +27,7 @@ export async function GET(request) {
       },
     });
 
-    if (!branch || branch.length === 0) {
+    if (!branch?.length) {
       return NextResponse.json(
         { error: "No branch data found" },
         { status: 404 }
@@ -49,7 +51,7 @@ export async function GET(request) {
 export async function POST(request) {
   let ip;
   try {
-    ip = request.headers.get("x-forwarded-for") || request.ip || "unknown";
+    ip = getRequestIP(request);
 
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
@@ -72,10 +74,7 @@ export async function POST(request) {
       );
     }
 
-    const now = new Date();
-    const offsetMillis = 7 * 60 * 60 * 1000;
-    const localNow = new Date(now.getTime() + offsetMillis);
-    localNow.setMilliseconds(0);
+    const localNow = getLocalNow();
 
     const newBranch = await prisma.branch.create({
       data: {
