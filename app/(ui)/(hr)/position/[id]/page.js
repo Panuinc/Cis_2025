@@ -91,10 +91,7 @@ export default function PositionUpdate({ params: paramsPromise }) {
 
       const departmentData = await departmentRes.json();
       if (departmentRes.ok) {
-        const activeDepartment = (departmentData.department || []).filter(
-          (department) => department.departmentStatus === "Active"
-        );
-        setDepartment(activeDepartment);
+        setDepartment(departmentData.department || []);
       } else {
         toast.error(departmentData.error);
       }
