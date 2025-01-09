@@ -18,6 +18,7 @@ export default {
         success: "#76D755",
         warning: "#FFAE2B",
         danger: "#FF0000",
+        secondary: "#00D3F3",
         background: "var(--background)",
         foreground: "var(--foreground)",
       },

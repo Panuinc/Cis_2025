@@ -27,7 +27,7 @@ export default function BranchPage() {
             href="/branch/create"
             className="flex items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
           >
-            <Button size="lg" color="primary">
+            <Button size="lg" color="secondary">
               <Add /> Add New
             </Button>
           </Link>
