@@ -139,18 +139,18 @@ export default function BranchList() {
         return item.branchUpdateAt || null;
       case "actions":
         return (
-          <div className="relative flex items-center justify-center w-full h-full p-2 gap-2">
+          <div className="relative flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
             <Dropdown>
               <DropdownTrigger>
-                <Button isIconOnly size="md" variant="light" color="danger">
+                <Button isIconOnly size="md" variant="light" color="warning">
                   <span>
                     <Setting />
                   </span>
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem key="edit" variant="flat" color="danger">
-                  <Link href={`/hr/branch/${item.branchId}`}>Update</Link>
+                <DropdownItem key="edit" variant="flat" color="warning">
+                  <Link href={`/branch/${item.branchId}`}>Update</Link>
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -178,8 +178,8 @@ export default function BranchList() {
               onValueChange={(val) => setFilterBranchValue(val || "")}
             />
           </div>
-          {(userData?.employeeLevel === "SuperAdmin" ||
-            userData?.employeeLevel === "Admin") && (
+          {(userData?.employee?.employeeLevel === "SuperAdmin" ||
+            userData?.employee?.employeeLevel === "Admin") && (
             <Link
               href="/branch/create"
               className="flex items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed"

@@ -10,12 +10,12 @@ export default function PaginationComponent({
   onRowsPerPageChange,
 }) {
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2">
-      <div className="flex items-center justify-between w-full h-full p-2 gap-2">
-        <div className="flex flex-row items-center justify-start h-full p-2 gap-2">
+    <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <div className="flex items-center justify-between w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex flex-row items-center justify-start h-full p-2 gap-2 border-2 border-dark border-dashed">
           Rows per page:
           <select
-            className="flex items-center justify-center h-full p-2 gap-2 border-2 bg-white dark:bg-dark rounded-xl"
+            className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed bg-white rounded-xl"
             onChange={(e) => {
               onRowsPerPageChange(Number(e.target.value));
               onPageChange(1);
@@ -36,7 +36,7 @@ export default function PaginationComponent({
           page={page}
           total={pages}
           onChange={onPageChange}
-          className="flex items-center justify-center h-full p-2 gap-2"
+          className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed"
         />
       </div>
     </div>

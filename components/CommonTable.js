@@ -31,13 +31,13 @@ export default function CommonTable({
       <Table
         isHeaderSticky
         classNames={{
-          wrapper: "min-h-full shadow-none bg-white dark:bg-dark",
+          wrapper: "min-h-full shadow-none bg-white",
         }}
       >
         <TableHeader columns={columns}>
           {(column) => (
             <TableColumn
-              className="h-14 text-sm bg-success text-white"
+              className="h-14 text-sm bg-default text-dark"
               key={column.uid}
               align={column.uid === "actions" ? "center" : "start"}
             >
