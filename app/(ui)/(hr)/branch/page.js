@@ -42,7 +42,7 @@ export default function BranchPage() {
             </div>
           </div>
           <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div className="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <div className="flex flex-row items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed overflow-auto">
               <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 Header Table 1
               </div>
@@ -60,7 +60,7 @@ export default function BranchPage() {
               </div>
             </div>
             <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <div className="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <div className="flex flex-row items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed overflow-auto">
                 <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                   Body Table 1
                 </div>
