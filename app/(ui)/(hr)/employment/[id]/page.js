@@ -237,7 +237,7 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
     return site.filter(
       (site) =>
         site.siteStatus === "Active" &&
-        site.siteBranchId === formData.employmentBranchId
+        site.siteBranchId == formData.employmentBranchId
     );
   }, [formData.employmentBranchId, site]);
 
