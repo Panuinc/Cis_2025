@@ -43,10 +43,10 @@ export const employeePosteSchema = z.object({
     .string({ required_error: "Please Enter Email" })
     .email({ message: "Please enter a valid Email" }),
   employeeTel: z
-    .number({ required_error: "Please Enter Telephone" })
+    .string({ required_error: "Please Enter Telephone" })
     .min(1, { message: "Please Enter Telephone" }),
   employeeIdCard: z
-    .number({ required_error: "Please Enter ID Card" })
+    .string({ required_error: "Please Enter ID Card" })
     .min(1, { message: "Please Enter ID Card" }),
   employeeBirthday: z.union([z.string(), z.date()]).refine(
     (val) => {
