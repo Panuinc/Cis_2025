@@ -203,14 +203,15 @@ export default function FormEmployee({
           </Select>
         </div>
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <DatePicker
+        <Input
             name="employeeBirthday"
-            label="Birthday"
+            type="date"
+            label="Employee Birthday"
             placeholder="Please Enter Data"
             labelPlacement="outside"
             size="lg"
             variant="bordered"
-            value={formData.employeeBirthday || null}
+            value={formData.employeeBirthday || ""}
             onChange={handleInputChange("employeeBirthday")}
             isInvalid={!!errors.employeeBirthday}
             errorMessage={errors.employeeBirthday}
