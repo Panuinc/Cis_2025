@@ -278,10 +278,10 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
     return parent.filter(
       (parent) =>
         parent.employeeStatus === "Active" &&
-        parent.employment?.some(
+        parent.employeeEmployment?.some(
           (emp) =>
-            emp.employmentBranchId === formData.employmentBranchId &&
-            emp.employmentDivisionId === formData.employmentDivisionId
+            emp.employmentBranchId == formData.employmentBranchId &&
+            emp.employmentDivisionId == formData.employmentDivisionId
         )
     );
   }, [formData.employmentBranchId, formData.employmentDivisionId, parent]);

@@ -261,7 +261,7 @@ export default function FormEmployment({
           >
             {filteredparent.map((parent) => (
               <SelectItem key={parent.employeeId} value={parent.employeeId}>
-                {parent.employeeFirstname}
+                {`${parent.employeeFirstname} ${parent.employeeLastname}`}
               </SelectItem>
             ))}
           </Select>
