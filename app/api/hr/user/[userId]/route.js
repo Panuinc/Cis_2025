@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import { handleErrors, handleGetErrors } from "@/lib/errorHandler";
-import { employeePutSchema } from "@/app/api/hr/employee/employeeSchema";
+import { userPutSchema } from "@/app/api/hr/user/userSchema";
 import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
 import prisma from "@/lib/prisma";
-import { formatEmployeeData } from "@/app/api/hr/employee/employeeSchema";
+import { formatUserData } from "@/app/api/hr/user/userSchema";
 import { getRequestIP } from "@/lib/GetRequestIp";
 import { getLocalNow } from "@/lib/GetLocalNow";
+import bcrypt from "bcryptjs";
 
 export async function GET(request, context) {
   let ip;
@@ -14,11 +15,11 @@ export async function GET(request, context) {
     ip = getRequestIP(request);
 
     const params = await context.params;
-    const employeeId = parseInt(params.employeeId, 10);
+    const userId = parseInt(params.userId, 10);
 
-    if (!employeeId) {
+    if (!userId) {
       return NextResponse.json(
-        { error: "Employee ID is required" },
+        { error: "User ID is required" },
         { status: 400 }
       );
     }
@@ -26,39 +27,36 @@ export async function GET(request, context) {
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
 
-    const employee = await prisma.employee.findMany({
-      where: { employeeId: employeeId },
+    const user = await prisma.user.findMany({
+      where: { userId: userId },
       include: {
-        employeeUser: true,
-        employeeEmployment: true,
-        employeeEmpDocument: true,
-        EmployeeCreateBy: {
+        UserCreateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
-        EmployeeUpdateBy: {
+        UserUpdateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
       },
     });
 
-    if (!employee?.length) {
+    if (!user?.length) {
       return NextResponse.json(
-        { error: "No employee data found" },
+        { error: "No user data found" },
         { status: 404 }
       );
     }
 
-    const formattedEmployee = formatEmployeeData(employee);
+    const formattedUser = formatUserData(user);
 
     return NextResponse.json(
       {
-        message: "Employee data retrieved successfully",
-        employee: formattedEmployee,
+        message: "User data retrieved successfully",
+        user: formattedUser,
       },
       { status: 200 }
     );
   } catch (error) {
-    return handleGetErrors(error, ip, "Error retrieving employee data");
+    return handleGetErrors(error, ip, "Error retrieving user data");
   }
 }
 
@@ -68,10 +66,10 @@ export async function PUT(request, context) {
     ip = getRequestIP(request);
 
     const params = await context.params;
-    const { employeeId } = params;
-    if (!employeeId) {
+    const { userId } = params;
+    if (!userId) {
       return NextResponse.json(
-        { error: "Employee ID is required" },
+        { error: "User ID is required" },
         { status: 400 }
       );
     }
@@ -82,30 +80,29 @@ export async function PUT(request, context) {
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
 
-    const parsedData = employeePutSchema.parse({
+    const parsedData = userPutSchema.parse({
       ...data,
-      employeeId,
-      employeeBirthday: new Date(data.employeeBirthday),
+      userId,
     });
 
     const localNow = getLocalNow();
 
-    const updatedEmployee = await prisma.employee.update({
-      where: { employeeId: parseInt(employeeId, 10) },
+    const hashedPassword = await bcrypt.hash(parsedData.userPassword, 12);
+
+    const updatedUser = await prisma.user.update({
+      where: { userId: parseInt(userId, 10) },
       data: {
         ...parsedData,
-        employeeUpdateAt: localNow,
+        userPassword: hashedPassword,
+        userUpdateAt: localNow,
       },
     });
 
     return NextResponse.json(
-      {
-        message: "Employee data updated successfully",
-        employee: updatedEmployee,
-      },
+      { message: "User data updated successfully", user: updatedUser },
       { status: 200 }
     );
   } catch (error) {
-    return handleErrors(error, ip, "Error updating employee data");
+    return handleErrors(error, ip, "Error updating user data");
   }
 }

@@ -410,7 +410,7 @@ export default function UiLayout({ children }) {
               icons={<Hide />}
               text={`${userData.employee?.employeeFirstname || ""} ${
                 userData.employee?.employeeLastname || ""
-              } ( ${userData.employee?.employeeNickname || ""} )`}
+              } `}
               isCollapsed={isCollapsed}
               onClick={handleToggleMenu}
             />

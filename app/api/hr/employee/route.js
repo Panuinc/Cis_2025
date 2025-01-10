@@ -18,6 +18,9 @@ export async function GET(request) {
 
     const employee = await prisma.employee.findMany({
       include: {
+        employeeUser:true,
+        employeeEmployment:true,
+        employeeEmpDocument:true,
         EmployeeCreateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },

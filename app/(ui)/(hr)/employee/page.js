@@ -160,7 +160,7 @@ export default function EmployeeList() {
                     <Link href={`/employee/${item.employeeId}`}>Update</Link>
                   </DropdownItem>
                   <DropdownItem key="edit user" variant="flat" color="warning">
-                    <Link href={`/employee/${item.employeeId}`}>User</Link>
+                    <Link href={`/user/${item.employeeId}`}>User</Link>
                   </DropdownItem>
                   <DropdownItem key="edit employment" variant="flat" color="warning">
                     <Link href={`/employee/${item.employeeId}`}>Employment</Link>
