@@ -89,12 +89,12 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
     try {
       const [
         branchRes,
-        // roleRes,
+        roleRes,
         siteRes,
-        // divisionRes,
-        // departmentRes,
-        // positionRes,
-        // parentRes,
+        divisionRes,
+        departmentRes,
+        positionRes,
+        parentRes,
         employmentRes,
       ] = await Promise.all([
         fetch(`/api/hr/branch`, {
@@ -103,42 +103,42 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
             "secret-token": SECRET_TOKEN,
           },
         }),
-        // fetch(`/api/hr/role`, {
-        //   method: "GET",
-        //   headers: {
-        //     "secret-token": SECRET_TOKEN,
-        //   },
-        // }),
+        fetch(`/api/hr/role`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
         fetch(`/api/hr/site`, {
           method: "GET",
           headers: {
             "secret-token": SECRET_TOKEN,
           },
         }),
-        // fetch(`/api/hr/division`, {
-        //   method: "GET",
-        //   headers: {
-        //     "secret-token": SECRET_TOKEN,
-        //   },
-        // }),
-        // fetch(`/api/hr/department`, {
-        //   method: "GET",
-        //   headers: {
-        //     "secret-token": SECRET_TOKEN,
-        //   },
-        // }),
-        // fetch(`/api/hr/position`, {
-        //   method: "GET",
-        //   headers: {
-        //     "secret-token": SECRET_TOKEN,
-        //   },
-        // }),
-        // fetch(`/api/hr/employee`, {
-        //   method: "GET",
-        //   headers: {
-        //     "secret-token": SECRET_TOKEN,
-        //   },
-        // }),
+        fetch(`/api/hr/division`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
+        fetch(`/api/hr/department`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
+        fetch(`/api/hr/position`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
+        fetch(`/api/hr/employee`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
         fetch(`/api/hr/employment/${employmentId}`, {
           method: "GET",
           headers: {
@@ -156,6 +156,16 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
         toast.error(branchData.error);
       }
 
+      const roleData = await roleRes.json();
+      if (roleRes.ok) {
+        const activeRole = (roleData.role || []).filter(
+          (role) => role.roleStatus === "Active"
+        );
+        setRole(activeRole);
+      } else {
+        toast.error(roleData.error);
+      }
+
       const siteData = await siteRes.json();
       if (siteRes.ok) {
         const activeSite = (siteData.site || []).filter(
@@ -164,6 +174,46 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
         setSite(activeSite);
       } else {
         toast.error(siteData.error);
+      }
+
+      const divisionData = await divisionRes.json();
+      if (divisionRes.ok) {
+        const activeDivision = (divisionData.division || []).filter(
+          (division) => division.divisionStatus === "Active"
+        );
+        setDivision(activeDivision);
+      } else {
+        toast.error(divisionData.error);
+      }
+
+      const departmentData = await departmentRes.json();
+      if (departmentRes.ok) {
+        const activeDepartment = (departmentData.department || []).filter(
+          (department) => department.departmentStatus === "Active"
+        );
+        setDepartment(activeDepartment);
+      } else {
+        toast.error(departmentData.error);
+      }
+
+      const positionData = await positionRes.json();
+      if (positionRes.ok) {
+        const activePosition = (positionData.position || []).filter(
+          (position) => position.positionStatus === "Active"
+        );
+        setPosition(activePosition);
+      } else {
+        toast.error(positionData.error);
+      }
+
+      const parentData = await parentRes.json();
+      if (parentRes.ok) {
+        const activeParent = (parentData.employee || []).filter(
+          (parent) => parent.employeeStatus === "Active"
+        );
+        setParent(activeParent);
+      } else {
+        toast.error(parentData.error);
       }
 
       const employmentData = await employmentRes.json();
@@ -191,7 +241,76 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
     );
   }, [formData.employmentBranchId, site]);
 
+  const filtereddivision = useMemo(() => {
+    if (!formData.employmentBranchId) return [];
+    return division.filter(
+      (division) =>
+        division.divisionStatus === "Active" &&
+        division.divisionBranchId == formData.employmentBranchId
+    );
+  }, [formData.employmentBranchId, division]);
+
   const isbranchselected = Boolean(formData.employmentBranchId);
+
+  const filtereddepartment = useMemo(() => {
+    if (!formData.employmentBranchId && !formData.employmentDivisionId)
+      return [];
+    return department.filter(
+      (department) =>
+        department.departmentStatus === "Active" &&
+        department.departmentBranchId == formData.employmentBranchId &&
+        department.departmentDivisionId == formData.employmentDivisionId
+    );
+  }, [
+    formData.employmentBranchId && formData.employmentDivisionId,
+    department,
+  ]);
+
+  const filteredparent = useMemo(() => {
+    if (!formData.employmentBranchId && !formData.employmentDivisionId) {
+      return [];
+    }
+    return parent.filter(
+      (parent) =>
+        parent.employeeStatus === "Active" &&
+        parent.employment?.some(
+          (emp) =>
+            emp.employmentBranchId === formData.employmentBranchId &&
+            emp.employmentDivisionId === formData.employmentDivisionId
+        )
+    );
+  }, [formData.employmentBranchId, formData.employmentDivisionId, parent]);
+
+  const isbranchanddivisionselected = Boolean(
+    formData.employmentBranchId && formData.employmentDivisionId
+  );
+
+  const filteredposition = useMemo(() => {
+    if (
+      !formData.employmentBranchId &&
+      !formData.employmentDivisionId &&
+      !formData.employmentDepartmentId
+    )
+      return [];
+    return position.filter(
+      (position) =>
+        position.positionStatus === "Active" &&
+        position.positionBranchId == formData.employmentBranchId &&
+        position.positionDivisionId == formData.employmentDivisionId &&
+        position.positionDepartmentId == formData.employmentDepartmentId
+    );
+  }, [
+    formData.employmentBranchId &&
+      formData.employmentDivisionId &&
+      formData.employmentDepartmentId,
+    position,
+  ]);
+
+  const isbranchanddivisionanddepartmentselected = Boolean(
+    formData.employmentBranchId &&
+      formData.employmentDivisionId &&
+      formData.employmentDepartmentId
+  );
 
   const handleInputChange = useCallback(
     (field) => (e) => {
@@ -268,16 +387,17 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
         errors={errors}
         setErrors={setErrors}
         filteredsite={filteredsite}
-        // filtereddivision={filtereddivision}
-        // filtereddepartment={filtereddepartment}
-        // filteredposition={filteredposition}
-        // filteredparent={filteredparent}
+        filtereddivision={filtereddivision}
+        filtereddepartment={filtereddepartment}
+        filteredposition={filteredposition}
+        filteredparent={filteredparent}
         isbranchselected={isbranchselected}
-        // isbranchanddivisionselected={isbranchanddivisionselected}
-        // isbranchanddivisionanddepartmentselected={isbranchanddivisionanddepartmentselected}
+        isbranchanddivisionselected={isbranchanddivisionselected}
+        isbranchanddivisionanddepartmentselected={
+          isbranchanddivisionanddepartmentselected
+        }
         branch={branch}
-        // role={role}
-
+        role={role}
         formData={formData}
         handleInputChange={handleInputChange}
         isUpdate={true}

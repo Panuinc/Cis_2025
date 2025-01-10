@@ -9,15 +9,15 @@ export default function FormEmployment({
   onClear,
   errors = {},
   filteredsite,
-  // filtereddivision,
-  // filtereddepartment,
-  // filteredposition,
-  // filteredparent,
+  filtereddivision,
+  filtereddepartment,
+  filteredposition,
+  filteredparent,
   isbranchselected,
-  // isbranchanddivisionselected,
-  // isbranchanddivisionanddepartmentselected,
+  isbranchanddivisionselected,
+  isbranchanddivisionanddepartmentselected,
   branch,
-  // role,
+  role,
   formData,
   handleInputChange,
   isUpdate = false,
@@ -129,7 +129,7 @@ export default function FormEmployment({
       </div>
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-        <Select
+          <Select
             name="employmentSiteId"
             label="Site Name"
             placeholder="Please Select Site Name"
@@ -149,6 +149,127 @@ export default function FormEmployment({
               </SelectItem>
             ))}
           </Select>
+        </div>
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Select
+            name="employmentDivisionId"
+            label="Division Name"
+            placeholder="Please Select Division Name"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.employmentDivisionId?.toString() || ""}
+            selectedKeys={[formData.employmentDivisionId?.toString() || ""]}
+            onChange={handleInputChange("employmentDivisionId")}
+            isDisabled={!isbranchselected}
+            isInvalid={!!errors.employmentDivisionId}
+            errorMessage={errors.employmentDivisionId}
+          >
+            {filtereddivision.map((division) => (
+              <SelectItem key={division.divisionId} value={division.divisionId}>
+                {division.divisionName}
+              </SelectItem>
+            ))}
+          </Select>
+        </div>
+      </div>
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Select
+            name="employmentDepartmentId"
+            label="Department Name"
+            placeholder="Please Select Department Name"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.employmentDepartmentId?.toString() || ""}
+            selectedKeys={[formData.employmentDepartmentId?.toString() || ""]}
+            onChange={handleInputChange("employmentDepartmentId")}
+            isDisabled={!isbranchanddivisionselected}
+            isInvalid={!!errors.employmentDepartmentId}
+            errorMessage={errors.employmentDepartmentId}
+          >
+            {filtereddepartment.map((department) => (
+              <SelectItem
+                key={department.departmentId}
+                value={department.departmentId}
+              >
+                {department.departmentName}
+              </SelectItem>
+            ))}
+          </Select>
+        </div>
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Select
+            name="employmentPositionId"
+            label="Position Name"
+            placeholder="Please Select Position Name"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.employmentPositionId?.toString() || ""}
+            selectedKeys={[formData.employmentPositionId?.toString() || ""]}
+            onChange={handleInputChange("employmentPositionId")}
+            isDisabled={!isbranchanddivisionanddepartmentselected}
+            isInvalid={!!errors.employmentPositionId}
+            errorMessage={errors.employmentPositionId}
+          >
+            {filteredposition.map((position) => (
+              <SelectItem key={position.positionId} value={position.positionId}>
+                {position.positionName}
+              </SelectItem>
+            ))}
+          </Select>
+        </div>
+      </div>
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Select
+            name="employmentRoleId"
+            label="Role Name"
+            placeholder="Please Select Role Name"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.employmentRoleId?.toString() || ""}
+            selectedKeys={[formData.employmentRoleId?.toString() || ""]}
+            onChange={handleInputChange("employmentRoleId")}
+            isInvalid={!!errors.employmentRoleId}
+            errorMessage={errors.employmentRoleId}
+          >
+            {role.map((role) => (
+              <SelectItem key={role.roleId} value={role.roleId}>
+                {role.roleName}
+              </SelectItem>
+            ))}
+          </Select>
+        </div>
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Select
+            name="employmentParentId"
+            label="Parent Name"
+            placeholder="Please Select Parent Name"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.employmentParentId?.toString() || ""}
+            selectedKeys={[formData.employmentParentId?.toString() || ""]}
+            onChange={handleInputChange("employmentParentId")}
+            isDisabled={!isbranchanddivisionselected}
+            isInvalid={!!errors.employmentParentId}
+            errorMessage={errors.employmentParentId}
+          >
+            {filteredparent.map((parent) => (
+              <SelectItem key={parent.employeeId} value={parent.employeeId}>
+                {parent.employeeFirstname} {parent.employeeLastname}
+              </SelectItem>
+            ))}
+          </Select>
+        </div>
+      </div>
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          01
         </div>
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           01
