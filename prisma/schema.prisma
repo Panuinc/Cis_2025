@@ -134,6 +134,8 @@ model Employment {
   employmentRoleId              Int?
   employmentParentId            Int?
   employmentStartWork           DateTime?
+  employmentPicture             String?         @db.VarChar(255)
+  employmentSignature           String?         @db.VarChar(255)
   employmentEnterType           String?         @db.VarChar(255)
   employmentPassportNumber      String?         @db.VarChar(255)
   employmentPassportStartDate   DateTime?
