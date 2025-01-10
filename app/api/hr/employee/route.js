@@ -18,9 +18,33 @@ export async function GET(request) {
 
     const employee = await prisma.employee.findMany({
       include: {
-        employeeUser:true,
-        employeeEmployment:true,
-        employeeEmpDocument:true,
+        employeeUser: true,
+        employeeEmployment: {
+          include: {
+            EmploymentBranchId: {
+              select: { branchName: true },
+            },
+            EmploymentSiteId: {
+              select: { siteName: true },
+            },
+            EmploymentDivisionId: {
+              select: { divisionName: true },
+            },
+            EmploymentDepartmentId: {
+              select: { departmentName: true },
+            },
+            EmploymentPositionId: {
+              select: { positionName: true },
+            },
+            EmploymentRoleId: {
+              select: { roleName: true },
+            },
+            EmploymentParentBy: {
+              select: { employeeFirstname: true, employeeLastname: true },
+            },
+          },
+        },
+        employeeEmpDocument: true,
         EmployeeCreateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },

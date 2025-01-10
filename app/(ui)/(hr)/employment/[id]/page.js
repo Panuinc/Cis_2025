@@ -209,9 +209,14 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
       const parentData = await parentRes.json();
       if (parentRes.ok) {
         const activeParent = (parentData.employee || []).filter(
-          (parent) => parent.employeeStatus === "Active"
+          (parent) =>
+            parent.employeeStatus === "Active" &&
+            parent.employeeEmployment?.some(
+              (emp) => emp?.EmploymentRoleId?.roleName === "Manager"
+            )
         );
         setParent(activeParent);
+        console.log("🚀 ~ fetchData ~ activeParent:", activeParent);
       } else {
         toast.error(parentData.error);
       }
