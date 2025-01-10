@@ -32,27 +32,24 @@ const DEFAULT_FORM_DATA = {
   employmentPicture: "",
   employmentSignature: "",
 
-  employmentEnterType: "",
-  employmentPassportNumber: "",
-  employmentPassportStartDate: "",
-  employmentPassportEndDate: "",
-  employmentPassportIssuedBy: "",
-
-  employmentPlaceOfBirth: "",
-  employmentEnterCheckPoint: "",
-  employmentEnterDate: "",
-  employmentImmigration: "",
-  employmentTypeOfVisa: "",
-
-  employmentVisaNumber: "",
-  employmentVisaIssuedBy: "",
-  employmentWorkPermitNumber: "",
-  employmentWorkPermitStartDate: "",
-  employmentWorkPermitEndDate: "",
-
-  employmentWorkPermitIssuedBy: "",
-  employmentSsoNumber: "",
-  employmentSsoHospital: "",
+  employmentEnterType: null,
+  employmentPassportNumber: null,
+  employmentPassportStartDate: null,
+  employmentPassportEndDate: null,
+  employmentPassportIssuedBy: null,
+  employmentPlaceOfBirth: null,
+  employmentEnterCheckPoint: null,
+  employmentEnterDate: null,
+  employmentImmigration: null,
+  employmentTypeOfVisa: null,
+  employmentVisaNumber: null,
+  employmentVisaIssuedBy: null,
+  employmentWorkPermitNumber: null,
+  employmentWorkPermitStartDate: null,
+  employmentWorkPermitEndDate: null,
+  employmentWorkPermitIssuedBy: null,
+  employmentSsoNumber: null,
+  employmentSsoHospital: null,
   employmentWorkStatus: "",
 };
 
@@ -322,7 +319,7 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
 
   const handleInputChange = useCallback(
     (field) => (e) => {
-      const value = e.target.value;
+      const value = e.target.value || null;
       setFormData((prev) => ({ ...prev, [field]: value }));
       setErrors((prev) => {
         if (prev[field]) {
