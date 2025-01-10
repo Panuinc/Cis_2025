@@ -439,7 +439,7 @@ export default function UiLayout({ children }) {
                 isOpen={menuState.HR}
                 onToggle={() => toggleMenu("HR")}
               />
-              <MenuMain
+              {/* <MenuMain
                 icons={<IT />}
                 text="IT Dep"
                 isCollapsed={isCollapsed}
@@ -493,7 +493,7 @@ export default function UiLayout({ children }) {
                 ]}
                 isOpen={menuState.SETTING}
                 onToggle={() => toggleMenu("SETTING")}
-              />
+              /> */}
             </div>
             <MenuMainOther
               icons={<Logout />}
