@@ -14,8 +14,8 @@ export default function FormEmployment({
   filteredposition,
   filteredparent,
   isbranchselected,
-  isbranchanddivisionselected,
-  isbranchanddivisionanddepartmentselected,
+  isBranchAndDivisionSelected,
+  isBranchAndDivisionAndDepartmentSelected,
   branch,
   role,
   formData,
@@ -185,7 +185,7 @@ export default function FormEmployment({
             value={formData.employmentDepartmentId?.toString() || ""}
             selectedKeys={[formData.employmentDepartmentId?.toString() || ""]}
             onChange={handleInputChange("employmentDepartmentId")}
-            isDisabled={!isbranchanddivisionselected}
+            isDisabled={!isBranchAndDivisionSelected}
             isInvalid={!!errors.employmentDepartmentId}
             errorMessage={errors.employmentDepartmentId}
           >
@@ -210,7 +210,7 @@ export default function FormEmployment({
             value={formData.employmentPositionId?.toString() || ""}
             selectedKeys={[formData.employmentPositionId?.toString() || ""]}
             onChange={handleInputChange("employmentPositionId")}
-            isDisabled={!isbranchanddivisionanddepartmentselected}
+            isDisabled={!isBranchAndDivisionAndDepartmentSelected}
             isInvalid={!!errors.employmentPositionId}
             errorMessage={errors.employmentPositionId}
           >
@@ -255,7 +255,7 @@ export default function FormEmployment({
             value={formData.employmentParentId?.toString() || ""}
             selectedKeys={[formData.employmentParentId?.toString() || ""]}
             onChange={handleInputChange("employmentParentId")}
-            isDisabled={!isbranchanddivisionselected}
+            isDisabled={!isBranchAndDivisionSelected}
             isInvalid={!!errors.employmentParentId}
             errorMessage={errors.employmentParentId}
           >

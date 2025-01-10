@@ -286,7 +286,7 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
     );
   }, [formData.employmentBranchId, formData.employmentDivisionId, parent]);
 
-  const isbranchanddivisionselected = Boolean(
+  const isBranchAndDivisionSelected = Boolean(
     formData.employmentBranchId && formData.employmentDivisionId
   );
 
@@ -311,7 +311,7 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
     position,
   ]);
 
-  const isbranchanddivisionanddepartmentselected = Boolean(
+  const isBranchAndDivisionAndDepartmentSelected = Boolean(
     formData.employmentBranchId &&
       formData.employmentDivisionId &&
       formData.employmentDepartmentId
@@ -397,9 +397,9 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
         filteredposition={filteredposition}
         filteredparent={filteredparent}
         isbranchselected={isbranchselected}
-        isbranchanddivisionselected={isbranchanddivisionselected}
-        isbranchanddivisionanddepartmentselected={
-          isbranchanddivisionanddepartmentselected
+        isBranchAndDivisionSelected={isBranchAndDivisionSelected}
+        isBranchAndDivisionAndDepartmentSelected={
+          isBranchAndDivisionAndDepartmentSelected
         }
         branch={branch}
         role={role}
