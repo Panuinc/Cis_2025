@@ -35,6 +35,11 @@ export async function GET(request, context) {
         EmploymentUpdateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
+        EmploymentEmployeeBy: {
+          select: {
+            employeeCitizen: true,
+          },
+        },
       },
     });
 

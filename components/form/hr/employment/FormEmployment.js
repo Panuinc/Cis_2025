@@ -269,10 +269,43 @@ export default function FormEmployment({
       </div>
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          01
+          <Input
+            type="date"
+            name="employmentStartWork"
+            label="Start Work"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.employmentStartWork || ""}
+            onChange={handleInputChange("employmentStartWork")}
+            isInvalid={!!errors.employmentStartWork}
+            errorMessage={errors.employmentStartWork}
+          />
         </div>
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          01
+          <Input
+            type="text"
+            name="employeeCitizen"
+            label="Citizen"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            readOnly
+            value={formData.employeeCitizen || ""}
+            onChange={handleInputChange("employeeCitizen")}
+            isInvalid={!!errors.employeeCitizen}
+            errorMessage={errors.employeeCitizen}
+          />
+        </div>
+      </div>
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          employmentPicture
+        </div>
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          employmentSignature
         </div>
       </div>
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
