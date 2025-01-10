@@ -224,7 +224,11 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
       const employmentData = await employmentRes.json();
       if (employmentRes.ok) {
         const employment = employmentData.employment[0];
-        setFormData(employment);
+        setFormData({
+          ...employment,
+          employeeCitizen:
+            employment.EmploymentEmployeeBy?.employeeCitizen || "",
+        });
       } else {
         toast.error(employmentData.error);
       }
