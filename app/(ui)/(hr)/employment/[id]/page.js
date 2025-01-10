@@ -356,7 +356,7 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
         if (res.ok) {
           toast.success(jsonData.message);
           setTimeout(() => {
-            router.push("/employment");
+            router.push("/employee");
           }, 2000);
         } else {
           if (jsonData.details) {

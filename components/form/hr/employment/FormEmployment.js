@@ -33,21 +33,6 @@ export default function FormEmployment({
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
             type="text"
-            name="employmentId"
-            label="Employment Id"
-            placeholder="Please Enter Data"
-            labelPlacement="outside"
-            size="lg"
-            variant="bordered"
-            value={formData.employmentId || ""}
-            onChange={handleInputChange("employmentId")}
-            isInvalid={!!errors.employmentId}
-            errorMessage={errors.employmentId}
-          />
-        </div>
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <Input
-            type="text"
             name="employmentNumber"
             label="Employment Number"
             placeholder="Please Enter Data"
@@ -281,22 +266,6 @@ export default function FormEmployment({
             onChange={handleInputChange("employmentStartWork")}
             isInvalid={!!errors.employmentStartWork}
             errorMessage={errors.employmentStartWork}
-          />
-        </div>
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <Input
-            type="text"
-            name="employeeCitizen"
-            label="Citizen"
-            placeholder="Please Enter Data"
-            labelPlacement="outside"
-            size="lg"
-            variant="bordered"
-            readOnly
-            value={formData.employeeCitizen || ""}
-            onChange={handleInputChange("employeeCitizen")}
-            isInvalid={!!errors.employeeCitizen}
-            errorMessage={errors.employeeCitizen}
           />
         </div>
       </div>

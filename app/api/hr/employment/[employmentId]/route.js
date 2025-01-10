@@ -87,7 +87,14 @@ export async function PUT(request, context) {
     const parsedData = employmentPutSchema.parse({
       ...data,
       employmentId,
-      employmentBirthday: new Date(data.employmentBirthday),
+      employmentStartWork: new Date(data.employmentStartWork),
+      employmentPassportStartDate: new Date(data.employmentPassportStartDate),
+      employmentPassportEndDate: new Date(data.employmentPassportEndDate),
+      employmentEnterDate: new Date(data.employmentEnterDate),
+      employmentWorkPermitStartDate: new Date(
+        data.employmentWorkPermitStartDate
+      ),
+      employmentWorkPermitEndDate: new Date(data.employmentWorkPermitEndDate),
     });
 
     const localNow = getLocalNow();
