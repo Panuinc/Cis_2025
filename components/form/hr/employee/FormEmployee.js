@@ -1,13 +1,7 @@
 "use client";
 import React from "react";
 import { Cancel, Database } from "@/components/icons/icons";
-import {
-  Input,
-  Button,
-  Select,
-  SelectItem,
-  DatePicker,
-} from "@nextui-org/react";
+import { Input, Button, Select, SelectItem } from "@nextui-org/react";
 
 export default function FormEmployee({
   formRef,
@@ -203,7 +197,7 @@ export default function FormEmployee({
           </Select>
         </div>
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-        <Input
+          <Input
             name="employeeBirthday"
             type="date"
             label="Employee Birthday"

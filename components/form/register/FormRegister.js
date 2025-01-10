@@ -1,13 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import {
-  Input,
-  Button,
-  DatePicker,
-  Select,
-  SelectItem,
-} from "@nextui-org/react";
+import { Input, Button, Select, SelectItem } from "@nextui-org/react";
 import {
   User,
   Email,
@@ -220,15 +214,16 @@ export default function FormRegister({
           </Select>
         </div>
         <div className="flex items-center justify-center w-full h-full p-2 gap-2">
-          <DatePicker
+          <Input
             name="employeeBirthday"
-            label="Birthday"
+            type="date"
+            label="Employee Birthday"
             placeholder="Please Enter Data"
             labelPlacement="outside"
             size="lg"
-            variant="bordered"
             startContent={<LeaveWork />}
-            value={formData.employeeBirthday || null}
+            variant="bordered"
+            value={formData.employeeBirthday || ""}
             onChange={handleInputChange("employeeBirthday")}
             isInvalid={!!errors.employeeBirthday}
             errorMessage={errors.employeeBirthday}
