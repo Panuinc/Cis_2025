@@ -216,7 +216,6 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
             )
         );
         setParent(activeParent);
-        console.log("🚀 ~ fetchData ~ activeParent:", activeParent);
       } else {
         toast.error(parentData.error);
       }
