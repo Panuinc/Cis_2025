@@ -156,8 +156,20 @@ export default function EmployeeList() {
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu>
-                  <DropdownItem key="edit" variant="flat" color="warning">
+                  <DropdownItem key="edit employee" variant="flat" color="warning">
                     <Link href={`/employee/${item.employeeId}`}>Update</Link>
+                  </DropdownItem>
+                  <DropdownItem key="edit user" variant="flat" color="warning">
+                    <Link href={`/employee/${item.employeeId}`}>User</Link>
+                  </DropdownItem>
+                  <DropdownItem key="edit employment" variant="flat" color="warning">
+                    <Link href={`/employee/${item.employeeId}`}>Employment</Link>
+                  </DropdownItem>
+                  <DropdownItem key="edit empDocument" variant="flat" color="warning">
+                    <Link href={`/employee/${item.employeeId}`}>Document</Link>
+                  </DropdownItem>
+                  <DropdownItem key="edit resume" variant="flat" color="warning">
+                    <Link href={`/employee/${item.employeeId}`}>Resume</Link>
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
