@@ -1,26 +1,50 @@
 import { z } from "zod";
-import {
-  preprocessInt,
-  preprocessString,
-  preprocessEnum,
-  preprocessAny,
-  preprocessDate,
-  formatData,
-} from "@/lib/zodSchema";
+
+const formatDate = (value) => {
+  if (!value) return null;
+  return new Date(value).toISOString().replace("T", " ").slice(0, 19);
+};
+
+const formatDateWithoutTime = (value) => {
+  if (!value) return null;
+  return new Date(value).toISOString().split("T")[0];
+};
+
+const preprocessInt = (requiredMsg, intMsg) =>
+  z.preprocess(
+    (val) => parseInt(val, 10),
+    z.number({ required_error: requiredMsg }).int({ message: intMsg })
+  );
+
+const preprocessDate = z.preprocess((val) => {
+  if (!val) return null;
+  if (typeof val === "string" || val instanceof Date) {
+    const date = new Date(val);
+    return isNaN(date.getTime()) ? undefined : date;
+  }
+  return undefined;
+}, z.date());
 
 export function formatEmploymentData(employment) {
-  return formatData(
-    employment,
-    [
-      "employmentStartWork",
-      "employmentPassportStartDate",
-      "employmentPassportEndDate",
-      "employmentEnterDate",
-      "employmentWorkPermitStartDate",
-      "employmentWorkPermitEndDate",
-    ],
-    ["employmentCreateAt", "employmentUpdateAt"]
-  );
+  return employment.map((employment) => ({
+    ...employment,
+    employmentStartWork: formatDateWithoutTime(employment.employmentStartWork),
+    employmentPassportStartDate: formatDateWithoutTime(
+      employment.employmentPassportStartDate
+    ),
+    employmentPassportEndDate: formatDateWithoutTime(
+      employment.employmentPassportEndDate
+    ),
+    employmentEnterDate: formatDateWithoutTime(employment.employmentEnterDate),
+    employmentWorkPermitStartDate: formatDateWithoutTime(
+      employment.employmentWorkPermitStartDate
+    ),
+    employmentWorkPermitEndDate: formatDateWithoutTime(
+      employment.employmentWorkPermitEndDate
+    ),
+    employmentCreateAt: formatDate(employment.employmentCreateAt),
+    employmentUpdateAt: formatDate(employment.employmentUpdateAt),
+  }));
 }
 
 export const employmentPutSchema = z.object({
@@ -31,24 +55,30 @@ export const employmentPutSchema = z.object({
     .nullable()
     .optional(),
 
-  employmentNumber: preprocessString(
-    "Please Enter Employment Number",
-    "Please Enter Employment Number"
-  )
+  employmentNumber: z
+    .string({ required_error: "Please Enter Employment Number" })
+    .min(1, { message: "Please Enter Employment Number" })
     .nullable()
     .optional(),
 
-  employmentCardNumber: preprocessString(
-    "Please Enter Employment Card Number",
-    "Please Enter Employment Card Number"
-  )
+  employmentCardNumber: z
+    .string({ required_error: "Please Enter Employment Card Number" })
+    .min(1, { message: "Please Enter Employment Card Number" })
     .nullable()
     .optional(),
 
-  employmentType: preprocessEnum(
-    ["Mr", "Ms", "Mrs"],
-    "Employment Title must be either 'Mr', 'Ms', or 'Mrs'."
-  )
+  employmentType: z
+    .enum(
+      [
+        "DAILY_WAGE",
+        "MONTHLY_SALARY",
+        "MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES",
+      ],
+      {
+        required_error:
+          "Employment Title must be either 'DAILY_WAGE', 'MONTHLY_SALARY', or 'MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES'.",
+      }
+    )
     .nullable()
     .optional(),
 
@@ -103,121 +133,98 @@ export const employmentPutSchema = z.object({
 
   employmentStartWork: preprocessDate,
 
-  employmentPicture: preprocessAny({
-    url: z.string(),
-    description: z.string().optional().nullable(),
-  }),
+  employmentPicture: z.any().nullable().optional(),
+  employmentSignature: z.any().nullable().optional(),
 
-  employmentSignature: preprocessAny({
-    url: z.string(),
-    description: z.string().optional().nullable(),
-  }),
-
-  employmentEnterType: preprocessString(
-    "Please Enter Employment Enter Type",
-    "Please Enter Employment Enter Type"
-  )
+  employmentEnterType: z
+    .string({ required_error: "Please Enter Type Enter" })
+    .min(1, { message: "Please Enter Type Enter" })
     .nullable()
     .optional(),
 
-  employmentPassportNumber: preprocessString(
-    "Please Enter Employment Passport Number",
-    "Please Enter Employment Passport Number"
-  )
+  employmentPassportNumber: z
+    .string({ required_error: "Please Enter Passport Number" })
+    .min(1, { message: "Please Enter Passport Number" })
     .nullable()
     .optional(),
 
   employmentPassportStartDate: preprocessDate,
-
   employmentPassportEndDate: preprocessDate,
-
   employmentEnterDate: preprocessDate,
-
   employmentWorkPermitStartDate: preprocessDate,
-
   employmentWorkPermitEndDate: preprocessDate,
 
-  employmentPassportIssuedBy: preprocessString(
-    "Please Enter Employment Issued By",
-    "Please Enter Employment Issued By"
-  )
+  employmentPassportIssuedBy: z
+    .string({ required_error: "Please Enter Issued By" })
+    .min(1, { message: "Please Enter Issued By" })
     .nullable()
     .optional(),
 
-  employmentPlaceOfBirth: preprocessString(
-    "Please Enter Employment Place Of Birth",
-    "Please Enter Employment Place Of Birth"
-  )
+  employmentPlaceOfBirth: z
+    .string({ required_error: "Please Enter Place Of Birth" })
+    .min(1, { message: "Please Enter Place Of Birth" })
     .nullable()
     .optional(),
 
-  employmentEnterCheckPoint: preprocessString(
-    "Please Enter Employment Check Point",
-    "Please Enter Employment Check Point"
-  )
+  employmentEnterCheckPoint: z
+    .string({ required_error: "Please Enter Check Point" })
+    .min(1, { message: "Please Enter Check Point" })
     .nullable()
     .optional(),
 
-  employmentImmigration: preprocessString(
-    "Please Enter Employment Immigration",
-    "Please Enter Employment Immigration"
-  )
+  employmentImmigration: z
+    .string({ required_error: "Please Enter Immigration" })
+    .min(1, { message: "Please Enter Immigration" })
     .nullable()
     .optional(),
 
-  employmentTypeOfVisa: preprocessString(
-    "Please Enter Employment Type Of Visa",
-    "Please Enter Employment Type Of Visa"
-  )
+  employmentTypeOfVisa: z
+    .string({ required_error: "Please Enter Type Of Visa" })
+    .min(1, { message: "Please Enter Type Of Visa" })
     .nullable()
     .optional(),
 
-  employmentVisaNumber: preprocessString(
-    "Please Enter Employment Visa Number",
-    "Please Enter Employment Visa Number"
-  )
+  employmentVisaNumber: z
+    .string({ required_error: "Please Enter Visa Number" })
+    .min(1, { message: "Please Enter Visa Number" })
     .nullable()
     .optional(),
 
-  employmentVisaIssuedBy: preprocessString(
-    "Please Enter Employment Visa Issued By",
-    "Please Enter Employment Visa Issued By"
-  )
+  employmentVisaIssuedBy: z
+    .string({ required_error: "Please Enter Visa Issued By" })
+    .min(1, { message: "Please Enter Visa Issued By" })
     .nullable()
     .optional(),
 
-  employmentWorkPermitNumber: preprocessString(
-    "Please Enter Employment Work Permit Number",
-    "Please Enter Employment Work Permit Number"
-  )
+  employmentWorkPermitNumber: z
+    .string({ required_error: "Please Enter Work Permit Number" })
+    .min(1, { message: "Please Enter Work Permit Number" })
     .nullable()
     .optional(),
 
-  employmentWorkPermitIssuedBy: preprocessString(
-    "Please Enter Employment Work Permit Issued By",
-    "Please Enter Employment Work Permit Issued By"
-  )
+  employmentWorkPermitIssuedBy: z
+    .string({ required_error: "Please Enter Work Permit Issued By" })
+    .min(1, { message: "Please Enter Work Permit Issued By" })
     .nullable()
     .optional(),
 
-  employmentSsoNumber: preprocessString(
-    "Please Enter Employment Sso Number",
-    "Please Enter Employment Sso Number"
-  )
+  employmentSsoNumber: z
+    .string({ required_error: "Please Enter Sso Number" })
+    .min(1, { message: "Please Enter Sso Number" })
     .nullable()
     .optional(),
 
-  employmentSsoHospital: preprocessString(
-    "Please Enter Employment Sso Hospital",
-    "Please Enter Employment Sso Hospital"
-  )
+  employmentSsoHospital: z
+    .string({ required_error: "Please Enter Sso Hospital" })
+    .min(1, { message: "Please Enter Sso Hospital" })
     .nullable()
     .optional(),
 
-  employmentWorkStatus: preprocessEnum(
-    ["CurrentEmployee", "Resign"],
-    "Employment Status must be either 'CurrentEmployee', 'Resign'."
-  )
+  employmentWorkStatus: z
+    .enum(["CurrentEmployee", "Resign"], {
+      required_error:
+        "Employment Status must be either 'CurrentEmployee' or 'Resign'.",
+    })
     .nullable()
     .optional(),
 
