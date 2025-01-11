@@ -8,9 +8,9 @@ import {
   formatData,
 } from "@/lib/zodSchema";
 
-export function formatDivisionData(division) {
+export function formatEmployeeData(employee) {
   return formatData(
-    division,
+    employee,
     ["employeeBirthday"],
     ["employeeCreateAt", "employeeUpdateAt"]
   );

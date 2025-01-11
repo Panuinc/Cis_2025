@@ -24,7 +24,7 @@ const divisionStatusColorMap = {
 export default function DivisionList() {
   const { data: session } = useSession();
   const userData = session?.user || {};
-  const isUserLevel = userData?.employeeLevel === "User";
+  const isUserLevel = userData?.employee?.employeeLevel === "User";
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
