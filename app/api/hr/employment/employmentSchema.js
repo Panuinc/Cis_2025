@@ -14,29 +14,34 @@ export function formatEmploymentData(employment) {
   return employment.map((employment) => ({
     ...employment,
     employmentStartWork: formatDateWithoutTime(employment.employmentStartWork),
-    employmentPassportStartDate: formatDateWithoutTime(
-      employment.employmentPassportStartDate
-    ),
-    employmentPassportEndDate: formatDateWithoutTime(
-      employment.employmentPassportEndDate
-    ),
+    employmentPassportStartDate: formatDateWithoutTime(employment.employmentPassportStartDate),
+    employmentPassportEndDate: formatDateWithoutTime(employment.employmentPassportEndDate),
     employmentEnterDate: formatDateWithoutTime(employment.employmentEnterDate),
-    employmentWorkPermitStartDate: formatDateWithoutTime(
-      employment.employmentWorkPermitStartDate
-    ),
-    employmentWorkPermitEndDate: formatDateWithoutTime(
-      employment.employmentWorkPermitEndDate
-    ),
+    employmentWorkPermitStartDate: formatDateWithoutTime(employment.employmentWorkPermitStartDate),
+    employmentWorkPermitEndDate: formatDateWithoutTime(employment.employmentWorkPermitEndDate),
     employmentCreateAt: formatDate(employment.employmentCreateAt),
     employmentUpdateAt: formatDate(employment.employmentUpdateAt),
   }));
 }
 
 const preprocessInt = (requiredMsg, intMsg) =>
-  z.preprocess(
-    (val) => parseInt(val, 10),
-    z.number({ required_error: requiredMsg }).int({ message: intMsg })
-  );
+  z
+    .preprocess(
+      (val) => parseInt(val, 10),
+      z.number({ required_error: requiredMsg }).int({ message: intMsg })
+    )
+    .nullable()
+    .optional();
+
+const preprocessString = (requiredMsg, minMsg) =>
+  z
+    .string({ required_error: requiredMsg })
+    .min(1, { message: minMsg })
+    .nullable()
+    .optional();
+
+const preprocessEnum = (validValues, requiredMsg) =>
+  z.enum(validValues, { required_error: requiredMsg }).nullable().optional();
 
 const preprocessDate = z.preprocess((val) => {
   if (!val) return null;
@@ -55,25 +60,20 @@ export const employmentPutSchema = z.object({
     .nullable()
     .optional(),
 
-  employmentNumber: z
-    .string({ required_error: "Please Enter Employment Number" })
-    .min(1, { message: "Please Enter Employment Number" })
-    .nullable()
-    .optional(),
+  employmentNumber: preprocessString(
+    "Please Enter Employment Number",
+    "Please Enter Employment Number"
+  ),
 
-  employmentCardNumber: z
-    .string({ required_error: "Please Enter Employment Card Number" })
-    .min(1, { message: "Please Enter Employment Card Number" })
-    .nullable()
-    .optional(),
+  employmentCardNumber: preprocessString(
+    "Please Enter Employment Card Number",
+    "Please Enter Employment Card Number"
+  ),
 
-  employmentType: z
-    .enum(["DAILY_WAGE", "MONTHLY_SALARY", "Mrs"], {
-      required_error:
-        "Employment Title must be either 'DAILY_WAGE', 'MONTHLY_SALARY', or 'Mrs'.",
-    })
-    .nullable()
-    .optional(),
+  employmentType: preprocessEnum(
+    ["Mr", "Ms", "Mrs"],
+    "Employment Title must be either 'Mr', 'Ms', or 'Mrs'."
+  ),
 
   employmentBranchId: preprocessInt(
     "Branch ID must be provided.",
