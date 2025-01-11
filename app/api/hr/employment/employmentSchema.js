@@ -10,21 +10,6 @@ const formatDateWithoutTime = (value) => {
   return new Date(value).toISOString().split("T")[0];
 };
 
-const preprocessInt = (requiredMsg, intMsg) =>
-  z.preprocess(
-    (val) => parseInt(val, 10),
-    z.number({ required_error: requiredMsg }).int({ message: intMsg })
-  );
-
-const preprocessDate = z.preprocess((val) => {
-  if (!val) return null;
-  if (typeof val === "string" || val instanceof Date) {
-    const date = new Date(val);
-    return isNaN(date.getTime()) ? undefined : date;
-  }
-  return undefined;
-}, z.date().nullable().optional());
-
 export function formatEmploymentData(employment) {
   return employment.map((employment) => ({
     ...employment,
@@ -46,6 +31,21 @@ export function formatEmploymentData(employment) {
     employmentUpdateAt: formatDate(employment.employmentUpdateAt),
   }));
 }
+
+const preprocessInt = (requiredMsg, intMsg) =>
+  z.preprocess(
+    (val) => parseInt(val, 10),
+    z.number({ required_error: requiredMsg }).int({ message: intMsg })
+  );
+
+const preprocessDate = z.preprocess((val) => {
+  if (!val) return null;
+  if (typeof val === "string" || val instanceof Date) {
+    const date = new Date(val);
+    return isNaN(date.getTime()) ? undefined : date;
+  }
+  return undefined;
+}, z.date().nullable().optional());
 
 export const employmentPutSchema = z.object({
   employmentId: preprocessInt(
