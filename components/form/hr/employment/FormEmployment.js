@@ -629,34 +629,6 @@ export default function FormEmployment({
             </SelectItem>
           </Select>
         </div>
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <Select
-            name="employmentType"
-            label="Employment Type"
-            placeholder="Please Select Status"
-            labelPlacement="outside"
-            size="lg"
-            variant="bordered"
-            value={formData.employmentType || ""}
-            selectedKeys={[formData.employmentType] || ""}
-            onChange={handleInputChange("employmentType")}
-            isInvalid={!!errors.employmentType}
-            errorMessage={errors.employmentType}
-          >
-            <SelectItem value="MONTHLY_SALARY" key="MONTHLY_SALARY">
-              MONTHLY_SALARY
-            </SelectItem>
-            <SelectItem value="DAILY_WAGE" key="DAILY_WAGE">
-              DAILY_WAGE
-            </SelectItem>
-            <SelectItem
-              value="MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES"
-              key="MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES"
-            >
-              MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES
-            </SelectItem>
-          </Select>
-        </div>
       </div>
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
