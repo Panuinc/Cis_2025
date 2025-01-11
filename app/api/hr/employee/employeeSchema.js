@@ -19,7 +19,7 @@ export function formatDivisionData(division) {
 export const employeePosteSchema = z.object({
   employeeTitle: preprocessEnum(
     ["Mr", "Ms", "Mrs"],
-    "Employment Title must be either 'Mr', 'Ms', 'Mrs'."
+    "Employee Title must be either 'Mr', 'Ms', 'Mrs'."
   ),
 
   employeeFirstname: preprocessString(
@@ -61,12 +61,12 @@ export const employeePosteSchema = z.object({
 
   employeeCitizen: preprocessEnum(
     ["Thai", "Cambodian", "Lao", "Burmese", "Vietnamese"],
-    "Employment Citizen must be either 'Thai', 'Cambodian', 'Lao', 'Burmese', 'Vietnamese'."
+    "Employee Citizen must be either 'Thai', 'Cambodian', 'Lao', 'Burmese', 'Vietnamese'."
   ),
 
   employeeGender: preprocessEnum(
     ["Male", "FeMale"],
-    "Employment Gender must be either 'Male', 'FeMale'."
+    "Employee Gender must be either 'Male', 'FeMale'."
   ),
 
   employeeCreateBy: preprocessInt(
@@ -82,7 +82,7 @@ export const employeePutSchema = z.object({
   ),
   employeeTitle: preprocessEnum(
     ["Mr", "Ms", "Mrs"],
-    "Employment Title must be either 'Mr', 'Ms', 'Mrs'."
+    "Employee Title must be either 'Mr', 'Ms', 'Mrs'."
   ),
 
   employeeFirstname: preprocessString(
@@ -124,17 +124,17 @@ export const employeePutSchema = z.object({
 
   employeeCitizen: preprocessEnum(
     ["Thai", "Cambodian", "Lao", "Burmese", "Vietnamese"],
-    "Employment Citizen must be either 'Thai', 'Cambodian', 'Lao', 'Burmese', 'Vietnamese'."
+    "Employee Citizen must be either 'Thai', 'Cambodian', 'Lao', 'Burmese', 'Vietnamese'."
   ),
 
   employeeGender: preprocessEnum(
     ["Male", "FeMale"],
-    "Employment Gender must be either 'Male', 'FeMale'."
+    "Employee Gender must be either 'Male', 'FeMale'."
   ),
 
   employeeStatus: preprocessEnum(
     ["Active", "InActive"],
-    "Employment Status must be either 'Active', 'InActive'."
+    "Employee Status must be either 'Active', 'InActive'."
   ),
 
   employeeUpdateBy: preprocessInt(

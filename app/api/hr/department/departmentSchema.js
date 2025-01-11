@@ -51,7 +51,7 @@ export const departmentPutSchema = z.object({
 
   departmentStatus: preprocessEnum(
     ["Active", "InActive"],
-    "Employment Status must be either 'Active', 'InActive'."
+    "Department Status must be either 'Active', 'InActive'."
   ),
 
   departmentUpdateBy: preprocessInt(

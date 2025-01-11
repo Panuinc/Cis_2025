@@ -37,7 +37,7 @@ export const branchPutSchema = z.object({
 
   branchStatus: preprocessEnum(
     ["Active", "InActive"],
-    "Employment Status must be either 'Active', 'InActive'."
+    "Branch Status must be either 'Active', 'InActive'."
   ),
 
   branchUpdateBy: preprocessInt(

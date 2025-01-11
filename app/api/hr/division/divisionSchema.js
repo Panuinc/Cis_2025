@@ -42,7 +42,7 @@ export const divisionPutSchema = z.object({
 
   divisionStatus: preprocessEnum(
     ["Active", "InActive"],
-    "Employment Status must be either 'Active', 'InActive'."
+    "Division Status must be either 'Active', 'InActive'."
   ),
 
   divisionUpdateBy: preprocessInt(
