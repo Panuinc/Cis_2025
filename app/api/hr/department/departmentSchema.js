@@ -1,22 +1,19 @@
 import { z } from "zod";
-
-const formatDate = (value) => {
-  if (!value) return null;
-  return new Date(value).toISOString().replace("T", " ").slice(0, 19);
-};
-
-const preprocessInt = (requiredMsg, intMsg) =>
-  z.preprocess(
-    (val) => parseInt(val, 10),
-    z.number({ required_error: requiredMsg }).int({ message: intMsg })
-  );
+import {
+  preprocessInt,
+  preprocessString,
+  preprocessEnum,
+  preprocessAny,
+  preprocessDate,
+  formatData,
+} from "@/lib/zodSchema";
 
 export function formatDepartmentData(department) {
-  return department.map((department) => ({
-    ...department,
-    departmentCreateAt: formatDate(department.departmentCreateAt),
-    departmentUpdateAt: formatDate(department.departmentUpdateAt),
-  }));
+  return formatData(
+    department,
+    [],
+    ["departmentCreateAt", "departmentUpdateAt"]
+  );
 }
 
 export const departmentPosteSchema = z.object({
@@ -24,13 +21,17 @@ export const departmentPosteSchema = z.object({
     "Branch ID must be provided.",
     "Branch ID must be an integer."
   ),
+
   departmentDivisionId: preprocessInt(
     "Division ID must be provided.",
     "Division ID must be an integer."
   ),
-  departmentName: z
-    .string({ required_error: "Please Enter Department Name" })
-    .min(1, { message: "Please Enter Department Name" }),
+
+  departmentName: preprocessString(
+    "Please Enter Department Name",
+    "Please Enter Department Name"
+  ),
+
   departmentCreateBy: preprocessInt(
     "Department creator ID must be provided.",
     "Department creator ID must be an integer."
@@ -42,14 +43,17 @@ export const departmentPutSchema = z.object({
     "Department ID must be provided.",
     "Department ID must be an integer."
   ),
-  departmentName: z
-    .string({ required_error: "Please Enter Department Name" })
-    .min(1, { message: "Please Enter Department Name" }),
-  departmentStatus: z.enum(["Active", "InActive"], {
-    required_error: "Department status must be either 'Active' or 'InActive'.",
-    invalid_type_error:
-      "Department status must be either 'Active' or 'InActive'.",
-  }),
+
+  departmentName: preprocessString(
+    "Please Enter Department Name",
+    "Please Enter Department Name"
+  ),
+
+  departmentStatus: preprocessEnum(
+    ["Active", "InActive"],
+    "Employment Status must be either 'Active', 'InActive'."
+  ),
+
   departmentUpdateBy: preprocessInt(
     "Department updater ID must be provided.",
     "Department updater ID must be an integer."
