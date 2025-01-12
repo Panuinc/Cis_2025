@@ -19,7 +19,9 @@ export default function FormEmployment({
   branch,
   role,
   formData,
+  setFormData,
   handleInputChange,
+  previews,
   isUpdate = false,
   operatedBy = "",
 }) {
@@ -270,8 +272,25 @@ export default function FormEmployment({
         </div>
       </div>
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          employmentPicture
+        <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Input
+            name="employmentPicture"
+            type="file"
+            label="Employment Picture"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            onChange={handleInputChange("employmentPicture")}
+            isInvalid={!!errors.employmentPicture}
+            errorMessage={errors.employmentPicture}
+          />
+          {previews.employmentPicture && (
+            <img
+              src={previews.employmentPicture}
+              alt="Employment Picture Preview"
+              className="w-40 h-40 object-contain rounded-md"
+            />
+          )}
         </div>
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           employmentSignature

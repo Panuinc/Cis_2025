@@ -77,6 +77,8 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
   const [parent, setParent] = useState([]);
   const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
 
+  const [previews, setPreviews] = useState({ employmentPicture: null });
+
   const formRef = useRef(null);
 
   const fetchData = useCallback(async () => {
@@ -223,6 +225,12 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
           employeeCitizen:
             employment.EmploymentEmployeeBy?.employeeCitizen || "",
         });
+        if (employment.employmentPicture) {
+          setPreviews((prev) => ({
+            ...prev,
+            employmentPicture: `/images/user_picture/${employment.employmentPicture}`,
+          }));
+        }
       } else {
         toast.error(employmentData.error);
       }
@@ -313,20 +321,29 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
       formData.employmentDepartmentId
   );
 
-  const handleInputChange = useCallback(
-    (field) => (e) => {
-      const value = e.target.value || null;
-      setFormData((prev) => ({ ...prev, [field]: value }));
-      setErrors((prev) => {
-        if (prev[field]) {
-          const { [field]: _, ...rest } = prev;
-          return rest;
-        }
-        return prev;
-      });
-    },
-    []
-  );
+  const handleInputChange = (field) => (e) => {
+    const value =
+      field === "employmentPicture" ? e.target.files[0] : e.target.value;
+
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+
+    if (field === "employmentPicture") {
+      const file = e.target.files[0];
+      if (file) {
+        setPreviews((prev) => ({
+          ...prev,
+          [field]: URL.createObjectURL(file),
+        }));
+      }
+    }
+
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: null }));
+    }
+  };
 
   const handleSubmit = useCallback(
     async (event) => {
@@ -334,6 +351,13 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
 
       const formDataObject = new FormData(formRef.current);
       formDataObject.append("employmentUpdateBy", userId);
+
+      // if (formData.employmentPicture) {
+      //   formDataObject.append("employmentPicture", formData.employmentPicture);
+      // }
+      // if (formData.employmentSignature) {
+      //   formDataObject.append("employmentSignature", formData.employmentSignature);
+      // }
 
       let method = "PUT";
       if (
@@ -409,7 +433,9 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
         branch={branch}
         role={role}
         formData={formData}
+        setFormData={setFormData}
         handleInputChange={handleInputChange}
+        previews={previews}
         isUpdate={true}
         operatedBy={operatedBy}
       />
