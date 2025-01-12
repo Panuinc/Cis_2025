@@ -1,5 +1,6 @@
 "use client";
-import React from "react";
+import SignatureCanvas from "react-signature-canvas";
+import React, { useState } from "react";
 import { Cancel, Database } from "@/components/icons/icons";
 import { Input, Button, Select, SelectItem } from "@nextui-org/react";
 
@@ -25,6 +26,29 @@ export default function FormEmployment({
   isUpdate = false,
   operatedBy = "",
 }) {
+  const signatureRef = React.useRef();
+  const [signaturePreview, setSignaturePreview] = useState(null);
+
+  const handleClearSignature = () => {
+    if (signatureRef.current) {
+      signatureRef.current.clear();
+      setFormData((prev) => ({ ...prev, employmentSignature: null }));
+      setSignaturePreview(null);
+    }
+  };
+
+  const handleSaveSignature = () => {
+    if (signatureRef.current) {
+      const canvas = signatureRef.current.getTrimmedCanvas();
+      canvas.toBlob((blob) => {
+        if (blob) {
+          setFormData((prev) => ({ ...prev, employmentSignature: blob }));
+          const previewUrl = URL.createObjectURL(blob);
+          setSignaturePreview(previewUrl);
+        }
+      });
+    }
+  };
   return (
     <form
       ref={formRef}
@@ -292,8 +316,44 @@ export default function FormEmployment({
             />
           )}
         </div>
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          employmentSignature
+        <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          Employment Signature
+          <SignatureCanvas
+            ref={signatureRef}
+            penColor="black"
+            canvasProps={{
+              width: 500,
+              height: 200,
+              className: "signature-canvas border rounded-md",
+            }}
+          />
+          <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2">
+            <Button
+              size="lg"
+              color="primary"
+              onPress={handleSaveSignature}
+              className="flex items-center justify-center h-full p-2 gap-2"
+            >
+              Save Signature
+            </Button>
+            <Button
+              size="lg"
+              color="danger"
+              onPress={handleClearSignature}
+              className="flex items-center justify-center h-full p-2 gap-2"
+            >
+              Clear Signature
+            </Button>
+          </div>
+          {signaturePreview && (
+            <div className="flex items-center justify-center w-full h-full p-2 gap-2">
+              <img
+                src={signaturePreview}
+                alt="Signature Preview"
+                className="w-40 h-40 object-contain rounded-md"
+              />
+            </div>
+          )}
         </div>
       </div>
       {formData.employeeCitizen && formData.employeeCitizen !== "Thai" && (
