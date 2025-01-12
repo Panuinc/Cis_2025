@@ -328,12 +328,12 @@ export default function FormEmployment({
               className: "signature-canvas border rounded-md",
             }}
           />
-          <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2">
+          <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
             <Button
               size="lg"
               color="primary"
               onPress={handleSaveSignature}
-              className="flex items-center justify-center h-full p-2 gap-2"
+              className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed"
             >
               Save Signature
             </Button>
@@ -341,13 +341,13 @@ export default function FormEmployment({
               size="lg"
               color="danger"
               onPress={handleClearSignature}
-              className="flex items-center justify-center h-full p-2 gap-2"
+              className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed"
             >
               Clear Signature
             </Button>
           </div>
           {signaturePreview && (
-            <div className="flex items-center justify-center w-full h-full p-2 gap-2">
+            <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <img
                 src={signaturePreview}
                 alt="Signature Preview"
