@@ -25,8 +25,8 @@ export default function FormEmployment({
   previews,
   isUpdate = false,
   operatedBy = "",
+  signatureRef,
 }) {
-  const signatureRef = React.useRef();
   const [signaturePreview, setSignaturePreview] = useState(null);
 
   const handleClearSignature = () => {
@@ -49,7 +49,7 @@ export default function FormEmployment({
       });
     }
   };
-  
+
   return (
     <form
       ref={formRef}

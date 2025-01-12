@@ -80,6 +80,7 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
   const [previews, setPreviews] = useState({ employmentPicture: null });
 
   const formRef = useRef(null);
+  const signatureRef = useRef();
 
   const fetchData = useCallback(async () => {
     try {
@@ -349,14 +350,29 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
     async (event) => {
       event.preventDefault();
 
+      let signatureBlob = null;
+      if (signatureRef.current) {
+        signatureBlob = await new Promise((resolve) => {
+          const canvas = signatureRef.current.getTrimmedCanvas();
+          canvas.toBlob((blob) => {
+            resolve(blob);
+          });
+        });
+      }
+
       const formDataObject = new FormData(formRef.current);
       formDataObject.append("employmentUpdateBy", userId);
 
-      if (formData.employmentSignature) {
+      if (signatureBlob) {
         formDataObject.append(
           "employmentSignature",
-          formData.employmentSignature
+          signatureBlob,
+          "signature.png"
         );
+      }
+
+      if (formData.employmentPicture) {
+        formDataObject.append("employmentPicture", formData.employmentPicture);
       }
 
       let method = "PUT";
@@ -401,7 +417,13 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
         toast.error("Error updating employment: " + error.message);
       }
     },
-    [employmentId, router, userId, formData.employeeCitizen]
+    [
+      employmentId,
+      router,
+      userId,
+      formData.employeeCitizen,
+      formData.employmentPicture,
+    ]
   );
 
   const handleClear = useCallback(() => {
@@ -438,6 +460,7 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
         previews={previews}
         isUpdate={true}
         operatedBy={operatedBy}
+        signatureRef={signatureRef}
       />
     </>
   );

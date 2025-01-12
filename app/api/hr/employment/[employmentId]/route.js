@@ -93,7 +93,7 @@ export async function PUT(request, context) {
 
     const parsedData = employmentPutSchema.parse({
       ...data,
-      employmentId: parsedEmploymentId, 
+      employmentId: parsedEmploymentId,
       employmentStartWork: new Date(data.employmentStartWork),
     });
 
@@ -120,7 +120,7 @@ export async function PUT(request, context) {
       employmentNumber,
       employmentId
     ) {
-      if (!file?.name) {
+      if (!file) {
         return { fileName: existingFileName };
       }
 
