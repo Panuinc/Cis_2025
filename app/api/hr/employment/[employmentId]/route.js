@@ -138,7 +138,7 @@ export async function PUT(request, context) {
     const { fileName: PictureName } = await uploadFile(
       employmentPicture,
       "user_picture",
-      existingEmployment[0]?.employmentPicture,
+      existingEmployment.employmentPicture,
       parsedData.employmentNumber,
       parsedEmploymentId
     );
@@ -146,7 +146,7 @@ export async function PUT(request, context) {
     const { fileName: SignatureName } = await uploadFile(
       employmentSignature,
       "signature",
-      existingEmployment[0]?.employmentSignature,
+      existingEmployment.employmentSignature,
       parsedData.employmentNumber,
       parsedEmploymentId
     );

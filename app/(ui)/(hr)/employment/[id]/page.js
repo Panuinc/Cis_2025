@@ -352,9 +352,12 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
       const formDataObject = new FormData(formRef.current);
       formDataObject.append("employmentUpdateBy", userId);
 
-      // if (formData.employmentSignature) {
-      //   formDataObject.append("employmentSignature", formData.employmentSignature);
-      // }
+      if (formData.employmentSignature) {
+        formDataObject.append(
+          "employmentSignature",
+          formData.employmentSignature
+        );
+      }
 
       let method = "PUT";
       if (
