@@ -298,7 +298,7 @@ export default function FormEmployment({
         </div>
       </div>
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-        <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
             name="employmentPicture"
             type="file"
@@ -318,7 +318,7 @@ export default function FormEmployment({
             />
           )}
         </div>
-        <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex flex-col items-start justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           Employment Signature
           <SignatureCanvas
             ref={signatureRef}
@@ -326,7 +326,7 @@ export default function FormEmployment({
             canvasProps={{
               width: 500,
               height: 200,
-              className: "signature-canvas border rounded-md",
+              className: "w-full signature-canvas border rounded-md",
             }}
           />
           <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
