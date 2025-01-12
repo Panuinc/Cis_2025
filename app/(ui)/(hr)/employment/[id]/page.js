@@ -352,9 +352,6 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
       const formDataObject = new FormData(formRef.current);
       formDataObject.append("employmentUpdateBy", userId);
 
-      // if (formData.employmentPicture) {
-      //   formDataObject.append("employmentPicture", formData.employmentPicture);
-      // }
       // if (formData.employmentSignature) {
       //   formDataObject.append("employmentSignature", formData.employmentSignature);
       // }
