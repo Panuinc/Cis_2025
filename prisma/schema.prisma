@@ -254,8 +254,8 @@ model CvEducation {
   cvEducationCvId        Int
   cvEducationDegree      String?
   cvEducationInstitution String?
-  cvEducationStartDate   DateTime
-  cvEducationEndDate     DateTime?
+  cvEducationStartDate   String?
+  cvEducationEndDate     String?
 
   cv Cv @relation(fields: [cvEducationCvId], references: [cvId])
 
@@ -267,8 +267,8 @@ model CvProfessionalLicense {
   cvProfessionalLicenseCvId      Int
   cvProfessionalLicenseName      String?
   cvProfessionalLicenseNumber    String?
-  cvProfessionalLicenseStartDate DateTime?
-  cvProfessionalLicenseEndDate   DateTime?
+  cvProfessionalLicenseStartDate String?
+  cvProfessionalLicenseEndDate   String?
 
   cv Cv @relation(fields: [cvProfessionalLicenseCvId], references: [cvId])
 
@@ -280,8 +280,8 @@ model CvWorkHistory {
   cvWorkHistoryCvId        Int
   cvWorkHistoryCompanyName String?
   cvWorkHistoryPosition    String?
-  cvWorkHistoryStartDate   DateTime?
-  cvWorkHistoryEndDate     DateTime?
+  cvWorkHistoryStartDate   String?
+  cvWorkHistoryEndDate     String?
 
   cv Cv @relation(fields: [cvWorkHistoryCvId], references: [cvId])
 

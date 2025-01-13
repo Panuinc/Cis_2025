@@ -119,6 +119,13 @@ export default function CvUpdate({ params: paramsPromise }) {
     }));
   }, []);
 
+  const removeEducationEntry = useCallback((index) => {
+    setFormData((prev) => ({
+      ...prev,
+      educations: prev.educations.filter((_, i) => i !== index),
+    }));
+  }, []);
+  
   const handleSubmit = useCallback(
     async (event) => {
       event.preventDefault();
@@ -190,6 +197,7 @@ export default function CvUpdate({ params: paramsPromise }) {
         operatedBy={operatedBy}
         handleEducationChange={handleEducationChange}
         addNewEducationEntry={addNewEducationEntry}
+        removeEducationEntry={removeEducationEntry}
       />
     </>
   );

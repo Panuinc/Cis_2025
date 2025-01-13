@@ -9,7 +9,6 @@ import prisma from "@/lib/prisma";
 import { getRequestIP } from "@/lib/GetRequestIp";
 import { getLocalNow } from "@/lib/GetLocalNow";
 
-
 export async function GET(request, context) {
   let ip;
   try {
@@ -32,8 +31,12 @@ export async function GET(request, context) {
         // CvProfessionalLicense: true,
         // CvWorkHistory: true,
         // CvProject: true,
-        CvCreateBy: { select: { employeeFirstname: true, employeeLastname: true } },
-        CvUpdateBy: { select: { employeeFirstname: true, employeeLastname: true } },
+        CvCreateBy: {
+          select: { employeeFirstname: true, employeeLastname: true },
+        },
+        CvUpdateBy: {
+          select: { employeeFirstname: true, employeeLastname: true },
+        },
       },
     });
 
@@ -52,7 +55,6 @@ export async function GET(request, context) {
   }
 }
 
-
 export async function PUT(request, context) {
   let ip;
   try {
@@ -67,39 +69,72 @@ export async function PUT(request, context) {
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
 
+    // รับข้อมูลจาก formData และแปลงค่าบางอย่างตามต้องการ
     const formData = await request.formData();
     const dataObj = {};
     for (const [key, value] of formData.entries()) {
-      if (["educations" /*, "licenses", "workHistories", "projects"*/].includes(key)) {
+      if (
+        ["educations" /*, "licenses", "workHistories", "projects"*/].includes(
+          key
+        )
+      ) {
         dataObj[key] = JSON.parse(value);
       } else {
         dataObj[key] = value;
       }
     }
 
+    // ตรวจสอบและ parse ข้อมูลด้วย schema
     const parsedData = cvPutSchema.parse({
       ...dataObj,
       cvId,
     });
 
-    const { educations, /* licenses, workHistories, projects, */ ...cvData } = parsedData;
+    const { educations, /* licenses, workHistories, projects, */ ...cvData } =
+      parsedData;
     const localNow = getLocalNow();
 
+    // แยกข้อมูลการศึกษาออกเป็นสองกลุ่ม สำหรับการอัปเดตและการสร้างใหม่
+    const updates = (educations || [])
+      .filter((edu) => edu.cvEducationId) // เลือกรายการที่มี ID อยู่แล้ว
+      .map((edu) => ({
+        where: { cvEducationId: edu.cvEducationId },
+        data: {
+          cvEducationDegree: edu.cvEducationDegree,
+          cvEducationInstitution: edu.cvEducationInstitution,
+          cvEducationStartDate: edu.cvEducationStartDate
+            ? new Date(edu.cvEducationStartDate).getFullYear().toString()
+            : null,
+          cvEducationEndDate: edu.cvEducationEndDate
+            ? new Date(edu.cvEducationEndDate).getFullYear().toString()
+            : null,
+        },
+      }));
+
+    const creates = (educations || [])
+      .filter((edu) => !edu.cvEducationId) // เลือกรายการใหม่ที่ยังไม่มี ID
+      .map((edu) => ({
+        cvEducationDegree: edu.cvEducationDegree,
+        cvEducationInstitution: edu.cvEducationInstitution,
+        cvEducationStartDate: edu.cvEducationStartDate
+          ? new Date(edu.cvEducationStartDate).getFullYear().toString()
+          : null,
+        cvEducationEndDate: edu.cvEducationEndDate
+          ? new Date(edu.cvEducationEndDate).getFullYear().toString()
+          : null,
+      }));
+
+    // อัปเดตข้อมูล CV พร้อมกับ nested write สำหรับ CvEducation
     const updatedCv = await prisma.cv.update({
       where: { cvId: parseInt(cvId, 10) },
       data: {
         ...cvData,
         cvUpdateAt: localNow,
         CvEducation: {
-          deleteMany: {}, 
-          create: educations?.map(edu => ({
-            cvEducationDegree: edu.cvEducationDegree,
-            cvEducationInstitution: edu.cvEducationInstitution,
-            cvEducationStartDate: edu.cvEducationStartDate,
-            cvEducationEndDate: edu.cvEducationEndDate,
-          })) || [],
+          update: updates, // อัปเดตรายการที่มีอยู่แล้ว
+          create: creates, // สร้างรายการใหม่
         },
-        // ทำซ้ำสำหรับ CvProfessionalLicense, CvWorkHistory, CvProject หากมีข้อมูล
+        // หากมี relations อื่น ๆ (licenses, workHistories, projects) สามารถจัดการแบบเดียวกันได้
       },
     });
 

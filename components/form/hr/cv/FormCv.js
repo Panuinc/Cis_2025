@@ -14,6 +14,7 @@ export default function FormCv({
   operatedBy = "",
   handleEducationChange,
   addNewEducationEntry,
+  removeEducationEntry,
 }) {
   return (
     <form
@@ -64,7 +65,11 @@ export default function FormCv({
               placeholder="Degree"
               value={edu.cvEducationDegree || ""}
               onChange={(e) =>
-                handleEducationChange(index, "cvEducationDegree", e.target.value)
+                handleEducationChange(
+                  index,
+                  "cvEducationDegree",
+                  e.target.value
+                )
               }
             />
             <Input
@@ -82,9 +87,11 @@ export default function FormCv({
             />
             <Input
               name={`cvEducationStartDate_${index}`}
-              label="Start Date"
-              type="date"
-              value={edu.cvEducationStartDate?.split("T")[0] || ""}
+              label="Start Year"
+              type="number"
+              min="1900"
+              max={new Date().getFullYear()}
+              value={edu.cvEducationStartDate || ""}
               onChange={(e) =>
                 handleEducationChange(
                   index,
@@ -95,9 +102,11 @@ export default function FormCv({
             />
             <Input
               name={`cvEducationEndDate_${index}`}
-              label="End Date"
-              type="date"
-              value={edu.cvEducationEndDate?.split("T")[0] || ""}
+              label="End Year"
+              type="number"
+              min="1900"
+              max={new Date().getFullYear()}
+              value={edu.cvEducationEndDate || ""}
               onChange={(e) =>
                 handleEducationChange(
                   index,
@@ -106,6 +115,14 @@ export default function FormCv({
                 )
               }
             />
+            <Button
+              size="sm"
+              color="error"
+              // startContent={<Delete />}
+              onPress={() => removeEducationEntry(index)}
+            >
+              Cancel
+            </Button>
           </div>
         ))}
         <Button onPress={addNewEducationEntry}>เพิ่มการศึกษา</Button>
@@ -113,10 +130,21 @@ export default function FormCv({
 
       {/* ปุ่ม Submit และ Cancel */}
       <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-        <Button size="md" color="success" startContent={<Database />} type="submit">
+        <Button
+          size="md"
+          color="success"
+          startContent={<Database />}
+          type="submit"
+        >
           Submit
         </Button>
-        <Button size="md" color="danger" startContent={<Cancel />} onPress={onClear} type="button">
+        <Button
+          size="md"
+          color="danger"
+          startContent={<Cancel />}
+          onPress={onClear}
+          type="button"
+        >
           Cancel
         </Button>
       </div>
