@@ -107,6 +107,19 @@ export async function PUT(request, context) {
       );
     }
 
+    const employment = await prisma.employment.findFirst({
+      where: { employmentEmployeeId: existingEmpDocument.empDocumentEmployeeId },
+    });
+
+    if (!employment) {
+      return NextResponse.json(
+        { error: "Employment data to update was not found" },
+        { status: 404 }
+      );
+    }
+
+    const employmentNumber = employment?.employmentNumber;
+
     const localNow = getLocalNow();
 
     const empDocumentIdCardFile = formData.get("empDocumentIdCardFile");
@@ -138,7 +151,7 @@ export async function PUT(request, context) {
       empDocumentIdCardFile,
       "idCardFile",
       existingEmpDocument.empDocumentIdCardFile,
-      parsedData.employmentNumber,
+      employmentNumber,
       parsedEmpDocumentId
     );
 
@@ -146,7 +159,7 @@ export async function PUT(request, context) {
       empDocumentHomeFile,
       "homeFile",
       existingEmpDocument.empDocumentHomeFile,
-      parsedData.employmentNumber,
+      employmentNumber,
       parsedEmpDocumentId
     );
 
@@ -210,6 +223,19 @@ export async function PATCH(request, context) {
       );
     }
 
+    const employment = await prisma.employment.findFirst({
+      where: { employmentEmployeeId: existingEmpDocument.empDocumentEmployeeId },
+    });
+
+    if (!employment) {
+      return NextResponse.json(
+        { error: "Employment data to update was not found" },
+        { status: 404 }
+      );
+    }
+
+    const employmentNumber = employment?.employmentNumber;
+
     const localNow = getLocalNow();
 
     const empDocumentSumFile = formData.get("empDocumentSumFile");
@@ -252,7 +278,7 @@ export async function PATCH(request, context) {
       empDocumentSumFile,
       "sumFile",
       existingEmpDocument.empDocumentSumFile,
-      parsedData.employmentNumber,
+      employmentNumber,
       parsedEmpDocumentId
     );
 
@@ -260,7 +286,7 @@ export async function PATCH(request, context) {
       empDocumentPassportFile,
       "passportFile",
       existingEmpDocument.empDocumentPassportFile,
-      parsedData.employmentNumber,
+      employmentNumber,
       parsedEmpDocumentId
     );
 
@@ -268,7 +294,7 @@ export async function PATCH(request, context) {
       empDocumentImmigrationFile,
       "immigrationFile",
       existingEmpDocument.empDocumentImmigrationFile,
-      parsedData.employmentNumber,
+      employmentNumber,
       parsedEmpDocumentId
     );
 
@@ -276,7 +302,7 @@ export async function PATCH(request, context) {
       empDocumentVisa1File,
       "visa1File",
       existingEmpDocument.empDocumentVisa1File,
-      parsedData.employmentNumber,
+      employmentNumber,
       parsedEmpDocumentId
     );
 
@@ -284,7 +310,7 @@ export async function PATCH(request, context) {
       empDocumentVisa2File,
       "visa2File",
       existingEmpDocument.empDocumentVisa2File,
-      parsedData.employmentNumber,
+      employmentNumber,
       parsedEmpDocumentId
     );
 
@@ -292,7 +318,7 @@ export async function PATCH(request, context) {
       empDocumentVisa3File,
       "visa3File",
       existingEmpDocument.empDocumentVisa3File,
-      parsedData.employmentNumber,
+      employmentNumber,
       parsedEmpDocumentId
     );
 
@@ -300,7 +326,7 @@ export async function PATCH(request, context) {
       empDocumentVisa4File,
       "visa4File",
       existingEmpDocument.empDocumentVisa4File,
-      parsedData.employmentNumber,
+      employmentNumber,
       parsedEmpDocumentId
     );
 
@@ -308,7 +334,7 @@ export async function PATCH(request, context) {
       empDocumentVisa5File,
       "visa5File",
       existingEmpDocument.empDocumentVisa5File,
-      parsedData.employmentNumber,
+      employmentNumber,
       parsedEmpDocumentId
     );
 
@@ -316,7 +342,7 @@ export async function PATCH(request, context) {
       empDocumentWorkPermit1File,
       "workPermit1File",
       existingEmpDocument.empDocumentWorkPermit1File,
-      parsedData.employmentNumber,
+      employmentNumber,
       parsedEmpDocumentId
     );
 
@@ -324,7 +350,7 @@ export async function PATCH(request, context) {
       empDocumentWorkPermit2File,
       "workPermit2File",
       existingEmpDocument.empDocumentWorkPermit2File,
-      parsedData.employmentNumber,
+      employmentNumber,
       parsedEmpDocumentId
     );
 
@@ -332,7 +358,7 @@ export async function PATCH(request, context) {
       empDocumentWorkPermit3File,
       "workPermit3File",
       existingEmpDocument.empDocumentWorkPermit3File,
-      parsedData.employmentNumber,
+      employmentNumber,
       parsedEmpDocumentId
     );
 
@@ -340,7 +366,7 @@ export async function PATCH(request, context) {
       empDocumentWorkPermit4File,
       "workPermit4File",
       existingEmpDocument.empDocumentWorkPermit4File,
-      parsedData.employmentNumber,
+      employmentNumber,
       parsedEmpDocumentId
     );
 
@@ -348,7 +374,7 @@ export async function PATCH(request, context) {
       empDocumentWorkPermit5File,
       "workPermit5File",
       existingEmpDocument.empDocumentWorkPermit5File,
-      parsedData.employmentNumber,
+      employmentNumber,
       parsedEmpDocumentId
     );
 
