@@ -81,7 +81,11 @@ export default function FormEmpDocument({
                 isInvalid={!!errors.empDocumentIdCardFile}
                 errorMessage={errors.empDocumentIdCardFile}
               />
-              {renderPreview(previewsIdCardFile)}
+              {formData.empDocumentIdCardFile == "" || (
+                <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                  {renderPreview(previewsIdCardFile)}
+                </div>
+              )}
             </div>
             <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <Input
@@ -95,7 +99,11 @@ export default function FormEmpDocument({
                 isInvalid={!!errors.empDocumentHomeFile}
                 errorMessage={errors.empDocumentHomeFile}
               />
-              {renderPreview(previewsHomeFile)}
+              {formData.empDocumentHomeFile == "" || (
+                <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                  {renderPreview(previewsHomeFile)}
+                </div>
+              )}
             </div>
           </div>
         </>
@@ -115,7 +123,11 @@ export default function FormEmpDocument({
                 isInvalid={!!errors.empDocumentSumFile}
                 errorMessage={errors.empDocumentSumFile}
               />
-              {renderPreview(previewsSumFile)}
+              {formData.empDocumentSumFile == "" || (
+                <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                  {renderPreview(previewsSumFile)}
+                </div>
+              )}
             </div>
             <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <Input
@@ -129,7 +141,11 @@ export default function FormEmpDocument({
                 isInvalid={!!errors.empDocumentPassportFile}
                 errorMessage={errors.empDocumentPassportFile}
               />
-              {renderPreview(previewsPassportFile)}
+              {formData.empDocumentPassportFile == "" || (
+                <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                  {renderPreview(previewsPassportFile)}
+                </div>
+              )}
             </div>
             <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <Input
@@ -143,7 +159,11 @@ export default function FormEmpDocument({
                 isInvalid={!!errors.empDocumentImmigrationFile}
                 errorMessage={errors.empDocumentImmigrationFile}
               />
-              {renderPreview(previewsImmigrationFile)}
+              {formData.empDocumentImmigrationFile == "" || (
+                <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                  {renderPreview(previewsImmigrationFile)}
+                </div>
+              )}
             </div>
           </div>
           <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -159,7 +179,11 @@ export default function FormEmpDocument({
                 isInvalid={!!errors.empDocumentVisa1File}
                 errorMessage={errors.empDocumentVisa1File}
               />
-              {renderPreview(previewsVisa1File)}
+              {formData.empDocumentVisa1File == "" || (
+                <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                  {renderPreview(previewsVisa1File)}
+                </div>
+              )}
             </div>
             <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <Input
@@ -173,7 +197,11 @@ export default function FormEmpDocument({
                 isInvalid={!!errors.empDocumentVisa2File}
                 errorMessage={errors.empDocumentVisa2File}
               />
-              {renderPreview(previewsVisa2File)}
+              {formData.empDocumentVisa2File == "" || (
+                <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                  {renderPreview(previewsVisa2File)}
+                </div>
+              )}
             </div>
             <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <Input
@@ -187,7 +215,11 @@ export default function FormEmpDocument({
                 isInvalid={!!errors.empDocumentVisa3File}
                 errorMessage={errors.empDocumentVisa3File}
               />
-              {renderPreview(previewsVisa3File)}
+              {formData.empDocumentVisa3File == "" || (
+                <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                  {renderPreview(previewsVisa3File)}
+                </div>
+              )}
             </div>
             <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <Input
@@ -201,7 +233,11 @@ export default function FormEmpDocument({
                 isInvalid={!!errors.empDocumentVisa4File}
                 errorMessage={errors.empDocumentVisa4File}
               />
-              {renderPreview(previewsVisa4File)}
+              {formData.empDocumentVisa4File == "" || (
+                <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                  {renderPreview(previewsVisa4File)}
+                </div>
+              )}
             </div>
             <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <Input
@@ -215,7 +251,11 @@ export default function FormEmpDocument({
                 isInvalid={!!errors.empDocumentVisa5File}
                 errorMessage={errors.empDocumentVisa5File}
               />
-              {renderPreview(previewsVisa5File)}
+              {formData.empDocumentVisa5File == "" || (
+                <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                  {renderPreview(previewsVisa5File)}
+                </div>
+              )}
             </div>
           </div>
           <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -231,7 +271,11 @@ export default function FormEmpDocument({
                 isInvalid={!!errors.empDocumentWorkPermit1File}
                 errorMessage={errors.empDocumentWorkPermit1File}
               />
-              {renderPreview(previewsWorkPermit1File)}
+              {formData.empDocumentWorkPermit1File == "" || (
+                <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                  {renderPreview(previewsWorkPermit1File)}
+                </div>
+              )}
             </div>
             <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <Input
@@ -245,7 +289,11 @@ export default function FormEmpDocument({
                 isInvalid={!!errors.empDocumentWorkPermit2File}
                 errorMessage={errors.empDocumentWorkPermit2File}
               />
-              {renderPreview(previewsWorkPermit2File)}
+              {formData.empDocumentWorkPermit2File == "" || (
+                <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                  {renderPreview(previewsWorkPermit2File)}
+                </div>
+              )}
             </div>
             <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <Input
@@ -259,7 +307,11 @@ export default function FormEmpDocument({
                 isInvalid={!!errors.empDocumentWorkPermit3File}
                 errorMessage={errors.empDocumentWorkPermit3File}
               />
-              {renderPreview(previewsWorkPermit3File)}
+              {formData.empDocumentWorkPermit3File == "" || (
+                <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                  {renderPreview(previewsWorkPermit3File)}
+                </div>
+              )}
             </div>
             <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <Input
@@ -273,7 +325,11 @@ export default function FormEmpDocument({
                 isInvalid={!!errors.empDocumentWorkPermit4File}
                 errorMessage={errors.empDocumentWorkPermit4File}
               />
-              {renderPreview(previewsWorkPermit4File)}
+              {formData.empDocumentWorkPermit4File == "" || (
+                <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                  {renderPreview(previewsWorkPermit4File)}
+                </div>
+              )}
             </div>
             <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <Input
@@ -287,7 +343,11 @@ export default function FormEmpDocument({
                 isInvalid={!!errors.empDocumentWorkPermit5File}
                 errorMessage={errors.empDocumentWorkPermit5File}
               />
-              {renderPreview(previewsWorkPermit5File)}
+              {formData.empDocumentWorkPermit5File == "" || (
+                <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                  {renderPreview(previewsWorkPermit5File)}
+                </div>
+              )}
             </div>
           </div>
         </>
