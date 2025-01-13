@@ -136,7 +136,9 @@ export async function PUT(request, context) {
         return { fileName: existingFileName };
       }
 
-      const fileName = `${employmentNumber}_${empDocumentId}.png`;
+      const extension = path.extname(file.name).toLowerCase() || '.png'; 
+
+      const fileName = `${employmentNumber}_${empDocumentId}${extension}`;
       const filePath = path
         .join("public/images", folder, fileName)
         .replace(/\\/g, "/");
@@ -263,7 +265,9 @@ export async function PATCH(request, context) {
         return { fileName: existingFileName };
       }
 
-      const fileName = `${employmentNumber}_${empDocumentId}.png`;
+      const extension = path.extname(file.name).toLowerCase() || '.png'; 
+
+      const fileName = `${employmentNumber}_${empDocumentId}${extension}`;
       const filePath = path
         .join("public/images", folder, fileName)
         .replace(/\\/g, "/");
