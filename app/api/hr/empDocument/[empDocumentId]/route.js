@@ -132,7 +132,7 @@ export async function PUT(request, context) {
       employmentNumber,
       empDocumentId
     ) {
-      if (!file) {
+      if (!file?.name || file.size === 0) {
         return { fileName: existingFileName };
       }
 
@@ -259,7 +259,7 @@ export async function PATCH(request, context) {
       employmentNumber,
       empDocumentId
     ) {
-      if (!file) {
+      if (!file?.name || file.size === 0) {
         return { fileName: existingFileName };
       }
 
