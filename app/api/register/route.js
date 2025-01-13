@@ -85,6 +85,14 @@ export async function POST(request) {
       },
     });
 
+    await prisma.cv.create({
+      data: {
+        cvEmployeeId: newEmployee.employeeId,
+        cvCreateBy: 1,
+        cvCreateAt: localNow,
+      },
+    });
+
     logger.info({
       message: "Account Registration Successful",
       EmployeeFullName: `${newEmployee.employeeFirstname} ${newEmployee.employeeLastname}`,

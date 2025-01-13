@@ -137,6 +137,14 @@ export async function POST(request) {
       },
     });
 
+    await prisma.cv.create({
+      data: {
+        cvEmployeeId: newEmployee.employeeId,
+        cvCreateBy: 1,
+        cvCreateAt: localNow,
+      },
+    });
+    
     return NextResponse.json(
       { message: "Successfully created new employee", employee: newEmployee },
       { status: 201 }
