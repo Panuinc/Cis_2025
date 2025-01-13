@@ -104,7 +104,9 @@ model Employee {
   createdPosition Position[] @relation("PositionCreateBy")
   updatedPosition Position[] @relation("PositionUpdateBy")
 
-  cv Cv[] @relation("EmployeeCv")
+  employeeCv Cv[] @relation("CvEmployeeBy")
+  createdCv  Cv[] @relation("CvCreateBy")
+  updatedCv  Cv[] @relation("CvUpdateBy")
 
   @@index([employeeCreateBy])
   @@index([employeeUpdateBy])
@@ -233,7 +235,9 @@ model Cv {
   cvUpdateBy   Int?
   cvUpdateAt   DateTime?
 
-  employee Employee @relation("EmployeeCv", fields: [cvEmployeeId], references: [employeeId])
+  CvEmployeeBy Employee? @relation("CvEmployeeBy", fields: [cvEmployeeId], references: [employeeId])
+  CvCreateBy   Employee? @relation("CvCreateBy", fields: [cvCreateBy], references: [employeeId])
+  CvUpdateBy   Employee? @relation("CvUpdateBy", fields: [cvUpdateBy], references: [employeeId])
 
   CvEducation   CvEducation[]
   CvLicense     CvProfessionalLicense[]

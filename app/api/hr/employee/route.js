@@ -45,6 +45,7 @@ export async function GET(request) {
           },
         },
         employeeEmpDocument: true,
+        employeeCv: true,
         EmployeeCreateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
