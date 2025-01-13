@@ -103,6 +103,11 @@ model Employee {
 
   createdPosition Position[] @relation("PositionCreateBy")
   updatedPosition Position[] @relation("PositionUpdateBy")
+
+  resume Resume[] @relation("EmployeeResume")
+
+  @@index([employeeCreateBy])
+  @@index([employeeUpdateBy])
 }
 
 model User {
@@ -118,6 +123,10 @@ model User {
   UserEmployeeBy Employee? @relation("UserEmployeeBy", fields: [userEmployeeId], references: [employeeId])
   UserCreateBy   Employee? @relation("UserCreatedBy", fields: [userCreateBy], references: [employeeId])
   UserUpdateBy   Employee? @relation("UserUpdatedBy", fields: [userUpdateBy], references: [employeeId])
+
+  @@index([userEmployeeId])
+  @@index([userCreateBy])
+  @@index([userUpdateBy])
 }
 
 model Employment {
@@ -171,6 +180,17 @@ model Employment {
   EmploymentDivisionId   Division?   @relation("EmploymentDivisionId", fields: [employmentDivisionId], references: [divisionId])
   EmploymentDepartmentId Department? @relation("EmploymentDepartmentId", fields: [employmentDepartmentId], references: [departmentId])
   EmploymentPositionId   Position?   @relation("EmploymentPositionId", fields: [employmentPositionId], references: [positionId])
+
+  @@index([employmentEmployeeId])
+  @@index([employmentBranchId])
+  @@index([employmentSiteId])
+  @@index([employmentDivisionId])
+  @@index([employmentDepartmentId])
+  @@index([employmentPositionId])
+  @@index([employmentRoleId])
+  @@index([employmentParentId])
+  @@index([employmentCreateBy])
+  @@index([employmentUpdateBy])
 }
 
 model EmpDocument {
@@ -199,6 +219,80 @@ model EmpDocument {
   EmpDocumentEmployeeBy Employee? @relation("EmpDocumentEmployeeBy", fields: [empDocumentEmployeeId], references: [employeeId])
   EmpDocumentCreateBy   Employee? @relation("EmpDocumentCreateBy", fields: [empDocumentCreateBy], references: [employeeId])
   EmpDocumentUpdateBy   Employee? @relation("EmpDocumentUpdateBy", fields: [empDocumentUpdateBy], references: [employeeId])
+
+  @@index([empDocumentEmployeeId])
+  @@index([empDocumentCreateBy])
+  @@index([empDocumentUpdateBy])
+}
+
+model Resume {
+  resumeId         Int       @id @default(autoincrement())
+  resumeEmployeeId Int
+  resumeCreateBy   Int
+  resumeCreateAt   DateTime  @default(now()) @db.Timestamp()
+  resumeUpdateBy   Int?
+  resumeUpdateAt   DateTime?
+
+  employee Employee @relation("EmployeeResume", fields: [resumeEmployeeId], references: [employeeId])
+
+  education   Education[]
+  license     ProfessionalLicense[]
+  workHistory WorkHistory[]
+  project     Project[]
+
+  @@index([resumeEmployeeId])
+  @@index([resumeCreateBy])
+  @@index([resumeUpdateBy])
+}
+
+model Education {
+  educationId          Int       @id @default(autoincrement())
+  educationResumeId    Int
+  educationDegree      String?
+  educationInstitution String?
+  educationStartDate   DateTime
+  educationEndDate     DateTime?
+
+  resume Resume @relation(fields: [educationResumeId], references: [resumeId])
+
+  @@index([educationResumeId])
+}
+
+model ProfessionalLicense {
+  professionalLicenseId        Int       @id @default(autoincrement())
+  professionalLicenseResumeId  Int
+  professionalLicenseName      String?
+  professionalLicenseNumber    String?
+  professionalLicenseStartDate DateTime?
+  professionalLicenseEndDate   DateTime?
+
+  resume Resume @relation(fields: [professionalLicenseResumeId], references: [resumeId])
+
+  @@index([professionalLicenseResumeId])
+}
+
+model WorkHistory {
+  workHistoryId          Int       @id @default(autoincrement())
+  workHistoryResumeId    Int
+  workHistoryCompanyName String?
+  workHistoryPosition    String?
+  workHistoryStartDate   DateTime?
+  workHistoryEndDate     DateTime?
+
+  resume Resume @relation(fields: [workHistoryResumeId], references: [resumeId])
+
+  @@index([workHistoryResumeId])
+}
+
+model Project {
+  projectId          Int     @id @default(autoincrement())
+  ProjectResumeId    Int
+  projectName        String?
+  projectDescription String?
+
+  resume Resume @relation(fields: [ProjectResumeId], references: [resumeId])
+
+  @@index([ProjectResumeId])
 }
 
 model Branch {
@@ -218,6 +312,9 @@ model Branch {
   branchIdDivision   Division[]   @relation("DivisionBranchId")
   branchIdDepartment Department[] @relation("DepartmentBranchId")
   branchIdPosition   Position[]   @relation("PositionBranchId")
+
+  @@index([branchCreateBy])
+  @@index([branchUpdateBy])
 }
 
 model Role {
@@ -233,6 +330,9 @@ model Role {
   RoleUpdateBy Employee? @relation("RoleUpdateBy", fields: [roleUpdateBy], references: [employeeId])
 
   roleIdEmployment Employment[] @relation("EmploymentRoleId")
+
+  @@index([roleCreateBy])
+  @@index([roleUpdateBy])
 }
 
 model Site {
@@ -250,6 +350,10 @@ model Site {
   SiteBranchId Branch?   @relation("SiteBranchId", fields: [siteBranchId], references: [branchId])
 
   siteIdEmployment Employment[] @relation("EmploymentSiteId")
+
+  @@index([siteBranchId])
+  @@index([siteCreateBy])
+  @@index([siteUpdateBy])
 }
 
 model Division {
@@ -269,6 +373,10 @@ model Division {
   divisionIdDepartment Department[] @relation("DepartmentDivisionId")
   divisionIdPosition   Position[]   @relation("PositionDivisionId")
   divisionIdEmployment Employment[] @relation("EmploymentDivisionId")
+
+  @@index([divisionBranchId])
+  @@index([divisionCreateBy])
+  @@index([divisionUpdateBy])
 }
 
 model Department {
@@ -289,6 +397,11 @@ model Department {
 
   departmentIdPosition   Position[]   @relation("PositionDepartmentId")
   departmentIdEmployment Employment[] @relation("EmploymentDepartmentId")
+
+  @@index([departmentBranchId])
+  @@index([departmentDivisionId])
+  @@index([departmentCreateBy])
+  @@index([departmentUpdateBy])
 }
 
 model Position {
@@ -310,4 +423,10 @@ model Position {
   PositionDepartmentId Department? @relation("PositionDepartmentId", fields: [positionDepartmentId], references: [departmentId])
 
   positionIdEmployment Employment[] @relation("EmploymentPositionId")
+
+  @@index([positionBranchId])
+  @@index([positionDivisionId])
+  @@index([positionDepartmentId])
+  @@index([positionCreateBy])
+  @@index([positionUpdateBy])
 }
