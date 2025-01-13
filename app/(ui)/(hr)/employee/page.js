@@ -180,7 +180,7 @@ export default function EmployeeList() {
                     variant="flat"
                     color="warning"
                   >
-                    <Link href={`/employee/${item.employeeId}`}>Document</Link>
+                    <Link href={`/empDocument/${item.employeeId}`}>Document</Link>
                   </DropdownItem>
                   <DropdownItem
                     key="edit resume"

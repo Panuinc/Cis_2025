@@ -195,7 +195,7 @@ export async function PATCH(request, context) {
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
 
-    const parsedData = employmentPutSchema.parse({
+    const parsedData = employmentPatchSchema.parse({
       ...data,
       employmentId: parsedEmploymentId,
       employmentStartWork: new Date(data.employmentStartWork),
