@@ -5,32 +5,36 @@ import { formatCvData } from "@/app/api/hr/cv/cvSchema";
 import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
 import prisma from "@/lib/prisma";
-// import { formatDepartmentData } from "@/app/api/hr/department/departmentSchema";
 import { getRequestIP } from "@/lib/GetRequestIp";
 import { getLocalNow } from "@/lib/GetLocalNow";
 
 export async function GET(request, context) {
   let ip;
   try {
+    // ดึง IP ผู้ใช้
     ip = getRequestIP(request);
 
+    // รับค่าพารามิเตอร์
     const params = await context.params;
     const cvId = parseInt(params.cvId, 10);
 
+    // ตรวจสอบว่า cvId ถูกต้อง
     if (!cvId) {
       return NextResponse.json({ error: "Cv ID is required" }, { status: 400 });
     }
 
+    // ตรวจสอบ Token และการจำกัดอัตราการใช้งาน
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
 
+    // ดึงข้อมูลจากฐานข้อมูล
     const cv = await prisma.cv.findMany({
       where: { cvId: cvId },
       include: {
         CvEducation: true,
-        // CvProfessionalLicense: true,
-        // CvWorkHistory: true,
-        // CvProject: true,
+        // CvProfessionalLicense: true, // Uncomment ถ้าจำเป็น
+        // CvWorkHistory: true,         // Uncomment ถ้าจำเป็น
+        // CvProject: true,             // Uncomment ถ้าจำเป็น
         CvCreateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
@@ -40,21 +44,30 @@ export async function GET(request, context) {
       },
     });
 
+    // ตรวจสอบว่ามีข้อมูลหรือไม่
     if (!cv?.length) {
       return NextResponse.json({ error: "No cv data found" }, { status: 404 });
     }
 
-    const formattedCv = formatCvData(cv);
+    // แปลงข้อมูลถ้าจำเป็น (ไม่เพิ่มฟิลด์ซ้ำซ้อน)
+    const formattedCv = cv.map((item) => {
+      const { CvEducation, ...rest } = item;
+      return {
+        ...rest,
+        educations: CvEducation, // แปลงชื่อฟิลด์ (ถ้าจำเป็น)
+      };
+    });
 
+    // ส่งข้อมูลกลับ
     return NextResponse.json(
       { message: "Cv data retrieved successfully", cv: formattedCv },
       { status: 200 }
     );
   } catch (error) {
+    // จัดการข้อผิดพลาด
     return handleGetErrors(error, ip, "Error retrieving cv data");
   }
 }
-
 export async function PUT(request, context) {
   let ip;
   try {
