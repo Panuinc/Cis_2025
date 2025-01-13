@@ -104,7 +104,7 @@ model Employee {
   createdPosition Position[] @relation("PositionCreateBy")
   updatedPosition Position[] @relation("PositionUpdateBy")
 
-  resume Resume[] @relation("EmployeeResume")
+  cv Cv[] @relation("EmployeeCv")
 
   @@index([employeeCreateBy])
   @@index([employeeUpdateBy])
@@ -225,74 +225,74 @@ model EmpDocument {
   @@index([empDocumentUpdateBy])
 }
 
-model Resume {
-  resumeId         Int       @id @default(autoincrement())
-  resumeEmployeeId Int
-  resumeCreateBy   Int
-  resumeCreateAt   DateTime  @default(now()) @db.Timestamp()
-  resumeUpdateBy   Int?
-  resumeUpdateAt   DateTime?
+model Cv {
+  cvId         Int       @id @default(autoincrement())
+  cvEmployeeId Int
+  cvCreateBy   Int
+  cvCreateAt   DateTime  @default(now()) @db.Timestamp()
+  cvUpdateBy   Int?
+  cvUpdateAt   DateTime?
 
-  employee Employee @relation("EmployeeResume", fields: [resumeEmployeeId], references: [employeeId])
+  employee Employee @relation("EmployeeCv", fields: [cvEmployeeId], references: [employeeId])
 
-  education   Education[]
-  license     ProfessionalLicense[]
-  workHistory WorkHistory[]
-  project     Project[]
+  CvEducation   CvEducation[]
+  CvLicense     CvProfessionalLicense[]
+  CvWorkHistory CvWorkHistory[]
+  CvProject     CvProject[]
 
-  @@index([resumeEmployeeId])
-  @@index([resumeCreateBy])
-  @@index([resumeUpdateBy])
+  @@index([cvEmployeeId])
+  @@index([cvCreateBy])
+  @@index([cvUpdateBy])
 }
 
-model Education {
-  educationId          Int       @id @default(autoincrement())
-  educationResumeId    Int
-  educationDegree      String?
-  educationInstitution String?
-  educationStartDate   DateTime
-  educationEndDate     DateTime?
+model CvEducation {
+  cvEducationId          Int       @id @default(autoincrement())
+  cvEducationCvId        Int
+  cvEducationDegree      String?
+  cvEducationInstitution String?
+  cvEducationStartDate   DateTime
+  cvEducationEndDate     DateTime?
 
-  resume Resume @relation(fields: [educationResumeId], references: [resumeId])
+  cv Cv @relation(fields: [cvEducationCvId], references: [cvId])
 
-  @@index([educationResumeId])
+  @@index([cvEducationCvId])
 }
 
-model ProfessionalLicense {
-  professionalLicenseId        Int       @id @default(autoincrement())
-  professionalLicenseResumeId  Int
-  professionalLicenseName      String?
-  professionalLicenseNumber    String?
-  professionalLicenseStartDate DateTime?
-  professionalLicenseEndDate   DateTime?
+model CvProfessionalLicense {
+  cvProfessionalLicenseId        Int       @id @default(autoincrement())
+  cvProfessionalLicenseCvId      Int
+  cvProfessionalLicenseName      String?
+  cvProfessionalLicenseNumber    String?
+  cvProfessionalLicenseStartDate DateTime?
+  cvProfessionalLicenseEndDate   DateTime?
 
-  resume Resume @relation(fields: [professionalLicenseResumeId], references: [resumeId])
+  cv Cv @relation(fields: [cvProfessionalLicenseCvId], references: [cvId])
 
-  @@index([professionalLicenseResumeId])
+  @@index([cvProfessionalLicenseCvId])
 }
 
-model WorkHistory {
-  workHistoryId          Int       @id @default(autoincrement())
-  workHistoryResumeId    Int
-  workHistoryCompanyName String?
-  workHistoryPosition    String?
-  workHistoryStartDate   DateTime?
-  workHistoryEndDate     DateTime?
+model CvWorkHistory {
+  cvWorkHistoryId          Int       @id @default(autoincrement())
+  cvWorkHistoryCvId        Int
+  cvWorkHistoryCompanyName String?
+  cvWorkHistoryPosition    String?
+  cvWorkHistoryStartDate   DateTime?
+  cvWorkHistoryEndDate     DateTime?
 
-  resume Resume @relation(fields: [workHistoryResumeId], references: [resumeId])
+  cv Cv @relation(fields: [cvWorkHistoryCvId], references: [cvId])
 
-  @@index([workHistoryResumeId])
+  @@index([cvWorkHistoryCvId])
 }
 
-model Project {
-  projectId          Int     @id @default(autoincrement())
-  ProjectResumeId    Int
-  projectName        String?
-  projectDescription String?
+model CvProject {
+  cvProjectId          Int     @id @default(autoincrement())
+  cvProjectCvId        Int
+  cvProjectName        String?
+  cvProjectDescription String?
 
-  resume Resume @relation(fields: [ProjectResumeId], references: [resumeId])
+  cv Cv @relation(fields: [cvProjectCvId], references: [cvId])
 
-  @@index([ProjectResumeId])
+  @@index([cvProjectCvId])
 }
 
 model Branch {

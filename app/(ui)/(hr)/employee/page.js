@@ -183,11 +183,11 @@ export default function EmployeeList() {
                     <Link href={`/empDocument/${item.employeeId}`}>Document</Link>
                   </DropdownItem>
                   <DropdownItem
-                    key="edit resume"
+                    key="edit cv"
                     variant="flat"
                     color="warning"
                   >
-                    <Link href={`/employee/${item.employeeId}`}>Resume</Link>
+                    <Link href={`/cv/${item.employeeId}`}>CV</Link>
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
