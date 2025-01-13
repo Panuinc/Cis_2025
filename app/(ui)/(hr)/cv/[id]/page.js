@@ -17,6 +17,10 @@ const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
 
 const DEFAULT_FORM_DATA = {
   cvEmployeeId: "",
+  educations: [], // เพิ่มการเก็บข้อมูลการศึกษา
+  // licenses: [],
+  // workHistories: [],
+  // projects: [],
 };
 
 export default function CvUpdate({ params: paramsPromise }) {
@@ -43,19 +47,24 @@ export default function CvUpdate({ params: paramsPromise }) {
 
   const fetchData = useCallback(async () => {
     try {
-      const [cvRes] = await Promise.all([
-        fetch(`/api/hr/cv/${cvId}`, {
-          method: "GET",
-          headers: {
-            "secret-token": SECRET_TOKEN,
-          },
-        }),
-      ]);
+      const cvRes = await fetch(`/api/hr/cv/${cvId}`, {
+        method: "GET",
+        headers: {
+          "secret-token": SECRET_TOKEN,
+        },
+      });
 
       const cvData = await cvRes.json();
       if (cvRes.ok) {
         const cv = cvData.cv[0];
-        setFormData(cv);
+        // สมมติว่า cvData มีข้อมูลของ educations ด้วย
+        setFormData({
+          cvEmployeeId: cv.cvEmployeeId,
+          educations: cv.CvEducation || [],
+          // licenses: cv.CvProfessionalLicense || [],
+          // workHistories: cv.CvWorkHistory || [],
+          // projects: cv.CvProject || [],
+        });
       } else {
         toast.error(cvData.error);
       }
@@ -83,12 +92,46 @@ export default function CvUpdate({ params: paramsPromise }) {
     []
   );
 
+  // ฟังก์ชันสำหรับจัดการการเปลี่ยนแปลงของการศึกษา
+  const handleEducationChange = useCallback((index, field, value) => {
+    setFormData((prev) => {
+      const updatedEducations = [...(prev.educations || [])];
+      updatedEducations[index] = {
+        ...updatedEducations[index],
+        [field]: value,
+      };
+      return { ...prev, educations: updatedEducations };
+    });
+  }, []);
+
+  const addNewEducationEntry = useCallback(() => {
+    setFormData((prev) => ({
+      ...prev,
+      educations: [
+        ...(prev.educations || []),
+        {
+          cvEducationDegree: "",
+          cvEducationInstitution: "",
+          cvEducationStartDate: "",
+          cvEducationEndDate: "",
+        },
+      ],
+    }));
+  }, []);
+
   const handleSubmit = useCallback(
     async (event) => {
       event.preventDefault();
 
       const formDataObject = new FormData(formRef.current);
       formDataObject.append("cvUpdateBy", userId);
+      formDataObject.append(
+        "educations",
+        JSON.stringify(formData.educations || [])
+      );
+      // formDataObject.append("licenses", JSON.stringify(formData.licenses || []));
+      // formDataObject.append("workHistories", JSON.stringify(formData.workHistories || []));
+      // formDataObject.append("projects", JSON.stringify(formData.projects || []));
 
       try {
         const res = await fetch(`/api/hr/cv/${cvId}`, {
@@ -123,7 +166,7 @@ export default function CvUpdate({ params: paramsPromise }) {
         toast.error("Error updating cv: " + error.message);
       }
     },
-    [cvId, router, userId]
+    [cvId, router, userId, formData]
   );
 
   const handleClear = useCallback(() => {
@@ -141,11 +184,12 @@ export default function CvUpdate({ params: paramsPromise }) {
         onSubmit={handleSubmit}
         onClear={handleClear}
         errors={errors}
-        setErrors={setErrors}
         formData={formData}
         handleInputChange={handleInputChange}
         isUpdate={true}
         operatedBy={operatedBy}
+        handleEducationChange={handleEducationChange}
+        addNewEducationEntry={addNewEducationEntry}
       />
     </>
   );
