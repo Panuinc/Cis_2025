@@ -351,7 +351,7 @@ export default function EmploymentUpdate({ params: paramsPromise }) {
       event.preventDefault();
 
       let signatureBlob = null;
-      if (signatureRef.current) {
+      if (signatureRef.current && !signatureRef.current.isEmpty()) {
         signatureBlob = await new Promise((resolve) => {
           const canvas = signatureRef.current.getTrimmedCanvas();
           canvas.toBlob((blob) => {

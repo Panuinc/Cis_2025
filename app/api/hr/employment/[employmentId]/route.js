@@ -120,7 +120,7 @@ export async function PUT(request, context) {
       employmentNumber,
       employmentId
     ) {
-      if (!file?.name) {
+      if (!file?.name || file.size === 0) {
         return { fileName: existingFileName };
       }
 
@@ -202,7 +202,9 @@ export async function PATCH(request, context) {
       employmentPassportStartDate: new Date(data.employmentPassportStartDate),
       employmentPassportEndDate: new Date(data.employmentPassportEndDate),
       employmentEnterDate: new Date(data.employmentEnterDate),
-      employmentWorkPermitStartDate: new Date(data.employmentWorkPermitStartDate),
+      employmentWorkPermitStartDate: new Date(
+        data.employmentWorkPermitStartDate
+      ),
       employmentWorkPermitEndDate: new Date(data.employmentWorkPermitEndDate),
     });
 
@@ -229,7 +231,7 @@ export async function PATCH(request, context) {
       employmentNumber,
       employmentId
     ) {
-      if (!file?.name) {
+      if (!file?.name || file.size === 0) {
         return { fileName: existingFileName };
       }
 
