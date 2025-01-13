@@ -202,9 +202,7 @@ export async function PATCH(request, context) {
       employmentPassportStartDate: new Date(data.employmentPassportStartDate),
       employmentPassportEndDate: new Date(data.employmentPassportEndDate),
       employmentEnterDate: new Date(data.employmentEnterDate),
-      employmentWorkPermitStartDate: new Date(
-        data.employmentWorkPermitStartDate
-      ),
+      employmentWorkPermitStartDate: new Date(data.employmentWorkPermitStartDate),
       employmentWorkPermitEndDate: new Date(data.employmentWorkPermitEndDate),
     });
 
