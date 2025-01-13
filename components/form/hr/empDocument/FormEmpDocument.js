@@ -38,13 +38,15 @@ export default function FormEmpDocument({
 
     if (preview.isPDF) {
       return (
-        <button
+        <Button
+          size="md"
+          color="success"
+          onPress={() => window.open(preview.previewURL, "_blank")}
           type="button"
-          onClick={() => window.open(preview.previewURL, "_blank")}
-          className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
+          className="flex items-center justify-center p-6 gap-2 border-2 border-dark border-dashed"
         >
-          Open PDF
-        </button>
+          Open File
+        </Button>
       );
     } else {
       return (
