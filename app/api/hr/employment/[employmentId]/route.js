@@ -229,7 +229,7 @@ export async function PATCH(request, context) {
       employmentNumber,
       employmentId
     ) {
-      if (!file) {
+      if (!file?.name) {
         return { fileName: existingFileName };
       }
 
