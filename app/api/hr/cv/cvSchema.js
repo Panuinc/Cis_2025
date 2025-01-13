@@ -12,18 +12,6 @@ export function formatCvData(cv) {
   return formatData(cv, [], ["cvCreateAt", "cvUpdateAt"]);
 }
 
-export const cvPosteSchema = z.object({
-  cvEmployeeId: preprocessInt(
-    "Please Enter Cv Name",
-    "Please Enter Cv Name"
-  ),
-
-  cvCreateBy: preprocessInt(
-    "Cv creator ID must be provided.",
-    "Cv creator ID must be an integer."
-  ),
-});
-
 export const cvPutSchema = z.object({
   cvId: preprocessInt("Cv ID must be provided.", "Cv ID must be an integer."),
 
