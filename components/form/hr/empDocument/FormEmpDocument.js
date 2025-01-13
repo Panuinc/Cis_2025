@@ -34,14 +34,14 @@ export default function FormEmpDocument({
   operatedBy = "",
 }) {
   const renderPreview = (preview) => {
-    if (!preview.previewURL) return null;
+    if (!preview || !preview.previewURL) return null;
 
     if (preview.isPDF) {
       return (
         <button
           type="button"
           onClick={() => window.open(preview.previewURL, "_blank")}
-          className="btn btn-primary mt-2"
+          className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
         >
           Open PDF
         </button>
@@ -51,7 +51,7 @@ export default function FormEmpDocument({
         <img
           src={preview.previewURL}
           alt="File Preview"
-          className="w-40 h-40 object-contain rounded-md mt-2"
+          className="flex items-center justify-center w-40 h-40 p-2 gap-2 border-2 border-dark border-dashed object-contain rounded-md mt-2"
         />
       );
     }
