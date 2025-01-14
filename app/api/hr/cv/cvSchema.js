@@ -1,22 +1,51 @@
 import { z } from "zod";
+import {
+  preprocessInt,
+  preprocessString,
+  preprocessEnum,
+  preprocessAny,
+  preprocessDate,
+  formatData,
+} from "@/lib/zodSchema";
 
-const preprocessInt = (emptyMessage, typeMessage) =>
-  z.preprocess((a) => parseInt(z.string().parse(a), 10), z.number({ invalid_type_error: typeMessage })).refine(val => !isNaN(val), { message: emptyMessage });
+// export function formatCvData(cv) {
+//   return formatData(cv, [], ["cvUpdateAt", "cvUpdateAt"]);
+// }
 
 const educationSchema = z.object({
-  cvEducationId: z.number().optional(),
-  cvEducationDegree: z.string().nullable().optional(),
-  cvEducationInstitution: z.string().nullable().optional(),
-  cvEducationStartDate: z.preprocess((arg) => new Date(arg), z.date()),
-  cvEducationEndDate: z.preprocess(
-    (arg) => (arg ? new Date(arg) : null),
-    z.date().nullable()
+  cvEducationId: preprocessInt(
+    "Cv ID must be provided.",
+    "Cv ID must be an integer."
   ).optional(),
+
+  cvEducationCvId: preprocessInt(
+    "CvEducation ID must be provided.",
+    "CvEducation ID must be an integer."
+  ).optional(),
+
+  cvEducationDegree: preprocessString(
+    "Please Enter Degree",
+    "Please Enter Degree"
+  ),
+
+  cvEducationInstitution: preprocessString(
+    "Please Enter Institution",
+    "Please Enter Institution"
+  ),
+
+  cvEducationStartDate: preprocessString(
+    "Please Enter Start date",
+    "Please Enter Start date"
+  ),
+
+  cvEducationEndDate: preprocessString(
+    "Please Enter End date",
+    "Please Enter End date"
+  ),
 });
 
 export function formatCvData(cvArray) {
-  // สมมติว่าจัดรูปแบบเฉพาะสำหรับ cv data
-  return cvArray.map(cv => ({
+  return cvArray.map((cv) => ({
     ...cv,
     educations: cv.CvEducation,
     // licenses: cv.CvProfessionalLicense,
@@ -27,8 +56,17 @@ export function formatCvData(cvArray) {
 
 export const cvPutSchema = z.object({
   cvId: preprocessInt("Cv ID must be provided.", "Cv ID must be an integer."),
-  cvEmployeeId: preprocessInt("Please Enter Cv Name", "Please Enter Cv Name"),
-  cvUpdateBy: preprocessInt("Cv updater ID must be provided.", "Cv updater ID must be an integer."),
+
+  cvEmployeeId: preprocessInt(
+    "Employee ID must be provided.",
+    "Employee ID must be an integer."
+  ),
+
+  cvUpdateBy: preprocessInt(
+    "Cv updater ID must be provided.",
+    "Cv updater ID must be an integer."
+  ),
+
   educations: z.array(educationSchema).optional(),
   // เพิ่ม licenses, workHistories, projects schemas ตามต้องการ
 });
