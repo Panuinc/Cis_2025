@@ -71,14 +71,12 @@ enum SkillLevel {
 
 enum PersonalRequestStatus {
   PendingManagerApprove
-  ManagerApproved
   ManagerRejected
   PendingHrApprove
-  HrApproved
   HrRejected
   PendingMdApprove
-  MdApproved
   MdRejected
+  ApprovedSuccess
 }
 
 model Employee {
