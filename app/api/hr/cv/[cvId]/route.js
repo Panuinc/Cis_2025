@@ -115,12 +115,8 @@ export async function PUT(request, context) {
         data: {
           cvEducationDegree: edu.cvEducationDegree,
           cvEducationInstitution: edu.cvEducationInstitution,
-          cvEducationStartDate: edu.cvEducationStartDate
-            ? new Date(edu.cvEducationStartDate).getFullYear().toString()
-            : null,
-          cvEducationEndDate: edu.cvEducationEndDate
-            ? new Date(edu.cvEducationEndDate).getFullYear().toString()
-            : null,
+          cvEducationStartDate: edu.cvEducationStartDate,
+          cvEducationEndDate: edu.cvEducationEndDate,
         },
       }));
 
@@ -129,12 +125,8 @@ export async function PUT(request, context) {
       .map((edu) => ({
         cvEducationDegree: edu.cvEducationDegree,
         cvEducationInstitution: edu.cvEducationInstitution,
-        cvEducationStartDate: edu.cvEducationStartDate
-          ? new Date(edu.cvEducationStartDate).getFullYear().toString()
-          : null,
-        cvEducationEndDate: edu.cvEducationEndDate
-          ? new Date(edu.cvEducationEndDate).getFullYear().toString()
-          : null,
+        cvEducationStartDate: edu.cvEducationStartDate,
+        cvEducationEndDate: edu.cvEducationEndDate,
       }));
 
     // อัปเดตข้อมูล CV พร้อมกับ nested write สำหรับ CvEducation
