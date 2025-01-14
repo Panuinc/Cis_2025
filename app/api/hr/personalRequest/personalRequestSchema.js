@@ -8,40 +8,40 @@ import {
   formatData,
 } from "@/lib/zodSchema";
 
-export function formatBranchData(branch) {
-  return formatData(branch, [], ["branchCreateAt", "branchUpdateAt"]);
+export function formatPersonalRequestData(personalRequest) {
+  return formatData(personalRequest, [], ["personalRequestCreateAt", "personalRequestUpdateAt"]);
 }
 
-export const branchPosteSchema = z.object({
-  branchName: preprocessString(
-    "Please Enter Branch Name",
-    "Please Enter Branch Name"
+export const personalRequestPosteSchema = z.object({
+  personalRequestAmount: preprocessString(
+    "Please Enter PersonalRequest Name",
+    "Please Enter PersonalRequest Name"
   ),
 
-  branchCreateBy: preprocessInt(
-    "Branch creator ID must be provided.",
-    "Branch creator ID must be an integer."
+  personalRequestCreateBy: preprocessInt(
+    "PersonalRequest creator ID must be provided.",
+    "PersonalRequest creator ID must be an integer."
   ),
 });
 
-export const branchPutSchema = z.object({
-  branchId: preprocessInt(
-    "Branch ID must be provided.",
-    "Branch ID must be an integer."
+export const personalRequestPutSchema = z.object({
+  personalRequestId: preprocessInt(
+    "PersonalRequest ID must be provided.",
+    "PersonalRequest ID must be an integer."
   ),
 
-  branchName: preprocessString(
-    "Please Enter Branch Name",
-    "Please Enter Branch Name"
+  personalRequestAmount: preprocessString(
+    "Please Enter PersonalRequest Name",
+    "Please Enter PersonalRequest Name"
   ),
 
-  branchStatus: preprocessEnum(
+  personalRequestStatus: preprocessEnum(
     ["Active", "InActive"],
-    "Branch Status must be either 'Active', 'InActive'."
+    "PersonalRequest Status must be either 'Active', 'InActive'."
   ),
 
-  branchUpdateBy: preprocessInt(
-    "Branch updater ID must be provided.",
-    "Branch updater ID must be an integer."
+  personalRequestUpdateBy: preprocessInt(
+    "PersonalRequest updater ID must be provided.",
+    "PersonalRequest updater ID must be an integer."
   ),
 });

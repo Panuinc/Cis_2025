@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { handleErrors, handleGetErrors } from "@/lib/errorHandler";
-import { branchPosteSchema } from "@/app/api/hr/branch/branchSchema";
+import { personalRequestPosteSchema } from "@/app/api/hr/personalRequest/personalRequestSchema";
 import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
 import prisma from "@/lib/prisma";
-import { formatBranchData } from "@/app/api/hr/branch/branchSchema";
+import { formatPersonalRequestData } from "@/app/api/hr/personalRequest/personalRequestSchema";
 import { getRequestIP } from "@/lib/GetRequestIp";
 import { getLocalNow } from "@/lib/GetLocalNow";
 
@@ -16,35 +16,35 @@ export async function GET(request) {
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
 
-    const branch = await prisma.branch.findMany({
+    const personalRequest = await prisma.personalRequest.findMany({
       include: {
-        BranchCreateBy: {
+        PersonalRequestCreateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
-        BranchUpdateBy: {
+        PersonalRequestUpdateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
       },
     });
 
-    if (!branch?.length) {
+    if (!personalRequest?.length) {
       return NextResponse.json(
-        { error: "No branch data found" },
+        { error: "No personalRequest data found" },
         { status: 404 }
       );
     }
 
-    const formattedBranch = formatBranchData(branch);
+    const formattedPersonalRequest = formatPersonalRequestData(personalRequest);
 
     return NextResponse.json(
       {
-        message: "Branch data retrieved successfully",
-        branch: formattedBranch,
+        message: "PersonalRequest data retrieved successfully",
+        personalRequest: formattedPersonalRequest,
       },
       { status: 200 }
     );
   } catch (error) {
-    return handleGetErrors(error, ip, "Error retrieving branch data");
+    return handleGetErrors(error, ip, "Error retrieving personalRequest data");
   }
 }
 
@@ -59,16 +59,16 @@ export async function POST(request) {
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
 
-    const parsedData = branchPosteSchema.parse(data);
+    const parsedData = personalRequestPosteSchema.parse(data);
 
-    const existingBranch = await prisma.branch.findFirst({
-      where: { branchName: parsedData.branchName },
+    const existingPersonalRequest = await prisma.personalRequest.findFirst({
+      where: { personalRequestAmount: parsedData.personalRequestAmount },
     });
 
-    if (existingBranch) {
+    if (existingPersonalRequest) {
       return NextResponse.json(
         {
-          error: `Branch with name '${parsedData.branchName}' already exists.`,
+          error: `PersonalRequest with name '${parsedData.personalRequestAmount}' already exists.`,
         },
         { status: 400 }
       );
@@ -76,18 +76,18 @@ export async function POST(request) {
 
     const localNow = getLocalNow();
 
-    const newBranch = await prisma.branch.create({
+    const newPersonalRequest = await prisma.personalRequest.create({
       data: {
         ...parsedData,
-        branchCreateAt: localNow,
+        personalRequestCreateAt: localNow,
       },
     });
 
     return NextResponse.json(
-      { message: "Successfully created new branch", branch: newBranch },
+      { message: "Successfully created new personalRequest", personalRequest: newPersonalRequest },
       { status: 201 }
     );
   } catch (error) {
-    return handleErrors(error, ip, "Error creating branch data");
+    return handleErrors(error, ip, "Error creating personalRequest data");
   }
 }

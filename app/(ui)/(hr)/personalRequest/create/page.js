@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import TopicHeader from "@/components/form/TopicHeader";
-import FormBranch from "@/components/form/hr/branch/FormBranch";
+import FormPersonalRequest from "@/components/form/hr/personalRequest/FormPersonalRequest";
 import React, {
   useState,
   useRef,
@@ -14,10 +14,10 @@ import React, {
 
 const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
 const DEFAULT_FORM_DATA = {
-  branchName: "",
+  personalRequestAmount: "",
 };
 
-export default function BranchCreate() {
+export default function PersonalRequestCreate() {
   const { data: session } = useSession();
   const userData = session?.user || {};
   const userId = userData?.userId;
@@ -55,10 +55,10 @@ export default function BranchCreate() {
     async (event) => {
       event.preventDefault();
       const formDataObject = new FormData(formRef.current);
-      formDataObject.append("branchCreateBy", userId);
+      formDataObject.append("personalRequestCreateBy", userId);
 
       try {
-        const res = await fetch("/api/hr/branch", {
+        const res = await fetch("/api/hr/personalRequest", {
           method: "POST",
           body: formDataObject,
           headers: { "secret-token": SECRET_TOKEN },
@@ -68,7 +68,7 @@ export default function BranchCreate() {
         if (res.ok) {
           toast.success(jsonData.message);
           setTimeout(() => {
-            router.push("/branch");
+            router.push("/personalRequest");
           }, 2000);
         } else {
           if (jsonData.details) {
@@ -81,10 +81,10 @@ export default function BranchCreate() {
             }, {});
             setErrors(fieldErrorObj);
           }
-          toast.error(jsonData.error || "Error creating branch");
+          toast.error(jsonData.error || "Error creating personalRequest");
         }
       } catch (error) {
-        toast.error("Error creating branch: " + error.message);
+        toast.error("Error creating personalRequest: " + error.message);
       }
     },
     [router, userId]
@@ -98,9 +98,9 @@ export default function BranchCreate() {
 
   return (
     <>
-      <TopicHeader topic="Branch Create" />
+      <TopicHeader topic="PersonalRequest Create" />
       <Toaster position="top-right" />
-      <FormBranch
+      <FormPersonalRequest
         formRef={formRef}
         onSubmit={handleSubmit}
         onClear={handleClear}

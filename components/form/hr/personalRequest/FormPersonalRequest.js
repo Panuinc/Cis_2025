@@ -3,7 +3,7 @@ import React from "react";
 import { Input, Button, Select, SelectItem } from "@nextui-org/react";
 import { Cancel, Database } from "@/components/icons/icons";
 
-export default function FormBranch({
+export default function FormPersonalRequest({
   formRef,
   onSubmit,
   onClear,
@@ -22,33 +22,33 @@ export default function FormBranch({
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
-            name="branchName"
+            name="personalRequestAmount"
             type="text"
-            label="Branch Name"
+            label="PersonalRequest Name"
             placeholder="Please Enter Data"
             labelPlacement="outside"
             size="lg"
             variant="bordered"
-            value={formData.branchName || ""}
-            onChange={handleInputChange("branchName")}
-            isInvalid={!!errors.branchName}
-            errorMessage={errors.branchName}
+            value={formData.personalRequestAmount || ""}
+            onChange={handleInputChange("personalRequestAmount")}
+            isInvalid={!!errors.personalRequestAmount}
+            errorMessage={errors.personalRequestAmount}
           />
         </div>
         {isUpdate && (
           <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
             <Select
-              name="branchStatus"
+              name="personalRequestStatus"
               label="Status"
               placeholder="Please Select Status"
               labelPlacement="outside"
               size="lg"
               variant="bordered"
-              value={formData.branchStatus || ""}
-              selectedKeys={[formData.branchStatus] || ""}
-              onChange={handleInputChange("branchStatus")}
-              isInvalid={!!errors.branchStatus}
-              errorMessage={errors.branchStatus}
+              value={formData.personalRequestStatus || ""}
+              selectedKeys={[formData.personalRequestStatus] || ""}
+              onChange={handleInputChange("personalRequestStatus")}
+              isInvalid={!!errors.personalRequestStatus}
+              errorMessage={errors.personalRequestStatus}
             >
               <SelectItem value="InActive" key="InActive">
                 InActive
