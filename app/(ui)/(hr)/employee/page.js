@@ -3,7 +3,7 @@ import React, { useEffect, useState, useMemo, useCallback } from "react";
 import TopicHeader from "@/components/form/TopicHeader";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { Add, Search, Setting } from "@/components/icons/icons";
+import { Add, Search, Setting, Document } from "@/components/icons/icons";
 import CommonTable from "@/components/CommonTable";
 import debounce from "lodash.debounce";
 import {
@@ -49,6 +49,7 @@ export default function EmployeeList() {
           { name: "Employee Citizen", uid: "employeeCitizen" },
           { name: "Employee Gender", uid: "employeeGender" },
           { name: "Employee Level", uid: "employeeLevel" },
+          { name: "Resume Link", uid: "resumeLink" },
         ]
       : [
           { name: "No.", uid: "index" },
@@ -63,6 +64,7 @@ export default function EmployeeList() {
           { name: "Employee Citizen", uid: "employeeCitizen" },
           { name: "Employee Gender", uid: "employeeGender" },
           { name: "Employee Level", uid: "employeeLevel" },
+          { name: "Resume Link", uid: "resumeLink" },
           { name: "Create By", uid: "createdBy" },
           { name: "Create At", uid: "employeeCreateAt" },
           { name: "Update By", uid: "updatedBy" },
@@ -138,6 +140,17 @@ export default function EmployeeList() {
           return item.employeeFirstname || null;
         case "employeeStatus":
           return renderChip(item.employeeStatus);
+        case "resumeLink":
+          const resumeLink = item.employeeResume?.[0]?.resumeLink;
+          return resumeLink ? (
+            <Link href={resumeLink} target="_blank" rel="noopener noreferrer">
+              <Button isIconOnly size="md" color="warning">
+                <Document />
+              </Button>
+            </Link>
+          ) : (
+            "No Resume"
+          );
         case "createdBy":
           return getFullName(item.EmployeeCreateBy);
         case "employeeCreateAt":
@@ -180,13 +193,11 @@ export default function EmployeeList() {
                     variant="flat"
                     color="warning"
                   >
-                    <Link href={`/empDocument/${item.employeeId}`}>Document</Link>
+                    <Link href={`/empDocument/${item.employeeId}`}>
+                      Document
+                    </Link>
                   </DropdownItem>
-                  <DropdownItem
-                    key="edit cv"
-                    variant="flat"
-                    color="warning"
-                  >
+                  <DropdownItem key="edit cv" variant="flat" color="warning">
                     <Link href={`/cv/${item.employeeId}`}>CV</Link>
                   </DropdownItem>
                   <DropdownItem
