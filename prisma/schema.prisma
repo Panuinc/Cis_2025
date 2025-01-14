@@ -231,7 +231,6 @@ model EmpDocument {
   @@index([empDocumentUpdateBy])
 }
 
-//
 model Resume {
   resumeId         Int       @id @default(autoincrement())
   resumeEmployeeId Int
@@ -249,8 +248,6 @@ model Resume {
   @@index([resumeCreateBy])
   @@index([resumeUpdateBy])
 }
-
-//
 
 model Cv {
   cvId         Int       @id @default(autoincrement())
