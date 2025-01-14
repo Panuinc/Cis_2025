@@ -508,9 +508,8 @@ model PersonalRequest {
   PersonalRequestManagerApproveBy Employee? @relation("PersonalRequestManagerApproveBy", fields: [personalRequestReasonManagerApproveBy], references: [employeeId])
   PersonalRequestHrApproveBy      Employee? @relation("PersonalRequestHrApproveBy", fields: [personalRequestReasonHrApproveBy], references: [employeeId])
   PersonalRequestMdApproveBy      Employee? @relation("PersonalRequestMdApproveBy", fields: [personalRequestReasonMdApproveBy], references: [employeeId])
-
-  PersonalRequestPositionId Position? @relation("PersonalRequestPositionId", fields: [personalRequestPositionId], references: [positionId])
-  PersonalRequestBranchId   Branch?   @relation("PersonalRequestBranchId", fields: [personalRequestBranchId], references: [branchId])
+  PersonalRequestPositionId       Position? @relation("PersonalRequestPositionId", fields: [personalRequestPositionId], references: [positionId])
+  PersonalRequestBranchId         Branch?   @relation("PersonalRequestBranchId", fields: [personalRequestBranchId], references: [branchId])
 
   @@index([personalRequestCreateBy])
   @@index([personalRequestUpdateBy])
