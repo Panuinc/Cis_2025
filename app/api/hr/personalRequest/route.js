@@ -62,13 +62,13 @@ export async function POST(request) {
     const parsedData = personalRequestPosteSchema.parse(data);
 
     const existingPersonalRequest = await prisma.personalRequest.findFirst({
-      where: { personalRequestAmount: parsedData.personalRequestAmount },
+      where: { personalRequestDocumentId: parsedData.personalRequestDocumentId },
     });
 
     if (existingPersonalRequest) {
       return NextResponse.json(
         {
-          error: `PersonalRequest with name '${parsedData.personalRequestAmount}' already exists.`,
+          error: `PersonalRequest with name '${parsedData.personalRequestDocumentId}' already exists.`,
         },
         { status: 400 }
       );

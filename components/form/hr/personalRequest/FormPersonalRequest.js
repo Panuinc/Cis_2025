@@ -22,17 +22,17 @@ export default function FormPersonalRequest({
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
-            name="personalRequestAmount"
+            name="personalRequestDocumentId"
             type="text"
             label="PersonalRequest Name"
             placeholder="Please Enter Data"
             labelPlacement="outside"
             size="lg"
             variant="bordered"
-            value={formData.personalRequestAmount || ""}
-            onChange={handleInputChange("personalRequestAmount")}
-            isInvalid={!!errors.personalRequestAmount}
-            errorMessage={errors.personalRequestAmount}
+            value={formData.personalRequestDocumentId || ""}
+            onChange={handleInputChange("personalRequestDocumentId")}
+            isInvalid={!!errors.personalRequestDocumentId}
+            errorMessage={errors.personalRequestDocumentId}
           />
         </div>
         {isUpdate && (

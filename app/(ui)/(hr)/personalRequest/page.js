@@ -38,11 +38,11 @@ export default function PersonalRequestList() {
     return isUserLevel
       ? [
           { name: "No.", uid: "index" },
-          { name: "PersonalRequest Name", uid: "personalRequestAmount" },
+          { name: "PersonalRequest Name", uid: "personalRequestDocumentId" },
         ]
       : [
           { name: "No.", uid: "index" },
-          { name: "PersonalRequest Name", uid: "personalRequestAmount" },
+          { name: "PersonalRequest Name", uid: "personalRequestDocumentId" },
           { name: "Create By", uid: "createdBy" },
           { name: "Create At", uid: "personalRequestCreateAt" },
           { name: "Update By", uid: "updatedBy" },
@@ -114,8 +114,8 @@ export default function PersonalRequestList() {
       switch (columnKey) {
         case "index":
           return item._index;
-        case "personalRequestAmount":
-          return item.personalRequestAmount || null;
+        case "personalRequestDocumentId":
+          return item.personalRequestDocumentId || null;
         case "personalRequestStatus":
           return renderChip(item.personalRequestStatus);
         case "createdBy":
@@ -169,7 +169,7 @@ export default function PersonalRequestList() {
   const { paginatedItems, pages } = useMemo(() => {
     const filtered = filterPersonalRequestValue
       ? personalRequest.filter((item) =>
-          item.personalRequestAmount
+          item.personalRequestDocumentId
             ?.toLowerCase()
             .includes(filterPersonalRequestValue.toLowerCase())
         )

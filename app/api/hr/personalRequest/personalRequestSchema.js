@@ -13,7 +13,7 @@ export function formatPersonalRequestData(personalRequest) {
 }
 
 export const personalRequestPosteSchema = z.object({
-  personalRequestAmount: preprocessString(
+  personalRequestDocumentId: preprocessString(
     "Please Enter PersonalRequest Name",
     "Please Enter PersonalRequest Name"
   ),
@@ -30,7 +30,7 @@ export const personalRequestPutSchema = z.object({
     "PersonalRequest ID must be an integer."
   ),
 
-  personalRequestAmount: preprocessString(
+  personalRequestDocumentId: preprocessString(
     "Please Enter PersonalRequest Name",
     "Please Enter PersonalRequest Name"
   ),
