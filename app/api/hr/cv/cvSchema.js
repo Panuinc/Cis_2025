@@ -7,8 +7,11 @@ const educationSchema = z.object({
   cvEducationId: z.number().optional(),
   cvEducationDegree: z.string().nullable().optional(),
   cvEducationInstitution: z.string().nullable().optional(),
-  cvEducationStartDate: z.string().nullable().optional(),
-  cvEducationEndDate: z.string().nullable().optional(),
+  cvEducationStartDate: z.preprocess((arg) => new Date(arg), z.date()),
+  cvEducationEndDate: z.preprocess(
+    (arg) => (arg ? new Date(arg) : null),
+    z.date().nullable()
+  ).optional(),
 });
 
 export function formatCvData(cvArray) {
