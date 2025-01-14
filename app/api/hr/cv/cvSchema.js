@@ -8,10 +8,6 @@ import {
   formatData,
 } from "@/lib/zodSchema";
 
-// export function formatCvData(cv) {
-//   return formatData(cv, [], ["cvUpdateAt", "cvUpdateAt"]);
-// }
-
 const educationSchema = z.object({
   cvEducationId: preprocessInt(
     "Cv ID must be provided.",
