@@ -60,7 +60,7 @@ export default function CvUpdate({ params: paramsPromise }) {
         // สมมติว่า cvData มีข้อมูลของ educations ด้วย
         setFormData({
           cvEmployeeId: cv.cvEmployeeId,
-          educations: cv.CvEducation || [],
+          educations: cv.educations  || [],
           // licenses: cv.CvProfessionalLicense || [],
           // workHistories: cv.CvWorkHistory || [],
           // projects: cv.CvProject || [],
