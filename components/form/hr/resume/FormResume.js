@@ -20,7 +20,7 @@ export default function FormResume({
       className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
     >
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex flex-col items-start justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
             name="resumeLink"
             type="text"
@@ -34,6 +34,15 @@ export default function FormResume({
             isInvalid={!!errors.resumeLink}
             errorMessage={errors.resumeLink}
           />
+          {formData.resumeLink && (
+            <Button
+              size="lg"
+              color="secondary"
+              onPress={() => window.open(formData.resumeLink, "_blank")}
+            >
+              Open Resume
+            </Button>
+          )}
         </div>
       </div>
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
