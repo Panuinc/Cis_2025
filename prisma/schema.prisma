@@ -48,6 +48,14 @@ enum EmploymentType {
   MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES
 }
 
+enum PersonalRequestReasonStatus {
+  Cancel
+  PendingManagerApprove
+  PendingHrApprove
+  PendingMdApprove
+  Approved
+}
+
 model Employee {
   employeeId        Int       @id @default(autoincrement())
   employeeTitle     Title
@@ -111,6 +119,12 @@ model Employee {
   employeeResume Resume[] @relation("ResumeEmployeeBy")
   createdResume  Resume[] @relation("ResumeCreateBy")
   updatedResume  Resume[] @relation("ResumeUpdateBy")
+
+  createdPersonalRequest        PersonalRequest[] @relation("PersonalRequestCreateBy")
+  updatedPersonalRequest        PersonalRequest[] @relation("PersonalRequestUpdateBy")
+  managerApprovePersonalRequest PersonalRequest[] @relation("PersonalRequestManagerApproveBy")
+  hrApprovePersonalRequest      PersonalRequest[] @relation("PersonalRequestHrApproveBy")
+  mdApprovePersonalRequest      PersonalRequest[] @relation("PersonalRequestMdApproveBy")
 
   @@index([employeeCreateBy])
   @@index([employeeUpdateBy])
@@ -340,6 +354,8 @@ model Branch {
   branchIdDepartment Department[] @relation("DepartmentBranchId")
   branchIdPosition   Position[]   @relation("PositionBranchId")
 
+  branchIdPersonalRequest PersonalRequest[] @relation("PersonalRequestBranchId")
+
   @@index([branchCreateBy])
   @@index([branchUpdateBy])
 }
@@ -451,9 +467,56 @@ model Position {
 
   positionIdEmployment Employment[] @relation("EmploymentPositionId")
 
+  positionIdPersonalRequest PersonalRequest[] @relation("PersonalRequestPositionId")
+
   @@index([positionBranchId])
   @@index([positionDivisionId])
   @@index([positionDepartmentId])
   @@index([positionCreateBy])
   @@index([positionUpdateBy])
+}
+
+model PersonalRequest {
+  personalRequestId                     Int                          @id @default(autoincrement())
+  personalRequestAmount                 Int?
+  personalRequestPositionId             Int?
+  personalRequestBranchId               Int?
+  personalRequestDesiredDate            DateTime?
+  personalRequestEmploymentType         String?
+  personalRequestReasonForRequest       String?
+  personalRequestReasonGender           Gender?
+  personalRequestReasonAge              String?
+  personalRequestReasonEducation        String?
+  personalRequestReasonEnglishSkill     String?
+  personalRequestReasonComputerSkill    String?
+  personalRequestReasonOtherSkill       String?
+  personalRequestReasonExperience       String?
+  personalRequestReasonStatus           PersonalRequestReasonStatus? @default(PendingManagerApprove)
+  personalRequestCreateBy               Int
+  personalRequestCreateAt               DateTime                     @default(now()) @db.Timestamp()
+  personalRequestUpdateBy               Int?
+  personalRequestUpdateAt               DateTime?
+  personalRequestReasonManagerApproveBy Int?
+  personalRequestReasonManagerApproveAt DateTime?
+  personalRequestReasonHrApproveBy      Int?
+  personalRequestReasonHrApproveAt      DateTime?
+  personalRequestReasonMdApproveBy      Int?
+  personalRequestReasonMdApproveAt      DateTime?
+
+  PersonalRequestCreateBy         Employee? @relation("PersonalRequestCreateBy", fields: [personalRequestCreateBy], references: [employeeId])
+  PersonalRequestUpdateBy         Employee? @relation("PersonalRequestUpdateBy", fields: [personalRequestUpdateBy], references: [employeeId])
+  PersonalRequestManagerApproveBy Employee? @relation("PersonalRequestManagerApproveBy", fields: [personalRequestReasonManagerApproveBy], references: [employeeId])
+  PersonalRequestHrApproveBy      Employee? @relation("PersonalRequestHrApproveBy", fields: [personalRequestReasonHrApproveBy], references: [employeeId])
+  PersonalRequestMdApproveBy      Employee? @relation("PersonalRequestMdApproveBy", fields: [personalRequestReasonMdApproveBy], references: [employeeId])
+
+  PersonalRequestPositionId Position? @relation("PersonalRequestPositionId", fields: [personalRequestPositionId], references: [positionId])
+  PersonalRequestBranchId   Branch?   @relation("PersonalRequestBranchId", fields: [personalRequestBranchId], references: [branchId])
+
+  @@index([personalRequestCreateBy])
+  @@index([personalRequestUpdateBy])
+  @@index([personalRequestReasonManagerApproveBy])
+  @@index([personalRequestReasonHrApproveBy])
+  @@index([personalRequestReasonMdApproveBy])
+  @@index([personalRequestPositionId])
+  @@index([personalRequestBranchId])
 }
