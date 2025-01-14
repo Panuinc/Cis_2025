@@ -48,12 +48,37 @@ enum EmploymentType {
   MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES
 }
 
+enum EmploymentTypes {
+  FULL_TIME
+  PART_TIME
+  TEMPORARY
+  CONTRACT
+  INTERN
+}
+
+enum RequestReason {
+  REPLACE_STAFF
+  NEW_POSITION
+  EXPANSION
+  OTHER
+}
+
+enum SkillLevel {
+  BASIC
+  INTERMEDIATE
+  ADVANCED
+}
+
 enum PersonalRequestReasonStatus {
-  Cancel
   PendingManagerApprove
+  ManagerApproved
+  ManagerRejected
   PendingHrApprove
+  HrApproved
+  HrRejected
   PendingMdApprove
-  Approved
+  MdApproved
+  MdRejected
 }
 
 model Employee {
@@ -482,16 +507,18 @@ model PersonalRequest {
   personalRequestPositionId             Int?
   personalRequestBranchId               Int?
   personalRequestDesiredDate            DateTime?
-  personalRequestEmploymentType         String?
-  personalRequestReasonForRequest       String?
+  personalRequestEmploymentType         EmploymentTypes?
+  personalRequestReasonForRequest       RequestReason?
   personalRequestReasonGender           Gender?
   personalRequestReasonAge              String?
   personalRequestReasonEducation        String?
-  personalRequestReasonEnglishSkill     String?
-  personalRequestReasonComputerSkill    String?
+  personalRequestReasonEnglishSkill     SkillLevel?
+  personalRequestReasonComputerSkill    SkillLevel?
   personalRequestReasonOtherSkill       String?
   personalRequestReasonExperience       String?
   personalRequestReasonStatus           PersonalRequestReasonStatus? @default(PendingManagerApprove)
+  personalRequestSpecialRequirements    String?
+  personalRequestNote                   String?
   personalRequestCreateBy               Int
   personalRequestCreateAt               DateTime                     @default(now()) @db.Timestamp()
   personalRequestUpdateBy               Int?
@@ -508,8 +535,9 @@ model PersonalRequest {
   PersonalRequestManagerApproveBy Employee? @relation("PersonalRequestManagerApproveBy", fields: [personalRequestReasonManagerApproveBy], references: [employeeId])
   PersonalRequestHrApproveBy      Employee? @relation("PersonalRequestHrApproveBy", fields: [personalRequestReasonHrApproveBy], references: [employeeId])
   PersonalRequestMdApproveBy      Employee? @relation("PersonalRequestMdApproveBy", fields: [personalRequestReasonMdApproveBy], references: [employeeId])
-  PersonalRequestPositionId       Position? @relation("PersonalRequestPositionId", fields: [personalRequestPositionId], references: [positionId])
-  PersonalRequestBranchId         Branch?   @relation("PersonalRequestBranchId", fields: [personalRequestBranchId], references: [branchId])
+
+  PersonalRequestPositionId Position? @relation("PersonalRequestPositionId", fields: [personalRequestPositionId], references: [positionId])
+  PersonalRequestBranchId   Branch?   @relation("PersonalRequestBranchId", fields: [personalRequestBranchId], references: [branchId])
 
   @@index([personalRequestCreateBy])
   @@index([personalRequestUpdateBy])
