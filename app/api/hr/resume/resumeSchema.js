@@ -8,40 +8,23 @@ import {
   formatData,
 } from "@/lib/zodSchema";
 
-export function formatBranchData(branch) {
-  return formatData(branch, [], ["branchCreateAt", "branchUpdateAt"]);
+export function formatResumeData(resume) {
+  return formatData(resume, [], ["resumeCreateAt", "resumeUpdateAt"]);
 }
 
-export const branchPosteSchema = z.object({
-  branchName: preprocessString(
-    "Please Enter Branch Name",
-    "Please Enter Branch Name"
+export const resumePutSchema = z.object({
+  resumeId: preprocessInt(
+    "Resume ID must be provided.",
+    "Resume ID must be an integer."
   ),
 
-  branchCreateBy: preprocessInt(
-    "Branch creator ID must be provided.",
-    "Branch creator ID must be an integer."
-  ),
-});
-
-export const branchPutSchema = z.object({
-  branchId: preprocessInt(
-    "Branch ID must be provided.",
-    "Branch ID must be an integer."
+  resumeLink: preprocessString(
+    "Please Enter Resume Link",
+    "Please Enter Resume Link"
   ),
 
-  branchName: preprocessString(
-    "Please Enter Branch Name",
-    "Please Enter Branch Name"
-  ),
-
-  branchStatus: preprocessEnum(
-    ["Active", "InActive"],
-    "Branch Status must be either 'Active', 'InActive'."
-  ),
-
-  branchUpdateBy: preprocessInt(
-    "Branch updater ID must be provided.",
-    "Branch updater ID must be an integer."
+  resumeUpdateBy: preprocessInt(
+    "Resume updater ID must be provided.",
+    "Resume updater ID must be an integer."
   ),
 });

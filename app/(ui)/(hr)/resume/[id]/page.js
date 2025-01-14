@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import TopicHeader from "@/components/form/TopicHeader";
-import FormBranch from "@/components/form/hr/branch/FormBranch";
+import FormResume from "@/components/form/hr/resume/FormResume";
 import React, {
   useState,
   useRef,
@@ -16,11 +16,10 @@ import React, {
 const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
 
 const DEFAULT_FORM_DATA = {
-  branchName: "",
-  branchStatus: "",
+  resumeLink: "",
 };
 
-export default function BranchUpdate({ params: paramsPromise }) {
+export default function ResumeUpdate({ params: paramsPromise }) {
   const { data: session } = useSession();
   const userData = session?.user || {};
   const userId = userData?.userId;
@@ -34,7 +33,7 @@ export default function BranchUpdate({ params: paramsPromise }) {
   );
 
   const params = use(paramsPromise);
-  const branchId = params.id;
+  const resumeId = params.id;
 
   const router = useRouter();
   const [errors, setErrors] = useState({});
@@ -44,8 +43,8 @@ export default function BranchUpdate({ params: paramsPromise }) {
 
   const fetchData = useCallback(async () => {
     try {
-      const [branchRes] = await Promise.all([
-        fetch(`/api/hr/branch/${branchId}`, {
+      const [resumeRes] = await Promise.all([
+        fetch(`/api/hr/resume/${resumeId}`, {
           method: "GET",
           headers: {
             "secret-token": SECRET_TOKEN,
@@ -53,17 +52,17 @@ export default function BranchUpdate({ params: paramsPromise }) {
         }),
       ]);
 
-      const branchData = await branchRes.json();
-      if (branchRes.ok) {
-        const branch = branchData.branch[0];
-        setFormData(branch);
+      const resumeData = await resumeRes.json();
+      if (resumeRes.ok) {
+        const resume = resumeData.resume[0];
+        setFormData(resume);
       } else {
-        toast.error(branchData.error);
+        toast.error(resumeData.error);
       }
     } catch (error) {
       toast.error("Error fetching data");
     }
-  }, [branchId]);
+  }, [resumeId]);
 
   useEffect(() => {
     fetchData();
@@ -89,10 +88,10 @@ export default function BranchUpdate({ params: paramsPromise }) {
       event.preventDefault();
 
       const formDataObject = new FormData(formRef.current);
-      formDataObject.append("branchUpdateBy", userId);
+      formDataObject.append("resumeUpdateBy", userId);
 
       try {
-        const res = await fetch(`/api/hr/branch/${branchId}`, {
+        const res = await fetch(`/api/hr/resume/${resumeId}`, {
           method: "PUT",
           body: formDataObject,
           headers: {
@@ -105,7 +104,7 @@ export default function BranchUpdate({ params: paramsPromise }) {
         if (res.ok) {
           toast.success(jsonData.message);
           setTimeout(() => {
-            router.push("/branch");
+            router.push("/employee");
           }, 2000);
         } else {
           if (jsonData.details) {
@@ -118,13 +117,13 @@ export default function BranchUpdate({ params: paramsPromise }) {
             }, {});
             setErrors(fieldErrorObj);
           }
-          toast.error(jsonData.error || "Error updating branch");
+          toast.error(jsonData.error || "Error updating resume");
         }
       } catch (error) {
-        toast.error("Error updating branch: " + error.message);
+        toast.error("Error updating resume: " + error.message);
       }
     },
-    [branchId, router, userId]
+    [resumeId, router, userId]
   );
 
   const handleClear = useCallback(() => {
@@ -135,9 +134,9 @@ export default function BranchUpdate({ params: paramsPromise }) {
 
   return (
     <>
-      <TopicHeader topic="Branch Update" />
+      <TopicHeader topic="Resume Update" />
       <Toaster position="top-right" />
-      <FormBranch
+      <FormResume
         formRef={formRef}
         onSubmit={handleSubmit}
         onClear={handleClear}

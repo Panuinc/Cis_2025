@@ -46,7 +46,7 @@ export async function GET(request) {
         },
         employeeEmpDocument: true,
         employeeCv: true,
-        employeeResume:true,
+        employeeResume: true,
         EmployeeCreateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
@@ -146,7 +146,15 @@ export async function POST(request) {
         cvCreateAt: localNow,
       },
     });
-    
+
+    await prisma.resume.create({
+      data: {
+        resumeEmployeeId: newEmployee.employeeId,
+        resumeCreateBy: 1,
+        resumeCreateAt: localNow,
+      },
+    });
+
     return NextResponse.json(
       { message: "Successfully created new employee", employee: newEmployee },
       { status: 201 }

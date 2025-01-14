@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { handleErrors, handleGetErrors } from "@/lib/errorHandler";
-import { branchPutSchema } from "@/app/api/hr/branch/branchSchema";
+import { resumePutSchema } from "@/app/api/hr/resume/resumeSchema";
 import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
 import prisma from "@/lib/prisma";
-import { formatBranchData } from "@/app/api/hr/branch/branchSchema";
+import { formatResumeData } from "@/app/api/hr/resume/resumeSchema";
 import { getRequestIP } from "@/lib/GetRequestIp";
 import { getLocalNow } from "@/lib/GetLocalNow";
 
@@ -14,11 +14,11 @@ export async function GET(request, context) {
     ip = getRequestIP(request);
 
     const params = await context.params;
-    const branchId = parseInt(params.branchId, 10);
+    const resumeId = parseInt(params.resumeId, 10);
 
-    if (!branchId) {
+    if (!resumeId) {
       return NextResponse.json(
-        { error: "Branch ID is required" },
+        { error: "Resume ID is required" },
         { status: 400 }
       );
     }
@@ -26,36 +26,36 @@ export async function GET(request, context) {
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
 
-    const branch = await prisma.branch.findMany({
-      where: { branchId: branchId },
+    const resume = await prisma.resume.findMany({
+      where: { resumeId: resumeId },
       include: {
-        BranchCreateBy: {
+        ResumeCreateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
-        BranchUpdateBy: {
+        ResumeUpdateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
       },
     });
 
-    if (!branch?.length) {
+    if (!resume?.length) {
       return NextResponse.json(
-        { error: "No branch data found" },
+        { error: "No resume data found" },
         { status: 404 }
       );
     }
 
-    const formattedBranch = formatBranchData(branch);
+    const formattedResume = formatResumeData(resume);
 
     return NextResponse.json(
       {
-        message: "Branch data retrieved successfully",
-        branch: formattedBranch,
+        message: "Resume data retrieved successfully",
+        resume: formattedResume,
       },
       { status: 200 }
     );
   } catch (error) {
-    return handleGetErrors(error, ip, "Error retrieving branch data");
+    return handleGetErrors(error, ip, "Error retrieving resume data");
   }
 }
 
@@ -65,10 +65,10 @@ export async function PUT(request, context) {
     ip = getRequestIP(request);
 
     const params = await context.params;
-    const { branchId } = params;
-    if (!branchId) {
+    const { resumeId } = params;
+    if (!resumeId) {
       return NextResponse.json(
-        { error: "Branch ID is required" },
+        { error: "Resume ID is required" },
         { status: 400 }
       );
     }
@@ -79,26 +79,26 @@ export async function PUT(request, context) {
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
 
-    const parsedData = branchPutSchema.parse({
+    const parsedData = resumePutSchema.parse({
       ...data,
-      branchId,
+      resumeId,
     });
 
     const localNow = getLocalNow();
 
-    const updatedBranch = await prisma.branch.update({
-      where: { branchId: parseInt(branchId, 10) },
+    const updatedResume = await prisma.resume.update({
+      where: { resumeId: parseInt(resumeId, 10) },
       data: {
         ...parsedData,
-        branchUpdateAt: localNow,
+        resumeUpdateAt: localNow,
       },
     });
 
     return NextResponse.json(
-      { message: "Branch data updated successfully", branch: updatedBranch },
+      { message: "Resume data updated successfully", resume: updatedResume },
       { status: 200 }
     );
   } catch (error) {
-    return handleErrors(error, ip, "Error updating branch data");
+    return handleErrors(error, ip, "Error updating resume data");
   }
 }

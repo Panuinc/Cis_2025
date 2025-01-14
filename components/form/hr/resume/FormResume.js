@@ -3,7 +3,7 @@ import React from "react";
 import { Input, Button, Select, SelectItem } from "@nextui-org/react";
 import { Cancel, Database } from "@/components/icons/icons";
 
-export default function FormBranch({
+export default function FormResume({
   formRef,
   onSubmit,
   onClear,
@@ -22,43 +22,19 @@ export default function FormBranch({
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
-            name="branchName"
+            name="resumeLink"
             type="text"
-            label="Branch Name"
+            label="Resume Link"
             placeholder="Please Enter Data"
             labelPlacement="outside"
             size="lg"
             variant="bordered"
-            value={formData.branchName || ""}
-            onChange={handleInputChange("branchName")}
-            isInvalid={!!errors.branchName}
-            errorMessage={errors.branchName}
+            value={formData.resumeLink || ""}
+            onChange={handleInputChange("resumeLink")}
+            isInvalid={!!errors.resumeLink}
+            errorMessage={errors.resumeLink}
           />
         </div>
-        {isUpdate && (
-          <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <Select
-              name="branchStatus"
-              label="Status"
-              placeholder="Please Select Status"
-              labelPlacement="outside"
-              size="lg"
-              variant="bordered"
-              value={formData.branchStatus || ""}
-              selectedKeys={[formData.branchStatus] || ""}
-              onChange={handleInputChange("branchStatus")}
-              isInvalid={!!errors.branchStatus}
-              errorMessage={errors.branchStatus}
-            >
-              <SelectItem value="InActive" key="InActive">
-                InActive
-              </SelectItem>
-              <SelectItem value="Active" key="Active">
-                Active
-              </SelectItem>
-            </Select>
-          </div>
-        )}
       </div>
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
