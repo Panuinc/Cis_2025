@@ -29,8 +29,11 @@ export async function GET(request, context) {
         CvEmployeeBy: true,
         CvEducation: true,
         CvLicense: true,
-        CvWorkHistory: true,
-        CvProject: true,
+        CvWorkHistory: {
+          include: {
+            projects: true,
+          },
+        },
         CvCreateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
@@ -45,14 +48,8 @@ export async function GET(request, context) {
     }
 
     const formattedCv = cv.map((item) => {
-      const {
-        CvEducation,
-        CvLicense,
-        CvWorkHistory,
-        CvProject,
-        CvEmployeeBy,
-        ...rest
-      } = item;
+      const { CvEducation, CvLicense, CvWorkHistory, CvEmployeeBy, ...rest } =
+        item;
 
       const formattedEmployee = CvEmployeeBy
         ? {
@@ -63,13 +60,20 @@ export async function GET(request, context) {
           }
         : null;
 
+      const formattedWorkHistories = CvWorkHistory.map((history) => {
+        const { projects, ...historyRest } = history;
+        return {
+          ...historyRest,
+          projects,
+        };
+      });
+
       return {
         ...rest,
         employee: formattedEmployee,
         educations: CvEducation,
         licenses: CvLicense,
-        workHistories: CvWorkHistory,
-        projects: CvProject,
+        workHistories: formattedWorkHistories,
       };
     });
 
@@ -97,11 +101,9 @@ export async function PUT(request, context) {
     await checkRateLimit(ip);
 
     const formData = await request.formData();
-    const dataObj = {};
+    let dataObj = {};
     for (const [key, value] of formData.entries()) {
-      if (
-        ["educations", "licenses", "workHistories", "projects"].includes(key)
-      ) {
+      if (["educations", "licenses", "workHistories"].includes(key)) {
         dataObj[key] = JSON.parse(value);
       } else {
         dataObj[key] = value;
@@ -147,6 +149,13 @@ export async function PUT(request, context) {
       "cvProfessionalLicenseStartDate",
       "cvProfessionalLicenseEndDate",
     ];
+    const workHistoryFields = [
+      "cvWorkHistoryCompanyName",
+      "cvWorkHistoryPosition",
+      "cvWorkHistoryStartDate",
+      "cvWorkHistoryEndDate",
+    ];
+    const projectFields = ["cvProjectName", "cvProjectDescription"];
 
     const { update: updateEducation, create: createEducation } = processEntries(
       educations,
@@ -158,6 +167,45 @@ export async function PUT(request, context) {
       "cvProfessionalLicenseId",
       licenseFields
     );
+
+    const updateWorkHistories = (workHistories || [])
+      .filter((e) => e.cvWorkHistoryId)
+      .map((e) => {
+        const { projects, ...historyData } = e;
+        const { update: updateProjects, create: createProjects } =
+          processEntries(projects, "cvProjectId", projectFields);
+        return {
+          where: { cvWorkHistoryId: e.cvWorkHistoryId },
+          data: {
+            ...Object.fromEntries(
+              workHistoryFields.map((field) => [field, historyData[field]])
+            ),
+            projects: {
+              update: updateProjects,
+              create: createProjects,
+            },
+          },
+        };
+      });
+
+    const createWorkHistories = (workHistories || [])
+      .filter((e) => !e.cvWorkHistoryId)
+      .map((e) => {
+        const { projects, ...historyData } = e;
+        const { create: createProjects } = processEntries(
+          projects,
+          "cvProjectId",
+          projectFields
+        );
+        return {
+          ...Object.fromEntries(
+            workHistoryFields.map((field) => [field, historyData[field]])
+          ),
+          projects: {
+            create: createProjects,
+          },
+        };
+      });
 
     const updatedCv = await prisma.cv.update({
       where: { cvId: parseInt(cvId, 10) },
@@ -171,6 +219,10 @@ export async function PUT(request, context) {
         CvLicense: {
           update: updateLicense,
           create: createLicense,
+        },
+        CvWorkHistory: {
+          update: updateWorkHistories,
+          create: createWorkHistories,
         },
       },
     });

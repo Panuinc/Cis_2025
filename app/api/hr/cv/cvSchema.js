@@ -72,13 +72,67 @@ const licenseSchema = z.object({
   ),
 });
 
+const projectSchema = z.object({
+  cvProjectId: preprocessInt(
+    "CvProject ID must be provided.",
+    "CvProject ID must be an integer."
+  ).optional(),
+
+  cvProjectWorkHistoryId: preprocessInt(
+    "CvProject Work History ID must be provided.",
+    "CvProject Work History ID must be an integer."
+  ).optional(),
+
+  cvProjectName: preprocessString(
+    "Please Enter Project Name",
+    "Please Enter Project Name"
+  ),
+
+  cvProjectDescription: preprocessString(
+    "Please Enter Project Description",
+    "Please Enter Project Description"
+  ),
+});
+
+const workHistorySchema = z.object({
+  cvWorkHistoryId: preprocessInt(
+    "CvWorkHistory ID must be provided.",
+    "CvWorkHistory ID must be an integer."
+  ).optional(),
+
+  cvWorkHistoryCvId: preprocessInt(
+    "CvWorkHistory Cv ID must be provided.",
+    "CvWorkHistory Cv ID must be an integer."
+  ).optional(),
+
+  cvWorkHistoryCompanyName: preprocessString(
+    "Please Enter Company Name",
+    "Please Enter Company Name"
+  ),
+
+  cvWorkHistoryPosition: preprocessString(
+    "Please Enter Position",
+    "Please Enter Position"
+  ),
+
+  cvWorkHistoryStartDate: preprocessString(
+    "Please Enter Start Date",
+    "Please Enter Start Date"
+  ),
+
+  cvWorkHistoryEndDate: preprocessString(
+    "Please Enter End Date",
+    "Please Enter End Date"
+  ),
+
+  projects: z.array(projectSchema).optional(),
+});
+
 export function formatCvData(cvArray) {
   return cvArray.map((cv) => ({
     ...cv,
     educations: cv.CvEducation,
     licenses: cv.CvProfessionalLicense,
-    // workHistories: cv.CvWorkHistory,
-    // projects: cv.CvProject,
   }));
 }
 
@@ -97,6 +151,5 @@ export const cvPutSchema = z.object({
 
   educations: z.array(educationSchema).optional(),
   licenses: z.array(licenseSchema).optional(),
-
-  // เพิ่ม licenses, workHistories, projects schemas ตามต้องการ
+  workHistories: z.array(workHistorySchema).optional(),
 });

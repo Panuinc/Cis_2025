@@ -23,8 +23,7 @@ const DEFAULT_FORM_DATA = {
   employeeEmail: "",
   educations: [],
   licenses: [],
-  // workHistories: [],
-  // projects: [],
+  workHistories: [],
 };
 
 export default function CvUpdate({ params: paramsPromise }) {
@@ -69,8 +68,7 @@ export default function CvUpdate({ params: paramsPromise }) {
           employeeEmail: cv.employee?.employeeEmail || "",
           educations: cv.educations || [],
           licenses: cv.licenses || [],
-          // workHistories: cv.CvWorkHistory || [],
-          // projects: cv.CvProject || [],
+          workHistories: cv.workHistories || [],
         });
       } else {
         toast.error(cvData.error);
@@ -165,6 +163,91 @@ export default function CvUpdate({ params: paramsPromise }) {
     }));
   }, []);
 
+  const handleWorkHistoryChange = useCallback((workIndex, field, value) => {
+    setFormData((prev) => {
+      const updatedWorkHistories = [...(prev.workHistories || [])];
+      updatedWorkHistories[workIndex] = {
+        ...updatedWorkHistories[workIndex],
+        [field]: value,
+      };
+      return { ...prev, workHistories: updatedWorkHistories };
+    });
+  }, []);
+
+  const addNewWorkHistoryEntry = useCallback(() => {
+    setFormData((prev) => ({
+      ...prev,
+      workHistories: [
+        ...(prev.workHistories || []),
+        {
+          cvWorkHistoryCompanyName: "",
+          cvWorkHistoryPosition: "",
+          cvWorkHistoryStartDate: "",
+          cvWorkHistoryEndDate: "",
+          projects: [],
+        },
+      ],
+    }));
+  }, []);
+
+  const removeWorkHistoryEntry = useCallback((index) => {
+    setFormData((prev) => ({
+      ...prev,
+      workHistories: prev.workHistories.filter((_, i) => i !== index),
+    }));
+  }, []);
+
+  const handleProjectChange = useCallback(
+    (workIndex, projectIndex, field, value) => {
+      setFormData((prev) => {
+        const updatedWorkHistories = [...(prev.workHistories || [])];
+        const workHistory = updatedWorkHistories[workIndex] || {};
+        const projects = [...(workHistory.projects || [])];
+        projects[projectIndex] = {
+          ...projects[projectIndex],
+          [field]: value,
+        };
+        updatedWorkHistories[workIndex] = {
+          ...workHistory,
+          projects,
+        };
+        return { ...prev, workHistories: updatedWorkHistories };
+      });
+    },
+    []
+  );
+
+  const addNewProjectEntry = useCallback((workIndex) => {
+    setFormData((prev) => {
+      const updatedWorkHistories = [...(prev.workHistories || [])];
+      const workHistory = updatedWorkHistories[workIndex] || {};
+      const projects = [...(workHistory.projects || [])];
+      projects.push({
+        cvProjectName: "",
+        cvProjectDescription: "",
+      });
+      updatedWorkHistories[workIndex] = {
+        ...workHistory,
+        projects,
+      };
+      return { ...prev, workHistories: updatedWorkHistories };
+    });
+  }, []);
+
+  const removeProjectEntry = useCallback((workIndex, projectIndex) => {
+    setFormData((prev) => {
+      const updatedWorkHistories = [...(prev.workHistories || [])];
+      const workHistory = updatedWorkHistories[workIndex] || {};
+      const projects = [...(workHistory.projects || [])];
+      projects.splice(projectIndex, 1);
+      updatedWorkHistories[workIndex] = {
+        ...workHistory,
+        projects,
+      };
+      return { ...prev, workHistories: updatedWorkHistories };
+    });
+  }, []);
+
   const handleSubmit = useCallback(
     async (event) => {
       event.preventDefault();
@@ -179,8 +262,10 @@ export default function CvUpdate({ params: paramsPromise }) {
         "licenses",
         JSON.stringify(formData.licenses || [])
       );
-      // formDataObject.append("workHistories", JSON.stringify(formData.workHistories || []));
-      // formDataObject.append("projects", JSON.stringify(formData.projects || []));
+      formDataObject.append(
+        "workHistories",
+        JSON.stringify(formData.workHistories || [])
+      );
 
       try {
         const res = await fetch(`/api/hr/cv/${cvId}`, {
@@ -243,6 +328,12 @@ export default function CvUpdate({ params: paramsPromise }) {
         handleLicenseChange={handleLicenseChange}
         addNewLicenseEntry={addNewLicenseEntry}
         removeLicenseEntry={removeLicenseEntry}
+        handleWorkHistoryChange={handleWorkHistoryChange}
+        addNewWorkHistoryEntry={addNewWorkHistoryEntry}
+        removeWorkHistoryEntry={removeWorkHistoryEntry}
+        handleProjectChange={handleProjectChange}
+        addNewProjectEntry={addNewProjectEntry}
+        removeProjectEntry={removeProjectEntry}
       />
     </>
   );
