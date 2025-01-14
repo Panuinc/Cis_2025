@@ -68,6 +68,8 @@ export default function FormCv({
             errorMessage={errors.employeeLastname}
           />
         </div>
+      </div>
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
             name="employeeBirthday"
