@@ -17,7 +17,7 @@ const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
 
 const DEFAULT_FORM_DATA = {
   cvEmployeeId: "",
-  educations: [], // เพิ่มการเก็บข้อมูลการศึกษา
+  educations: [],
   // licenses: [],
   // workHistories: [],
   // projects: [],
@@ -57,7 +57,6 @@ export default function CvUpdate({ params: paramsPromise }) {
       const cvData = await cvRes.json();
       if (cvRes.ok) {
         const cv = cvData.cv[0];
-        // สมมติว่า cvData มีข้อมูลของ educations ด้วย
         setFormData({
           cvEmployeeId: cv.cvEmployeeId,
           educations: cv.educations  || [],
@@ -92,7 +91,6 @@ export default function CvUpdate({ params: paramsPromise }) {
     []
   );
 
-  // ฟังก์ชันสำหรับจัดการการเปลี่ยนแปลงของการศึกษา
   const handleEducationChange = useCallback((index, field, value) => {
     setFormData((prev) => {
       const updatedEducations = [...(prev.educations || [])];
