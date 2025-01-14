@@ -69,7 +69,7 @@ enum SkillLevel {
   ADVANCED
 }
 
-enum PersonalRequestReasonStatus {
+enum PersonalRequestStatus {
   PendingManagerApprove
   ManagerApproved
   ManagerRejected
@@ -517,7 +517,7 @@ model PersonalRequest {
   personalRequestReasonComputerSkill    SkillLevel?
   personalRequestReasonOtherSkill       String?
   personalRequestReasonExperience       String?
-  personalRequestReasonStatus           PersonalRequestReasonStatus? @default(PendingManagerApprove)
+  personalRequestStatus           PersonalRequestStatus? @default(PendingManagerApprove)
   personalRequestSpecialRequirements    String?
   personalRequestNote                   String?
   personalRequestCreateBy               Int
