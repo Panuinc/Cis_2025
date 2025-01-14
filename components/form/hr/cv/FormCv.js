@@ -212,8 +212,8 @@ export default function FormCv({
           <Button
             size="md"
             color="warning"
-            onPress={addNewEducationEntry}
             startContent={<Database />}
+            onPress={addNewEducationEntry}
           >
             Add Education
           </Button>
@@ -328,8 +328,8 @@ export default function FormCv({
           <Button
             size="md"
             color="warning"
-            onPress={addNewLicenseEntry}
             startContent={<Database />}
+            onPress={addNewLicenseEntry}
           >
             Add License
           </Button>
@@ -496,8 +496,8 @@ export default function FormCv({
                 <Button
                   size="md"
                   color="warning"
-                  onPress={() => addNewProjectEntry(wIndex)}
                   startContent={<Database />}
+                  onPress={() => addNewProjectEntry(wIndex)}
                 >
                   Add Project
                 </Button>
@@ -520,8 +520,8 @@ export default function FormCv({
           <Button
             size="md"
             color="warning"
-            onPress={addNewWorkHistoryEntry}
             startContent={<Database />}
+            onPress={addNewWorkHistoryEntry}
           >
             Add Work History
           </Button>
