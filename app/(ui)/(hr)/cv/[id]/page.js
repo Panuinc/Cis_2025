@@ -17,6 +17,10 @@ const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
 
 const DEFAULT_FORM_DATA = {
   cvEmployeeId: "",
+  employeeFirstname: "",
+  employeeLastname: "",
+  employeeBirthday: "",
+  employeeEmail: "",
   educations: [],
   // licenses: [],
   // workHistories: [],
@@ -59,7 +63,11 @@ export default function CvUpdate({ params: paramsPromise }) {
         const cv = cvData.cv[0];
         setFormData({
           cvEmployeeId: cv.cvEmployeeId,
-          educations: cv.educations  || [],
+          employeeFirstname: cv.employee?.employeeFirstname || "",
+          employeeLastname: cv.employee?.employeeLastname || "",
+          employeeBirthday: cv.employee?.employeeBirthday || "",
+          employeeEmail: cv.employee?.employeeEmail || "",
+          educations: cv.educations || [],
           // licenses: cv.CvProfessionalLicense || [],
           // workHistories: cv.CvWorkHistory || [],
           // projects: cv.CvProject || [],
@@ -123,7 +131,7 @@ export default function CvUpdate({ params: paramsPromise }) {
       educations: prev.educations.filter((_, i) => i !== index),
     }));
   }, []);
-  
+
   const handleSubmit = useCallback(
     async (event) => {
       event.preventDefault();

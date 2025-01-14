@@ -26,6 +26,7 @@ export async function GET(request, context) {
     const cv = await prisma.cv.findMany({
       where: { cvId: cvId },
       include: {
+        CvEmployeeBy: true,
         CvEducation: true,
         CvLicense: true,
         CvWorkHistory: true,
@@ -44,10 +45,27 @@ export async function GET(request, context) {
     }
 
     const formattedCv = cv.map((item) => {
-      const { CvEducation, CvLicense, CvWorkHistory, CvProject, ...rest } =
-        item;
+      const {
+        CvEducation,
+        CvLicense,
+        CvWorkHistory,
+        CvProject,
+        CvEmployeeBy,
+        ...rest
+      } = item;
+
+      const formattedEmployee = CvEmployeeBy
+        ? {
+            ...CvEmployeeBy,
+            employeeBirthday: CvEmployeeBy.employeeBirthday
+              ? CvEmployeeBy.employeeBirthday.toISOString().split("T")[0]
+              : null,
+          }
+        : null;
+
       return {
         ...rest,
+        employee: formattedEmployee,
         educations: CvEducation,
         licenses: CvLicense,
         workHistories: CvWorkHistory,

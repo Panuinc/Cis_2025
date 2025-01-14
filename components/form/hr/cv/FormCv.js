@@ -25,17 +25,66 @@ export default function FormCv({
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
-            name="cvEmployeeId"
+            name="employeeFirstname"
             type="text"
-            label="Cv Employee Id"
+            label="Firstname"
             placeholder="Please Enter Data"
             labelPlacement="outside"
             size="lg"
-            variant="bordered"
-            value={formData.cvEmployeeId || ""}
-            onChange={handleInputChange("cvEmployeeId")}
-            isInvalid={!!errors.cvEmployeeId}
-            errorMessage={errors.cvEmployeeId}
+            variant="flat"
+            readOnly
+            value={formData.employeeFirstname || ""}
+            onChange={handleInputChange("employeeFirstname")}
+            isInvalid={!!errors.employeeFirstname}
+            errorMessage={errors.employeeFirstname}
+          />
+        </div>
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Input
+            name="employeeLastname"
+            type="text"
+            label="Lastname"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="flat"
+            readOnly
+            value={formData.employeeLastname || ""}
+            onChange={handleInputChange("employeeLastname")}
+            isInvalid={!!errors.employeeLastname}
+            errorMessage={errors.employeeLastname}
+          />
+        </div>
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Input
+            name="employeeBirthday"
+            type="text"
+            label="Birth Day"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="flat"
+            readOnly
+            value={formData.employeeBirthday || ""}
+            onChange={handleInputChange("employeeBirthday")}
+            isInvalid={!!errors.employeeBirthday}
+            errorMessage={errors.employeeBirthday}
+          />
+        </div>
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Input
+            name="employeeEmail"
+            type="text"
+            label="Email"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="flat"
+            readOnly
+            value={formData.employeeEmail || ""}
+            onChange={handleInputChange("employeeEmail")}
+            isInvalid={!!errors.employeeEmail}
+            errorMessage={errors.employeeEmail}
           />
         </div>
       </div>

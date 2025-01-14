@@ -56,7 +56,7 @@ export const cvPutSchema = z.object({
   cvEmployeeId: preprocessInt(
     "Employee ID must be provided.",
     "Employee ID must be an integer."
-  ),
+  ).optional(),
 
   cvUpdateBy: preprocessInt(
     "Cv updater ID must be provided.",
