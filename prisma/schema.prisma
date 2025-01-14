@@ -242,7 +242,6 @@ model Cv {
   CvEducation   CvEducation[]
   CvLicense     CvProfessionalLicense[]
   CvWorkHistory CvWorkHistory[]
-  CvProject     CvProject[]
 
   @@index([cvEmployeeId])
   @@index([cvCreateBy])
@@ -283,20 +282,22 @@ model CvWorkHistory {
   cvWorkHistoryStartDate   String?
   cvWorkHistoryEndDate     String?
 
-  cv Cv @relation(fields: [cvWorkHistoryCvId], references: [cvId])
+  cv       Cv          @relation(fields: [cvWorkHistoryCvId], references: [cvId])
+  
+  projects CvProject[]
 
   @@index([cvWorkHistoryCvId])
 }
 
 model CvProject {
-  cvProjectId          Int     @id @default(autoincrement())
-  cvProjectCvId        Int
-  cvProjectName        String?
-  cvProjectDescription String?
+  cvProjectId            Int     @id @default(autoincrement())
+  cvProjectWorkHistoryId Int
+  cvProjectName          String?
+  cvProjectDescription   String?
 
-  cv Cv @relation(fields: [cvProjectCvId], references: [cvId])
+  cvWorkHistory CvWorkHistory @relation(fields: [cvProjectWorkHistoryId], references: [cvWorkHistoryId])
 
-  @@index([cvProjectCvId])
+  @@index([cvProjectWorkHistoryId])
 }
 
 model Branch {
