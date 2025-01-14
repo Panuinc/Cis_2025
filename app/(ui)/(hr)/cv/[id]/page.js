@@ -132,7 +132,6 @@ export default function CvUpdate({ params: paramsPromise }) {
     }));
   }, []);
 
-  //
   const handleLicenseChange = useCallback((index, field, value) => {
     setFormData((prev) => {
       const updatedLicenses = [...(prev.licenses || [])];
@@ -165,8 +164,6 @@ export default function CvUpdate({ params: paramsPromise }) {
       licenses: prev.licenses.filter((_, i) => i !== index),
     }));
   }, []);
-
-  //
 
   const handleSubmit = useCallback(
     async (event) => {
@@ -240,15 +237,12 @@ export default function CvUpdate({ params: paramsPromise }) {
         handleInputChange={handleInputChange}
         isUpdate={true}
         operatedBy={operatedBy}
-
         handleEducationChange={handleEducationChange}
         addNewEducationEntry={addNewEducationEntry}
         removeEducationEntry={removeEducationEntry}
-
         handleLicenseChange={handleLicenseChange}
         addNewLicenseEntry={addNewLicenseEntry}
         removeLicenseEntry={removeLicenseEntry}
-
       />
     </>
   );
