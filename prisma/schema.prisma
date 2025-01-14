@@ -108,6 +108,10 @@ model Employee {
   createdCv  Cv[] @relation("CvCreateBy")
   updatedCv  Cv[] @relation("CvUpdateBy")
 
+  employeeResume Resume[] @relation("ResumeEmployeeBy")
+  createdResume  Resume[] @relation("ResumeCreateBy")
+  updatedResume  Resume[] @relation("ResumeUpdateBy")
+
   @@index([employeeCreateBy])
   @@index([employeeUpdateBy])
 }
@@ -227,6 +231,27 @@ model EmpDocument {
   @@index([empDocumentUpdateBy])
 }
 
+//
+model Resume {
+  resumeId         Int       @id @default(autoincrement())
+  resumeEmployeeId Int
+  resumeLink       String?   @db.VarChar(255)
+  resumeCreateBy   Int
+  resumeCreateAt   DateTime  @default(now()) @db.Timestamp()
+  resumeUpdateBy   Int?
+  resumeUpdateAt   DateTime?
+
+  ResumeEmployeeBy Employee? @relation("ResumeEmployeeBy", fields: [resumeEmployeeId], references: [employeeId])
+  ResumeCreateBy   Employee? @relation("ResumeCreateBy", fields: [resumeCreateBy], references: [employeeId])
+  ResumeUpdateBy   Employee? @relation("ResumeUpdateBy", fields: [resumeUpdateBy], references: [employeeId])
+
+  @@index([resumeEmployeeId])
+  @@index([resumeCreateBy])
+  @@index([resumeUpdateBy])
+}
+
+//
+
 model Cv {
   cvId         Int       @id @default(autoincrement())
   cvEmployeeId Int
@@ -249,7 +274,7 @@ model Cv {
 }
 
 model CvEducation {
-  cvEducationId          Int       @id @default(autoincrement())
+  cvEducationId          Int     @id @default(autoincrement())
   cvEducationCvId        Int
   cvEducationDegree      String?
   cvEducationInstitution String?
@@ -262,7 +287,7 @@ model CvEducation {
 }
 
 model CvProfessionalLicense {
-  cvProfessionalLicenseId        Int       @id @default(autoincrement())
+  cvProfessionalLicenseId        Int     @id @default(autoincrement())
   cvProfessionalLicenseCvId      Int
   cvProfessionalLicenseName      String?
   cvProfessionalLicenseNumber    String?
@@ -275,15 +300,15 @@ model CvProfessionalLicense {
 }
 
 model CvWorkHistory {
-  cvWorkHistoryId          Int       @id @default(autoincrement())
+  cvWorkHistoryId          Int     @id @default(autoincrement())
   cvWorkHistoryCvId        Int
   cvWorkHistoryCompanyName String?
   cvWorkHistoryPosition    String?
   cvWorkHistoryStartDate   String?
   cvWorkHistoryEndDate     String?
 
-  cv       Cv          @relation(fields: [cvWorkHistoryCvId], references: [cvId])
-  
+  cv Cv @relation(fields: [cvWorkHistoryCvId], references: [cvId])
+
   projects CvProject[]
 
   @@index([cvWorkHistoryCvId])
