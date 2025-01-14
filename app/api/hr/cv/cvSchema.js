@@ -10,13 +10,13 @@ import {
 
 const educationSchema = z.object({
   cvEducationId: preprocessInt(
-    "Cv ID must be provided.",
-    "Cv ID must be an integer."
+    "CvEducation ID must be provided.",
+    "CvEducation ID must be an integer."
   ).optional(),
 
   cvEducationCvId: preprocessInt(
-    "CvEducation ID must be provided.",
-    "CvEducation ID must be an integer."
+    "CvEducation CV ID must be provided.",
+    "CvEducation Cv ID must be an integer."
   ).optional(),
 
   cvEducationDegree: preprocessString(
@@ -40,11 +40,43 @@ const educationSchema = z.object({
   ),
 });
 
+const licenseSchema = z.object({
+  cvProfessionalLicenseId: preprocessInt(
+    "Cv ProfessionalLicense ID must be provided.",
+    "Cv ProfessionalLicense ID must be an integer."
+  ).optional(),
+
+  cvProfessionalLicenseCvId: preprocessInt(
+    "Cv ProfessionalLicense Cv ID must be provided.",
+    "Cv ProfessionalLicense Cv ID must be an integer."
+  ).optional(),
+
+  cvProfessionalLicenseName: preprocessString(
+    "Please Enter ProfessionalLicense Name",
+    "Please Enter ProfessionalLicense Name"
+  ),
+
+  cvProfessionalLicenseNumber: preprocessString(
+    "Please Enter ProfessionalLicense Number",
+    "Please Enter ProfessionalLicense Number"
+  ),
+
+  cvProfessionalLicenseStartDate: preprocessString(
+    "Please Enter Start date",
+    "Please Enter Start date"
+  ),
+
+  cvProfessionalLicenseEndDate: preprocessString(
+    "Please Enter End date",
+    "Please Enter End date"
+  ),
+});
+
 export function formatCvData(cvArray) {
   return cvArray.map((cv) => ({
     ...cv,
     educations: cv.CvEducation,
-    // licenses: cv.CvProfessionalLicense,
+    licenses: cv.CvProfessionalLicense,
     // workHistories: cv.CvWorkHistory,
     // projects: cv.CvProject,
   }));
@@ -64,5 +96,7 @@ export const cvPutSchema = z.object({
   ),
 
   educations: z.array(educationSchema).optional(),
+  licenses: z.array(licenseSchema).optional(),
+
   // เพิ่ม licenses, workHistories, projects schemas ตามต้องการ
 });

@@ -22,7 +22,7 @@ const DEFAULT_FORM_DATA = {
   employeeBirthday: "",
   employeeEmail: "",
   educations: [],
-  // licenses: [],
+  licenses: [],
   // workHistories: [],
   // projects: [],
 };
@@ -68,7 +68,7 @@ export default function CvUpdate({ params: paramsPromise }) {
           employeeBirthday: cv.employee?.employeeBirthday || "",
           employeeEmail: cv.employee?.employeeEmail || "",
           educations: cv.educations || [],
-          // licenses: cv.CvProfessionalLicense || [],
+          licenses: cv.licenses || [],
           // workHistories: cv.CvWorkHistory || [],
           // projects: cv.CvProject || [],
         });
@@ -132,6 +132,42 @@ export default function CvUpdate({ params: paramsPromise }) {
     }));
   }, []);
 
+  //
+  const handleLicenseChange = useCallback((index, field, value) => {
+    setFormData((prev) => {
+      const updatedLicenses = [...(prev.licenses || [])];
+      updatedLicenses[index] = {
+        ...updatedLicenses[index],
+        [field]: value,
+      };
+      return { ...prev, licenses: updatedLicenses };
+    });
+  }, []);
+
+  const addNewLicenseEntry = useCallback(() => {
+    setFormData((prev) => ({
+      ...prev,
+      licenses: [
+        ...(prev.licenses || []),
+        {
+          cvProfessionalLicenseName: "",
+          cvProfessionalLicenseNumber: "",
+          cvProfessionalLicenseStartDate: "",
+          cvProfessionalLicenseEndDate: "",
+        },
+      ],
+    }));
+  }, []);
+
+  const removeLicenseEntry = useCallback((index) => {
+    setFormData((prev) => ({
+      ...prev,
+      licenses: prev.licenses.filter((_, i) => i !== index),
+    }));
+  }, []);
+
+  //
+
   const handleSubmit = useCallback(
     async (event) => {
       event.preventDefault();
@@ -142,7 +178,10 @@ export default function CvUpdate({ params: paramsPromise }) {
         "educations",
         JSON.stringify(formData.educations || [])
       );
-      // formDataObject.append("licenses", JSON.stringify(formData.licenses || []));
+      formDataObject.append(
+        "licenses",
+        JSON.stringify(formData.licenses || [])
+      );
       // formDataObject.append("workHistories", JSON.stringify(formData.workHistories || []));
       // formDataObject.append("projects", JSON.stringify(formData.projects || []));
 
@@ -201,9 +240,15 @@ export default function CvUpdate({ params: paramsPromise }) {
         handleInputChange={handleInputChange}
         isUpdate={true}
         operatedBy={operatedBy}
+
         handleEducationChange={handleEducationChange}
         addNewEducationEntry={addNewEducationEntry}
         removeEducationEntry={removeEducationEntry}
+
+        handleLicenseChange={handleLicenseChange}
+        addNewLicenseEntry={addNewLicenseEntry}
+        removeLicenseEntry={removeLicenseEntry}
+
       />
     </>
   );

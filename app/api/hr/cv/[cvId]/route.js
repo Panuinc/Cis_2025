@@ -100,9 +100,7 @@ export async function PUT(request, context) {
     const dataObj = {};
     for (const [key, value] of formData.entries()) {
       if (
-        ["educations" /*, "licenses", "workHistories", "projects"*/].includes(
-          key
-        )
+        ["educations", "licenses", "workHistories", "projects"].includes(key)
       ) {
         dataObj[key] = JSON.parse(value);
       } else {
@@ -115,30 +113,51 @@ export async function PUT(request, context) {
       cvId,
     });
 
-    const { educations, /* licenses, workHistories, projects, */ ...cvData } =
+    const { educations, licenses, workHistories, projects, ...cvData } =
       parsedData;
+
     const localNow = getLocalNow();
 
-    const update = (educations || [])
-      .filter((education) => education.cvEducationId)
-      .map((education) => ({
-        where: { cvEducationId: education.cvEducationId },
-        data: {
-          cvEducationDegree: education.cvEducationDegree,
-          cvEducationInstitution: education.cvEducationInstitution,
-          cvEducationStartDate: education.cvEducationStartDate,
-          cvEducationEndDate: education.cvEducationEndDate,
-        },
-      }));
+    function processEntries(entries, idKey, fields) {
+      const update = (entries || [])
+        .filter((e) => e[idKey])
+        .map((e) => ({
+          where: { [idKey]: e[idKey] },
+          data: Object.fromEntries(fields.map((field) => [field, e[field]])),
+        }));
 
-    const create = (educations || [])
-      .filter((education) => !education.cvEducationId)
-      .map((education) => ({
-        cvEducationDegree: education.cvEducationDegree,
-        cvEducationInstitution: education.cvEducationInstitution,
-        cvEducationStartDate: education.cvEducationStartDate,
-        cvEducationEndDate: education.cvEducationEndDate,
-      }));
+      const create = (entries || [])
+        .filter((e) => !e[idKey])
+        .map((e) =>
+          Object.fromEntries(fields.map((field) => [field, e[field]]))
+        );
+
+      return { update, create };
+    }
+
+    const educationFields = [
+      "cvEducationDegree",
+      "cvEducationInstitution",
+      "cvEducationStartDate",
+      "cvEducationEndDate",
+    ];
+    const licenseFields = [
+      "cvProfessionalLicenseName",
+      "cvProfessionalLicenseNumber",
+      "cvProfessionalLicenseStartDate",
+      "cvProfessionalLicenseEndDate",
+    ];
+
+    const { update: updateEducation, create: createEducation } = processEntries(
+      educations,
+      "cvEducationId",
+      educationFields
+    );
+    const { update: updateLicense, create: createLicense } = processEntries(
+      licenses,
+      "cvProfessionalLicenseId",
+      licenseFields
+    );
 
     const updatedCv = await prisma.cv.update({
       where: { cvId: parseInt(cvId, 10) },
@@ -146,8 +165,12 @@ export async function PUT(request, context) {
         ...cvData,
         cvUpdateAt: localNow,
         CvEducation: {
-          update: update,
-          create: create,
+          update: updateEducation,
+          create: createEducation,
+        },
+        CvLicense: {
+          update: updateLicense,
+          create: createLicense,
         },
       },
     });

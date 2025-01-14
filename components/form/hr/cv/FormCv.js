@@ -12,9 +12,14 @@ export default function FormCv({
   handleInputChange,
   isUpdate = false,
   operatedBy = "",
+
   handleEducationChange,
   addNewEducationEntry,
   removeEducationEntry,
+
+  handleLicenseChange,
+  addNewLicenseEntry,
+  removeLicenseEntry,
 }) {
   return (
     <form
@@ -202,6 +207,123 @@ export default function FormCv({
             startContent={<Database />}
           >
             Add Education
+          </Button>
+        </div>
+      </div>
+
+      <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed font-[600]">
+          Licenses
+        </div>
+        {formData.licenses?.map((license, index) => (
+          <div
+            key={index}
+            className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
+          >
+            <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                <Input
+                  name={`cvProfessionalLicenseName_${index}`}
+                  type="text"
+                  label="License Name"
+                  placeholder="Please Enter Data"
+                  labelPlacement="outside"
+                  size="lg"
+                  variant="bordered"
+                  value={license.cvProfessionalLicenseName || ""}
+                  onChange={(e) =>
+                    handleLicenseChange(
+                      index,
+                      "cvProfessionalLicenseName",
+                      e.target.value
+                    )
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                <Input
+                  name={`cvProfessionalLicenseNumber_${index}`}
+                  type="text"
+                  label="License Number"
+                  placeholder="Please Enter Data"
+                  labelPlacement="outside"
+                  size="lg"
+                  variant="bordered"
+                  value={license.cvProfessionalLicenseNumber || ""}
+                  onChange={(e) =>
+                    handleLicenseChange(
+                      index,
+                      "cvProfessionalLicenseNumber",
+                      e.target.value
+                    )
+                  }
+                />
+              </div>
+            </div>
+            <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                <Input
+                  name={`cvProfessionalLicenseStartDate_${index}`}
+                  type="number"
+                  label="Start Year"
+                  placeholder="Please Enter Data"
+                  labelPlacement="outside"
+                  size="lg"
+                  variant="bordered"
+                  min="1900"
+                  max={new Date().getFullYear()}
+                  value={license.cvProfessionalLicenseStartDate || ""}
+                  onChange={(e) =>
+                    handleLicenseChange(
+                      index,
+                      "cvProfessionalLicenseStartDate",
+                      e.target.value
+                    )
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                <Input
+                  name={`cvProfessionalLicenseEndDate_${index}`}
+                  type="number"
+                  label="End Year"
+                  placeholder="Please Enter Data"
+                  labelPlacement="outside"
+                  size="lg"
+                  variant="bordered"
+                  min="1900"
+                  max={new Date().getFullYear()}
+                  value={license.cvProfessionalLicenseEndDate || ""}
+                  onChange={(e) =>
+                    handleLicenseChange(
+                      index,
+                      "cvProfessionalLicenseEndDate",
+                      e.target.value
+                    )
+                  }
+                />
+              </div>
+            </div>
+            <div className="flex items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <Button
+                size="md"
+                color="danger"
+                startContent={<Cancel />}
+                onPress={() => removeLicenseEntry(index)}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        ))}
+        <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Button
+            size="md"
+            color="warning"
+            onPress={addNewLicenseEntry}
+            startContent={<Database />}
+          >
+            Add License
           </Button>
         </div>
       </div>
