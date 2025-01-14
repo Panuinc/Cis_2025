@@ -503,6 +503,7 @@ model Position {
 
 model PersonalRequest {
   personalRequestId                     Int                          @id @default(autoincrement())
+  personalRequestDocumentId             String
   personalRequestAmount                 Int?
   personalRequestPositionId             Int?
   personalRequestBranchId               Int?
