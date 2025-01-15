@@ -34,6 +34,18 @@ export async function GET(request, context) {
     const personalRequest = await prisma.personalRequest.findMany({
       where: { personalRequestId: personalRequestId },
       include: {
+        PersonalRequestBranchId: {
+          select: { branchName: true },
+        },
+        PersonalRequestDivisionId: {
+          select: { divisionName: true },
+        },
+        PersonalRequestDepartmentId: {
+          select: { departmentName: true },
+        },
+        PersonalRequestPositionId: {
+          select: { positionName: true },
+        },
         PersonalRequestCreateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
