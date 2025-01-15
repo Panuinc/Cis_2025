@@ -139,14 +139,6 @@ export async function POST(request) {
       },
     });
 
-    await prisma.cv.create({
-      data: {
-        cvEmployeeId: newEmployee.employeeId,
-        cvCreateBy: 1,
-        cvCreateAt: localNow,
-      },
-    });
-
     await prisma.resume.create({
       data: {
         resumeEmployeeId: newEmployee.employeeId,
