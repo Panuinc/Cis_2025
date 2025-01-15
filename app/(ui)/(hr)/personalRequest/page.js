@@ -17,7 +17,7 @@ import {
 } from "@nextui-org/react";
 
 const personalRequestStatusColorMap = {
-  active: "success",
+  pendingmanagerapprove: "warning",
   inactive: "danger",
 };
 
@@ -72,7 +72,7 @@ export default function PersonalRequestList() {
 
         if (isUserLevel) {
           filteredData = filteredData.filter(
-            (item) => item.personalRequestStatus?.toLowerCase() === "active"
+            (item) => item.personalRequestStatus?.toLowerCase() === "pendingmanagerapprove"
           );
         }
 
