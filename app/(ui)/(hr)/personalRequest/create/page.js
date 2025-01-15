@@ -10,6 +10,7 @@ import React, {
   useEffect,
   useCallback,
   useMemo,
+  use,
 } from "react";
 
 const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
@@ -30,7 +31,7 @@ const DEFAULT_FORM_DATA = {
   personalRequestReasonEducation: "",
   personalRequestReasonEnglishSkill: "",
   personalRequestReasonComputerSkill: "",
-  
+
   personalRequestReasonOtherSkill: "",
   personalRequestReasonExperience: "",
 };
@@ -50,9 +51,145 @@ export default function PersonalRequestCreate() {
 
   const router = useRouter();
   const [errors, setErrors] = useState({});
+  const [branch, setBranch] = useState([]);
+  const [division, setDivision] = useState([]);
+  const [department, setDepartment] = useState([]);
+  const [position, setPosition] = useState([]);
   const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
 
   const formRef = useRef(null);
+
+  const fetchData = useCallback(async () => {
+    try {
+      const [branchRes, divisionRes, departmentRes, positionRes] =
+        await Promise.all([
+          fetch(`/api/hr/branch`, {
+            method: "GET",
+            headers: {
+              "secret-token": SECRET_TOKEN,
+            },
+          }),
+          fetch(`/api/hr/division`, {
+            method: "GET",
+            headers: {
+              "secret-token": SECRET_TOKEN,
+            },
+          }),
+          fetch(`/api/hr/department`, {
+            method: "GET",
+            headers: {
+              "secret-token": SECRET_TOKEN,
+            },
+          }),
+          fetch(`/api/hr/position`, {
+            method: "GET",
+            headers: {
+              "secret-token": SECRET_TOKEN,
+            },
+          }),
+        ]);
+
+      const branchData = await branchRes.json();
+      if (branchRes.ok) {
+        const activeBranch = (branchData.branch || []).filter(
+          (branch) => branch.branchStatus === "Active"
+        );
+        setBranch(activeBranch);
+      } else {
+        toast.error(branchData.error);
+      }
+
+      const divisionData = await divisionRes.json();
+      if (divisionRes.ok) {
+        const activeDivision = (divisionData.division || []).filter(
+          (division) => division.divisionStatus === "Active"
+        );
+        setDivision(activeDivision);
+      } else {
+        toast.error(divisionData.error);
+      }
+
+      const departmentData = await departmentRes.json();
+      if (departmentRes.ok) {
+        const activeDepartment = (departmentData.department || []).filter(
+          (department) => department.departmentStatus === "Active"
+        );
+        setDepartment(activeDepartment);
+      } else {
+        toast.error(departmentData.error);
+      }
+
+      const positionData = await positionRes.json();
+      if (positionRes.ok) {
+        const activePosition = (positionData.position || []).filter(
+          (position) => position.positionStatus === "Active"
+        );
+        setPosition(activePosition);
+      } else {
+        toast.error(positionData.error);
+      }
+    } catch (error) {
+      toast.error("Error fetching data");
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const filtereddivision = useMemo(() => {
+    if (!formData.employmentBranchId) return [];
+    return division.filter(
+      (division) =>
+        division.divisionStatus === "Active" &&
+        division.divisionBranchId == formData.employmentBranchId
+    );
+  }, [formData.employmentBranchId, division]);
+
+  const isbranchselected = Boolean(formData.employmentBranchId);
+
+  const filtereddepartment = useMemo(() => {
+    if (!formData.employmentBranchId && !formData.employmentDivisionId) {
+      return [];
+    }
+    return department.filter(
+      (department) =>
+        department.departmentStatus === "Active" &&
+        department.departmentBranchId == formData.employmentBranchId &&
+        department.departmentDivisionId == formData.employmentDivisionId
+    );
+  }, [formData.employmentBranchId, formData.employmentDivisionId, department]);
+
+  const isBranchAndDivisionSelected = Boolean(
+    formData.employmentBranchId && formData.employmentDivisionId
+  );
+
+  const filteredposition = useMemo(() => {
+    if (
+      !formData.employmentBranchId &&
+      !formData.employmentDivisionId &&
+      !formData.employmentDepartmentId
+    )
+      return [];
+    return position.filter(
+      (position) =>
+        position.positionStatus === "Active" &&
+        position.positionBranchId == formData.employmentBranchId &&
+        position.positionDivisionId == formData.employmentDivisionId &&
+        position.positionDepartmentId == formData.employmentDepartmentId
+    );
+  }, [
+    formData.employmentBranchId,
+    formData.employmentDivisionId,
+    formData.employmentDepartmentId,
+    position,
+  ]);
+
+  const isBranchAndDivisionAndDepartmentSelected = Boolean(
+    formData.employmentBranchId &&
+      formData.employmentDivisionId &&
+      formData.employmentDepartmentId
+  );
 
   const handleInputChange = useCallback(
     (field) => (e) => {
@@ -123,6 +260,15 @@ export default function PersonalRequestCreate() {
         onSubmit={handleSubmit}
         onClear={handleClear}
         errors={errors}
+        filtereddivision={filtereddivision}
+        filtereddepartment={filtereddepartment}
+        filteredposition={filteredposition}
+        isbranchselected={isbranchselected}
+        isBranchAndDivisionSelected={isBranchAndDivisionSelected}
+        isBranchAndDivisionAndDepartmentSelected={
+          isBranchAndDivisionAndDepartmentSelected
+        }
+        branch={branch}
         setErrors={setErrors}
         formData={formData}
         handleInputChange={handleInputChange}
