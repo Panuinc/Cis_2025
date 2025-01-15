@@ -500,26 +500,24 @@ model Position {
 }
 
 model PersonalRequest {
-  personalRequestId                     Int                          @id @default(autoincrement())
-  personalRequestDocumentId             String
-  personalRequestAmount                 Int?
-  personalRequestPositionId             Int?
-  personalRequestBranchId               Int?
-  personalRequestDesiredDate            DateTime?
-  personalRequestEmploymentType         EmploymentTypes?
-  personalRequestReasonForRequest       RequestReason?
-  personalRequestReasonGender           Gender?
-  personalRequestReasonAge              String?
-  personalRequestReasonEducation        String?
-  personalRequestReasonEnglishSkill     SkillLevel?
-  personalRequestReasonComputerSkill    SkillLevel?
-  personalRequestReasonOtherSkill       String?
-  personalRequestReasonExperience       String?
-  personalRequestStatus           PersonalRequestStatus? @default(PendingManagerApprove)
-  personalRequestSpecialRequirements    String?
-  personalRequestNote                   String?
+  personalRequestId                     Int                   @id @default(autoincrement())
+  personalRequestDocumentId             String                @db.VarChar(255)
+  personalRequestAmount                 Int
+  personalRequestPositionId             Int
+  personalRequestBranchId               Int
+  personalRequestDesiredDate            DateTime
+  personalRequestEmploymentType         EmploymentTypes
+  personalRequestReasonForRequest       RequestReason
+  personalRequestReasonGender           Gender
+  personalRequestReasonAge              String                @db.VarChar(255)
+  personalRequestReasonEducation        String                @db.VarChar(255)
+  personalRequestReasonEnglishSkill     SkillLevel
+  personalRequestReasonComputerSkill    SkillLevel
+  personalRequestReasonOtherSkill       String                @db.VarChar(255)
+  personalRequestReasonExperience       String                @db.VarChar(255)
+  personalRequestStatus                 PersonalRequestStatus @default(PendingManagerApprove)
   personalRequestCreateBy               Int
-  personalRequestCreateAt               DateTime                     @default(now()) @db.Timestamp()
+  personalRequestCreateAt               DateTime              @default(now()) @db.Timestamp()
   personalRequestUpdateBy               Int?
   personalRequestUpdateAt               DateTime?
   personalRequestReasonManagerApproveBy Int?
