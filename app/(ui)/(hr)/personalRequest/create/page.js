@@ -15,6 +15,21 @@ import React, {
 const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
 const DEFAULT_FORM_DATA = {
   personalRequestDocumentId: "",
+  personalRequestAmount: "",
+  personalRequestPositionId: "",
+  personalRequestBranchId: "",
+
+  personalRequestDesiredDate: "",
+  personalRequestEmploymentType: "",
+  personalRequestReasonForRequest: "",
+  personalRequestReasonGender: "",
+  personalRequestReasonAge: "",
+
+  personalRequestReasonEducation: "",
+  personalRequestReasonEnglishSkill: "",
+  personalRequestReasonComputerSkill: "",
+  personalRequestReasonOtherSkill: "",
+  personalRequestReasonExperience: "",
 };
 
 export default function PersonalRequestCreate() {
