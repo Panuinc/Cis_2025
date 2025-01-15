@@ -59,10 +59,15 @@ export async function POST(request) {
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
 
-    const parsedData = personalRequestPosteSchema.parse(data);
+    const parsedData = personalRequestPosteSchema.parse({
+      ...data,
+      personalRequestDesiredDate: new Date(data.personalRequestDesiredDate),
+    });
 
     const existingPersonalRequest = await prisma.personalRequest.findFirst({
-      where: { personalRequestDocumentId: parsedData.personalRequestDocumentId },
+      where: {
+        personalRequestDocumentId: parsedData.personalRequestDocumentId,
+      },
     });
 
     if (existingPersonalRequest) {
@@ -84,7 +89,10 @@ export async function POST(request) {
     });
 
     return NextResponse.json(
-      { message: "Successfully created new personalRequest", personalRequest: newPersonalRequest },
+      {
+        message: "Successfully created new personalRequest",
+        personalRequest: newPersonalRequest,
+      },
       { status: 201 }
     );
   } catch (error) {

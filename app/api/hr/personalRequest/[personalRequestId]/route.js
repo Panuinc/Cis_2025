@@ -82,6 +82,7 @@ export async function PUT(request, context) {
     const parsedData = personalRequestPutSchema.parse({
       ...data,
       personalRequestId,
+      personalRequestDesiredDate: new Date(data.personalRequestDesiredDate),
     });
 
     const localNow = getLocalNow();
