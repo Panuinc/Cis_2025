@@ -311,10 +311,10 @@ model Cv {
 model CvEducation {
   cvEducationId          Int     @id @default(autoincrement())
   cvEducationCvId        Int
-  cvEducationDegree      String?
-  cvEducationInstitution String?
-  cvEducationStartDate   String?
-  cvEducationEndDate     String?
+  cvEducationDegree      String? @db.VarChar(255)
+  cvEducationInstitution String? @db.VarChar(255)
+  cvEducationStartDate   String? @db.VarChar(255)
+  cvEducationEndDate     String? @db.VarChar(255)
 
   cv Cv @relation(fields: [cvEducationCvId], references: [cvId])
 
@@ -324,10 +324,10 @@ model CvEducation {
 model CvProfessionalLicense {
   cvProfessionalLicenseId        Int     @id @default(autoincrement())
   cvProfessionalLicenseCvId      Int
-  cvProfessionalLicenseName      String?
-  cvProfessionalLicenseNumber    String?
-  cvProfessionalLicenseStartDate String?
-  cvProfessionalLicenseEndDate   String?
+  cvProfessionalLicenseName      String? @db.VarChar(255)
+  cvProfessionalLicenseNumber    String? @db.VarChar(255)
+  cvProfessionalLicenseStartDate String? @db.VarChar(255)
+  cvProfessionalLicenseEndDate   String? @db.VarChar(255)
 
   cv Cv @relation(fields: [cvProfessionalLicenseCvId], references: [cvId])
 
@@ -337,10 +337,10 @@ model CvProfessionalLicense {
 model CvWorkHistory {
   cvWorkHistoryId          Int     @id @default(autoincrement())
   cvWorkHistoryCvId        Int
-  cvWorkHistoryCompanyName String?
-  cvWorkHistoryPosition    String?
-  cvWorkHistoryStartDate   String?
-  cvWorkHistoryEndDate     String?
+  cvWorkHistoryCompanyName String? @db.VarChar(255)
+  cvWorkHistoryPosition    String? @db.VarChar(255)
+  cvWorkHistoryStartDate   String? @db.VarChar(255)
+  cvWorkHistoryEndDate     String? @db.VarChar(255)
 
   cv Cv @relation(fields: [cvWorkHistoryCvId], references: [cvId])
 
@@ -352,8 +352,8 @@ model CvWorkHistory {
 model CvProject {
   cvProjectId            Int     @id @default(autoincrement())
   cvProjectWorkHistoryId Int
-  cvProjectName          String?
-  cvProjectDescription   String?
+  cvProjectName          String? @db.VarChar(255)
+  cvProjectDescription   String? @db.VarChar(255)
 
   cvWorkHistory CvWorkHistory @relation(fields: [cvProjectWorkHistoryId], references: [cvWorkHistoryId])
 
