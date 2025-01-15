@@ -27,14 +27,24 @@ export const personalRequestPosteSchema = z.object({
     "PersonalRequest Amount must be an integer."
   ),
 
-  personalRequestPositionId: preprocessInt(
-    "Position ID must be provided.",
-    "Position ID must be an integer."
-  ),
-
   personalRequestBranchId: preprocessInt(
     "Branch ID must be provided.",
     "Branch ID must be an integer."
+  ),
+
+  personalRequestDivisionId: preprocessInt(
+    "Division ID must be provided.",
+    "Division ID must be an integer."
+  ),
+
+  personalRequestDepartmentId: preprocessInt(
+    "Department ID must be provided.",
+    "Department ID must be an integer."
+  ),
+
+  personalRequestPositionId: preprocessInt(
+    "Position ID must be provided.",
+    "Position ID must be an integer."
   ),
 
   personalRequestDesiredDate: preprocessDate.refine(
@@ -106,14 +116,24 @@ export const personalRequestPutSchema = z.object({
     "PersonalRequest Amount must be an integer."
   ),
 
-  personalRequestPositionId: preprocessInt(
-    "Position ID must be provided.",
-    "Position ID must be an integer."
-  ),
-
   personalRequestBranchId: preprocessInt(
     "Branch ID must be provided.",
     "Branch ID must be an integer."
+  ),
+
+  personalRequestDivisionId: preprocessInt(
+    "Division ID must be provided.",
+    "Division ID must be an integer."
+  ),
+
+  personalRequestDepartmentId: preprocessInt(
+    "Department ID must be provided.",
+    "Department ID must be an integer."
+  ),
+
+  personalRequestPositionId: preprocessInt(
+    "Position ID must be provided.",
+    "Position ID must be an integer."
   ),
 
   personalRequestDesiredDate: preprocessDate.refine(

@@ -437,9 +437,10 @@ model Division {
   DivisionUpdateBy Employee? @relation("DivisionUpdateBy", fields: [divisionUpdateBy], references: [employeeId])
   DivisionBranchId Branch?   @relation("DivisionBranchId", fields: [divisionBranchId], references: [branchId])
 
-  divisionIdDepartment Department[] @relation("DepartmentDivisionId")
-  divisionIdPosition   Position[]   @relation("PositionDivisionId")
-  divisionIdEmployment Employment[] @relation("EmploymentDivisionId")
+  divisionIdDepartment      Department[]      @relation("DepartmentDivisionId")
+  divisionIdPosition        Position[]        @relation("PositionDivisionId")
+  divisionIdEmployment      Employment[]      @relation("EmploymentDivisionId")
+  divisionIdPersonalRequest PersonalRequest[] @relation("PersonalRequestDivisionId")
 
   @@index([divisionBranchId])
   @@index([divisionCreateBy])
@@ -462,8 +463,9 @@ model Department {
   DepartmentBranchId   Branch?   @relation("DepartmentBranchId", fields: [departmentBranchId], references: [branchId])
   DepartmentDivisionId Division? @relation("DepartmentDivisionId", fields: [departmentDivisionId], references: [divisionId])
 
-  departmentIdPosition   Position[]   @relation("PositionDepartmentId")
-  departmentIdEmployment Employment[] @relation("EmploymentDepartmentId")
+  departmentIdPosition        Position[]        @relation("PositionDepartmentId")
+  departmentIdEmployment      Employment[]      @relation("EmploymentDepartmentId")
+  departmentIdPersonalRequest PersonalRequest[] @relation("PersonalRequestDepartmentId")
 
   @@index([departmentBranchId])
   @@index([departmentDivisionId])
@@ -504,8 +506,10 @@ model PersonalRequest {
   personalRequestId                     Int                   @id @default(autoincrement())
   personalRequestDocumentId             String                @db.VarChar(255)
   personalRequestAmount                 Int
-  personalRequestPositionId             Int
   personalRequestBranchId               Int
+  personalRequestDivisionId             Int
+  personalRequestDepartmentId           Int
+  personalRequestPositionId             Int
   personalRequestDesiredDate            DateTime
   personalRequestEmploymentType         EmploymentTypes
   personalRequestReasonForRequest       RequestReason
@@ -534,14 +538,18 @@ model PersonalRequest {
   PersonalRequestHrApproveBy      Employee? @relation("PersonalRequestHrApproveBy", fields: [personalRequestReasonHrApproveBy], references: [employeeId])
   PersonalRequestMdApproveBy      Employee? @relation("PersonalRequestMdApproveBy", fields: [personalRequestReasonMdApproveBy], references: [employeeId])
 
-  PersonalRequestPositionId Position? @relation("PersonalRequestPositionId", fields: [personalRequestPositionId], references: [positionId])
-  PersonalRequestBranchId   Branch?   @relation("PersonalRequestBranchId", fields: [personalRequestBranchId], references: [branchId])
+  PersonalRequestBranchId     Branch?     @relation("PersonalRequestBranchId", fields: [personalRequestBranchId], references: [branchId])
+  PersonalRequestDivisionId   Division?   @relation("PersonalRequestDivisionId", fields: [personalRequestDivisionId], references: [divisionId])
+  PersonalRequestDepartmentId Department? @relation("PersonalRequestDepartmentId", fields: [personalRequestDepartmentId], references: [departmentId])
+  PersonalRequestPositionId   Position?   @relation("PersonalRequestPositionId", fields: [personalRequestPositionId], references: [positionId])
 
   @@index([personalRequestCreateBy])
   @@index([personalRequestUpdateBy])
   @@index([personalRequestReasonManagerApproveBy])
   @@index([personalRequestReasonHrApproveBy])
   @@index([personalRequestReasonMdApproveBy])
-  @@index([personalRequestPositionId])
   @@index([personalRequestBranchId])
+  @@index([personalRequestDivisionId])
+  @@index([personalRequestDepartmentId])
+  @@index([personalRequestPositionId])
 }
