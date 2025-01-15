@@ -38,11 +38,11 @@ export default function PersonalRequestList() {
     return isUserLevel
       ? [
           { name: "No.", uid: "index" },
-          { name: "PersonalRequest Name", uid: "personalRequestDocumentId" },
+          { name: "PersonalRequest Document Id", uid: "personalRequestDocumentId" },
         ]
       : [
           { name: "No.", uid: "index" },
-          { name: "PersonalRequest Name", uid: "personalRequestDocumentId" },
+          { name: "PersonalRequest Document Id", uid: "personalRequestDocumentId" },
           { name: "Create By", uid: "createdBy" },
           { name: "Create At", uid: "personalRequestCreateAt" },
           { name: "Update By", uid: "updatedBy" },
