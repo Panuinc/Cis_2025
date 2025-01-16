@@ -4,6 +4,7 @@ import {
   Document,
   Page,
   Text,
+  View,
   Image,
   StyleSheet,
   Font,
@@ -16,28 +17,43 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: 50,
+    padding: 40,
     fontFamily: "NotoSansThai",
-    fontSize: 12,
+    fontSize: 10,
   },
-
-  headerText: {
-    textAlign: "center",
-    fontSize: 16,
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 20,
   },
-  
-  image: {
-    position: "absolute",
-    top: 20,
-    left: 50,
+  headerImage: {
     width: 50,
     height: 50,
   },
-  
-  textBlock: {
+  headerText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginLeft: 20,
+    flex: 1,
+  },
+  section: {
+    marginBottom: 10,
+  },
+  textRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 5,
-    border: 1,
+  },
+  label: {
+    width: "30%",
+    fontWeight: "bold",
+  },
+  value: {
+    width: "70%",
+    borderBottom: "1px solid black",
+    paddingBottom: 2,
   },
 });
 
@@ -45,37 +61,60 @@ export async function exportPdf(item, getFullName) {
   const MyDocument = () => (
     <Document>
       <Page size="A4" style={styles.page}>
-        <Image
-          style={styles.image}
-          src="/images/company_logo/company_logo.png"
-        />
+        {/* Header Section */}
+        <View style={styles.header}>
+          <Image
+            style={styles.headerImage}
+            src="/images/company_logo/company_logo.png"
+          />
+          <Text style={styles.headerText}>
+            ใบขออัตรากำลังคน : Personnel Request
+          </Text>
+        </View>
 
-        <Text style={styles.headerText}>
-          ใบขออัตรากำลังคน : Personnel Request
-        </Text>
+        {/* Document Fields */}
+        <View style={styles.section}>
+          <View style={styles.textRow}>
+            <Text style={styles.label}>รหัสเอกสาร ID:</Text>
+            <Text style={styles.value}>
+              {item.personalRequestDocumentId || "-"}
+            </Text>
+          </View>
+          <View style={styles.textRow}>
+            <Text style={styles.label}>สถานะ:</Text>
+            <Text style={styles.value}>
+              {item.personalRequestStatus || "-"}
+            </Text>
+          </View>
+          <View style={styles.textRow}>
+            <Text style={styles.label}>สร้างโดย:</Text>
+            <Text style={styles.value}>
+              {getFullName(item.PersonalRequestCreateBy) || "-"}
+            </Text>
+          </View>
+          <View style={styles.textRow}>
+            <Text style={styles.label}>สร้างเมื่อ:</Text>
+            <Text style={styles.value}>
+              {new Date(item.personalRequestCreateAt).toLocaleString() || "-"}
+            </Text>
+          </View>
+          <View style={styles.textRow}>
+            <Text style={styles.label}>อัปเดตโดย:</Text>
+            <Text style={styles.value}>
+              {getFullName(item.PersonalRequestUpdateBy) || "-"}
+            </Text>
+          </View>
+          <View style={styles.textRow}>
+            <Text style={styles.label}>อัปเดตเมื่อ:</Text>
+            <Text style={styles.value}>
+              {item.personalRequestUpdateAt
+                ? new Date(item.personalRequestUpdateAt).toLocaleString()
+                : "-"}
+            </Text>
+          </View>
+        </View>
 
-        <Text style={styles.textBlock}>
-          รหัสเอกสาร ID: {item.personalRequestDocumentId}
-        </Text>
-        <Text style={styles.textBlock}>
-          Status: {item.personalRequestStatus}
-        </Text>
-        <Text style={styles.textBlock}>
-          Created By: {getFullName(item.PersonalRequestCreateBy) || "-"}
-        </Text>
-        <Text style={styles.textBlock}>
-          Created At:{" "}
-          {new Date(item.personalRequestCreateAt).toLocaleString() || "-"}
-        </Text>
-        <Text style={styles.textBlock}>
-          Updated By: {getFullName(item.PersonalRequestUpdateBy) || "-"}
-        </Text>
-        <Text style={styles.textBlock}>
-          Updated At:{" "}
-          {item.personalRequestUpdateAt
-            ? new Date(item.personalRequestUpdateAt).toLocaleString()
-            : "-"}
-        </Text>
+        {/* Additional Sections can be added below */}
       </Page>
     </Document>
   );

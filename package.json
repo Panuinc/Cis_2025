@@ -24,6 +24,7 @@
     "next": "^15.1.4",
     "next-auth": "^4.24.11",
     "primereact": "^10.9.1",
+    "puppeteer": "^24.1.0",
     "rate-limiter-flexible": "^5.0.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
