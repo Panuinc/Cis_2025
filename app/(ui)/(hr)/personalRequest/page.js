@@ -6,8 +6,7 @@ import { useSession } from "next-auth/react";
 import { Add, Search, Setting } from "@/components/icons/icons";
 import CommonTable from "@/components/CommonTable";
 import debounce from "lodash.debounce";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
+import { handlePreviewPDF } from "@/components/form/hr/personalRequest/FormPersonalRequestExport";
 import {
   Input,
   Button,
@@ -118,29 +117,6 @@ export default function PersonalRequestList() {
         {status || null}
       </Chip>
     );
-  }, []);
-
-  const handlePreviewPDF = useCallback((item) => {
-    const doc = new jsPDF();
-
-    doc.setFontSize(16);
-    doc.text("Personal Request Details", 10, 10);
-
-    doc.setFontSize(12);
-    let yOffset = 20;
-    doc.text(`Document ID: ${item.personalRequestDocumentId}`, 10, yOffset);
-    yOffset += 10;
-    doc.text(`Amount: ${item.personalRequestAmount}`, 10, yOffset);
-    yOffset += 10;
-    doc.text(
-      `Branch: ${item.PersonalRequestBranchId?.branchName || ""}`,
-      10,
-      yOffset
-    );
-    yOffset += 10;
-
-    const blobUrl = doc.output("bloburl");
-    window.open(blobUrl);
   }, []);
 
   const renderCell = useCallback(
