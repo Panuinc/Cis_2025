@@ -10,11 +10,31 @@ export async function exportPdf(item, getFullName) {
     const fontBytes = await fetch(fontUrl).then((res) => res.arrayBuffer());
     const thaiFont = await pdfDoc.embedFont(fontBytes);
 
+    const imageUrl = "/images/company_logo/company_logo.png";
+    const imageBytes = await fetch(imageUrl).then((res) => res.arrayBuffer());
+    const pngImage = await pdfDoc.embedPng(imageBytes);
+    const imageDims = pngImage.scale(0.5);
+
     const page = pdfDoc.addPage([600, 800]);
-    const { height } = page.getSize();
+    const { width, height } = page.getSize();
     const fontSize = 12;
     let y = height - 50;
 
+    page.drawImage(pngImage, {
+      x: 50,
+      y: height - imageDims.height - 20,
+      width: imageDims.width,
+      height: imageDims.height,
+    });
+
+    page.drawText("ใบขออัตรากำลังคน : Personnel Request", {
+      x: width / 2 - 120,
+      y: height - 40 - imageDims.height,
+      size: 16,
+      font: thaiFont,
+    });
+
+    
     page.drawText(`รหัสเอกสาร ID: ${item.personalRequestDocumentId}`, {
       x: 50,
       y,
