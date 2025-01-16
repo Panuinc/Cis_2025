@@ -17,7 +17,7 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: 40,
+    padding: 20,
     fontFamily: "NotoSansThai",
     fontSize: 10,
   },
@@ -46,12 +46,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 5,
   },
+  textCol: {
+    flexDirection: "col",
+    justifyContent: "space-between",
+    marginBottom: 5,
+  },
   label: {
-    width: "30%",
+    width: "100%",
     fontWeight: "bold",
   },
   value: {
-    width: "70%",
+    width: "100%",
     borderBottom: "1px solid black",
     paddingBottom: 2,
   },
@@ -61,7 +66,6 @@ export async function exportPdf(item, getFullName) {
   const MyDocument = () => (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* Header Section */}
         <View style={styles.header}>
           <Image
             style={styles.headerImage}
@@ -72,49 +76,157 @@ export async function exportPdf(item, getFullName) {
           </Text>
         </View>
 
-        {/* Document Fields */}
         <View style={styles.section}>
+
           <View style={styles.textRow}>
-            <Text style={styles.label}>รหัสเอกสาร ID:</Text>
+            <Text style={styles.label}>ด้วยข้าพเจ้า นาย / นาง / นางสาว:</Text>
+            <Text style={styles.value}>{getFullName(item.PersonalRequestCreateBy) || "-"}</Text>
+
+            <Text style={styles.label}>ตำแหน่ง:</Text>
+             <Text style={styles.value}>
+                {item.PersonalRequestCreateBy
+                ?.employeeEmployment?.[0]?.EmploymentPositionId?.positionName || "-"}
+            </Text>      
+        </View>
+
+          <View style={styles.textRow}>
+            <Text style={styles.label}>แผนก:</Text>
             <Text style={styles.value}>
-              {item.personalRequestDocumentId || "-"}
+                {item.PersonalRequestCreateBy
+                ?.employeeEmployment?.[0]?.EmploymentDepartmentId?.departmentName || "-"}
             </Text>
+            <Text style={styles.label}>มีความประสงค์ ขออัตรากำลังคนจำนวน :</Text>
+            <Text style={styles.value}>{item.personalRequestAmount || "-"}</Text>
+            <Text style={styles.label}>อัตรา</Text>
           </View>
+
           <View style={styles.textRow}>
-            <Text style={styles.label}>สถานะ:</Text>
-            <Text style={styles.value}>
-              {item.personalRequestStatus || "-"}
-            </Text>
+            <Text style={styles.label}>ในตำแหน่ง:</Text>
+            <Text style={styles.value}>{item.PersonalRequestPositionId.positionName || "-"}</Text>
+
+            <Text style={styles.label}>ประจำสาขา:</Text>
+            <Text style={styles.value}>{item.PersonalRequestBranchId.branchName || "-"}</Text>
+
+            <Text style={styles.label}>วันที่ต้องการ :</Text>
+            <Text style={styles.value}>{item.personalRequestDesiredDate || "-"}</Text>
           </View>
+
           <View style={styles.textRow}>
-            <Text style={styles.label}>สร้างโดย:</Text>
-            <Text style={styles.value}>
-              {getFullName(item.PersonalRequestCreateBy) || "-"}
-            </Text>
+            <Text style={styles.label}>ประเภทพนักงาน:</Text>
+            <Text style={styles.value}>{item.personalRequestEmploymentType || "-"}</Text>
+
+            <Text style={styles.label}>เหตุผลในการขอรับ:</Text>
+            <Text style={styles.value}>{item.personalRequestReasonForRequest || "-"}</Text>
           </View>
+
           <View style={styles.textRow}>
-            <Text style={styles.label}>สร้างเมื่อ:</Text>
-            <Text style={styles.value}>
-              {new Date(item.personalRequestCreateAt).toLocaleString() || "-"}
-            </Text>
+            <Text style={styles.label}>คุณสมบัติ:</Text>
           </View>
+
           <View style={styles.textRow}>
-            <Text style={styles.label}>อัปเดตโดย:</Text>
-            <Text style={styles.value}>
-              {getFullName(item.PersonalRequestUpdateBy) || "-"}
-            </Text>
+            <Text style={styles.label}>1.เพศ:</Text>
+            <Text style={styles.value}>{item.personalRequestReasonGender || "-"}</Text>
+
+            <Text style={styles.label}>2.อายุ:</Text>
+            <Text style={styles.value}>{item.personalRequestReasonAge || "-"}</Text>
+
+            <Text style={styles.label}>3.วุฒิการศึกษา:</Text>
+            <Text style={styles.value}>{item.personalRequestReasonEducation || "-"}</Text>
           </View>
+
           <View style={styles.textRow}>
-            <Text style={styles.label}>อัปเดตเมื่อ:</Text>
-            <Text style={styles.value}>
-              {item.personalRequestUpdateAt
-                ? new Date(item.personalRequestUpdateAt).toLocaleString()
-                : "-"}
-            </Text>
+            <Text style={styles.label}>4.ความสามารถทางภาษาอังกฤษ:</Text>
+            <Text style={styles.value}>{item.personalRequestReasonEnglishSkill || "-"}</Text>
+          </View>
+
+          <View style={styles.textRow}>
+            <Text style={styles.label}>5.ความสามารถด้านคอมพิวเตอร์:</Text>
+            <Text style={styles.value}>{item.personalRequestReasonComputerSkill || "-"}</Text>
+          </View>
+
+          <View style={styles.textRow}>
+            <Text style={styles.label}>6.ความสามารถพิเศษอื่นๆ:</Text>
+            <Text style={styles.value}>{item.personalRequestReasonOtherSkill || "-"}</Text>
+          </View>
+
+          <View style={styles.textRow}>
+            <Text style={styles.label}>7.ความรู้ ความชำนาญ หรือประสบการณ์ที่ต้องการ:</Text>
+            <Text style={styles.value}>{item.personalRequestReasonExperience || "-"}</Text>
+          </View>
+
+          <View style={styles.textRow}>
+            <Text style={styles.label}>8.ลักษณะงาน และหน้าที่ความรับผิดชอบ  ( แนบใบกำหนดลักษณะงาน   Job  Description FM-HR3-01 ):</Text>
+          </View>
+
+          <View style={styles.textRow}>
+            <View style={styles.textCol}>
+                <View style={styles.textRow}>
+                    <Text style={styles.label}>ลงชื่อ:</Text>
+                    <Text style={styles.value}>{getFullName(item.PersonalRequestCreateBy) || "-"}</Text>
+                    <Text style={styles.label}>ผู้ขอเสนอ:</Text>
+                </View>
+                <View style={styles.textRow}>
+                    <Text style={styles.label}>(ผู้จัดการแผนก /ฝ่าย /หัวหน้างาน)</Text>
+                </View>
+                <View style={styles.textRow}>
+                    <Text style={styles.label}>วันที่</Text>
+                    <Text style={styles.value}> {new Date(item.personalRequestCreateAt).toLocaleDateString() || "-"}</Text>
+                </View>
+            </View>
+
+            <View style={styles.textCol}>
+                <View style={styles.textRow}>
+                    <Text style={styles.label}>ลงชื่อ:</Text>
+                    <Text style={styles.value}>{getFullName(item.PersonalRequestCreateBy) || "-"}</Text>
+                    <Text style={styles.label}>รับทราบ:</Text>
+                </View>
+                <View style={styles.textRow}>
+                    <Text style={styles.label}>(ผู้ช่วยผู้จัดการ / ผู้จัดการ)</Text>
+                </View>
+                <View style={styles.textRow}>
+                    <Text style={styles.label}>วันที่</Text>
+                    <Text style={styles.value}> {new Date(item.personalRequestCreateAt).toLocaleDateString() || "-"}</Text>
+                </View>
+            </View>
+          </View>
+
+          <View style={styles.textRow}>
+            <View style={styles.textCol}>
+                <View style={styles.textRow}>
+                    <Text style={styles.label}>ลงชื่อ:</Text>
+                    <Text style={styles.value}>{getFullName(item.PersonalRequestCreateBy) || "-"}</Text>
+                    <Text style={styles.label}>รับทราบ:</Text>
+                </View>
+                <View style={styles.textRow}>
+                    <Text style={styles.label}>(แผนกบุคคล)</Text>
+                </View>
+                <View style={styles.textRow}>
+                    <Text style={styles.label}>วันที่</Text>
+                    <Text style={styles.value}> {new Date(item.personalRequestCreateAt).toLocaleDateString() || "-"}</Text>
+                </View>
+            </View>
+
+            <View style={styles.textCol}>
+                <View style={styles.textRow}>
+                    <Text style={styles.label}>ลงชื่อ:</Text>
+                    <Text style={styles.value}>{getFullName(item.PersonalRequestCreateBy) || "-"}</Text>
+                    <Text style={styles.label}>รับทราบ:</Text>
+                </View>
+                <View style={styles.textRow}>
+                    <Text style={styles.label}>(รองกรรมการผู้จัดการ)</Text>
+                </View>
+                <View style={styles.textRow}>
+                    <Text style={styles.label}>วันที่</Text>
+                    <Text style={styles.value}> {new Date(item.personalRequestCreateAt).toLocaleDateString() || "-"}</Text>
+                </View>
+            </View>
+          </View>
+
+          <View style={styles.textRow}>
+            <Text style={styles.label}>FM01-WP-HR1-01 / Rev.00 / 24-02-64</Text>
           </View>
         </View>
 
-        {/* Additional Sections can be added below */}
       </Page>
     </Document>
   );

@@ -48,6 +48,17 @@ export async function GET(request, context) {
         },
         PersonalRequestCreateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
+          select: {
+            employeeFirstname: true,
+            employeeLastname: true,
+            employeeEmployment: {
+              select: {
+                EmploymentPositionId: { select: { positionName: true } },
+                EmploymentDepartmentId: { select: { departmentName: true } },
+              },
+              take: 1,
+            },
+          },
         },
         PersonalRequestUpdateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
