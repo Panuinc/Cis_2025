@@ -411,24 +411,8 @@ export default function FormPersonalRequest({
         </div>
       </div>
 
-      {/* // */}
-      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <Input
-            name="personalRequestAmount"
-            type="text"
-            label="PersonalRequest Name"
-            placeholder="Please Enter Data"
-            labelPlacement="outside"
-            size="lg"
-            variant="bordered"
-            value={formData.personalRequestAmount || ""}
-            onChange={handleInputChange("personalRequestAmount")}
-            isInvalid={!!errors.personalRequestAmount}
-            errorMessage={errors.personalRequestAmount}
-          />
-        </div>
-        {isUpdate && (
+      {isUpdate && (
+        <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
             <Select
               name="personalRequestStatus"
@@ -451,8 +435,9 @@ export default function FormPersonalRequest({
               </SelectItem>
             </Select>
           </div>
-        )}
-      </div>
+        </div>
+      )}
+
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
@@ -468,6 +453,7 @@ export default function FormPersonalRequest({
           />
         </div>
       </div>
+      
       <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Button
@@ -491,7 +477,6 @@ export default function FormPersonalRequest({
           </Button>
         </div>
       </div>
-      {/* // */}
     </form>
   );
 }
