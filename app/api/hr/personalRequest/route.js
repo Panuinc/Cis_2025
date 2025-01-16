@@ -76,27 +76,35 @@ export async function POST(request) {
       personalRequestDesiredDate: new Date(data.personalRequestDesiredDate),
     });
 
-    const existingPersonalRequest = await prisma.personalRequest.findFirst({
+    const localNow = getLocalNow();
+    const day = String(localNow.getDate()).padStart(2, "0");
+    const month = String(localNow.getMonth() + 1).padStart(2, "0");
+    const year = localNow.getFullYear();
+    const formattedDate = `${day}/${month}/${year}`;
+
+    const startOfMonth = new Date(year, localNow.getMonth(), 1);
+    const endOfMonth = new Date(year, localNow.getMonth() + 1, 1);
+
+    const countThisMonth = await prisma.personalRequest.count({
       where: {
-        personalRequestDocumentId: parsedData.personalRequestDocumentId,
+        personalRequestCreateAt: {
+          gte: startOfMonth,
+          lt: endOfMonth,
+        },
       },
     });
 
-    if (existingPersonalRequest) {
-      return NextResponse.json(
-        {
-          error: `PersonalRequest with name '${parsedData.personalRequestDocumentId}' already exists.`,
-        },
-        { status: 400 }
-      );
-    }
+    const sequenceNumber = String(countThisMonth + 1).padStart(2, "0");
+    const newDocumentId = `PR-${formattedDate}-${sequenceNumber}`;
 
-    const localNow = getLocalNow();
+    parsedData.personalRequestDocumentId = newDocumentId;
+
+    const localNowTimestamp = getLocalNow();
 
     const newPersonalRequest = await prisma.personalRequest.create({
       data: {
         ...parsedData,
-        personalRequestCreateAt: localNow,
+        personalRequestCreateAt: localNowTimestamp,
       },
     });
 

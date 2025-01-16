@@ -20,7 +20,7 @@ export const personalRequestPosteSchema = z.object({
   personalRequestDocumentId: preprocessString(
     "Please Enter PersonalRequest Name",
     "Please Enter PersonalRequest Name"
-  ).optional,
+  ).optional(),
 
   personalRequestAmount: preprocessInt(
     "PersonalRequest Amount must be provided.",
@@ -69,9 +69,9 @@ export const personalRequestPosteSchema = z.object({
     "PersonalRequest Gender must be either 'Male', 'FeMale'."
   ),
 
-  personalRequestReasonAge: preprocessInt(
-    "Reason Age must be provided.",
-    "Reason Age must be an integer."
+  personalRequestReasonAge: preprocessString(
+    "Please Enter Age",
+    "Please Enter Age"
   ),
 
   personalRequestReasonEducation: preprocessString(
@@ -158,9 +158,9 @@ export const personalRequestPutSchema = z.object({
     "PersonalRequest Gender must be either 'Male', 'FeMale'."
   ),
 
-  personalRequestReasonAge: preprocessInt(
-    "Reason Age must be provided.",
-    "Reason Age must be an integer."
+  personalRequestReasonAge: preprocessString(
+    "Please Enter Age",
+    "Please Enter Age"
   ),
 
   personalRequestReasonEducation: preprocessString(

@@ -148,57 +148,57 @@ export default function PersonalRequestCreate() {
   }, [fetchData]);
 
   const filtereddivision = useMemo(() => {
-    if (!formData.employmentBranchId) return [];
+    if (!formData.personalRequestBranchId) return [];
     return division.filter(
       (division) =>
         division.divisionStatus === "Active" &&
-        division.divisionBranchId == formData.employmentBranchId
+        division.divisionBranchId == formData.personalRequestBranchId
     );
-  }, [formData.employmentBranchId, division]);
+  }, [formData.personalRequestBranchId, division]);
 
-  const isbranchselected = Boolean(formData.employmentBranchId);
+  const isbranchselected = Boolean(formData.personalRequestBranchId);
 
   const filtereddepartment = useMemo(() => {
-    if (!formData.employmentBranchId && !formData.employmentDivisionId) {
+    if (!formData.personalRequestBranchId && !formData.personalRequestDivisionId) {
       return [];
     }
     return department.filter(
       (department) =>
         department.departmentStatus === "Active" &&
-        department.departmentBranchId == formData.employmentBranchId &&
-        department.departmentDivisionId == formData.employmentDivisionId
+        department.departmentBranchId == formData.personalRequestBranchId &&
+        department.departmentDivisionId == formData.personalRequestDivisionId
     );
-  }, [formData.employmentBranchId, formData.employmentDivisionId, department]);
+  }, [formData.personalRequestBranchId, formData.personalRequestDivisionId, department]);
 
   const isBranchAndDivisionSelected = Boolean(
-    formData.employmentBranchId && formData.employmentDivisionId
+    formData.personalRequestBranchId && formData.personalRequestDivisionId
   );
 
   const filteredposition = useMemo(() => {
     if (
-      !formData.employmentBranchId &&
-      !formData.employmentDivisionId &&
-      !formData.employmentDepartmentId
+      !formData.personalRequestBranchId &&
+      !formData.personalRequestDivisionId &&
+      !formData.personalRequestDepartmentId
     )
       return [];
     return position.filter(
       (position) =>
         position.positionStatus === "Active" &&
-        position.positionBranchId == formData.employmentBranchId &&
-        position.positionDivisionId == formData.employmentDivisionId &&
-        position.positionDepartmentId == formData.employmentDepartmentId
+        position.positionBranchId == formData.personalRequestBranchId &&
+        position.positionDivisionId == formData.personalRequestDivisionId &&
+        position.positionDepartmentId == formData.personalRequestDepartmentId
     );
   }, [
-    formData.employmentBranchId,
-    formData.employmentDivisionId,
-    formData.employmentDepartmentId,
+    formData.personalRequestBranchId,
+    formData.personalRequestDivisionId,
+    formData.personalRequestDepartmentId,
     position,
   ]);
 
   const isBranchAndDivisionAndDepartmentSelected = Boolean(
-    formData.employmentBranchId &&
-      formData.employmentDivisionId &&
-      formData.employmentDepartmentId
+    formData.personalRequestBranchId &&
+      formData.personalRequestDivisionId &&
+      formData.personalRequestDepartmentId
   );
 
   const handleInputChange = useCallback(
