@@ -97,6 +97,43 @@ export default function PersonalRequestList() {
     fetchPersonalRequest();
   }, [isUserLevel]);
 
+  // const handleExport = useCallback(async (personalRequestId) => {
+  //   try {
+  //     const response = await fetch(
+  //       `/api/hr/personalRequest/Export/${personalRequestId}`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
+  //         },
+  //       }
+  //     );
+  
+  //     if (!response.ok) {
+  //       const errorText = await response.text();
+  //       console.error("Export failed with status:", response.status, errorText);
+  //       throw new Error("Failed to export PDF");
+  //     }
+  
+  //     const blob = await response.blob();
+  
+  //     // สร้าง URL จาก blob
+  //     const blobURL = window.URL.createObjectURL(blob);
+  //     // เปิด PDF ในแท็บใหม่เพื่อแสดงผล
+  //     window.open(blobURL);
+      
+  //     // หากต้องการให้ไฟล์ดาวน์โหลดทันทีแทนการแสดงผล สามารถทำได้โดย:
+  //     // const link = document.createElement('a');
+  //     // link.href = blobURL;
+  //     // link.download = `personal_request_${personalRequestId}.pdf`;
+  //     // link.click();
+  //     // URL.revokeObjectURL(blobURL); // ล้าง URL หลังใช้เสร็จ
+  
+  //   } catch (error) {
+  //     console.error("Export PDF error:", error);
+  //   }
+  // }, []);
+
   const getFullName = useCallback((user) => {
     if (!user) return null;
     const { employeeFirstname, employeeLastname } = user;

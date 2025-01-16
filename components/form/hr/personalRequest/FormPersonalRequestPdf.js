@@ -125,6 +125,6 @@ export async function exportPdf(item, getFullName) {
     window.open(url, "_blank");
   } catch (error) {
     console.error("Error exporting PDF:", error);
-    alert("เกิดข้อผิดพลาดในการสร้าง PDF");
+    alert("Error exporting PDF");
   }
 }
