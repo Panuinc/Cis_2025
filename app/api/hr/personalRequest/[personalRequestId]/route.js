@@ -55,6 +55,7 @@ export async function GET(request, context) {
               select: {
                 EmploymentPositionId: { select: { positionName: true } },
                 EmploymentDepartmentId: { select: { departmentName: true } },
+                employmentSignature: true,
               },
               take: 1,
             },

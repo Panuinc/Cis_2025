@@ -31,6 +31,11 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
   },
+   signatureImage: {
+      width: 100,
+       height: 50,
+       marginTop: 10,
+     },
   headerText: {
     fontSize: 16,
     fontWeight: "bold",
@@ -162,7 +167,13 @@ export async function exportPdf(item, getFullName) {
             <View style={styles.textCol}>
                 <View style={styles.textRow}>
                     <Text style={styles.label}>ลงชื่อ:</Text>
-                    <Text style={styles.value}>{getFullName(item.PersonalRequestCreateBy) || "-"}</Text>
+                    <Image
+                        style={styles.signatureImage}
+                        src={
+                            item.PersonalRequestCreateBy?.employeeEmployment?.[0]?.employmentSignature
+                            || "/default_signature.png" 
+                        }
+                    />
                     <Text style={styles.label}>ผู้ขอเสนอ:</Text>
                 </View>
                 <View style={styles.textRow}>
