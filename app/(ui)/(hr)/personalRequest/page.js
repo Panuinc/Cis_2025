@@ -191,7 +191,7 @@ export default function PersonalRequestList() {
                   <DropdownItem
                     key="export"
                     variant="flat"
-                    color="primary"
+                    color="warning"
                     onPress={() => exportPdf(item, getFullName)}
                   >
                     Export PDF
