@@ -49,6 +49,16 @@ export default function PersonalRequestCreate() {
     [userData]
   );
 
+  const amPosition = useMemo(
+    () => `${userData?.positionName || ""}`,
+    [userData]
+  );
+
+  const amDepartment = useMemo(
+    () => `${userData?.departmentName || ""}`,
+    [userData]
+  );
+
   const router = useRouter();
   const [errors, setErrors] = useState({});
   const [branch, setBranch] = useState([]);
@@ -273,6 +283,8 @@ export default function PersonalRequestCreate() {
         formData={formData}
         handleInputChange={handleInputChange}
         operatedBy={operatedBy}
+        amPosition={amPosition}
+        amDepartment={amDepartment}
       />
     </>
   );
