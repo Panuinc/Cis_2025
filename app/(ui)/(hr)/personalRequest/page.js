@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { Add, Search, Setting } from "@/components/icons/icons";
 import CommonTable from "@/components/CommonTable";
 import debounce from "lodash.debounce";
+import { exportPdf } from "@/components/form/hr/personalRequest/FormPersonalRequestPdf";
 import {
   Input,
   Button,
@@ -149,6 +150,14 @@ export default function PersonalRequestList() {
                     <Link href={`/personalRequest/${item.personalRequestId}`}>
                       Update
                     </Link>
+                  </DropdownItem>
+                  <DropdownItem
+                    key="export"
+                    variant="flat"
+                    color="primary"
+                    onPress={() => exportPdf(item, getFullName)}
+                  >
+                    Export PDF
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
