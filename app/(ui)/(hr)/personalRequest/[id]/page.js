@@ -256,7 +256,7 @@ export default function PersonalRequestUpdate({ params: paramsPromise }) {
 
       try {
         const res = await fetch(
-          `/api/hr/personalRequest/${personalRequestId}`,
+          `/api/hr/personalRequest/${personalRequestId}?action=update`,
           {
             method: "PUT",
             body: formDataObject,

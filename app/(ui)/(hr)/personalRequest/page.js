@@ -18,7 +18,7 @@ import {
 
 const personalRequestStatusColorMap = {
   pendingmanagerapprove: "warning",
-  inactive: "danger",
+  cancel: "danger",
 };
 
 export default function PersonalRequestList() {
