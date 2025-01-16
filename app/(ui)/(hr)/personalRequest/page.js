@@ -6,6 +6,8 @@ import { useSession } from "next-auth/react";
 import { Add, Search, Setting } from "@/components/icons/icons";
 import CommonTable from "@/components/CommonTable";
 import debounce from "lodash.debounce";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 import {
   Input,
   Button,
@@ -25,12 +27,13 @@ export default function PersonalRequestList() {
   const { data: session } = useSession();
   const userData = session?.user || {};
   const isUserLevel = userData?.employee?.employeeLevel === "User";
-  
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [personalRequest, setPersonalRequest] = useState([]);
 
-  const [filterPersonalRequestValue, setFilterPersonalRequestValue] = useState("");
+  const [filterPersonalRequestValue, setFilterPersonalRequestValue] =
+    useState("");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -38,11 +41,17 @@ export default function PersonalRequestList() {
     return isUserLevel
       ? [
           { name: "No.", uid: "index" },
-          { name: "PersonalRequest Document Id", uid: "personalRequestDocumentId" },
+          {
+            name: "PersonalRequest Document Id",
+            uid: "personalRequestDocumentId",
+          },
         ]
       : [
           { name: "No.", uid: "index" },
-          { name: "PersonalRequest Document Id", uid: "personalRequestDocumentId" },
+          {
+            name: "PersonalRequest Document Id",
+            uid: "personalRequestDocumentId",
+          },
           { name: "Create By", uid: "createdBy" },
           { name: "Create At", uid: "personalRequestCreateAt" },
           { name: "Update By", uid: "updatedBy" },
@@ -72,7 +81,9 @@ export default function PersonalRequestList() {
 
         if (isUserLevel) {
           filteredData = filteredData.filter(
-            (item) => item.personalRequestStatus?.toLowerCase() === "pendingmanagerapprove"
+            (item) =>
+              item.personalRequestStatus?.toLowerCase() ===
+              "pendingmanagerapprove"
           );
         }
 
@@ -109,6 +120,29 @@ export default function PersonalRequestList() {
     );
   }, []);
 
+  const handlePreviewPDF = useCallback((item) => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(16);
+    doc.text("Personal Request Details", 10, 10);
+
+    doc.setFontSize(12);
+    let yOffset = 20;
+    doc.text(`Document ID: ${item.personalRequestDocumentId}`, 10, yOffset);
+    yOffset += 10;
+    doc.text(`Amount: ${item.personalRequestAmount}`, 10, yOffset);
+    yOffset += 10;
+    doc.text(
+      `Branch: ${item.PersonalRequestBranchId?.branchName || ""}`,
+      10,
+      yOffset
+    );
+    yOffset += 10;
+
+    const blobUrl = doc.output("bloburl");
+    window.open(blobUrl);
+  }, []);
+
   const renderCell = useCallback(
     (item, columnKey) => {
       switch (columnKey) {
@@ -137,7 +171,17 @@ export default function PersonalRequestList() {
                 </DropdownTrigger>
                 <DropdownMenu>
                   <DropdownItem key="edit" variant="flat" color="warning">
-                    <Link href={`/personalRequest/${item.personalRequestId}`}>Update</Link>
+                    <Link href={`/personalRequest/${item.personalRequestId}`}>
+                      Update
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem
+                    key="export"
+                    variant="flat"
+                    color="warning"
+                    onPress={() => handlePreviewPDF(item)}
+                  >
+                    Export PDF
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>

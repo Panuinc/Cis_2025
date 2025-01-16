@@ -16,6 +16,8 @@
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.7",
     "framer-motion": "^11.15.0",
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.4",
     "lodash.debounce": "^4.0.8",
     "moment-timezone": "^0.5.46",
     "mysql": "^2.18.1",
