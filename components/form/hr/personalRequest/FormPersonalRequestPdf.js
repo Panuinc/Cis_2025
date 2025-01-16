@@ -1,99 +1,85 @@
-import { PDFDocument } from "pdf-lib";
-import fontkit from "@pdf-lib/fontkit";
+import React from "react";
+import {
+  pdf,
+  Document,
+  Page,
+  Text,
+  Image,
+  StyleSheet,
+  Font,
+} from "@react-pdf/renderer";
+
+Font.register({
+  family: "NotoSansThai",
+  src: "/fonts/NotoSansThai-Regular.ttf",
+});
+
+const styles = StyleSheet.create({
+  page: {
+    padding: 50,
+    fontFamily: "NotoSansThai",
+    fontSize: 12,
+  },
+  headerText: {
+    textAlign: "center",
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  image: {
+    position: "absolute",
+    top: 20,
+    left: 50,
+    width: 50,
+    height: 50,
+  },
+  textBlock: {
+    marginBottom: 4,
+    border: 1,
+  },
+});
 
 export async function exportPdf(item, getFullName) {
+  const MyDocument = () => (
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <Image
+          style={styles.image}
+          src="/images/company_logo/company_logo.png"
+        />
+
+        <Text style={styles.headerText}>
+          ใบขออัตรากำลังคน : Personnel Request
+        </Text>
+
+        <Text style={styles.textBlock}>
+          รหัสเอกสาร ID: {item.personalRequestDocumentId}
+        </Text>
+        <Text style={styles.textBlock}>
+          Status: {item.personalRequestStatus}
+        </Text>
+        <Text style={styles.textBlock}>
+          Created By: {getFullName(item.PersonalRequestCreateBy) || "-"}
+        </Text>
+        <Text style={styles.textBlock}>
+          Created At:{" "}
+          {new Date(item.personalRequestCreateAt).toLocaleString() || "-"}
+        </Text>
+        <Text style={styles.textBlock}>
+          Updated By: {getFullName(item.PersonalRequestUpdateBy) || "-"}
+        </Text>
+        <Text style={styles.textBlock}>
+          Updated At:{" "}
+          {item.personalRequestUpdateAt
+            ? new Date(item.personalRequestUpdateAt).toLocaleString()
+            : "-"}
+        </Text>
+      </Page>
+    </Document>
+  );
+
   try {
-    const pdfDoc = await PDFDocument.create();
-    pdfDoc.registerFontkit(fontkit);
-
-    const fontUrl = "/fonts/NotoSansThai-Regular.ttf";
-    const fontBytes = await fetch(fontUrl).then((res) => res.arrayBuffer());
-    const thaiFont = await pdfDoc.embedFont(fontBytes);
-
-    const imageUrl = "/images/company_logo/company_logo.png";
-    const imageBytes = await fetch(imageUrl).then((res) => res.arrayBuffer());
-    const pngImage = await pdfDoc.embedPng(imageBytes);
-    const imageDims = pngImage.scale(0.5);
-
-    const page = pdfDoc.addPage([600, 800]);
-    const { width, height } = page.getSize();
-    const fontSize = 12;
-    let y = height - 50;
-
-    page.drawImage(pngImage, {
-      x: 50,
-      y: height - imageDims.height - 20,
-      width: imageDims.width,
-      height: imageDims.height,
-    });
-
-    page.drawText("ใบขออัตรากำลังคน : Personnel Request", {
-      x: width / 2 - 120,
-      y: height - 40 - imageDims.height,
-      size: 16,
-      font: thaiFont,
-    });
-
-    
-    page.drawText(`รหัสเอกสาร ID: ${item.personalRequestDocumentId}`, {
-      x: 50,
-      y,
-      size: fontSize,
-      font: thaiFont,
-    });
-    y -= 20;
-    page.drawText(`Status: ${item.personalRequestStatus}`, {
-      x: 50,
-      y,
-      size: fontSize,
-      font: thaiFont,
-    });
-    y -= 20;
-    page.drawText(
-      `Created By: ${getFullName(item.PersonalRequestCreateBy) || "-"}`,
-      {
-        x: 50,
-        y,
-        size: fontSize,
-        font: thaiFont,
-      }
-    );
-    y -= 20;
-    page.drawText(
-      `Created At: ${
-        new Date(item.personalRequestCreateAt).toLocaleString() || "-"
-      }`,
-      {
-        x: 50,
-        y,
-        size: fontSize,
-        font: thaiFont,
-      }
-    );
-    y -= 20;
-    page.drawText(
-      `Updated By: ${getFullName(item.PersonalRequestUpdateBy) || "-"}`,
-      {
-        x: 50,
-        y,
-        size: fontSize,
-        font: thaiFont,
-      }
-    );
-    y -= 20;
-    page.drawText(
-      `Updated At: ${
-        item.personalRequestUpdateAt
-          ? new Date(item.personalRequestUpdateAt).toLocaleString()
-          : "-"
-      }`,
-      { x: 50, y, size: fontSize, font: thaiFont }
-    );
-
-    const pdfBytes = await pdfDoc.save();
-    const blob = new Blob([pdfBytes], { type: "application/pdf" });
+    const blob = await pdf(<MyDocument />).toBlob();
     const url = URL.createObjectURL(blob);
-
     window.open(url, "_blank");
   } catch (error) {
     console.error("Error exporting PDF:", error);
