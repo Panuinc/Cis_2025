@@ -20,11 +20,13 @@ const styles = StyleSheet.create({
     fontFamily: "NotoSansThai",
     fontSize: 12,
   },
+
   headerText: {
     textAlign: "center",
     fontSize: 16,
     marginBottom: 20,
   },
+  
   image: {
     position: "absolute",
     top: 20,
@@ -32,8 +34,9 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
   },
+  
   textBlock: {
-    marginBottom: 4,
+    marginBottom: 5,
     border: 1,
   },
 });
