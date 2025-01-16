@@ -15,8 +15,7 @@ export const authOptions = {
         userPassword: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        const ip =
-          req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+        const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
         await checkRateLimit(ip);
 
         if (!credentials?.userUsername || !credentials?.userPassword) {
@@ -27,7 +26,20 @@ export const authOptions = {
           const user = await prisma.user.findFirst({
             where: { userUsername: credentials.userUsername },
             include: {
-              UserEmployeeBy: true,
+              UserEmployeeBy: {
+                include: {
+                  employeeEmployment: {
+                    include: {
+                      EmploymentBranchId: { select: { branchName: true } },
+                      EmploymentSiteId: { select: { siteName: true } },
+                      EmploymentRoleId: { select: { roleName: true } },
+                      EmploymentDivisionId: { select: { divisionName: true } },
+                      EmploymentDepartmentId: { select: { departmentName: true } },
+                      EmploymentPositionId: { select: { positionName: true } },
+                    },
+                  },
+                },
+              },
             },
           });
 
@@ -55,11 +67,20 @@ export const authOptions = {
             );
           }
 
+          const firstEmployment = user.UserEmployeeBy.employeeEmployment[0];
+
           return {
             userId: user.userId,
             userUsername: user.userUsername,
             userPassword: user.userPassword,
             employee: user.UserEmployeeBy,
+            employment: user.UserEmployeeBy.employeeEmployment,
+            branchName: firstEmployment?.EmploymentBranchId?.branchName,
+            siteName: firstEmployment?.EmploymentSiteId?.siteName,
+            roleName: firstEmployment?.EmploymentRoleId?.roleName,
+            divisionName: firstEmployment?.EmploymentDivisionId?.divisionName,
+            departmentName: firstEmployment?.EmploymentDepartmentId?.departmentName,
+            positionName: firstEmployment?.EmploymentPositionId?.positionName,
           };
         } catch (error) {
           throw error;
@@ -76,6 +97,13 @@ export const authOptions = {
         token.userUsername = user.userUsername;
         token.userPassword = user.userPassword;
         token.employee = user.employee;
+        token.employment = user.employment;
+        token.branchName = user.branchName;
+        token.siteName = user.siteName;
+        token.roleName = user.roleName;
+        token.divisionName = user.divisionName;
+        token.departmentName = user.departmentName;
+        token.positionName = user.positionName;
       }
       return token;
     },
@@ -85,6 +113,13 @@ export const authOptions = {
         userUsername: token.userUsername,
         userPassword: token.userPassword,
         employee: token.employee,
+        employment: token.employment,
+        branchName: token.branchName,
+        siteName: token.siteName,
+        roleName: token.roleName,
+        divisionName: token.divisionName,
+        departmentName: token.departmentName,
+        positionName: token.positionName,
       };
       return session;
     },
