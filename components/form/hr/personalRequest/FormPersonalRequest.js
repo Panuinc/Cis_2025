@@ -427,11 +427,14 @@ export default function FormPersonalRequest({
               isInvalid={!!errors.personalRequestStatus}
               errorMessage={errors.personalRequestStatus}
             >
-              <SelectItem value="InActive" key="InActive">
-                InActive
+              <SelectItem
+                value="PendingManagerApprove"
+                key="PendingManagerApprove"
+              >
+                PendingManagerApprove
               </SelectItem>
-              <SelectItem value="Active" key="Active">
-                Active
+              <SelectItem value="Cancel" key="Cancel">
+                Cancel
               </SelectItem>
             </Select>
           </div>
@@ -453,7 +456,7 @@ export default function FormPersonalRequest({
           />
         </div>
       </div>
-      
+
       <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Button

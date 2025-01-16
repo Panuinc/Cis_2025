@@ -17,6 +17,24 @@ const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
 
 const DEFAULT_FORM_DATA = {
   personalRequestDocumentId: "",
+  personalRequestAmount: "",
+  personalRequestBranchId: "",
+  personalRequestDivisionId: "",
+
+  personalRequestDepartmentId: "",
+  personalRequestPositionId: "",
+  personalRequestDesiredDate: "",
+  personalRequestEmploymentType: "",
+  personalRequestReasonForRequest: "",
+
+  personalRequestReasonGender: "",
+  personalRequestReasonAge: "",
+  personalRequestReasonEducation: "",
+  personalRequestReasonEnglishSkill: "",
+  personalRequestReasonComputerSkill: "",
+
+  personalRequestReasonOtherSkill: "",
+  personalRequestReasonExperience: "",
   personalRequestStatus: "",
 };
 
@@ -33,18 +51,62 @@ export default function PersonalRequestUpdate({ params: paramsPromise }) {
     [userData]
   );
 
+  const amPosition = useMemo(
+    () => `${userData?.positionName || ""}`,
+    [userData]
+  );
+
+  const amDepartment = useMemo(
+    () => `${userData?.departmentName || ""}`,
+    [userData]
+  );
+
   const params = use(paramsPromise);
   const personalRequestId = params.id;
 
   const router = useRouter();
   const [errors, setErrors] = useState({});
+  const [branch, setBranch] = useState([]);
+  const [division, setDivision] = useState([]);
+  const [department, setDepartment] = useState([]);
+  const [position, setPosition] = useState([]);
   const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
 
   const formRef = useRef(null);
 
   const fetchData = useCallback(async () => {
     try {
-      const [personalRequestRes] = await Promise.all([
+      const [
+        branchRes,
+        divisionRes,
+        departmentRes,
+        positionRes,
+        personalRequestRes,
+      ] = await Promise.all([
+        fetch(`/api/hr/branch`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
+        fetch(`/api/hr/division`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
+        fetch(`/api/hr/department`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
+        fetch(`/api/hr/position`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
         fetch(`/api/hr/personalRequest/${personalRequestId}`, {
           method: "GET",
           headers: {
@@ -60,6 +122,46 @@ export default function PersonalRequestUpdate({ params: paramsPromise }) {
       } else {
         toast.error(personalRequestData.error);
       }
+
+      const branchData = await branchRes.json();
+      if (branchRes.ok) {
+        const activeBranch = (branchData.branch || []).filter(
+          (branch) => branch.branchStatus === "Active"
+        );
+        setBranch(activeBranch);
+      } else {
+        toast.error(branchData.error);
+      }
+
+      const divisionData = await divisionRes.json();
+      if (divisionRes.ok) {
+        const activeDivision = (divisionData.division || []).filter(
+          (division) => division.divisionStatus === "Active"
+        );
+        setDivision(activeDivision);
+      } else {
+        toast.error(divisionData.error);
+      }
+
+      const departmentData = await departmentRes.json();
+      if (departmentRes.ok) {
+        const activeDepartment = (departmentData.department || []).filter(
+          (department) => department.departmentStatus === "Active"
+        );
+        setDepartment(activeDepartment);
+      } else {
+        toast.error(departmentData.error);
+      }
+
+      const positionData = await positionRes.json();
+      if (positionRes.ok) {
+        const activePosition = (positionData.position || []).filter(
+          (position) => position.positionStatus === "Active"
+        );
+        setPosition(activePosition);
+      } else {
+        toast.error(positionData.error);
+      }
     } catch (error) {
       toast.error("Error fetching data");
     }
@@ -68,6 +170,67 @@ export default function PersonalRequestUpdate({ params: paramsPromise }) {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  const filtereddivision = useMemo(() => {
+    if (!formData.personalRequestBranchId) return [];
+    return division.filter(
+      (division) =>
+        division.divisionStatus === "Active" &&
+        division.divisionBranchId == formData.personalRequestBranchId
+    );
+  }, [formData.personalRequestBranchId, division]);
+
+  const isbranchselected = Boolean(formData.personalRequestBranchId);
+
+  const filtereddepartment = useMemo(() => {
+    if (
+      !formData.personalRequestBranchId &&
+      !formData.personalRequestDivisionId
+    ) {
+      return [];
+    }
+    return department.filter(
+      (department) =>
+        department.departmentStatus === "Active" &&
+        department.departmentBranchId == formData.personalRequestBranchId &&
+        department.departmentDivisionId == formData.personalRequestDivisionId
+    );
+  }, [
+    formData.personalRequestBranchId,
+    formData.personalRequestDivisionId,
+    department,
+  ]);
+
+  const isBranchAndDivisionSelected = Boolean(
+    formData.personalRequestBranchId && formData.personalRequestDivisionId
+  );
+
+  const filteredposition = useMemo(() => {
+    if (
+      !formData.personalRequestBranchId &&
+      !formData.personalRequestDivisionId &&
+      !formData.personalRequestDepartmentId
+    )
+      return [];
+    return position.filter(
+      (position) =>
+        position.positionStatus === "Active" &&
+        position.positionBranchId == formData.personalRequestBranchId &&
+        position.positionDivisionId == formData.personalRequestDivisionId &&
+        position.positionDepartmentId == formData.personalRequestDepartmentId
+    );
+  }, [
+    formData.personalRequestBranchId,
+    formData.personalRequestDivisionId,
+    formData.personalRequestDepartmentId,
+    position,
+  ]);
+
+  const isBranchAndDivisionAndDepartmentSelected = Boolean(
+    formData.personalRequestBranchId &&
+      formData.personalRequestDivisionId &&
+      formData.personalRequestDepartmentId
+  );
 
   const handleInputChange = useCallback(
     (field) => (e) => {
@@ -92,13 +255,16 @@ export default function PersonalRequestUpdate({ params: paramsPromise }) {
       formDataObject.append("personalRequestUpdateBy", userId);
 
       try {
-        const res = await fetch(`/api/hr/personalRequest/${personalRequestId}`, {
-          method: "PUT",
-          body: formDataObject,
-          headers: {
-            "secret-token": SECRET_TOKEN,
-          },
-        });
+        const res = await fetch(
+          `/api/hr/personalRequest/${personalRequestId}`,
+          {
+            method: "PUT",
+            body: formDataObject,
+            headers: {
+              "secret-token": SECRET_TOKEN,
+            },
+          }
+        );
 
         const jsonData = await res.json();
 
@@ -143,10 +309,21 @@ export default function PersonalRequestUpdate({ params: paramsPromise }) {
         onClear={handleClear}
         errors={errors}
         setErrors={setErrors}
+        filtereddivision={filtereddivision}
+        filtereddepartment={filtereddepartment}
+        filteredposition={filteredposition}
+        isbranchselected={isbranchselected}
+        isBranchAndDivisionSelected={isBranchAndDivisionSelected}
+        isBranchAndDivisionAndDepartmentSelected={
+          isBranchAndDivisionAndDepartmentSelected
+        }
+        branch={branch}
         formData={formData}
         handleInputChange={handleInputChange}
         isUpdate={true}
         operatedBy={operatedBy}
+        amPosition={amPosition}
+        amDepartment={amDepartment}
       />
     </>
   );
