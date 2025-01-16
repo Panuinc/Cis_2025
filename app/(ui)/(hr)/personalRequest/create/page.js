@@ -260,6 +260,7 @@ export default function PersonalRequestCreate() {
         onSubmit={handleSubmit}
         onClear={handleClear}
         errors={errors}
+        setErrors={setErrors}
         filtereddivision={filtereddivision}
         filtereddepartment={filtereddepartment}
         filteredposition={filteredposition}
@@ -269,7 +270,6 @@ export default function PersonalRequestCreate() {
           isBranchAndDivisionAndDepartmentSelected
         }
         branch={branch}
-        setErrors={setErrors}
         formData={formData}
         handleInputChange={handleInputChange}
         operatedBy={operatedBy}
