@@ -60,8 +60,8 @@ export async function GET(request, context) {
       <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     </head>
     <body class="font-sans p-4">
-      <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+      <div class="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
+          <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-danger border-dashed">
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
                   <img src="${
                     process.env.NEXT_PUBLIC_API_URL
@@ -72,7 +72,7 @@ export async function GET(request, context) {
                   ใบขออัตรากำลังคน : Personnel Request
               </div>
           </div>
-          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+          <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-danger border-dashed">
               <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
                   <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
                       ด้วยข้าพเจ้า นาย / นาง / นางสาว
@@ -83,7 +83,8 @@ export async function GET(request, context) {
                           ? personalRequest.PersonalRequestCreateBy
                               .employeeFirstname +
                             " " +
-                            personalRequest.PersonalRequestCreateBy.employeeLastname
+                            personalRequest.PersonalRequestCreateBy
+                              .employeeLastname
                           : "-"
                       }
                   </div>
@@ -97,7 +98,7 @@ export async function GET(request, context) {
                   </div>
               </div>
           </div>
-          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+          <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-danger border-dashed">
               <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
                   <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
                       แผนก
@@ -108,7 +109,8 @@ export async function GET(request, context) {
                           ? personalRequest.PersonalRequestCreateBy
                               .employeeFirstname +
                             " " +
-                            personalRequest.PersonalRequestCreateBy.employeeLastname
+                            personalRequest.PersonalRequestCreateBy
+                              .employeeLastname
                           : "-"
                       }
                   </div>
@@ -122,7 +124,7 @@ export async function GET(request, context) {
                   </div>
               </div>
           </div>
-          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+          <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-danger border-dashed">
               <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
                   <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
                       ในตำแหน่ง
@@ -133,7 +135,8 @@ export async function GET(request, context) {
                           ? personalRequest.PersonalRequestCreateBy
                               .employeeFirstname +
                             " " +
-                            personalRequest.PersonalRequestCreateBy.employeeLastname
+                            personalRequest.PersonalRequestCreateBy
+                              .employeeLastname
                           : "-"
                       }
                   </div>
