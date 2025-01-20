@@ -106,7 +106,7 @@ export async function GET(request, context) {
 
         <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-danger border-dashed">
           <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
               ด้วยข้าพเจ้า นาย / นาง / นางสาว
             </div>
             <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-b-2">
@@ -114,7 +114,7 @@ export async function GET(request, context) {
             </div>
           </div>
           <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
               ตำแหน่ง
             </div>
             <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-b-2">
@@ -125,21 +125,21 @@ export async function GET(request, context) {
 
         <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-danger border-dashed">
           <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
               แผนก
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-b-2">
               ${personalRequest.PersonalRequestCreateBy &&personalRequest.PersonalRequestCreateBy.employeeEmployment &&personalRequest.PersonalRequestCreateBy.employeeEmployment.length > 0 &&personalRequest.PersonalRequestCreateBy.employeeEmployment[0].EmploymentDepartmentId? personalRequest.PersonalRequestCreateBy.employeeEmployment[0].EmploymentDepartmentId.departmentName: "-"}
             </div>
           </div>
           <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
               มีความประสงค์ขออัตรากำลังคนจำนวน
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-b-2">
               ${personalRequest.personalRequestAmount || "-"}
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
               อัตตรา
             </div>
           </div>
@@ -147,26 +147,26 @@ export async function GET(request, context) {
 
         <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-danger border-dashed">
           <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
               ในตำแหน่ง
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-b-2">
               ${personalRequest.PersonalRequestPositionId.positionName || "-"}
             </div>
           </div>
           <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
               ประจำสาขา
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-b-2">
               ${personalRequest.PersonalRequestBranchId.branchName || "-"}
             </div>
           </div>
           <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
               วันที่ต้องการ
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-b-2">
               ${formattedDesiredDate}
             </div>
           </div>
@@ -174,18 +174,18 @@ export async function GET(request, context) {
 
         <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-danger border-dashed">
           <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
               ประเภทพนักงาน
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-b-2">
               ${personalRequest.personalRequestEmploymentType || "-"}
             </div>
           </div>
           <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
               เหตุผลในการขอรับ
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-b-2">
               ${personalRequest.personalRequestReasonForRequest || "-"}
             </div>
           </div>
@@ -193,7 +193,7 @@ export async function GET(request, context) {
 
         <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-danger border-dashed">
           <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
               คุณสมบัติ
             </div>
           </div>
@@ -201,26 +201,26 @@ export async function GET(request, context) {
 
         <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-danger border-dashed">
           <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
               1.เพศ
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-b-2">
               ${personalRequest.personalRequestReasonGender || "-"}
             </div>
           </div>
           <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
               2.อายุ
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-b-2">
               ${personalRequest.personalRequestReasonAge || "-"}
             </div>
           </div>
           <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
               3.วุฒิการศึกษา
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-b-2">
               ${personalRequest.personalRequestReasonEducation || "-"}
             </div>
           </div>
@@ -228,10 +228,10 @@ export async function GET(request, context) {
 
         <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-danger border-dashed">
           <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
               4.ความสามารถทางภาษาอังกฤษ
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-b-2">
               ${personalRequest.personalRequestReasonEnglishSkill || "-"}
             </div>
           </div>
@@ -239,10 +239,10 @@ export async function GET(request, context) {
 
         <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-danger border-dashed">
           <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
               5.ความสามารถทางด้านคอมพิวเตอร์
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-b-2">
               ${personalRequest.personalRequestReasonComputerSkill || "-"}
             </div>
           </div>
@@ -250,10 +250,10 @@ export async function GET(request, context) {
 
         <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-danger border-dashed">
           <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
               6.ความสามารถพิเศษอื่นๆ
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-b-2">
               ${personalRequest.personalRequestReasonOtherSkill || "-"}
             </div>
           </div>
@@ -261,10 +261,10 @@ export async function GET(request, context) {
 
         <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-danger border-dashed">
           <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
               7.ความรู้ ความชำนาญ หรือประสบการณ์ที่ต้องการ
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-b-2">
               ${personalRequest.personalRequestReasonExperience || "-"}
             </div>
           </div>
@@ -272,7 +272,7 @@ export async function GET(request, context) {
 
         <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-danger border-dashed">
           <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
               8.ลักษณะงาน และหน้าที่ความรับผิดชอบ ( แนบใบกำหนดลักษณะงาน Job Description FM-HR3-01 )
             </div>
           </div>
@@ -284,7 +284,7 @@ export async function GET(request, context) {
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
                 ลงชื่อ
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-b-2">
                 <img src="${process.env.NEXT_PUBLIC_API_URL}/images/signature/${personalRequest.PersonalRequestCreateBy &&personalRequest.PersonalRequestCreateBy.employeeEmployment &&personalRequest.PersonalRequestCreateBy.employeeEmployment.length > 0? personalRequest.PersonalRequestCreateBy.employeeEmployment[0].employmentSignature: " default_signature.png"}" class="w-20 h-20" />
               </div>
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
@@ -297,10 +297,10 @@ export async function GET(request, context) {
               </div>
             </div>
             <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex items-center justify-end w-full h-full p-2 gap-2 border-2 border-dashed">
                 วันที่
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-b-2">
                 ${formattedCreateAt}
               </div>
             </div>
@@ -310,7 +310,7 @@ export async function GET(request, context) {
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
                 ลงชื่อ
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-b-2">
                 <img src="${process.env.NEXT_PUBLIC_API_URL}/images/signature/${personalRequest.PersonalRequestCreateBy &&personalRequest.PersonalRequestCreateBy.employeeEmployment &&personalRequest.PersonalRequestCreateBy.employeeEmployment.length > 0? personalRequest.PersonalRequestCreateBy.employeeEmployment[0].employmentSignature: " default_signature.png"}" class="w-20 h-20" />
               </div>
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
@@ -323,10 +323,10 @@ export async function GET(request, context) {
               </div>
             </div>
             <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex items-center justify-end w-full h-full p-2 gap-2 border-2 border-dashed">
                 วันที่
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-b-2">
                 ${formattedCreateAt}
               </div>
             </div>
@@ -339,7 +339,7 @@ export async function GET(request, context) {
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
                 ลงชื่อ
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-b-2">
                 <img src="${process.env.NEXT_PUBLIC_API_URL}/images/signature/${personalRequest.PersonalRequestCreateBy &&personalRequest.PersonalRequestCreateBy.employeeEmployment &&personalRequest.PersonalRequestCreateBy.employeeEmployment.length > 0? personalRequest.PersonalRequestCreateBy.employeeEmployment[0].employmentSignature: " default_signature.png"}" class="w-20 h-20" />
               </div>
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
@@ -352,10 +352,10 @@ export async function GET(request, context) {
               </div>
             </div>
             <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex items-center justify-end w-full h-full p-2 gap-2 border-2 border-dashed">
                 วันที่
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-b-2">
                 ${formattedCreateAt}
               </div>
             </div>
@@ -365,7 +365,7 @@ export async function GET(request, context) {
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
                 ลงชื่อ
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-b-2">
                 <img src="${process.env.NEXT_PUBLIC_API_URL}/images/signature/${personalRequest.PersonalRequestCreateBy &&personalRequest.PersonalRequestCreateBy.employeeEmployment &&personalRequest.PersonalRequestCreateBy.employeeEmployment.length > 0? personalRequest.PersonalRequestCreateBy.employeeEmployment[0].employmentSignature: " default_signature.png"}" class="w-20 h-20" />
               </div>
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
@@ -378,10 +378,10 @@ export async function GET(request, context) {
               </div>
             </div>
             <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex items-center justify-end w-full h-full p-2 gap-2 border-2 border-dashed">
                 วันที่
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-b-2">
                 ${formattedCreateAt}
               </div>
             </div>
