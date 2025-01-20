@@ -333,83 +333,66 @@ export async function GET(request, context) {
           </div>
         </div>
 
-          <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-danger border-dashed">
-              <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                  <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                      <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                          ลงชื่อ
-                      </div>
-                      <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                          <img src="${
-                            process.env.NEXT_PUBLIC_API_URL
-                          }/images/signature/${
-            personalRequest.PersonalRequestCreateBy &&
-            personalRequest.PersonalRequestCreateBy.employeeEmployment &&
-            personalRequest.PersonalRequestCreateBy.employeeEmployment.length > 0
-              ? personalRequest.PersonalRequestCreateBy.employeeEmployment[0]
-                  .employmentSignature
-              : " default_signature.png"
-          }" class="w-20 h-20" />
-                      </div>
-                      <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                          รับทราบ
-                      </div>
-                  </div>
-                  <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                      <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                          (แผนกบุคคล)
-                      </div>
-                  </div>
-                  <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                      <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                          วันที่
-                      </div>
-                      <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                          ${formattedCreateAt}
-                      </div>
-                  </div>
+        <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-danger border-dashed">
+          <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                ลงชื่อ
               </div>
-              <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                  <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                      <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                          ลงชื่อ
-                      </div>
-                      <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                          <img src="${
-                            process.env.NEXT_PUBLIC_API_URL
-                          }/images/signature/${
-            personalRequest.PersonalRequestCreateBy &&
-            personalRequest.PersonalRequestCreateBy.employeeEmployment &&
-            personalRequest.PersonalRequestCreateBy.employeeEmployment.length > 0
-              ? personalRequest.PersonalRequestCreateBy.employeeEmployment[0]
-                  .employmentSignature
-              : " default_signature.png"
-          }" class="w-20 h-20" />
-                      </div>
-                      <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                          รับทราบ
-                      </div>
-                  </div>
-                  <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                      <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                          (รองกรรมการผู้จัดการ)
-                      </div>
-                  </div>
-                  <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                      <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                          วันที่
-                      </div>
-                      <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                          ${formattedCreateAt}
-                      </div>
-                  </div>
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                <img src="${process.env.NEXT_PUBLIC_API_URL}/images/signature/${personalRequest.PersonalRequestCreateBy &&personalRequest.PersonalRequestCreateBy.employeeEmployment &&personalRequest.PersonalRequestCreateBy.employeeEmployment.length > 0? personalRequest.PersonalRequestCreateBy.employeeEmployment[0].employmentSignature: " default_signature.png"}" class="w-20 h-20" />
               </div>
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                รับทราบ
+              </div>
+            </div>
+            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                (แผนกบุคคล)
+              </div>
+            </div>
+            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                วันที่
+              </div>
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                ${formattedCreateAt}
+              </div>
+            </div>
           </div>
-      <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+          <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                ลงชื่อ
+              </div>
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                <img src="${process.env.NEXT_PUBLIC_API_URL}/images/signature/${personalRequest.PersonalRequestCreateBy &&personalRequest.PersonalRequestCreateBy.employeeEmployment &&personalRequest.PersonalRequestCreateBy.employeeEmployment.length > 0? personalRequest.PersonalRequestCreateBy.employeeEmployment[0].employmentSignature: " default_signature.png"}" class="w-20 h-20" />
+              </div>
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                รับทราบ
+              </div>
+            </div>
+            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                (รองกรรมการผู้จัดการ)
+              </div>
+            </div>
+            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                วันที่
+              </div>
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                ${formattedCreateAt}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
           <div class="flex items-center justify-end w-full h-full p-2 gap-2 border-2 border-dashed">
-              FM01-WP-HR1-01 / Rev.00 / 24-02-64
+            FM01-WP-HR1-01 / Rev.00 / 24-02-64
           </div>
-      </div>
+        </div>
 
       </div>
     </body>
