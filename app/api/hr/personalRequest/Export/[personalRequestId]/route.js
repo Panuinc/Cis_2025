@@ -98,7 +98,7 @@ export async function GET(request, context) {
         }
       </style>
     </head>   
-     <body class="font-sans p-8">
+     <body class="font-sans p-8 text-sm">
       <div class="flex flex-col items-center justify-start w-full h-full gap-2">
         <div class="flex flex-row items-center justify-center w-full gap-2">
           <div class="flex items-center justify-center h-full gap-2">
@@ -109,7 +109,7 @@ export async function GET(request, context) {
           </div>
         </div>
 
-        <div class="flex flex-row items-center justify-center w-full gap-2">
+        <div class="flex flex-row items-center justify-center w-full gap-2 mt-10">
           <div class="flex flex-row items-center justify-center w-full h-full gap-2">
             <div class="flex items-center justify-start w-full h-full gap-2">
               ด้วยข้าพเจ้า นาย / นาง / นางสาว
@@ -279,7 +279,7 @@ export async function GET(request, context) {
             <div class="flex items-center justify-start w-full h-full gap-2">
               1.เพศ
             </div>
-            <div class="flex flex-col items-center justify-center w-full h-full gap-2">
+            <div class="flex flex-row items-center justify-center w-full h-full gap-2">
               <label class="flex items-center justify-start w-full h-full gap-2">
                 <input
                   type="checkbox"
@@ -368,7 +368,7 @@ export async function GET(request, context) {
           </div>
         </div>
 
-        <div class="flex flex-row items-center justify-center w-full gap-2">
+        <div class="flex flex-row items-center justify-center w-full gap-2 mt-20">
           <div class="flex flex-col items-center justify-center w-full h-full gap-2">
             <div class="flex flex-row items-center justify-center w-full h-full gap-2">
               <div class="flex items-center justify-center w-full h-full gap-2">
