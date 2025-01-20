@@ -35,3 +35,25 @@ body {
   color: #ffffff;
   text-shadow: none;
 }
+.shadow-one {
+  /* background: #F0F0F3; */
+  box-shadow: 
+    -10px -10px 30px #FFFFFF, 
+    10px 10px 30px rgba(174, 174, 192, 0.4);
+}
+
+.shadow-two {
+  /* background: #F0F0F3; */
+  box-shadow: 
+    -10px -10px 30px #FFFFFF, 
+    10px 10px 30px rgba(174, 174, 192, 0.4),
+    inset -10px -10px 10px rgba(174, 174, 192, 0.25),
+    inset 10px 10px 10px #FFFFFF;
+}
+
+.shadow-three {
+  /* background: #F0F0F3; */
+  box-shadow: 
+    -10px -10px 30px rgba(255, 255, 255, 0.7), 
+    10px 10px 30px rgba(174, 174, 192, 0.2);
+}

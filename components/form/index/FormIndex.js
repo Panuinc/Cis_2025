@@ -15,9 +15,9 @@ export default function FormIndex({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col items-center justify-center w-full min-h-[500px] xl:w-4/12 p-2 gap-2 border-2 border-dark border-dashed bg-white rounded-3xl shadow-md"
+      className="flex flex-col items-center justify-center w-full min-h-[500px] xl:w-4/12 p-2 gap-2 bg-white bg-opacity-50 rounded-3xl shadow-md"
     >
-      <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <div className="flex items-center justify-center w-full h-full p-2 gap-2">
         <Image
           width={100}
           height={100}
@@ -27,11 +27,11 @@ export default function FormIndex({
         />
       </div>
 
-      <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed text-lg font-[600]">
+      <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-lg font-[600]">
         Channakorn Internal System
       </div>
 
-      <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <div className="flex items-center justify-center w-full h-full p-2 gap-2">
         <Input
           type="text"
           label="Username"
@@ -46,7 +46,7 @@ export default function FormIndex({
         />
       </div>
 
-      <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <div className="flex items-center justify-center w-full h-full p-2 gap-2">
         <Input
           type="password"
           label="Password"
@@ -61,19 +61,19 @@ export default function FormIndex({
         />
       </div>
 
-      <div className="flex items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <div className="flex items-center justify-end w-full h-full p-2 gap-2">
         <Checkbox color="success" size="md" defaultSelected={false}>
           Keep me logged in
         </Checkbox>
       </div>
 
-      <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <div className="flex items-center justify-center w-full h-full p-2 gap-2">
         <Button size="lg" color="success" className="w-1/2" type="submit">
           Login
         </Button>
       </div>
 
-      <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <div className="flex items-center justify-start w-full h-full p-2 gap-2">
         If You Don&#39;t Account
         <Link href="/register" className="font-[600] text-success">
           Register
