@@ -18,8 +18,8 @@ export function formatEmployeeData(employee) {
 
 export const employeePosteSchema = z.object({
   employeeTitle: preprocessEnum(
-    ["Mr", "Ms", "Mrs"],
-    "Employee Title must be either 'Mr', 'Ms', 'Mrs'."
+    ["นาย", "นางสาว", "นาง"],
+    "Employee Title must be either 'นาย', 'นางสาว', 'นาง'."
   ),
 
   employeeFirstname: preprocessString(
@@ -65,8 +65,8 @@ export const employeePosteSchema = z.object({
   ),
 
   employeeGender: preprocessEnum(
-    ["Male", "FeMale"],
-    "Employee Gender must be either 'Male', 'FeMale'."
+    ["ชาย", "หญิง"],
+    "Employee Gender must be either 'ชาย', 'หญิง'."
   ),
 
   employeeCreateBy: preprocessInt(
@@ -81,8 +81,8 @@ export const employeePutSchema = z.object({
     "Employee ID must be an integer."
   ),
   employeeTitle: preprocessEnum(
-    ["Mr", "Ms", "Mrs"],
-    "Employee Title must be either 'Mr', 'Ms', 'Mrs'."
+    ["นาย", "นางสาว", "นาง"],
+    "Employee Title must be either 'นาย', 'นางสาว', 'นาง'."
   ),
 
   employeeFirstname: preprocessString(
@@ -128,8 +128,8 @@ export const employeePutSchema = z.object({
   ),
 
   employeeGender: preprocessEnum(
-    ["Male", "FeMale"],
-    "Employee Gender must be either 'Male', 'FeMale'."
+    ["ชาย", "หญิง"],
+    "Employee Gender must be either 'ชาย', 'หญิง'."
   ),
 
   employeeStatus: preprocessEnum(

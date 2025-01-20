@@ -43,14 +43,14 @@ export default function FormRegister({
             isInvalid={!!errors.employeeTitle}
             errorMessage={errors.employeeTitle}
           >
-            <SelectItem value="Mr" key="Mr">
-              Mr
+            <SelectItem value="นาย" key="นาย">
+              นาย
             </SelectItem>
-            <SelectItem value="Ms" key="Ms">
-              Ms
+            <SelectItem value="นาง" key="นาง">
+              นาง
             </SelectItem>
-            <SelectItem value="Mrs" key="Mrs">
-              Mrs
+            <SelectItem value="นางสาว" key="นางสาว">
+              นางสาว
             </SelectItem>
           </Select>
         </div>
@@ -205,11 +205,11 @@ export default function FormRegister({
             isInvalid={!!errors.employeeGender}
             errorMessage={errors.employeeGender}
           >
-            <SelectItem value="Male" key="Male">
-              Male
+            <SelectItem value="ชาย" key="ชาย">
+              ชาย
             </SelectItem>
-            <SelectItem value="FeMale" key="FeMale">
-              FeMale
+            <SelectItem value="หญิง" key="หญิง">
+              หญิง
             </SelectItem>
           </Select>
         </div>
