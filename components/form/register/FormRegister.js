@@ -43,14 +43,14 @@ export default function FormRegister({
             isInvalid={!!errors.employeeTitle}
             errorMessage={errors.employeeTitle}
           >
-            <SelectItem value="นาย" key="นาย">
-              นาย
+            <SelectItem value="Mr" key="Mr">
+              Mr
             </SelectItem>
-            <SelectItem value="นาง" key="นาง">
-              นาง
+            <SelectItem value="Mrs" key="Mrs">
+              Mrs
             </SelectItem>
-            <SelectItem value="นางสาว" key="นางสาว">
-              นางสาว
+            <SelectItem value="Ms" key="Ms">
+              Ms
             </SelectItem>
           </Select>
         </div>

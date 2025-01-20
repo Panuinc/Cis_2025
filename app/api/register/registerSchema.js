@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const registerSchema = z.object({
-  employeeTitle: z.enum(["นาย", "นางสาว", "นาง"], {errorMap: () => ({ message: "Employee status must be either 'นาย' or 'นางสาว' or 'นาง'" }),}),  
+  employeeTitle: z.enum(["Mr", "Ms", "Mrs"], {errorMap: () => ({ message: "Employee status must be either 'Mr' or 'Ms' or 'Mrs'" }),}),  
   employeeFirstname: z.string().min(1, { message: "Please Enter Firstname" }),
   employeeLastname: z.string().min(1, { message: "Please Enter Lastname" }),
   employeeNickname: z.string().min(1, { message: "Please Enter Nickname" }),
