@@ -47,14 +47,14 @@ export default function PersonalRequestList() {
       ? [
           { name: "No.", uid: "index" },
           {
-            name: "PersonalRequest Document Id",
+            name: "Document Id",
             uid: "personalRequestDocumentId",
           },
         ]
       : [
           { name: "No.", uid: "index" },
           {
-            name: "PersonalRequest Document Id",
+            name: "Document Id",
             uid: "personalRequestDocumentId",
           },
           { name: "Create By", uid: "createdBy" },
@@ -123,17 +123,8 @@ export default function PersonalRequestList() {
 
       const blob = await response.blob();
 
-      // สร้าง URL จาก blob
       const blobURL = window.URL.createObjectURL(blob);
-      // เปิด PDF ในแท็บใหม่เพื่อแสดงผล
       window.open(blobURL);
-
-      // หากต้องการให้ไฟล์ดาวน์โหลดทันทีแทนการแสดงผล สามารถทำได้โดย:
-      // const link = document.createElement('a');
-      // link.href = blobURL;
-      // link.download = `personal_request_${personalRequestId}.pdf`;
-      // link.click();
-      // URL.revokeObjectURL(blobURL); // ล้าง URL หลังใช้เสร็จ
     } catch (error) {
       console.error("Export PDF error:", error);
     }
