@@ -41,11 +41,11 @@ export const employmentPutSchema = z.object({
 
   employmentType: preprocessEnum(
     [
-      "รายเดือน",
-      "รายวัน",
-      "รายเดือน(พิการ)",
+      "MONTHLY_SALARY",
+      "DAILY_WAGE",
+      "MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES",
     ],
-    "Employment Title must be either 'รายเดือน', 'รายวัน', or 'รายเดือน(พิการ)'."
+    "Employment Title must be either 'MONTHLY_SALARY', 'DAILY_WAGE', or 'MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES'."
   ),
 
   employmentBranchId: preprocessInt(
@@ -101,8 +101,8 @@ export const employmentPutSchema = z.object({
   }),
 
   employmentWorkStatus: preprocessEnum(
-    ["พนักงาน", "ลาออก"],
-    "Employment Status must be either 'พนักงาน', 'ลาออก'."
+    ["CurrentEmployee", "Resign"],
+    "Employment Status must be either 'CurrentEmployee', 'Resign'."
   ),
 
   employmentUpdateBy: preprocessInt(
@@ -129,11 +129,11 @@ export const employmentPatchSchema = z.object({
 
   employmentType: preprocessEnum(
     [
-      "รายเดือน",
-      "รายวัน",
-      "รายเดือน(พิการ)",
+      "MONTHLY_SALARY",
+      "DAILY_WAGE",
+      "MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES",
     ],
-    "Employment Title must be either 'รายเดือน', 'รายวัน', or 'รายเดือน(พิการ)'."
+    "Employment Title must be either 'MONTHLY_SALARY', 'DAILY_WAGE', or 'MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES'."
   ),
 
   employmentBranchId: preprocessInt(
@@ -289,8 +289,8 @@ export const employmentPatchSchema = z.object({
   ),
 
   employmentWorkStatus: preprocessEnum(
-    ["พนักงาน", "ลาออก"],
-    "Employment Status must be either 'พนักงาน', 'ลาออก'."
+    ["CurrentEmployee", "Resign"],
+    "Employment Status must be either 'CurrentEmployee', 'Resign'."
   ),
 
   employmentUpdateBy: preprocessInt(

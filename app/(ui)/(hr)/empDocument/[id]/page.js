@@ -192,7 +192,7 @@ export default function EmpDocumentUpdate({ params: paramsPromise }) {
 
       let method = "PUT";
       if (
-        ["กัมพูชา", "ลาว", "พม่า", "เวียดนาม"].includes(
+        ["Cambodian", "Lao", "Burmese", "Vietnamese"].includes(
           formData.employeeCitizen
         )
       ) {

@@ -284,17 +284,17 @@ export async function GET(request, context) {
                 <input
                   type="checkbox"
                   class="form-checkbox h-5 w-5"
-                  ${genderValue === "ชาย" ? "checked" : ""}
+                  ${genderValue === "Male" ? "checked" : ""}
                 />
-                <span>ชาย</span>
+                <span>Male</span>
               </label>
               <label class="flex items-center justify-start w-full h-full gap-2">
                 <input
                   type="checkbox"
                   class="form-checkbox h-5 w-5"
-                  ${genderValue === "หญิง" ? "checked" : ""}
+                  ${genderValue === "FeMale" ? "checked" : ""}
                   />
-                <span>หญิง</span>
+                <span>FeMale</span>
               </label>
             </div>
           </div>

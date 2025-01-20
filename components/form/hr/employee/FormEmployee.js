@@ -155,20 +155,20 @@ export default function FormEmployee({
             isInvalid={!!errors.employeeCitizen}
             errorMessage={errors.employeeCitizen}
           >
-            <SelectItem value="ไทย" key="ไทย">
-              ไทย
+            <SelectItem value="Thai" key="Thai">
+              Thai
             </SelectItem>
-            <SelectItem value="กัมพูชา" key="กัมพูชา">
-              กัมพูชา
+            <SelectItem value="Cambodian" key="Cambodian">
+              Cambodian
             </SelectItem>
-            <SelectItem value="ลาว" key="ลาว">
-              ลาว
+            <SelectItem value="Lao" key="Lao">
+              Lao
             </SelectItem>
-            <SelectItem value="พม่า" key="พม่า">
-              พม่า
+            <SelectItem value="Burmese" key="Burmese">
+              Burmese
             </SelectItem>
-            <SelectItem value="เวียดนาม" key="เวียดนาม">
-              เวียดนาม
+            <SelectItem value="Vietnamese" key="Vietnamese">
+              Vietnamese
             </SelectItem>
           </Select>
         </div>
@@ -188,11 +188,11 @@ export default function FormEmployee({
             isInvalid={!!errors.employeeGender}
             errorMessage={errors.employeeGender}
           >
-            <SelectItem value="ชาย" key="ชาย">
-              ชาย
+            <SelectItem value="Male" key="Male">
+              Male
             </SelectItem>
-            <SelectItem value="หญิง" key="หญิง">
-              หญิง
+            <SelectItem value="FeMale" key="FeMale">
+              FeMale
             </SelectItem>
           </Select>
         </div>

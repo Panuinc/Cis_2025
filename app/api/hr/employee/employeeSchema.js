@@ -60,13 +60,13 @@ export const employeePosteSchema = z.object({
   ),
 
   employeeCitizen: preprocessEnum(
-    ["ไทย", "กัมพูชา", "ลาว", "พม่า", "เวียดนาม"],
-    "Employee Citizen must be either 'ไทย', 'กัมพูชา', 'ลาว', 'พม่า', 'เวียดนาม'."
+    ["Thai", "Cambodian", "Lao", "Burmese", "Vietnamese"],
+    "Employee Citizen must be either 'Thai', 'Cambodian', 'Lao', 'Burmese', 'Vietnamese'."
   ),
 
   employeeGender: preprocessEnum(
-    ["ชาย", "หญิง"],
-    "Employee Gender must be either 'ชาย', 'หญิง'."
+    ["Male", "FeMale"],
+    "Employee Gender must be either 'Male', 'FeMale'."
   ),
 
   employeeCreateBy: preprocessInt(
@@ -123,13 +123,13 @@ export const employeePutSchema = z.object({
   ),
 
   employeeCitizen: preprocessEnum(
-    ["ไทย", "กัมพูชา", "ลาว", "พม่า", "เวียดนาม"],
-    "Employee Citizen must be either 'ไทย', 'กัมพูชา', 'ลาว', 'พม่า', 'เวียดนาม'."
+    ["Thai", "Cambodian", "Lao", "Burmese", "Vietnamese"],
+    "Employee Citizen must be either 'Thai', 'Cambodian', 'Lao', 'Burmese', 'Vietnamese'."
   ),
 
   employeeGender: preprocessEnum(
-    ["ชาย", "หญิง"],
-    "Employee Gender must be either 'ชาย', 'หญิง'."
+    ["Male", "FeMale"],
+    "Employee Gender must be either 'Male', 'FeMale'."
   ),
 
   employeeStatus: preprocessEnum(

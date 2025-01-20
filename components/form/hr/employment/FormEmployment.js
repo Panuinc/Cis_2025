@@ -104,17 +104,17 @@ export default function FormEmployment({
             isInvalid={!!errors.employmentType}
             errorMessage={errors.employmentType}
           >
-            <SelectItem value="รายเดือน" key="รายเดือน">
-              รายเดือน
+            <SelectItem value="MONTHLY_SALARY" key="MONTHLY_SALARY">
+              MONTHLY_SALARY
             </SelectItem>
-            <SelectItem value="รายวัน" key="รายวัน">
-              รายวัน
+            <SelectItem value="DAILY_WAGE" key="DAILY_WAGE">
+              DAILY_WAGE
             </SelectItem>
             <SelectItem
-              value="รายเดือน(พิการ)"
-              key="รายเดือน(พิการ)"
+              value="MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES"
+              key="MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES"
             >
-              รายเดือน(พิการ)
+              MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES
             </SelectItem>
           </Select>
         </div>
@@ -358,7 +358,7 @@ export default function FormEmployment({
           )}
         </div>
       </div>
-      {formData.employeeCitizen && formData.employeeCitizen !== "ไทย" && (
+      {formData.employeeCitizen && formData.employeeCitizen !== "Thai" && (
         <>
           <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
             <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -387,8 +387,8 @@ export default function FormEmployment({
                 >
                   MOU นำเข้า บต.25 (เกินกำหนด)
                 </SelectItem>
-                <SelectItem value="MOU ในไทย" key="MOU ในไทย">
-                  MOU ในไทย
+                <SelectItem value="MOU ในThai" key="MOU ในThai">
+                  MOU ในThai
                 </SelectItem>
                 <SelectItem
                   value="50อ1 บัตรชมพู มติครม. 20/8/62"
@@ -702,11 +702,11 @@ export default function FormEmployment({
             isInvalid={!!errors.employmentWorkStatus}
             errorMessage={errors.employmentWorkStatus}
           >
-            <SelectItem value="พนักงาน" key="พนักงาน">
-              พนักงาน
+            <SelectItem value="CurrentEmployee" key="CurrentEmployee">
+              CurrentEmployee
             </SelectItem>
-            <SelectItem value="ลาออก" key="ลาออก">
-              ลาออก
+            <SelectItem value="Resign" key="Resign">
+              Resign
             </SelectItem>
           </Select>
         </div>

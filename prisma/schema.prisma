@@ -14,16 +14,16 @@ enum Title {
 }
 
 enum Gender {
-  Male   @map("ชาย")
-  FeMale @map("หญิง")
+  Male   @map("Male")
+  FeMale @map("FeMale")
 }
 
 enum Citizen {
-  Thai       @map("ไทย")
-  Cambodian  @map("กัมพูชา")
-  Lao        @map("ลาว")
-  Burmese    @map("พม่า")
-  Vietnamese @map("เวียดนาม")
+  Thai       @map("Thai")
+  Cambodian  @map("Cambodian")
+  Lao        @map("Lao")
+  Burmese    @map("Burmese")
+  Vietnamese @map("Vietnamese")
 }
 
 enum Level {
@@ -38,14 +38,14 @@ enum Status {
 }
 
 enum WorkStatus {
-  CurrentEmployee @map("พนักงาน")
-  Resign          @map("ลาออก")
+  CurrentEmployee @map("CurrentEmployee")
+  Resign          @map("Resign")
 }
 
 enum EmploymentType {
-  DAILY_WAGE                                   @map("รายเดือน")
-  MONTHLY_SALARY                               @map("รายวัน")
-  MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES @map("รายเดือน(พิการ)")
+  DAILY_WAGE                                   @map("DAILY_WAGE")
+  MONTHLY_SALARY                               @map("MONTHLY_SALARY")
+  MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES @map("MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES")
 }
 
 enum EmploymentTypes {
