@@ -19,7 +19,13 @@ import {
 
 const personalRequestStatusColorMap = {
   pendingmanagerapprove: "warning",
+  PendingHrApprove: "secondary",
+  PendingMdApprove: "primary",
+  ApprovedSuccess: "success",
   cancel: "danger",
+  managercancel: "danger",
+  hrcancel: "danger",
+  mdcancel: "danger",
 };
 
 export default function PersonalRequestList() {
