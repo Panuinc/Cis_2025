@@ -101,8 +101,8 @@ export const employmentPutSchema = z.object({
   }),
 
   employmentWorkStatus: preprocessEnum(
-    ["CurrentEmployee", "Resign"],
-    "Employment Status must be either 'CurrentEmployee', 'Resign'."
+    ["พนักงาน", "ลาออก"],
+    "Employment Status must be either 'พนักงาน', 'ลาออก'."
   ),
 
   employmentUpdateBy: preprocessInt(
@@ -289,8 +289,8 @@ export const employmentPatchSchema = z.object({
   ),
 
   employmentWorkStatus: preprocessEnum(
-    ["CurrentEmployee", "Resign"],
-    "Employment Status must be either 'CurrentEmployee', 'Resign'."
+    ["พนักงาน", "ลาออก"],
+    "Employment Status must be either 'พนักงาน', 'ลาออก'."
   ),
 
   employmentUpdateBy: preprocessInt(

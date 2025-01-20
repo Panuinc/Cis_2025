@@ -702,11 +702,11 @@ export default function FormEmployment({
             isInvalid={!!errors.employmentWorkStatus}
             errorMessage={errors.employmentWorkStatus}
           >
-            <SelectItem value="CurrentEmployee" key="CurrentEmployee">
-              CurrentEmployee
+            <SelectItem value="พนักงาน" key="พนักงาน">
+              พนักงาน
             </SelectItem>
-            <SelectItem value="Resign" key="Resign">
-              Resign
+            <SelectItem value="ลาออก" key="ลาออก">
+              ลาออก
             </SelectItem>
           </Select>
         </div>

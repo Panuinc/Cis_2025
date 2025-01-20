@@ -38,8 +38,8 @@ enum Status {
 }
 
 enum WorkStatus {
-  CurrentEmployee
-  Resign
+  CurrentEmployee @map("พนักงาน")
+  Resign          @map("ลาออก")
 }
 
 enum EmploymentType {
