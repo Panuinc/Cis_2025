@@ -65,8 +65,8 @@ export const personalRequestPosteSchema = z.object({
   ),
 
   personalRequestReasonGender: preprocessEnum(
-    ["ชาย", "หญิง"],
-    "PersonalRequest Gender must be either 'ชาย', 'หญิง'."
+    ["Male", "FeMale"],
+    "PersonalRequest Gender must be either 'Male', 'FeMale'."
   ),
 
   personalRequestReasonAge: preprocessString(
@@ -154,8 +154,8 @@ export const personalRequestPutSchema = z.object({
   ),
 
   personalRequestReasonGender: preprocessEnum(
-    ["ชาย", "หญิง"],
-    "PersonalRequest Gender must be either 'ชาย', 'หญิง'."
+    ["Male", "FeMale"],
+    "PersonalRequest Gender must be either 'Male', 'FeMale'."
   ),
 
   personalRequestReasonAge: preprocessString(

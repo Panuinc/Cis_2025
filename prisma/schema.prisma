@@ -8,14 +8,14 @@ datasource db {
 }
 
 enum Title {
-  MR @map("นาย")
-  MS @map("นางสาว")
-  MRS @map("นาง")
+  Mr  @map("Mr")
+  Ms  @map("Ms")
+  Mrs @map("Mrs")
 }
 
 enum Gender {
-  Male    @map("ชาย")
-  FeMale  @map("เพศหญิง")
+  Male   @map("Male")
+  FeMale @map("FeMale")
 }
 
 enum Citizen {
