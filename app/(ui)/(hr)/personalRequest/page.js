@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react";
 import { Add, Search, Setting } from "@/components/icons/icons";
 import CommonTable from "@/components/CommonTable";
 import debounce from "lodash.debounce";
-import { exportPdf } from "@/components/form/hr/personalRequest/FormPersonalRequestPdf";
 import {
   Input,
   Button,
