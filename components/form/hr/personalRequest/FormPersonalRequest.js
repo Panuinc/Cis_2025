@@ -282,11 +282,11 @@ export default function FormPersonalRequest({
             isInvalid={!!errors.personalRequestReasonGender}
             errorMessage={errors.personalRequestReasonGender}
           >
-            <SelectItem value="Male" key="Male">
-              Male
+            <SelectItem value="ชาย" key="ชาย">
+              ชาย
             </SelectItem>
-            <SelectItem value="FeMale" key="FeMale">
-              FeMale
+            <SelectItem value="หญิง" key="หญิง">
+              หญิง
             </SelectItem>
           </Select>
         </div>
