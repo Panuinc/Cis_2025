@@ -82,15 +82,7 @@ export default function PersonalRequestList() {
         }
 
         const data = await response.json();
-        let filteredData = data.personalRequest || [];
-
-        if (isUserLevel) {
-          filteredData = filteredData.filter(
-            (item) =>
-              item.personalRequestStatus?.toLowerCase() ===
-              "pendingmanagerapprove"
-          );
-        }
+        const filteredData = data.personalRequest || [];
 
         setPersonalRequest(filteredData);
       } catch (err) {
