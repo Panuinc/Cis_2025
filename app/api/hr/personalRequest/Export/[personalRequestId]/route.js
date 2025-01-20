@@ -66,7 +66,6 @@ export async function GET(request, context) {
       );
     }
 
-// จัดรูปแบบวันที่
     const formattedCreateAt = personalRequest.personalRequestCreateAt
     ? new Date(personalRequest.personalRequestCreateAt).toLocaleDateString(
         "th-TH",
@@ -81,7 +80,6 @@ export async function GET(request, context) {
       )
     : "-";
 
-    // ดึงค่าจาก DB สำหรับเพศ
     const genderValue = personalRequest.personalRequestReasonGender || "";
 
     const employmentTypeValue = personalRequest.personalRequestEmploymentType || "";
