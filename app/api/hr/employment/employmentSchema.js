@@ -41,11 +41,11 @@ export const employmentPutSchema = z.object({
 
   employmentType: preprocessEnum(
     [
-      "DAILY_WAGE",
-      "MONTHLY_SALARY",
-      "MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES",
+      "รายเดือน",
+      "รายวัน",
+      "รายเดือน(พิการ)",
     ],
-    "Employment Title must be either 'DAILY_WAGE', 'MONTHLY_SALARY', or 'MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES'."
+    "Employment Title must be either 'รายเดือน', 'รายวัน', or 'รายเดือน(พิการ)'."
   ),
 
   employmentBranchId: preprocessInt(
@@ -129,11 +129,11 @@ export const employmentPatchSchema = z.object({
 
   employmentType: preprocessEnum(
     [
-      "DAILY_WAGE",
-      "MONTHLY_SALARY",
-      "MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES",
+      "รายเดือน",
+      "รายวัน",
+      "รายเดือน(พิการ)",
     ],
-    "Employment Title must be either 'DAILY_WAGE', 'MONTHLY_SALARY', or 'MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES'."
+    "Employment Title must be either 'รายเดือน', 'รายวัน', or 'รายเดือน(พิการ)'."
   ),
 
   employmentBranchId: preprocessInt(

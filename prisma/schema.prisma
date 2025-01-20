@@ -43,9 +43,9 @@ enum WorkStatus {
 }
 
 enum EmploymentType {
-  DAILY_WAGE
-  MONTHLY_SALARY
-  MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES
+  DAILY_WAGE                                   @map("รายเดือน")
+  MONTHLY_SALARY                               @map("รายวัน")
+  MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES @map("รายเดือน(พิการ)")
 }
 
 enum EmploymentTypes {

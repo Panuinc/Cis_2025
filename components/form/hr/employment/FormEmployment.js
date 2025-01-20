@@ -104,17 +104,17 @@ export default function FormEmployment({
             isInvalid={!!errors.employmentType}
             errorMessage={errors.employmentType}
           >
-            <SelectItem value="DAILY_WAGE" key="DAILY_WAGE">
-              DAILY_WAGE
+            <SelectItem value="รายเดือน" key="รายเดือน">
+              รายเดือน
             </SelectItem>
-            <SelectItem value="MONTHLY_SALARY" key="MONTHLY_SALARY">
-              MONTHLY_SALARY
+            <SelectItem value="รายวัน" key="รายวัน">
+              รายวัน
             </SelectItem>
             <SelectItem
-              value="MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES"
-              key="MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES"
+              value="รายเดือน(พิการ)"
+              key="รายเดือน(พิการ)"
             >
-              MONTHLY_SALARY_FOR_PERSONS_WITH_DISABILITIES
+              รายเดือน(พิการ)
             </SelectItem>
           </Select>
         </div>
