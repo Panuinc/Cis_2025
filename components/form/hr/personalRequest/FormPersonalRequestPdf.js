@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   label: {
-    width: "auto",
+    width: "100%",
     fontWeight: "bold",
   },
   value: {
