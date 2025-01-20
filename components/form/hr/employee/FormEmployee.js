@@ -155,20 +155,20 @@ export default function FormEmployee({
             isInvalid={!!errors.employeeCitizen}
             errorMessage={errors.employeeCitizen}
           >
-            <SelectItem value="Thai" key="Thai">
-              Thai
+            <SelectItem value="ไทย" key="ไทย">
+              ไทย
             </SelectItem>
-            <SelectItem value="Cambodian" key="Cambodian">
-              Cambodian
+            <SelectItem value="กัมพูชา" key="กัมพูชา">
+              กัมพูชา
             </SelectItem>
-            <SelectItem value="Lao" key="Lao">
-              Lao
+            <SelectItem value="ลาว" key="ลาว">
+              ลาว
             </SelectItem>
-            <SelectItem value="Burmese" key="Burmese">
-              Burmese
+            <SelectItem value="พม่า" key="พม่า">
+              พม่า
             </SelectItem>
-            <SelectItem value="Vietnamese" key="Vietnamese">
-              Vietnamese
+            <SelectItem value="เวียดนาม" key="เวียดนาม">
+              เวียดนาม
             </SelectItem>
           </Select>
         </div>

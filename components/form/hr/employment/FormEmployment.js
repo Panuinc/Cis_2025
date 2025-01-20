@@ -358,7 +358,7 @@ export default function FormEmployment({
           )}
         </div>
       </div>
-      {formData.employeeCitizen && formData.employeeCitizen !== "Thai" && (
+      {formData.employeeCitizen && formData.employeeCitizen !== "ไทย" && (
         <>
           <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
             <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">

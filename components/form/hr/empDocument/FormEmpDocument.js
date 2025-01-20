@@ -66,7 +66,7 @@ export default function FormEmpDocument({
       className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
       encType="multipart/form-data"
     >
-      {formData.employeeCitizen && formData.employeeCitizen === "Thai" && (
+      {formData.employeeCitizen && formData.employeeCitizen === "ไทย" && (
         <>
           <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
             <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -108,7 +108,7 @@ export default function FormEmpDocument({
           </div>
         </>
       )}
-      {formData.employeeCitizen && formData.employeeCitizen !== "Thai" && (
+      {formData.employeeCitizen && formData.employeeCitizen !== "ไทย" && (
         <>
           <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
             <div className="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">

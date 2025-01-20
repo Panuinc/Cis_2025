@@ -19,11 +19,11 @@ enum Gender {
 }
 
 enum Citizen {
-  Thai
-  Cambodian
-  Lao
-  Burmese
-  Vietnamese
+  Thai       @map("ไทย")
+  Cambodian  @map("กัมพูชา")
+  Lao        @map("ลาว")
+  Burmese    @map("พม่า")
+  Vietnamese @map("เวียดนาม")
 }
 
 enum Level {
