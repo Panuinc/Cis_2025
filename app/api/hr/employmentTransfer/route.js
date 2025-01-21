@@ -41,13 +41,13 @@ export async function POST(request) {
 
     return NextResponse.json(
       {
-        message: "Employment Transfer completed successfully",
+        message: "Employment Transfer successfully",
         updatedCount: result.length,
         result,
       },
       { status: 200 }
     );
   } catch (error) {
-    return handleErrors(error, ip, "Error updating employment data in bulk");
+    return handleErrors(error, ip, "Error updating employment data");
   }
 }
