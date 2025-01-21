@@ -101,7 +101,7 @@ export default function FormEmploymentTransfer({
           color={sequentialMode ? "warning" : "primary"}
           onPress={() => setSequentialMode((prev) => !prev)}
         >
-          {sequentialMode ? "Close Sequential Mode" : "open Sequential Mode"}
+          {sequentialMode ? "Close Sequential Mode" : "Open Sequential Mode"}
         </Button>
       </div>
 
