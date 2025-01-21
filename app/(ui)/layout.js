@@ -436,6 +436,7 @@ export default function UiLayout({ children }) {
                   { label: "Position", href: "/position" },
                   { label: "Employee", href: "/employee" },
                   { label: "PersonalRequest", href: "/personalRequest" },
+                  { label: "Transfer", href: "/transfer" },
                 ]}
                 isOpen={menuState.HR}
                 onToggle={() => toggleMenu("HR")}
