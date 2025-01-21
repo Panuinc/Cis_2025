@@ -129,7 +129,6 @@ export default function FormEmploymentTransfer({
             ))}
           </Select>
         </div>
-
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Select
             name="employmentDepartmentId"
@@ -155,6 +154,9 @@ export default function FormEmploymentTransfer({
             ))}
           </Select>
         </div>
+      </div>
+
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Select
             name="employmentParentId"
@@ -178,6 +180,7 @@ export default function FormEmploymentTransfer({
           </Select>
         </div>
       </div>
+
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
@@ -193,6 +196,7 @@ export default function FormEmploymentTransfer({
           />
         </div>
       </div>
+
       <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Button
