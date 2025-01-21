@@ -29,7 +29,6 @@ export async function POST(request) {
           employmentDivisionId: item.employmentDivisionId,
           employmentDepartmentId: item.employmentDepartmentId,
           employmentParentId: item.employmentParentId,
-
           employmentUpdateBy: item.employmentUpdateBy,
           employmentUpdateAt: localNow,
         },
