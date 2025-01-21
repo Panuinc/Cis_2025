@@ -46,6 +46,12 @@ export default function EmploymentTransferPage() {
   const [selectedIds, setSelectedIds] = useState([]);
   const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
 
+  const [filterBranch, setFilterBranch] = useState("");
+  const [filterSite, setFilterSite] = useState("");
+  const [filterDivision, setFilterDivision] = useState("");
+  const [filterDepartment, setFilterDepartment] = useState("");
+  const [filterParent, setFilterParent] = useState("");
+
   const formRef = useRef(null);
 
   const fetchData = useCallback(async () => {
@@ -306,6 +312,41 @@ export default function EmploymentTransferPage() {
     setErrors({});
   }, []);
 
+  const filteredEmployees = useMemo(() => {
+    return employees.filter((emp) => {
+      const employment = emp.employeeEmployment?.[0] || {};
+      const matchBranch = filterBranch
+        ? employment.employmentBranchId === Number(filterBranch)
+        : true;
+      const matchSite = filterSite
+        ? employment.employmentSiteId === Number(filterSite)
+        : true;
+      const matchDivision = filterDivision
+        ? employment.employmentDivisionId === Number(filterDivision)
+        : true;
+      const matchDepartment = filterDepartment
+        ? employment.employmentDepartmentId === Number(filterDepartment)
+        : true;
+      const matchParent = filterParent
+        ? employment.employmentParentId === Number(filterParent)
+        : true;
+      return (
+        matchBranch &&
+        matchSite &&
+        matchDivision &&
+        matchDepartment &&
+        matchParent
+      );
+    });
+  }, [
+    employees,
+    filterBranch,
+    filterSite,
+    filterDivision,
+    filterDepartment,
+    filterParent,
+  ]);
+
   return (
     <>
       <TopicHeader topic="Employment Transfer" />
@@ -332,6 +373,18 @@ export default function EmploymentTransferPage() {
         filteredparent={filteredparent}
         isbranchselected={isbranchselected}
         isBranchAndDivisionSelected={isBranchAndDivisionSelected}
+        
+        filterBranch={filterBranch}
+        setFilterBranch={setFilterBranch}
+        filterSite={filterSite}
+        setFilterSite={setFilterSite}
+        filterDivision={filterDivision}
+        setFilterDivision={setFilterDivision}
+        filterDepartment={filterDepartment}
+        setFilterDepartment={setFilterDepartment}
+        filterParent={filterParent}
+        setFilterParent={setFilterParent}
+        filteredEmployees={filteredEmployees}
       />
     </>
   );
