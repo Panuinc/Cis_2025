@@ -28,37 +28,61 @@ export default function FormEmploymentTransfer({
       onSubmit={onSubmit}
       className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
     >
-      <table className="mb-4 border-collapse border border-gray-300 w-full">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="border p-2">Select</th>
-            <th className="border p-2">ID</th>
-            <th className="border p-2">Name</th>
-            <th className="border p-2">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {employees.map((emp) => {
-            const empId = emp.employeeId;
-            return (
-              <tr key={empId} className="border">
-                <td className="border p-2 text-center">
-                  <input
-                    type="checkbox"
-                    checked={selectedIds.includes(empId)}
-                    onChange={(e) => handleSelect(e.target.checked, empId)}
-                  />
-                </td>
-                <td className="border p-2">{empId}</td>
-                <td className="border p-2">
-                  {emp.employeeFirstname} {emp.employeeLastname}
-                </td>
-                <td className="border p-2">{emp.employeeStatus}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <div className="flex items-start justify-start w-full min-h-80 p-2 gap-2 border-2 border-dark border-dashed overflow-auto">
+        <table className="table-auto w-full h-full p-2 gap-2">
+          <thead className="bg-gray-100 p-2 gap-2">
+            <tr>
+              <th className="border-b-2 p-4">Select</th>
+              <th className="border-b-2 p-4">ID</th>
+              <th className="border-b-2 p-4">Name</th>
+              <th className="border-b-2 p-4">Branch</th>
+              <th className="border-b-2 p-4">Site</th>
+              <th className="border-b-2 p-4">Division</th>
+              <th className="border-b-2 p-4">Department</th>
+              <th className="border-b-2 p-4">Parent Name</th>
+              <th className="border-b-2 p-4">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {employees.map((emp) => {
+              const empId = emp.employeeId;
+              const employment = emp.employeeEmployment?.[0] || {};
+              const parentName = employment.EmploymentParentBy
+                ? `${employment.EmploymentParentBy.employeeFirstname} ${employment.EmploymentParentBy.employeeLastname}`
+                : "-";
+              return (
+                <tr key={empId} className="border">
+                  <td className="border-b-2 p-4 text-center">
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.includes(empId)}
+                      onChange={(e) => handleSelect(e.target.checked, empId)}
+                    />
+                  </td>
+                  <td className="border-b-2 p-4">{empId}</td>
+                  <td className="border-b-2 p-4">
+                    {emp.employeeFirstname} {emp.employeeLastname}
+                  </td>
+                  <td className="border-b-2 p-4">
+                    {employment.EmploymentBranchId?.branchName || "-"}
+                  </td>
+                  <td className="border-b-2 p-4">
+                    {employment.EmploymentSiteId?.siteName || "-"}
+                  </td>
+                  <td className="border-b-2 p-4">
+                    {employment.EmploymentDivisionId?.divisionName || "-"}
+                  </td>
+                  <td className="border-b-2 p-4">
+                    {employment.EmploymentDepartmentId?.departmentName || "-"}
+                  </td>
+                  <td className="border-b-2 p-4">{parentName}</td>
+                  <td className="border-b-2 p-4">{emp.employeeStatus}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
 
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
