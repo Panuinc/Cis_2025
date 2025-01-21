@@ -1,30 +1,45 @@
 "use client";
-
+import React from "react";
+import { Cancel, Database } from "@/components/icons/icons";
 import { Table, Button, Select, SelectItem } from "@nextui-org/react";
 
-// หรือนำเข้า tailwind หรือ library อื่น ๆ ตามเดิม
-// import "..."  
-
 export default function FormEmploymentTransfer({
-  employees,
-  selectedIds,
+  // Refs
+  formRef,
+
+  // Handlers
+  onSubmit,
+  onClear,
   handleSelect,
 
-  transferData,
-  handleTransferChange,
-  handleSubmit,
+  // States
+  errors,
+  setErrors,
+  formData,
+  setFormData,
+  selectedIds,
 
-  activeBranch,
-  activeSite,
-  activeDivision,
-  activeDepartment,
-  activeManagers,
+  // Derived data
+  filteredsite,
+  filtereddivision,
+  filtereddepartment,
+  filteredparent,
+  branch,
+  employees,
+
+  // Booleans
+  isbranchselected,
+  isBranchAndDivisionSelected,
+  isUpdate,
+
+  // Misc
+  operatedBy,
 }) {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Employment Transfer</h1>
 
-      {/* -- ตารางแสดง employees -- */}
+      {/* -- ตารางแสดง Employees ให้เลือก -- */}
       <table className="mb-4 border-collapse border border-gray-300 w-full">
         <thead className="bg-gray-100">
           <tr>
@@ -57,16 +72,19 @@ export default function FormEmploymentTransfer({
         </tbody>
       </table>
 
-      {/* -- ฟอร์มเลือก Branch, Site, Division, Department, Parent -- */}
+      {/* -- เลือก Branch, Site, Division, Department, Parent -- */}
       <div className="grid md:grid-cols-3 gap-4 mb-4">
         <Select
           label="Branch"
           placeholder="Select Branch"
-          selectedKeys={[transferData.branchId]}
-          onChange={handleTransferChange("branchId")}
+          selectedKeys={[formData.employmentBranchId]}
+          onChange={(keys) => {
+            const value = keys.anchorKey || "";
+            setFormData((prev) => ({ ...prev, employmentBranchId: value }));
+          }}
         >
-          {activeBranch.map((b) => (
-            <SelectItem key={b.branchId} value={String(b.branchId)}>
+          {branch.map((b) => (
+            <SelectItem key={String(b.branchId)} value={String(b.branchId)}>
               {b.branchName}
             </SelectItem>
           ))}
@@ -75,11 +93,14 @@ export default function FormEmploymentTransfer({
         <Select
           label="Site"
           placeholder="Select Site"
-          selectedKeys={[transferData.siteId]}
-          onChange={handleTransferChange("siteId")}
+          selectedKeys={[formData.employmentSiteId]}
+          onChange={(keys) => {
+            const value = keys.anchorKey || "";
+            setFormData((prev) => ({ ...prev, employmentSiteId: value }));
+          }}
         >
-          {activeSite.map((s) => (
-            <SelectItem key={s.siteId} value={String(s.siteId)}>
+          {filteredsite.map((s) => (
+            <SelectItem key={String(s.siteId)} value={String(s.siteId)}>
               {s.siteName}
             </SelectItem>
           ))}
@@ -88,11 +109,14 @@ export default function FormEmploymentTransfer({
         <Select
           label="Division"
           placeholder="Select Division"
-          selectedKeys={[transferData.divisionId]}
-          onChange={handleTransferChange("divisionId")}
+          selectedKeys={[formData.employmentDivisionId]}
+          onChange={(keys) => {
+            const value = keys.anchorKey || "";
+            setFormData((prev) => ({ ...prev, employmentDivisionId: value }));
+          }}
         >
-          {activeDivision.map((d) => (
-            <SelectItem key={d.divisionId} value={String(d.divisionId)}>
+          {filtereddivision.map((d) => (
+            <SelectItem key={String(d.divisionId)} value={String(d.divisionId)}>
               {d.divisionName}
             </SelectItem>
           ))}
@@ -101,11 +125,20 @@ export default function FormEmploymentTransfer({
         <Select
           label="Department"
           placeholder="Select Department"
-          selectedKeys={[transferData.departmentId]}
-          onChange={handleTransferChange("departmentId")}
+          selectedKeys={[formData.employmentDepartmentId]}
+          onChange={(keys) => {
+            const value = keys.anchorKey || "";
+            setFormData((prev) => ({
+              ...prev,
+              employmentDepartmentId: value,
+            }));
+          }}
         >
-          {activeDepartment.map((dep) => (
-            <SelectItem key={dep.departmentId} value={String(dep.departmentId)}>
+          {filtereddepartment.map((dep) => (
+            <SelectItem
+              key={String(dep.departmentId)}
+              value={String(dep.departmentId)}
+            >
               {dep.departmentName}
             </SelectItem>
           ))}
@@ -114,21 +147,35 @@ export default function FormEmploymentTransfer({
         <Select
           label="Manager/Parent"
           placeholder="Select Parent"
-          selectedKeys={[transferData.parentId]}
-          onChange={handleTransferChange("parentId")}
+          selectedKeys={[formData.employmentParentId]}
+          onChange={(keys) => {
+            const value = keys.anchorKey || "";
+            setFormData((prev) => ({
+              ...prev,
+              employmentParentId: value,
+            }));
+          }}
         >
-          {activeManagers.map((m) => (
-            <SelectItem key={m.employeeId} value={String(m.employeeId)}>
+          {filteredparent.map((m) => (
+            <SelectItem
+              key={String(m.employeeId)}
+              value={String(m.employeeId)}
+            >
               {m.employeeFirstname} {m.employeeLastname}
             </SelectItem>
           ))}
         </Select>
       </div>
 
-      {/* -- ปุ่ม Submit -- */}
-      <Button color="primary" onPress={handleSubmit}>
-        Transfer Selected
-      </Button>
+      {/* ปุ่ม Submit และ Clear */}
+      <div className="flex items-center gap-2">
+        <Button color="primary" onPress={onSubmit}>
+          Transfer Selected
+        </Button>
+        <Button color="secondary" onPress={onClear}>
+          Clear
+        </Button>
+      </div>
     </div>
   );
 }

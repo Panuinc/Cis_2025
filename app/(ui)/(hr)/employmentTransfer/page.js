@@ -1,230 +1,310 @@
 "use client";
-
-import { useState, useEffect, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
-
+import TopicHeader from "@/components/form/TopicHeader";
 import FormEmploymentTransfer from "@/components/form/hr/employmentTransfer/FormEmploymentTransfer";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+  use,
+} from "react";
 
 const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
 
+const DEFAULT_FORM_DATA = {
+  employmentBranchId: "",
+  employmentSiteId: "",
+  employmentDivisionId: "",
+  employmentDepartmentId: "",
+  employmentParentId: "",
+};
+
 export default function EmploymentTransferPage() {
   const { data: session } = useSession();
+  const userData = session?.user || {};
+  const userId = userData?.userId;
+
+  const operatedBy = useMemo(
+    () =>
+      `${userData?.employee?.employeeFirstname || ""} ${
+        userData?.employee?.employeeLastname || ""
+      }`,
+    [userData]
+  );
+
   const router = useRouter();
-
-  const userId = session?.user?.userId || null;
-
+  const [errors, setErrors] = useState({});
+  const [branch, setBranch] = useState([]);
+  const [site, setSite] = useState([]);
+  const [division, setDivision] = useState([]);
+  const [department, setDepartment] = useState([]);
+  const [parent, setParent] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
+  const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
 
-  const [branchList, setBranchList] = useState([]);
-  const [siteList, setSiteList] = useState([]);
-  const [divisionList, setDivisionList] = useState([]);
-  const [departmentList, setDepartmentList] = useState([]);
-  const [parentList, setParentList] = useState([]);
+  const formRef = useRef(null);
 
-  const [transferData, setTransferData] = useState({
-    branchId: "",
-    siteId: "",
-    divisionId: "",
-    departmentId: "",
-    parentId: "",
-  });
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const [
-          employeeRes,
-          branchRes,
-          siteRes,
-          divisionRes,
-          departmentRes,
-          parentRes,
-        ] = await Promise.all([
-          fetch(`/api/hr/employee`, {
-            method: "GET",
-            headers: { "secret-token": SECRET_TOKEN },
-          }),
-          fetch(`/api/hr/branch`, {
-            method: "GET",
-            headers: { "secret-token": SECRET_TOKEN },
-          }),
-          fetch(`/api/hr/site`, {
-            method: "GET",
-            headers: { "secret-token": SECRET_TOKEN },
-          }),
-          fetch(`/api/hr/division`, {
-            method: "GET",
-            headers: { "secret-token": SECRET_TOKEN },
-          }),
-          fetch(`/api/hr/department`, {
-            method: "GET",
-            headers: { "secret-token": SECRET_TOKEN },
-          }),
-          fetch(`/api/hr/employee`, {
-            method: "GET",
-            headers: { "secret-token": SECRET_TOKEN },
-          }),
-        ]);
-
-        const [
-          employeeData,
-          branchData,
-          siteData,
-          divisionData,
-          departmentData,
-          parentData,
-        ] = await Promise.all([
-          employeeRes.json(),
-          branchRes.json(),
-          siteRes.json(),
-          divisionRes.json(),
-          departmentRes.json(),
-          parentRes.json(),
-        ]);
-
-        if (employeeRes.ok) {
-          setEmployees(employeeData.employee || []);
-        } else {
-          toast.error(employeeData.error || "Cannot fetch employees");
-        }
-
-        if (branchRes.ok) {
-          setBranchList(branchData.branch || []);
-        } else {
-          toast.error(branchData.error || "Cannot fetch branch");
-        }
-
-        if (siteRes.ok) {
-          setSiteList(siteData.site || []);
-        } else {
-          toast.error(siteData.error || "Cannot fetch site");
-        }
-
-        if (divisionRes.ok) {
-          setDivisionList(divisionData.division || []);
-        } else {
-          toast.error(divisionData.error || "Cannot fetch division");
-        }
-
-        if (departmentRes.ok) {
-          setDepartmentList(departmentData.department || []);
-        } else {
-          toast.error(departmentData.error || "Cannot fetch department");
-        }
-
-        if (parentRes.ok) {
-          const allEmp = parentData.employee || [];
-          const managers = allEmp.filter((emp) =>
-            emp.employeeEmployment?.some(
-              (em) => em.EmploymentRoleId?.roleName === "Manager"
-            )
-          );
-          setParentList(managers);
-        } else {
-          toast.error(parentData.error || "Cannot fetch parent data");
-        }
-      } catch (error) {
-        toast.error("Error fetching data: " + error.message);
-      }
-    })();
-  }, []);
-
-  const handleSelect = (checked, empId) => {
-    setSelectedIds((prev) => {
-      if (checked) {
-        return [...prev, empId];
-      } else {
-        return prev.filter((id) => id !== empId);
-      }
-    });
-  };
-
-  const handleTransferChange = (field) => (e) => {
-    const value = e.target?.value || e;
-    setTransferData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleSubmit = async () => {
-    if (!userId) {
-      toast.error("No userId found (Please login)");
-      return;
-    }
-
-    if (selectedIds.length === 0) {
-      toast.error("Please select at least one employee");
-      return;
-    }
-
-    const payload = selectedIds.map((empId) => ({
-      employmentId: empId,
-      employmentBranchId: parseInt(transferData.branchId, 10),
-      employmentSiteId: parseInt(transferData.siteId, 10),
-      employmentDivisionId: parseInt(transferData.divisionId, 10),
-      employmentDepartmentId: parseInt(transferData.departmentId, 10),
-      employmentParentId: parseInt(transferData.parentId, 10),
-      employmentUpdateBy: parseInt(userId, 10),
-    }));
-
+  const fetchData = useCallback(async () => {
     try {
-      const res = await fetch("/api/hr/employmentTransfer", {
-        method: "POST",
-        headers: {
-          "secret-token": SECRET_TOKEN,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      const [
+        branchRes,
+        siteRes,
+        divisionRes,
+        departmentRes,
+        parentRes,
+        employeeRes,
+      ] = await Promise.all([
+        fetch(`/api/hr/branch`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
+        fetch(`/api/hr/site`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
+        fetch(`/api/hr/division`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
+        fetch(`/api/hr/department`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
+        fetch(`/api/hr/employee`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
+        fetch(`/api/hr/employee`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
+      ]);
 
-      const data = await res.json();
-      if (res.ok) {
-        toast.success(data.message || "Bulk Transfer success");
+      const branchData = await branchRes.json();
+      if (branchRes.ok) {
+        const activeBranch = (branchData.branch || []).filter(
+          (branch) => branch.branchStatus === "Active"
+        );
+        setBranch(activeBranch);
       } else {
-        toast.error(data.error || "Error on Bulk Transfer");
+        toast.error(branchData.error);
+      }
+
+      const siteData = await siteRes.json();
+      if (siteRes.ok) {
+        const activeSite = (siteData.site || []).filter(
+          (site) => site.siteStatus === "Active"
+        );
+        setSite(activeSite);
+      } else {
+        toast.error(siteData.error);
+      }
+
+      const divisionData = await divisionRes.json();
+      if (divisionRes.ok) {
+        const activeDivision = (divisionData.division || []).filter(
+          (division) => division.divisionStatus === "Active"
+        );
+        setDivision(activeDivision);
+      } else {
+        toast.error(divisionData.error);
+      }
+
+      const departmentData = await departmentRes.json();
+      if (departmentRes.ok) {
+        const activeDepartment = (departmentData.department || []).filter(
+          (department) => department.departmentStatus === "Active"
+        );
+        setDepartment(activeDepartment);
+      } else {
+        toast.error(departmentData.error);
+      }
+
+      const parentData = await parentRes.json();
+      if (parentRes.ok) {
+        const activeParent = (parentData.employee || []).filter(
+          (parent) =>
+            parent.employeeStatus === "Active" &&
+            parent.employeeEmployment?.some(
+              (emp) => emp?.EmploymentRoleId?.roleName === "Manager"
+            )
+        );
+        setParent(activeParent);
+      } else {
+        toast.error(parentData.error);
+      }
+
+      const employeeData = await employeeRes.json();
+      if (employeeRes.ok) {
+        const activeEmployee = (employeeData.employee || []).filter(
+          (employee) => employee.employeeStatus === "Active"
+        );
+        setEmployees(activeEmployee);
+      } else {
+        toast.error(employeeData.error);
       }
     } catch (error) {
-      toast.error("Fetch error: " + error.message);
+      toast.error("Error fetching data");
     }
-  };
+  }, []);
 
-  const activeBranch = useMemo(
-    () => branchList.filter((b) => b.branchStatus === "Active"),
-    [branchList]
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const filteredsite = useMemo(() => {
+    if (!formData.employmentBranchId) return [];
+    return site.filter(
+      (site) =>
+        site.siteStatus === "Active" &&
+        site.siteBranchId == formData.employmentBranchId
+    );
+  }, [formData.employmentBranchId, site]);
+
+  const filtereddivision = useMemo(() => {
+    if (!formData.employmentBranchId) return [];
+    return division.filter(
+      (division) =>
+        division.divisionStatus === "Active" &&
+        division.divisionBranchId == formData.employmentBranchId
+    );
+  }, [formData.employmentBranchId, division]);
+
+  const isbranchselected = Boolean(formData.employmentBranchId);
+
+  const filtereddepartment = useMemo(() => {
+    if (!formData.employmentBranchId && !formData.employmentDivisionId) {
+      return [];
+    }
+    return department.filter(
+      (department) =>
+        department.departmentStatus === "Active" &&
+        department.departmentBranchId == formData.employmentBranchId &&
+        department.departmentDivisionId == formData.employmentDivisionId
+    );
+  }, [formData.employmentBranchId, formData.employmentDivisionId, department]);
+
+  const filteredparent = useMemo(() => {
+    if (!formData.employmentBranchId && !formData.employmentDivisionId) {
+      return [];
+    }
+    return parent.filter(
+      (parent) =>
+        parent.employeeStatus === "Active" &&
+        parent.employeeEmployment?.some(
+          (emp) =>
+            emp.employmentBranchId == formData.employmentBranchId &&
+            emp.employmentDivisionId == formData.employmentDivisionId
+        )
+    );
+  }, [formData.employmentBranchId, formData.employmentDivisionId, parent]);
+
+  const isBranchAndDivisionSelected = Boolean(
+    formData.employmentBranchId && formData.employmentDivisionId
   );
-  const activeSite = useMemo(
-    () => siteList.filter((s) => s.siteStatus === "Active"),
-    [siteList]
+
+  const handleInputChange = useCallback(
+    (field) => (e) => {
+      const value = e.target.value;
+      setFormData((prev) => ({ ...prev, [field]: value }));
+      setErrors((prev) => {
+        if (prev[field]) {
+          const { [field]: _, ...rest } = prev;
+          return rest;
+        }
+        return prev;
+      });
+    },
+    []
   );
-  const activeDivision = useMemo(
-    () => divisionList.filter((d) => d.divisionStatus === "Active"),
-    [divisionList]
+
+  const handleSubmit = useCallback(
+    async (event) => {
+      event.preventDefault();
+      const formDataObject = new FormData(formRef.current);
+      formDataObject.append("employmentUpdateBy", userId);
+
+      try {
+        const res = await fetch("/api/hr/employmentTransfer", {
+          method: "POST",
+          body: formDataObject,
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        });
+
+        const jsonData = await res.json();
+        if (res.ok) {
+          toast.success(jsonData.message);
+          setTimeout(() => {
+            router.push("/branch");
+          }, 2000);
+        } else {
+          if (jsonData.details) {
+            const fieldErrorObj = jsonData.details.reduce((acc, err) => {
+              const fieldName = err.field && err.field[0];
+              if (fieldName) {
+                acc[fieldName] = err.message;
+              }
+              return acc;
+            }, {});
+            setErrors(fieldErrorObj);
+          }
+          toast.error(jsonData.error || "Error creating branch");
+        }
+      } catch (error) {
+        toast.error("Error creating branch: " + error.message);
+      }
+    },
+    [router, userId]
   );
-  const activeDepartment = useMemo(
-    () => departmentList.filter((dep) => dep.departmentStatus === "Active"),
-    [departmentList]
-  );
-  const activeManagers = useMemo(
-    () => parentList.filter((p) => p.employeeStatus === "Active"),
-    [parentList]
-  );
+
+  const handleClear = useCallback(() => {
+    if (formRef.current) formRef.current.reset();
+    setFormData(DEFAULT_FORM_DATA);
+    setErrors({});
+  }, []);
 
   return (
     <>
+      <TopicHeader topic="Employment Transfer" />
       <Toaster position="top-right" />
       <FormEmploymentTransfer
+        formRef={formRef}
+        onSubmit={handleSubmit}
+        onClear={handleClear}
+        errors={errors}
+        setErrors={setErrors}
+        filteredsite={filteredsite}
+        filtereddivision={filtereddivision}
+        filtereddepartment={filtereddepartment}
+        filteredparent={filteredparent}
+        isbranchselected={isbranchselected}
+        isBranchAndDivisionSelected={isBranchAndDivisionSelected}
+        branch={branch}
         employees={employees}
-        selectedIds={selectedIds}
-        handleSelect={handleSelect}
-        transferData={transferData}
-        handleTransferChange={handleTransferChange}
-        handleSubmit={handleSubmit}
-        activeBranch={activeBranch}
-        activeSite={activeSite}
-        activeDivision={activeDivision}
-        activeDepartment={activeDepartment}
-        activeManagers={activeManagers}
+        formData={formData}
+        setFormData={setFormData}
+        handleInputChange={handleInputChange}
+        isUpdate={true}
+        operatedBy={operatedBy}
       />
     </>
   );
