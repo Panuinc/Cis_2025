@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
-import { handleErrors, handleGetErrors } from "@/lib/errorHandler";
-import { employmentTransferPostSchema } from "@/app/api/hr/employment/employmentSchema";
+import { handleErrors } from "@/lib/errorHandler";
+import { employmentTransferBulkSchema } from "@/app/api/hr/employmentTransfer/employmentTransferSchema";
 import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
 import prisma from "@/lib/prisma";
-import { formatEmploymentTransferData } from "@/app/api/hr/employmentTransfer/employmentTransferSchema";
 import { getRequestIP } from "@/lib/GetRequestIp";
 import { getLocalNow } from "@/lib/GetLocalNow";
 
@@ -16,26 +15,9 @@ export async function POST(request) {
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
 
-    //   const formData = await request.formData();
-    //   const data = Object.fromEntries(formData);
-
-    //   const parsedData = employmentTransferPostSchema.parse(data);
     const body = await request.json();
 
-    const parsedData = employmentTransferPostSchema.parse(body);
-
-    //   const existingBranch = await prisma.branch.findFirst({
-    //     where: { branchName: parsedData.branchName },
-    //   });
-
-    //   if (existingBranch) {
-    //     return NextResponse.json(
-    //       {
-    //         error: `Branch with name '${parsedData.branchName}' already exists.`,
-    //       },
-    //       { status: 400 }
-    //     );
-    //   }
+    const parsedData = employmentTransferBulkSchema.parse(body);
 
     const localNow = getLocalNow();
 
@@ -69,11 +51,3 @@ export async function POST(request) {
     return handleErrors(error, ip, "Error updating employment data in bulk");
   }
 }
-//       return NextResponse.json(
-//         { message: "Successfully created new branch", branch: newBranch },
-//         { status: 201 }
-//       );
-//     } catch (error) {
-//       return handleErrors(error, ip, "Error creating branch data");
-//     }
-//   }

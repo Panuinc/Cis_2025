@@ -1,27 +1,5 @@
 import { z } from "zod";
-import {
-  preprocessInt,
-  preprocessString,
-  preprocessEnum,
-  preprocessAny,
-  preprocessDate,
-  formatData,
-} from "@/lib/zodSchema";
-
-export function formatEmploymentTransferData(employment) {
-  return formatData(
-    employment,
-    [
-      "employmentStartWork",
-      "employmentPassportStartDate",
-      "employmentPassportEndDate",
-      "employmentEnterDate",
-      "employmentWorkPermitStartDate",
-      "employmentWorkPermitEndDate",
-    ],
-    ["employmentCreateAt", "employmentUpdateAt"]
-  );
-}
+import { preprocessInt } from "@/lib/zodSchema";
 
 export const employmentTransferPostSchema = z.object({
   employmentId: preprocessInt(
@@ -53,3 +31,7 @@ export const employmentTransferPostSchema = z.object({
     "Updater ID must be an integer."
   ),
 });
+
+export const employmentTransferBulkSchema = z.array(
+  employmentTransferPostSchema
+);
