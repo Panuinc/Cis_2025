@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Input, Button, Select, SelectItem } from "@nextui-org/react";
+import { Input, Button, Select, SelectItem, Checkbox } from "@nextui-org/react";
 import { Cancel, Database } from "@/components/icons/icons";
 import CommonTable from "@/components/CommonTable";
 
@@ -32,7 +32,6 @@ export default function FormEmploymentTransfer({
     { name: "Division", uid: "division" },
     { name: "Department", uid: "department" },
     { name: "Parent Name", uid: "parentName" },
-    { name: "Status", uid: "status" },
   ];
 
   const renderCell = (item, columnKey) => {
@@ -44,9 +43,10 @@ export default function FormEmploymentTransfer({
     switch (columnKey) {
       case "select":
         return (
-          <input
-            type="checkbox"
-            checked={selectedIds.includes(item.employeeId)}
+          <Checkbox
+            size="lg"
+            color="warning"
+            isSelected={selectedIds.includes(item.employeeId)}
             onChange={(e) => handleSelect(e.target.checked, item.employeeId)}
           />
         );
@@ -64,8 +64,6 @@ export default function FormEmploymentTransfer({
         return employment.EmploymentDepartmentId?.departmentName || "-";
       case "parentName":
         return parentName;
-      case "status":
-        return item.employeeStatus;
       default:
         return "";
     }
@@ -77,7 +75,7 @@ export default function FormEmploymentTransfer({
       onSubmit={onSubmit}
       className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
     >
-      <div className="flex flex-col items-start justify-start w-full min-h-96 p-2 gap-2 border-2 border-dark border-dashed overflow-auto">
+      <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <CommonTable
           columns={columns}
           items={employees.map((emp, index) => ({
