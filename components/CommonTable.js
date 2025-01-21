@@ -47,7 +47,7 @@ export default function CommonTable({
         </TableHeader>
         <TableBody items={items} emptyContent={emptyContentText}>
           {(item) => (
-            <TableRow key={item._index} className="border-2 border-dark border-dashed">
+            <TableRow key={item._index} className="border-2 h-14 border-dark border-dashed">
               {(columnKey) => (
                 <TableCell>{renderCell(item, columnKey)}</TableCell>
               )}

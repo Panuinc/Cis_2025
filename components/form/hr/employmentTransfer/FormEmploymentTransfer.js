@@ -2,6 +2,7 @@
 import React from "react";
 import { Input, Button, Select, SelectItem } from "@nextui-org/react";
 import { Cancel, Database } from "@/components/icons/icons";
+import CommonTable from "@/components/CommonTable";
 
 export default function FormEmploymentTransfer({
   formRef,
@@ -22,66 +23,76 @@ export default function FormEmploymentTransfer({
   isBranchAndDivisionSelected,
   operatedBy,
 }) {
+  const columns = [
+    { name: "Select", uid: "select" },
+    { name: "ID", uid: "id" },
+    { name: "Name", uid: "name" },
+    { name: "Branch", uid: "branch" },
+    { name: "Site", uid: "site" },
+    { name: "Division", uid: "division" },
+    { name: "Department", uid: "department" },
+    { name: "Parent Name", uid: "parentName" },
+    { name: "Status", uid: "status" },
+  ];
+
+  const renderCell = (item, columnKey) => {
+    const employment = item.employeeEmployment?.[0] || {};
+    const parentName = employment.EmploymentParentBy
+      ? `${employment.EmploymentParentBy.employeeFirstname} ${employment.EmploymentParentBy.employeeLastname}`
+      : "-";
+
+    switch (columnKey) {
+      case "select":
+        return (
+          <input
+            type="checkbox"
+            checked={selectedIds.includes(item.employeeId)}
+            onChange={(e) => handleSelect(e.target.checked, item.employeeId)}
+          />
+        );
+      case "id":
+        return item.employeeId;
+      case "name":
+        return `${item.employeeFirstname} ${item.employeeLastname}`;
+      case "branch":
+        return employment.EmploymentBranchId?.branchName || "-";
+      case "site":
+        return employment.EmploymentSiteId?.siteName || "-";
+      case "division":
+        return employment.EmploymentDivisionId?.divisionName || "-";
+      case "department":
+        return employment.EmploymentDepartmentId?.departmentName || "-";
+      case "parentName":
+        return parentName;
+      case "status":
+        return item.employeeStatus;
+      default:
+        return "";
+    }
+  };
+
   return (
     <form
       ref={formRef}
       onSubmit={onSubmit}
       className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
     >
-      <div className="flex items-start justify-start w-full min-h-80 p-2 gap-2 border-2 border-dark border-dashed overflow-auto">
-        <table className="table-auto w-full h-full p-2 gap-2">
-          <thead className="bg-gray-100 p-2 gap-2">
-            <tr>
-              <th className="border-b-2 p-4">Select</th>
-              <th className="border-b-2 p-4">ID</th>
-              <th className="border-b-2 p-4">Name</th>
-              <th className="border-b-2 p-4">Branch</th>
-              <th className="border-b-2 p-4">Site</th>
-              <th className="border-b-2 p-4">Division</th>
-              <th className="border-b-2 p-4">Department</th>
-              <th className="border-b-2 p-4">Parent Name</th>
-              <th className="border-b-2 p-4">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {employees.map((emp) => {
-              const empId = emp.employeeId;
-              const employment = emp.employeeEmployment?.[0] || {};
-              const parentName = employment.EmploymentParentBy
-                ? `${employment.EmploymentParentBy.employeeFirstname} ${employment.EmploymentParentBy.employeeLastname}`
-                : "-";
-              return (
-                <tr key={empId} className="border">
-                  <td className="border-b-2 p-4 text-center">
-                    <input
-                      type="checkbox"
-                      checked={selectedIds.includes(empId)}
-                      onChange={(e) => handleSelect(e.target.checked, empId)}
-                    />
-                  </td>
-                  <td className="border-b-2 p-4">{empId}</td>
-                  <td className="border-b-2 p-4">
-                    {emp.employeeFirstname} {emp.employeeLastname}
-                  </td>
-                  <td className="border-b-2 p-4">
-                    {employment.EmploymentBranchId?.branchName || "-"}
-                  </td>
-                  <td className="border-b-2 p-4">
-                    {employment.EmploymentSiteId?.siteName || "-"}
-                  </td>
-                  <td className="border-b-2 p-4">
-                    {employment.EmploymentDivisionId?.divisionName || "-"}
-                  </td>
-                  <td className="border-b-2 p-4">
-                    {employment.EmploymentDepartmentId?.departmentName || "-"}
-                  </td>
-                  <td className="border-b-2 p-4">{parentName}</td>
-                  <td className="border-b-2 p-4">{emp.employeeStatus}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+      <div className="flex flex-col items-start justify-start w-full min-h-96 p-2 gap-2 border-2 border-dark border-dashed overflow-auto">
+        <CommonTable
+          columns={columns}
+          items={employees.map((emp, index) => ({
+            ...emp,
+            _index: emp.employeeId || index,
+          }))}
+          loading={false}
+          renderCell={renderCell}
+          page={1}
+          pages={1}
+          onPageChange={() => {}}
+          rowsPerPage={employees.length}
+          onRowsPerPageChange={() => {}}
+          emptyContentText="No employees found"
+        />
       </div>
 
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
