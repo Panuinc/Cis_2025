@@ -1,39 +1,30 @@
 "use client";
 import React from "react";
+import { Input, Button, Select, SelectItem } from "@nextui-org/react";
 import { Cancel, Database } from "@/components/icons/icons";
-import { Input,Table, Button, Select, SelectItem } from "@nextui-org/react";
 
+// รับ props ที่ส่งมาจาก Page
 export default function FormEmploymentTransfer({
-  // Refs
   formRef,
-
-  // Handlers
   onSubmit,
   onClear,
   handleSelect,
   handleInputChange,
-
-  // States
   errors,
-  setErrors,
   formData,
-  setFormData,
   selectedIds,
-
-  // Derived data
+  branch,
+  site,
+  division,
+  department,
+  parent,
+  employees,
   filteredsite,
   filtereddivision,
   filtereddepartment,
   filteredparent,
-  branch,
-  employees,
-
-  // Booleans
   isbranchselected,
   isBranchAndDivisionSelected,
-  isUpdate,
-
-  // Misc
   operatedBy,
 }) {
   return (
@@ -42,6 +33,7 @@ export default function FormEmploymentTransfer({
       onSubmit={onSubmit}
       className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
     >
+      {/* ตารางเลือกพนักงาน */}
       <table className="mb-4 border-collapse border border-gray-300 w-full">
         <thead className="bg-gray-100">
           <tr>
@@ -56,7 +48,7 @@ export default function FormEmploymentTransfer({
             const empId = emp.employeeId;
             return (
               <tr key={empId} className="border">
-                <td className="border p-2">
+                <td className="border p-2 text-center">
                   <input
                     type="checkbox"
                     checked={selectedIds.includes(empId)}
@@ -73,7 +65,10 @@ export default function FormEmploymentTransfer({
           })}
         </tbody>
       </table>
+
+      {/* เลือก Branch, Site, Division, Department, Parent */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        {/* Branch */}
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Select
             name="employmentBranchId"
@@ -95,6 +90,8 @@ export default function FormEmploymentTransfer({
             ))}
           </Select>
         </div>
+
+        {/* Site */}
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Select
             name="employmentSiteId"
@@ -118,7 +115,9 @@ export default function FormEmploymentTransfer({
           </Select>
         </div>
       </div>
+
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        {/* Division */}
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Select
             name="employmentDivisionId"
@@ -141,6 +140,8 @@ export default function FormEmploymentTransfer({
             ))}
           </Select>
         </div>
+
+        {/* Department */}
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Select
             name="employmentDepartmentId"
@@ -166,6 +167,8 @@ export default function FormEmploymentTransfer({
             ))}
           </Select>
         </div>
+
+        {/* Parent (Manager) */}
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Select
             name="employmentParentId"
@@ -204,6 +207,8 @@ export default function FormEmploymentTransfer({
           />
         </div>
       </div>
+
+      {/* ปุ่ม Submit / Cancel */}
       <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Button
