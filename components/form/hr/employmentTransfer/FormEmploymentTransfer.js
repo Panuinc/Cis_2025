@@ -42,6 +42,8 @@ export default function FormEmploymentTransfer({
   setFilterParent,
   sequentialMode,
   setSequentialMode,
+  showEmployeeSection,
+  setShowEmployeeSection,
 }) {
   const columns = [
     { name: "Select", uid: "select" },
@@ -95,204 +97,232 @@ export default function FormEmploymentTransfer({
       onSubmit={onSubmit}
       className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
     >
-      <div className="flex justify-end w-full p-2">
-        <Button
-          size="md"
-          color={sequentialMode ? "warning" : "primary"}
-          onPress={() => setSequentialMode((prev) => !prev)}
-        >
-          {sequentialMode ? "Close Sequential Mode" : "Open Sequential Mode"}
-        </Button>
-      </div>
-
-      <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-        <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <Select
-              label="Filter Branch"
-              placeholder="Select Branch"
-              labelPlacement="outside"
-              size="lg"
-              variant="bordered"
-              value={filterBranch}
-              onChange={(e) => setFilterBranch(e.target.value)}
-            >
-              <SelectItem value="">All Branches</SelectItem>
-              {branch.map((branch) => (
-                <SelectItem
-                  key={branch.branchId}
-                  value={branch.branchId.toString()}
-                >
-                  {branch.branchName}
-                </SelectItem>
-              ))}
-            </Select>
-          </div>
-          <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <Select
-              label="Filter Site"
-              placeholder="Select Site"
-              labelPlacement="outside"
-              size="lg"
-              variant="bordered"
-              value={filterSite}
-              onChange={(e) => setFilterSite(e.target.value)}
-              isDisabled={sequentialMode ? !filterBranch : false}
-            >
-              <SelectItem value="">All Sites</SelectItem>
-              {site
-                .filter((site) => {
-                  return sequentialMode && filterBranch
-                    ? site.siteBranchId === Number(filterBranch)
-                    : true;
-                })
-                .map((site) => (
-                  <SelectItem key={site.siteId} value={site.siteId.toString()}>
-                    {site.siteName}
-                  </SelectItem>
-                ))}
-            </Select>
-          </div>
-          <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <Select
-              label="Filter Division"
-              placeholder="Select Division"
-              labelPlacement="outside"
-              size="lg"
-              variant="bordered"
-              value={filterDivision}
-              onChange={(e) => setFilterDivision(e.target.value)}
-              isDisabled={sequentialMode ? !filterBranch : false}
-            >
-              <SelectItem value="">All Divisions</SelectItem>
-              {division
-                .filter((division) => {
-                  return sequentialMode && filterBranch
-                    ? division.divisionBranchId === Number(filterBranch)
-                    : true;
-                })
-                .map((division) => (
-                  <SelectItem
-                    key={division.divisionId}
-                    value={division.divisionId.toString()}
-                  >
-                    {division.divisionName}
-                  </SelectItem>
-                ))}
-            </Select>
-          </div>
-          <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <Select
-              label="Filter Department"
-              placeholder="Select Department"
-              labelPlacement="outside"
-              size="lg"
-              variant="bordered"
-              value={filterDepartment}
-              onChange={(e) => setFilterDepartment(e.target.value)}
-              isDisabled={sequentialMode ? !filterDivision : false}
-            >
-              <SelectItem value="">All Departments</SelectItem>
-              {department
-                .filter((department) => {
-                  return sequentialMode && filterDivision
-                    ? department.departmentBranchId === Number(filterBranch) &&
-                        department.departmentDivisionId ===
-                          Number(filterDivision)
-                    : true;
-                })
-                .map((department) => (
-                  <SelectItem
-                    key={department.departmentId}
-                    value={department.departmentId.toString()}
-                  >
-                    {department.departmentName}
-                  </SelectItem>
-                ))}
-            </Select>
-          </div>
-          <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <Select
-              label="Filter Parent"
-              placeholder="Select Parent"
-              labelPlacement="outside"
-              size="lg"
-              variant="bordered"
-              value={filterParent}
-              onChange={(e) => setFilterParent(e.target.value)}
-              isDisabled={sequentialMode ? !filterDivision : false}
-            >
-              <SelectItem value="">All Parents</SelectItem>
-              {parent
-                .filter((parent) => {
-                  return sequentialMode && filterDivision
-                    ? parent.employeeStatus === "Active" &&
-                        parent.employeeEmployment?.some(
-                          (emp) =>
-                            emp.employmentBranchId === Number(filterBranch) &&
-                            emp.employmentDivisionId === Number(filterDivision)
-                        )
-                    : true;
-                })
-                .map((parent) => (
-                  <SelectItem
-                    key={parent.employeeId}
-                    value={parent.employeeId.toString()}
-                  >
-                    {`${parent.employeeFirstname} ${parent.employeeLastname}`}
-                  </SelectItem>
-                ))}
-            </Select>
-          </div>
-        </div>
-
-        <div className="flex flex-col xl:flex-row items-start justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <div
-            className={`flex flex-col items-start justify-center w-full p-2 gap-2 border-2 border-dark border-dashed ${
-              selectedIds.length > 0 ? "xl:w-1/2" : ""
-            }`}
+      {!showEmployeeSection && (
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Button
+            size="md"
+            color="primary"
+            onPress={() => setShowEmployeeSection(true)}
           >
-            <CommonTable
-              columns={columns}
-              items={filteredEmployees.map((emp, index) => ({
-                ...emp,
-                _index: emp.employeeId || index,
-              }))}
-              loading={false}
-              renderCell={renderCell}
-              page={1}
-              pages={1}
-              onPageChange={() => {}}
-              rowsPerPage={filteredEmployees.length}
-              onRowsPerPageChange={() => {}}
-              emptyContentText="No employees found"
-            />
+            Select Employee
+          </Button>
+        </div>
+      )}
+      {showEmployeeSection && (
+        <>
+          <div className="flex justify-end w-full p-2">
+            <Button
+              size="md"
+              color={sequentialMode ? "warning" : "primary"}
+              onPress={() => setSequentialMode((prev) => !prev)}
+            >
+              {sequentialMode
+                ? "Close Sequential Mode"
+                : "Open Sequential Mode"}
+            </Button>
           </div>
 
-          {selectedIds.length > 0 && (
-            <div className="flex flex-col items-start justify-center w-full xl:w-1/2 p-2 gap-2 border-2 border-dark border-dashed">
-              <CommonTable
-                columns={columns}
-                items={employees
-                  .filter((emp) => selectedIds.includes(emp.employeeId))
-                  .map((emp, index) => ({
+          <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                <Select
+                  label="Filter Branch"
+                  placeholder="Select Branch"
+                  labelPlacement="outside"
+                  size="lg"
+                  variant="bordered"
+                  value={filterBranch}
+                  onChange={(e) => setFilterBranch(e.target.value)}
+                >
+                  <SelectItem value="">All Branches</SelectItem>
+                  {branch.map((branch) => (
+                    <SelectItem
+                      key={branch.branchId}
+                      value={branch.branchId.toString()}
+                    >
+                      {branch.branchName}
+                    </SelectItem>
+                  ))}
+                </Select>
+              </div>
+              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                <Select
+                  label="Filter Site"
+                  placeholder="Select Site"
+                  labelPlacement="outside"
+                  size="lg"
+                  variant="bordered"
+                  value={filterSite}
+                  onChange={(e) => setFilterSite(e.target.value)}
+                  isDisabled={sequentialMode ? !filterBranch : false}
+                >
+                  <SelectItem value="">All Sites</SelectItem>
+                  {site
+                    .filter((site) => {
+                      return sequentialMode && filterBranch
+                        ? site.siteBranchId === Number(filterBranch)
+                        : true;
+                    })
+                    .map((site) => (
+                      <SelectItem
+                        key={site.siteId}
+                        value={site.siteId.toString()}
+                      >
+                        {site.siteName}
+                      </SelectItem>
+                    ))}
+                </Select>
+              </div>
+              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                <Select
+                  label="Filter Division"
+                  placeholder="Select Division"
+                  labelPlacement="outside"
+                  size="lg"
+                  variant="bordered"
+                  value={filterDivision}
+                  onChange={(e) => setFilterDivision(e.target.value)}
+                  isDisabled={sequentialMode ? !filterBranch : false}
+                >
+                  <SelectItem value="">All Divisions</SelectItem>
+                  {division
+                    .filter((division) => {
+                      return sequentialMode && filterBranch
+                        ? division.divisionBranchId === Number(filterBranch)
+                        : true;
+                    })
+                    .map((division) => (
+                      <SelectItem
+                        key={division.divisionId}
+                        value={division.divisionId.toString()}
+                      >
+                        {division.divisionName}
+                      </SelectItem>
+                    ))}
+                </Select>
+              </div>
+              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                <Select
+                  label="Filter Department"
+                  placeholder="Select Department"
+                  labelPlacement="outside"
+                  size="lg"
+                  variant="bordered"
+                  value={filterDepartment}
+                  onChange={(e) => setFilterDepartment(e.target.value)}
+                  isDisabled={sequentialMode ? !filterDivision : false}
+                >
+                  <SelectItem value="">All Departments</SelectItem>
+                  {department
+                    .filter((department) => {
+                      return sequentialMode && filterDivision
+                        ? department.departmentBranchId ===
+                            Number(filterBranch) &&
+                            department.departmentDivisionId ===
+                              Number(filterDivision)
+                        : true;
+                    })
+                    .map((department) => (
+                      <SelectItem
+                        key={department.departmentId}
+                        value={department.departmentId.toString()}
+                      >
+                        {department.departmentName}
+                      </SelectItem>
+                    ))}
+                </Select>
+              </div>
+              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                <Select
+                  label="Filter Parent"
+                  placeholder="Select Parent"
+                  labelPlacement="outside"
+                  size="lg"
+                  variant="bordered"
+                  value={filterParent}
+                  onChange={(e) => setFilterParent(e.target.value)}
+                  isDisabled={sequentialMode ? !filterDivision : false}
+                >
+                  <SelectItem value="">All Parents</SelectItem>
+                  {parent
+                    .filter((parent) => {
+                      return sequentialMode && filterDivision
+                        ? parent.employeeStatus === "Active" &&
+                            parent.employeeEmployment?.some(
+                              (emp) =>
+                                emp.employmentBranchId ===
+                                  Number(filterBranch) &&
+                                emp.employmentDivisionId ===
+                                  Number(filterDivision)
+                            )
+                        : true;
+                    })
+                    .map((parent) => (
+                      <SelectItem
+                        key={parent.employeeId}
+                        value={parent.employeeId.toString()}
+                      >
+                        {`${parent.employeeFirstname} ${parent.employeeLastname}`}
+                      </SelectItem>
+                    ))}
+                </Select>
+              </div>
+            </div>
+
+            <div className="flex flex-col xl:flex-row items-start justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <div
+                className={`flex flex-col items-start justify-center w-full p-2 gap-2 border-2 border-dark border-dashed ${
+                  selectedIds.length > 0 ? "xl:w-1/2" : ""
+                }`}
+              >
+                <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed font-[600]">
+                  All Employee
+                </div>
+                <CommonTable
+                  columns={columns}
+                  items={filteredEmployees.map((emp, index) => ({
                     ...emp,
                     _index: emp.employeeId || index,
                   }))}
-                loading={false}
-                renderCell={renderCell}
-                page={1}
-                pages={1}
-                onPageChange={() => {}}
-                rowsPerPage={selectedIds.length}
-                onRowsPerPageChange={() => {}}
-                emptyContentText="No selected employees"
-              />
-            </div>
-          )}
-        </div>
-      </div>
+                  loading={false}
+                  renderCell={renderCell}
+                  page={1}
+                  pages={1}
+                  onPageChange={() => {}}
+                  rowsPerPage={filteredEmployees.length}
+                  onRowsPerPageChange={() => {}}
+                  emptyContentText="No employees found"
+                />
+              </div>
 
+              {selectedIds.length > 0 && (
+                <div className="flex flex-col items-start justify-center w-full xl:w-1/2 p-2 gap-2 border-2 border-dark border-dashed">
+                  <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed font-[600]">
+                    Select Employee
+                  </div>
+                  <CommonTable
+                    columns={columns}
+                    items={employees
+                      .filter((emp) => selectedIds.includes(emp.employeeId))
+                      .map((emp, index) => ({
+                        ...emp,
+                        _index: emp.employeeId || index,
+                      }))}
+                    loading={false}
+                    renderCell={renderCell}
+                    page={1}
+                    pages={1}
+                    onPageChange={() => {}}
+                    rowsPerPage={selectedIds.length}
+                    onRowsPerPageChange={() => {}}
+                    emptyContentText="No selected employees"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </>
+      )}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Select
@@ -338,7 +368,6 @@ export default function FormEmploymentTransfer({
           </Select>
         </div>
       </div>
-
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Select
@@ -388,7 +417,6 @@ export default function FormEmploymentTransfer({
           </Select>
         </div>
       </div>
-
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Select
@@ -413,7 +441,6 @@ export default function FormEmploymentTransfer({
           </Select>
         </div>
       </div>
-
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
@@ -429,7 +456,6 @@ export default function FormEmploymentTransfer({
           />
         </div>
       </div>
-
       <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Button

@@ -53,6 +53,7 @@ export default function EmploymentTransferPage() {
   const [filterParent, setFilterParent] = useState("");
 
   const [sequentialMode, setSequentialMode] = useState(false);
+  const [showEmployeeSection, setShowEmployeeSection] = useState(false);
 
   const formRef = useRef(null);
 
@@ -388,6 +389,9 @@ export default function EmploymentTransferPage() {
         filteredEmployees={filteredEmployees}
         sequentialMode={sequentialMode}
         setSequentialMode={setSequentialMode}
+        showEmployeeSection={showEmployeeSection}
+        setShowEmployeeSection={setShowEmployeeSection}
+
       />
     </>
   );
