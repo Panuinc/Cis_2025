@@ -246,22 +246,50 @@ export default function FormEmploymentTransfer({
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <CommonTable
-            columns={columns}
-            items={filteredEmployees.map((emp, index) => ({
-              ...emp,
-              _index: emp.employeeId || index,
-            }))}
-            loading={false}
-            renderCell={renderCell}
-            page={1}
-            pages={1}
-            onPageChange={() => {}}
-            rowsPerPage={filteredEmployees.length}
-            onRowsPerPageChange={() => {}}
-            emptyContentText="No employees found"
-          />
+        <div className="flex flex-col xl:flex-row items-start justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <div
+            className={`flex flex-col items-start justify-center w-full p-2 gap-2 border-2 border-dark border-dashed ${
+              selectedIds.length > 0 ? "xl:w-1/2" : ""
+            }`}
+          >
+            <CommonTable
+              columns={columns}
+              items={filteredEmployees.map((emp, index) => ({
+                ...emp,
+                _index: emp.employeeId || index,
+              }))}
+              loading={false}
+              renderCell={renderCell}
+              page={1}
+              pages={1}
+              onPageChange={() => {}}
+              rowsPerPage={filteredEmployees.length}
+              onRowsPerPageChange={() => {}}
+              emptyContentText="No employees found"
+            />
+          </div>
+
+          {selectedIds.length > 0 && (
+            <div className="flex flex-col items-start justify-center w-full xl:w-1/2 p-2 gap-2 border-2 border-dark border-dashed">
+              <CommonTable
+                columns={columns}
+                items={employees
+                  .filter((emp) => selectedIds.includes(emp.employeeId))
+                  .map((emp, index) => ({
+                    ...emp,
+                    _index: emp.employeeId || index,
+                  }))}
+                loading={false}
+                renderCell={renderCell}
+                page={1}
+                pages={1}
+                onPageChange={() => {}}
+                rowsPerPage={selectedIds.length}
+                onRowsPerPageChange={() => {}}
+                emptyContentText="No selected employees"
+              />
+            </div>
+          )}
         </div>
       </div>
 
