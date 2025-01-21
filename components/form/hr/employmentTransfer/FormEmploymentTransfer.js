@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Cancel, Database } from "@/components/icons/icons";
-import { Table, Button, Select, SelectItem } from "@nextui-org/react";
+import { Input,Table, Button, Select, SelectItem } from "@nextui-org/react";
 
 export default function FormEmploymentTransfer({
   // Refs
@@ -11,6 +11,7 @@ export default function FormEmploymentTransfer({
   onSubmit,
   onClear,
   handleSelect,
+  handleInputChange,
 
   // States
   errors,
