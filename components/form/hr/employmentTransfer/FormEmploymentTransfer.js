@@ -36,10 +36,11 @@ export default function FormEmploymentTransfer({
   operatedBy,
 }) {
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Employment Transfer</h1>
-
-      {/* -- ตารางแสดง Employees ให้เลือก -- */}
+    <form
+      ref={formRef}
+      onSubmit={onSubmit}
+      className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
+    >
       <table className="mb-4 border-collapse border border-gray-300 w-full">
         <thead className="bg-gray-100">
           <tr>
@@ -71,111 +72,160 @@ export default function FormEmploymentTransfer({
           })}
         </tbody>
       </table>
-
-      {/* -- เลือก Branch, Site, Division, Department, Parent -- */}
-      <div className="grid md:grid-cols-3 gap-4 mb-4">
-        <Select
-          label="Branch"
-          placeholder="Select Branch"
-          selectedKeys={[formData.employmentBranchId]}
-          onChange={(keys) => {
-            const value = keys.anchorKey || "";
-            setFormData((prev) => ({ ...prev, employmentBranchId: value }));
-          }}
-        >
-          {branch.map((b) => (
-            <SelectItem key={String(b.branchId)} value={String(b.branchId)}>
-              {b.branchName}
-            </SelectItem>
-          ))}
-        </Select>
-
-        <Select
-          label="Site"
-          placeholder="Select Site"
-          selectedKeys={[formData.employmentSiteId]}
-          onChange={(keys) => {
-            const value = keys.anchorKey || "";
-            setFormData((prev) => ({ ...prev, employmentSiteId: value }));
-          }}
-        >
-          {filteredsite.map((s) => (
-            <SelectItem key={String(s.siteId)} value={String(s.siteId)}>
-              {s.siteName}
-            </SelectItem>
-          ))}
-        </Select>
-
-        <Select
-          label="Division"
-          placeholder="Select Division"
-          selectedKeys={[formData.employmentDivisionId]}
-          onChange={(keys) => {
-            const value = keys.anchorKey || "";
-            setFormData((prev) => ({ ...prev, employmentDivisionId: value }));
-          }}
-        >
-          {filtereddivision.map((d) => (
-            <SelectItem key={String(d.divisionId)} value={String(d.divisionId)}>
-              {d.divisionName}
-            </SelectItem>
-          ))}
-        </Select>
-
-        <Select
-          label="Department"
-          placeholder="Select Department"
-          selectedKeys={[formData.employmentDepartmentId]}
-          onChange={(keys) => {
-            const value = keys.anchorKey || "";
-            setFormData((prev) => ({
-              ...prev,
-              employmentDepartmentId: value,
-            }));
-          }}
-        >
-          {filtereddepartment.map((dep) => (
-            <SelectItem
-              key={String(dep.departmentId)}
-              value={String(dep.departmentId)}
-            >
-              {dep.departmentName}
-            </SelectItem>
-          ))}
-        </Select>
-
-        <Select
-          label="Manager/Parent"
-          placeholder="Select Parent"
-          selectedKeys={[formData.employmentParentId]}
-          onChange={(keys) => {
-            const value = keys.anchorKey || "";
-            setFormData((prev) => ({
-              ...prev,
-              employmentParentId: value,
-            }));
-          }}
-        >
-          {filteredparent.map((m) => (
-            <SelectItem
-              key={String(m.employeeId)}
-              value={String(m.employeeId)}
-            >
-              {m.employeeFirstname} {m.employeeLastname}
-            </SelectItem>
-          ))}
-        </Select>
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Select
+            name="employmentBranchId"
+            label="Branch Name"
+            placeholder="Please Select Branch Name"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.employmentBranchId?.toString() || ""}
+            selectedKeys={[formData.employmentBranchId?.toString() || ""]}
+            onChange={handleInputChange("employmentBranchId")}
+            isInvalid={!!errors.employmentBranchId}
+            errorMessage={errors.employmentBranchId}
+          >
+            {branch.map((branch) => (
+              <SelectItem key={branch.branchId} value={branch.branchId}>
+                {branch.branchName}
+              </SelectItem>
+            ))}
+          </Select>
+        </div>
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Select
+            name="employmentSiteId"
+            label="Site Name"
+            placeholder="Please Select Site Name"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.employmentSiteId?.toString() || ""}
+            selectedKeys={[formData.employmentSiteId?.toString() || ""]}
+            onChange={handleInputChange("employmentSiteId")}
+            isDisabled={!isbranchselected}
+            isInvalid={!!errors.employmentSiteId}
+            errorMessage={errors.employmentSiteId}
+          >
+            {filteredsite.map((site) => (
+              <SelectItem key={site.siteId} value={site.siteId}>
+                {site.siteName}
+              </SelectItem>
+            ))}
+          </Select>
+        </div>
       </div>
-
-      {/* ปุ่ม Submit และ Clear */}
-      <div className="flex items-center gap-2">
-        <Button color="primary" onPress={onSubmit}>
-          Transfer Selected
-        </Button>
-        <Button color="secondary" onPress={onClear}>
-          Clear
-        </Button>
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Select
+            name="employmentDivisionId"
+            label="Division Name"
+            placeholder="Please Select Division Name"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.employmentDivisionId?.toString() || ""}
+            selectedKeys={[formData.employmentDivisionId?.toString() || ""]}
+            onChange={handleInputChange("employmentDivisionId")}
+            isDisabled={!isbranchselected}
+            isInvalid={!!errors.employmentDivisionId}
+            errorMessage={errors.employmentDivisionId}
+          >
+            {filtereddivision.map((division) => (
+              <SelectItem key={division.divisionId} value={division.divisionId}>
+                {division.divisionName}
+              </SelectItem>
+            ))}
+          </Select>
+        </div>
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Select
+            name="employmentDepartmentId"
+            label="Department Name"
+            placeholder="Please Select Department Name"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.employmentDepartmentId?.toString() || ""}
+            selectedKeys={[formData.employmentDepartmentId?.toString() || ""]}
+            onChange={handleInputChange("employmentDepartmentId")}
+            isDisabled={!isBranchAndDivisionSelected}
+            isInvalid={!!errors.employmentDepartmentId}
+            errorMessage={errors.employmentDepartmentId}
+          >
+            {filtereddepartment.map((department) => (
+              <SelectItem
+                key={department.departmentId}
+                value={department.departmentId}
+              >
+                {department.departmentName}
+              </SelectItem>
+            ))}
+          </Select>
+        </div>
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Select
+            name="employmentParentId"
+            label="Parent Name"
+            placeholder="Please Select Parent Name"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.employmentParentId?.toString() || ""}
+            selectedKeys={[formData.employmentParentId?.toString() || ""]}
+            onChange={handleInputChange("employmentParentId")}
+            isDisabled={!isBranchAndDivisionSelected}
+            isInvalid={!!errors.employmentParentId}
+            errorMessage={errors.employmentParentId}
+          >
+            {filteredparent.map((parent) => (
+              <SelectItem key={parent.employeeId} value={parent.employeeId}>
+                {`${parent.employeeFirstname} ${parent.employeeLastname}`}
+              </SelectItem>
+            ))}
+          </Select>
+        </div>
       </div>
-    </div>
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Input
+            name="Operated By"
+            type="text"
+            label="Operated By"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={operatedBy}
+            isReadOnly={true}
+          />
+        </div>
+      </div>
+      <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Button
+            size="md"
+            color="success"
+            startContent={<Database />}
+            type="submit"
+          >
+            Submit
+          </Button>
+        </div>
+        <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Button
+            size="md"
+            color="danger"
+            startContent={<Cancel />}
+            onPress={onClear}
+            type="button"
+          >
+            Cancel
+          </Button>
+        </div>
+      </div>
+    </form>
   );
 }
