@@ -4,7 +4,7 @@ import { employmentTransferPostSchema } from "@/app/api/hr/employment/employment
 import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
 import prisma from "@/lib/prisma";
-import { formatEmploymentData } from "@/app/api/hr/employment/employmentSchema";
+import { formatEmploymentTransferData } from "@/app/api/hr/employmentTransfer/employmentTransferSchema";
 import { getRequestIP } from "@/lib/GetRequestIp";
 import { getLocalNow } from "@/lib/GetLocalNow";
 

@@ -8,7 +8,7 @@ import {
   formatData,
 } from "@/lib/zodSchema";
 
-export function formatEmploymentData(employment) {
+export function formatEmploymentTransferData(employment) {
   return formatData(
     employment,
     [
