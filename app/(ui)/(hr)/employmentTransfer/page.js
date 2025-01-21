@@ -52,6 +52,8 @@ export default function EmploymentTransferPage() {
   const [filterDepartment, setFilterDepartment] = useState("");
   const [filterParent, setFilterParent] = useState("");
 
+  const [sequentialMode, setSequentialMode] = useState(false);
+
   const formRef = useRef(null);
 
   const fetchData = useCallback(async () => {
@@ -373,7 +375,6 @@ export default function EmploymentTransferPage() {
         filteredparent={filteredparent}
         isbranchselected={isbranchselected}
         isBranchAndDivisionSelected={isBranchAndDivisionSelected}
-        
         filterBranch={filterBranch}
         setFilterBranch={setFilterBranch}
         filterSite={filterSite}
@@ -385,6 +386,8 @@ export default function EmploymentTransferPage() {
         filterParent={filterParent}
         setFilterParent={setFilterParent}
         filteredEmployees={filteredEmployees}
+        sequentialMode={sequentialMode}
+        setSequentialMode={setSequentialMode}
       />
     </>
   );

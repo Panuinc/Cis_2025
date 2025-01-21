@@ -40,6 +40,8 @@ export default function FormEmploymentTransfer({
   setFilterDepartment,
   filterParent,
   setFilterParent,
+  sequentialMode,
+  setSequentialMode,
 }) {
   const columns = [
     { name: "Select", uid: "select" },
@@ -93,6 +95,16 @@ export default function FormEmploymentTransfer({
       onSubmit={onSubmit}
       className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
     >
+      <div className="flex justify-end w-full p-2">
+        <Button
+          size="md"
+          color={sequentialMode ? "warning" : "primary"}
+          onPress={() => setSequentialMode((prev) => !prev)}
+        >
+          {sequentialMode ? "Close Sequential Mode" : "open Sequential Mode"}
+        </Button>
+      </div>
+
       <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -125,11 +137,15 @@ export default function FormEmploymentTransfer({
               variant="bordered"
               value={filterSite}
               onChange={(e) => setFilterSite(e.target.value)}
-              isDisabled={!filterBranch}
+              isDisabled={sequentialMode ? !filterBranch : false}
             >
               <SelectItem value="">All Sites</SelectItem>
               {site
-                .filter((site) => site.siteBranchId === Number(filterBranch))
+                .filter((site) => {
+                  return sequentialMode && filterBranch
+                    ? site.siteBranchId === Number(filterBranch)
+                    : true;
+                })
                 .map((site) => (
                   <SelectItem key={site.siteId} value={site.siteId.toString()}>
                     {site.siteName}
@@ -146,14 +162,15 @@ export default function FormEmploymentTransfer({
               variant="bordered"
               value={filterDivision}
               onChange={(e) => setFilterDivision(e.target.value)}
-              isDisabled={!filterBranch}
+              isDisabled={sequentialMode ? !filterBranch : false}
             >
               <SelectItem value="">All Divisions</SelectItem>
               {division
-                .filter(
-                  (division) =>
-                    division.divisionBranchId === Number(filterBranch)
-                )
+                .filter((division) => {
+                  return sequentialMode && filterBranch
+                    ? division.divisionBranchId === Number(filterBranch)
+                    : true;
+                })
                 .map((division) => (
                   <SelectItem
                     key={division.divisionId}
@@ -173,15 +190,17 @@ export default function FormEmploymentTransfer({
               variant="bordered"
               value={filterDepartment}
               onChange={(e) => setFilterDepartment(e.target.value)}
-              isDisabled={!filterDivision}
+              isDisabled={sequentialMode ? !filterDivision : false}
             >
               <SelectItem value="">All Departments</SelectItem>
               {department
-                .filter(
-                  (department) =>
-                    department.departmentBranchId === Number(filterBranch) &&
-                    department.departmentDivisionId === Number(filterDivision)
-                )
+                .filter((department) => {
+                  return sequentialMode && filterDivision
+                    ? department.departmentBranchId === Number(filterBranch) &&
+                        department.departmentDivisionId ===
+                          Number(filterDivision)
+                    : true;
+                })
                 .map((department) => (
                   <SelectItem
                     key={department.departmentId}
@@ -201,19 +220,20 @@ export default function FormEmploymentTransfer({
               variant="bordered"
               value={filterParent}
               onChange={(e) => setFilterParent(e.target.value)}
-              isDisabled={!filterDivision}
+              isDisabled={sequentialMode ? !filterDivision : false}
             >
               <SelectItem value="">All Parents</SelectItem>
               {parent
-                .filter(
-                  (parent) =>
-                    parent.employeeStatus === "Active" &&
-                    parent.employeeEmployment?.some(
-                      (emp) =>
-                        emp.employmentBranchId === Number(filterBranch) &&
-                        emp.employmentDivisionId === Number(filterDivision)
-                    )
-                )
+                .filter((parent) => {
+                  return sequentialMode && filterDivision
+                    ? parent.employeeStatus === "Active" &&
+                        parent.employeeEmployment?.some(
+                          (emp) =>
+                            emp.employmentBranchId === Number(filterBranch) &&
+                            emp.employmentDivisionId === Number(filterDivision)
+                        )
+                    : true;
+                })
                 .map((parent) => (
                   <SelectItem
                     key={parent.employeeId}
@@ -225,6 +245,7 @@ export default function FormEmploymentTransfer({
             </Select>
           </div>
         </div>
+
         <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <CommonTable
             columns={columns}
