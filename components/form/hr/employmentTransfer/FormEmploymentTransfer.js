@@ -98,7 +98,7 @@ export default function FormEmploymentTransfer({
       className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
     >
       {!showEmployeeSection && (
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Button
             size="md"
             color="primary"
@@ -280,10 +280,12 @@ export default function FormEmploymentTransfer({
                 </div>
                 <CommonTable
                   columns={columns}
-                  items={filteredEmployees.map((emp, index) => ({
-                    ...emp,
-                    _index: emp.employeeId || index,
-                  }))}
+                  items={filteredEmployees
+                    .filter((emp) => !selectedIds.includes(emp.employeeId))
+                    .map((emp, index) => ({
+                      ...emp,
+                      _index: emp.employeeId || index,
+                    }))}
                   loading={false}
                   renderCell={renderCell}
                   page={1}
