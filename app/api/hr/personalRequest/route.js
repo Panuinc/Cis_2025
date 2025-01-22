@@ -12,11 +12,36 @@ export async function GET(request) {
   let ip;
   try {
     ip = getRequestIP(request);
-
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
 
+    // ดึง employeeId จาก query parameters
+    const { searchParams } = new URL(request.url);
+    const employeeIdParam = searchParams.get("employeeId");
+    const employeeId = employeeIdParam ? Number(employeeIdParam) : null;
+
+    let whereCondition = undefined;
+
+    if (employeeId) {
+      // ค้นหาลูกน้องที่มี employmentParentId ตรงกับ employeeId
+      const subordinates = await prisma.employment.findMany({
+        where: { employmentParentId: employeeId },
+        select: { employmentEmployeeId: true },
+      });
+
+      // สร้างลิสต์ของ subordinate IDs
+      const subordinateIds = subordinates.map((e) => e.employmentEmployeeId);
+
+      // รวม employeeId ของผู้ใช้เองเข้าไปด้วย
+      subordinateIds.push(employeeId);
+
+      // กำหนดเงื่อนไข where
+      whereCondition = { personalRequestCreateBy: { in: subordinateIds } };
+    }
+
+    // ดึงข้อมูล PersonalRequest โดยใช้เงื่อนไข whereCondition ถ้ามี
     const personalRequest = await prisma.personalRequest.findMany({
+      where: whereCondition,
       include: {
         PersonalRequestBranchId: {
           select: { branchName: true },
@@ -31,7 +56,6 @@ export async function GET(request) {
           select: { positionName: true },
         },
         PersonalRequestCreateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
           select: {
             employeeFirstname: true,
             employeeLastname: true,

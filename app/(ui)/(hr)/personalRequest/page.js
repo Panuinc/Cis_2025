@@ -68,12 +68,19 @@ export default function PersonalRequestList() {
   useEffect(() => {
     const fetchPersonalRequest = async () => {
       try {
-        const response = await fetch("/api/hr/personalRequest", {
-          method: "GET",
-          headers: {
-            "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
-          },
-        });
+        // ดึง employeeId จาก session
+        const employeeId = userData?.employee?.employeeId;
+        // ส่ง employeeId เป็น query parameter ไปยัง API
+        const response = await fetch(
+          `/api/hr/personalRequest?employeeId=${employeeId}`,
+          {
+            method: "GET",
+            headers: {
+              "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
+              "user-id": userData?.userId, // ส่ง userId เพื่อใช้ใน API
+            },
+          }
+        );
 
         if (!response.ok) {
           const errorData = await response.json();
@@ -92,34 +99,42 @@ export default function PersonalRequestList() {
     };
 
     fetchPersonalRequest();
-  }, [isUserLevel]);
+  }, [isUserLevel, userData?.employee?.employeeId, userData?.userId]);
 
-  const handleExport = useCallback(async (personalRequestId) => {
-    try {
-      const response = await fetch(
-        `/api/hr/personalRequest/export/${personalRequestId}`,
-        {
-          method: "GET",
-          headers: {
-            "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
-          },
+  const handleExport = useCallback(
+    async (personalRequestId) => {
+      try {
+        const response = await fetch(
+          `/api/hr/personalRequest/export/${personalRequestId}`,
+          {
+            method: "GET",
+            headers: {
+              "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
+              "user-id": userData?.userId, // ส่ง userId เพื่อใช้ใน API
+            },
+          }
+        );
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error(
+            "Export failed with status:",
+            response.status,
+            errorText
+          );
+          throw new Error("Failed to export PDF");
         }
-      );
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Export failed with status:", response.status, errorText);
-        throw new Error("Failed to export PDF");
+        const blob = await response.blob();
+
+        const blobURL = window.URL.createObjectURL(blob);
+        window.open(blobURL);
+      } catch (error) {
+        console.error("Export PDF error:", error);
       }
-
-      const blob = await response.blob();
-
-      const blobURL = window.URL.createObjectURL(blob);
-      window.open(blobURL);
-    } catch (error) {
-      console.error("Export PDF error:", error);
-    }
-  }, []);
+    },
+    [userData?.userId]
+  );
 
   const getFullName = useCallback((user) => {
     if (!user) return null;
@@ -155,11 +170,13 @@ export default function PersonalRequestList() {
         case "createdBy":
           return getFullName(item.PersonalRequestCreateBy);
         case "personalRequestCreateAt":
-          return item.personalRequestCreateAt || null;
+          return new Date(item.personalRequestCreateAt).toLocaleString();
         case "updatedBy":
           return getFullName(item.PersonalRequestUpdateBy);
         case "personalRequestUpdateAt":
-          return item.personalRequestUpdateAt || null;
+          return item.personalRequestUpdateAt
+            ? new Date(item.personalRequestUpdateAt).toLocaleString()
+            : null;
         case "actions":
           return (
             <div className="relative flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -191,7 +208,7 @@ export default function PersonalRequestList() {
           return item[columnKey];
       }
     },
-    [getFullName, renderChip]
+    [getFullName, renderChip, handleExport]
   );
 
   const debouncedSetFilterPersonalRequestValue = useMemo(
