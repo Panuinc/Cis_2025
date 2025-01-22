@@ -29,14 +29,21 @@ export async function GET(request) {
         select: { employmentEmployeeId: true },
       });
 
-      // สร้างลิสต์ของ subordinate IDs
+      // สร้างลิสต์ของ subordinate IDs (ไม่รวม parent เอง)
       const subordinateIds = subordinates.map((e) => e.employmentEmployeeId);
 
-      // รวม employeeId ของผู้ใช้เองเข้าไปด้วย
-      subordinateIds.push(employeeId);
-
-      // กำหนดเงื่อนไข where
-      whereCondition = { personalRequestCreateBy: { in: subordinateIds } };
+      // กำหนดเงื่อนไข where โดยใช้ OR:
+      // - เงื่อนไขแรก: เอกสารที่สร้างโดย parent เอง (employeeId)
+      // - เงื่อนไขที่สอง: เอกสารที่สร้างโดยลูกน้องและมีสถานะ PendingManagerApprove
+      whereCondition = {
+        OR: [
+          { personalRequestCreateBy: employeeId },
+          {
+            personalRequestCreateBy: { in: subordinateIds },
+            personalRequestStatus: "PendingManagerApprove"
+          }
+        ]
+      };
     }
 
     // ดึงข้อมูล PersonalRequest โดยใช้เงื่อนไข whereCondition ถ้ามี
