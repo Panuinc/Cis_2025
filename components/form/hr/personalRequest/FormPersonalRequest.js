@@ -21,6 +21,9 @@ export default function FormPersonalRequest({
   operatedBy = "",
   amPosition = "",
   amDepartment = "",
+  isParentOfCreator = false,
+  onManagerApprove,
+  onManagerReject,
 }) {
   return (
     <form
@@ -456,6 +459,33 @@ export default function FormPersonalRequest({
           />
         </div>
       </div>
+
+      {isParentOfCreator && (
+        <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <Button
+              size="md"
+              color="success"
+              startContent={<Database />}
+              onPress={onManagerApprove}
+              type="button"
+            >
+              Approved
+            </Button>
+          </div>
+          <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <Button
+              size="md"
+              color="danger"
+              startContent={<Cancel />}
+              onPress={onManagerReject}
+              type="button"
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      )}
 
       <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">

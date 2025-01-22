@@ -171,6 +171,15 @@ export default function PersonalRequestUpdate({ params: paramsPromise }) {
     fetchData();
   }, [fetchData]);
 
+  const isParentOfCreator = useMemo(() => {
+    const creatorEmployments =
+      formData?.PersonalRequestCreateBy?.employeeEmployment || [];
+    return creatorEmployments.some(
+      (employment) =>
+        employment.employmentParentId === userData?.employee?.employeeId
+    );
+  }, [userData, formData]);
+
   const filtereddivision = useMemo(() => {
     if (!formData.personalRequestBranchId) return [];
     return division.filter(
@@ -293,6 +302,60 @@ export default function PersonalRequestUpdate({ params: paramsPromise }) {
     [personalRequestId, router, userId]
   );
 
+  const handleManagerApprove = async () => {
+    const formDataObject = new FormData(formRef.current);
+    formDataObject.set("personalRequestStatus", "PendingHrApprove");
+    formDataObject.append("personalRequestReasonManagerApproveBy", userId);
+    try {
+      const res = await fetch(
+        `/api/hr/personalRequest/${personalRequestId}?action=managerApprove`,
+        {
+          method: "PUT",
+          body: formDataObject,
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }
+      );
+      const jsonData = await res.json();
+      if (res.ok) {
+        toast.success(jsonData.message);
+        router.push("/personalRequest");
+      } else {
+        toast.error(jsonData.error || "Error approving request");
+      }
+    } catch (err) {
+      toast.error("Error: " + err.message);
+    }
+  };
+
+  const handleManagerReject = async () => {
+    const formDataObject = new FormData(formRef.current);
+    formDataObject.set("personalRequestStatus", "ManagerCancel");
+    formDataObject.append("personalRequestReasonManagerApproveBy", userId);
+    try {
+      const res = await fetch(
+        `/api/hr/personalRequest/${personalRequestId}?action=managerApprove`,
+        {
+          method: "PUT",
+          body: formDataObject,
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }
+      );
+      const jsonData = await res.json();
+      if (res.ok) {
+        toast.success("Request rejected successfully");
+        router.push("/personalRequest");
+      } else {
+        toast.error(jsonData.error || "Error rejecting request");
+      }
+    } catch (err) {
+      toast.error("Error: " + err.message);
+    }
+  };
+
   const handleClear = useCallback(() => {
     if (formRef.current) formRef.current.reset();
     setFormData(DEFAULT_FORM_DATA);
@@ -324,6 +387,9 @@ export default function PersonalRequestUpdate({ params: paramsPromise }) {
         operatedBy={operatedBy}
         amPosition={amPosition}
         amDepartment={amDepartment}
+        isParentOfCreator={isParentOfCreator}
+        onManagerApprove={handleManagerApprove}
+        onManagerReject={handleManagerReject}
       />
     </>
   );

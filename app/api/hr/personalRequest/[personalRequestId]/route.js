@@ -51,13 +51,14 @@ export async function GET(request, context) {
           select: {
             employeeFirstname: true,
             employeeLastname: true,
+            employeeCreateBy: true,
             employeeEmployment: {
               select: {
+                employmentParentId: true, 
                 EmploymentPositionId: { select: { positionName: true } },
                 EmploymentDepartmentId: { select: { departmentName: true } },
                 employmentSignature: true,
               },
-              take: 1,
             },
           },
         },
