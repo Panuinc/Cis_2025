@@ -64,6 +64,7 @@ export async function GET(request) {
         },
         PersonalRequestCreateBy: {
           select: {
+            employeeId: true,
             employeeFirstname: true,
             employeeLastname: true,
             employeeEmployment: {

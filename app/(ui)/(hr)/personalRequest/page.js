@@ -177,7 +177,19 @@ export default function PersonalRequestList() {
           return item.personalRequestUpdateAt
             ? new Date(item.personalRequestUpdateAt).toLocaleString()
             : null;
-        case "actions":
+        case "actions": {
+          // เก็บ employeeId ของผู้ใช้ที่ล็อกอินจาก session
+          const loggedInEmployeeId = userData?.employee?.employeeId;
+          // ตรวจสอบว่าผู้สร้างเอกสารคือผู้ใช้ที่ล็อกอินหรือไม่
+          const isOwner =
+            item.PersonalRequestCreateBy.employeeId === loggedInEmployeeId;
+          // กำหนดเงื่อนไขการแสดงปุ่ม Update:
+          // - หากไม่ใช่เจ้าของ (หมายความว่าเป็นผู้ปกครองของเจ้าของ) ให้แสดงปุ่มเสมอ
+          // - หรือถ้าเป็นเจ้าของและสถานะเป็น PendingManagerApprove ให้แสดงปุ่ม
+          const showUpdate =
+            !isOwner ||
+            (isOwner && item.personalRequestStatus === "PendingManagerApprove");
+
           return (
             <div className="relative flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <Dropdown>
@@ -187,11 +199,13 @@ export default function PersonalRequestList() {
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu>
-                  <DropdownItem key="edit" variant="flat" color="warning">
-                    <Link href={`/personalRequest/${item.personalRequestId}`}>
-                      Update
-                    </Link>
-                  </DropdownItem>
+                  {showUpdate && (
+                    <DropdownItem key="edit" variant="flat" color="warning">
+                      <Link href={`/personalRequest/${item.personalRequestId}`}>
+                        Update
+                      </Link>
+                    </DropdownItem>
+                  )}
                   <DropdownItem
                     key="export"
                     variant="flat"
@@ -204,6 +218,7 @@ export default function PersonalRequestList() {
               </Dropdown>
             </div>
           );
+        }
         default:
           return item[columnKey];
       }
