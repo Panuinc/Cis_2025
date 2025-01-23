@@ -56,7 +56,7 @@ export const personalRequestPosteSchema = z.object({
 
   personalRequestEmploymentType: preprocessEnum(
     ["FULL_TIME", "PART_TIME", "TEMPORARY", "CONTRACT", "INTERN"],
-    "PersonalRequest EMployee TYpe must be either 'FULL_TIME', 'PART_TIME', 'TEMPORARY', 'CONTRACT', 'INTERN'."
+    "PersonalRequest Employment Type must be either 'FULL_TIME', 'PART_TIME', 'TEMPORARY', 'CONTRACT', 'INTERN'."
   ),
 
   personalRequestReasonForRequest: preprocessEnum(
@@ -81,12 +81,12 @@ export const personalRequestPosteSchema = z.object({
 
   personalRequestReasonEnglishSkill: preprocessEnum(
     ["BASIC", "INTERMEDIATE", "ADVANCED"],
-    "PersonalRequest Gender must be either 'BASIC', 'INTERMEDIATE', 'ADVANCED'."
+    "PersonalRequest English Skill must be either 'BASIC', 'INTERMEDIATE', 'ADVANCED'."
   ),
 
   personalRequestReasonComputerSkill: preprocessEnum(
     ["BASIC", "INTERMEDIATE", "ADVANCED"],
-    "PersonalRequest Gender must be either 'BASIC', 'INTERMEDIATE', 'ADVANCED'."
+    "PersonalRequest Computer Skill must be either 'BASIC', 'INTERMEDIATE', 'ADVANCED'."
   ),
 
   personalRequestReasonOtherSkill: preprocessString(
@@ -145,7 +145,7 @@ export const personalRequestPutSchema = z.object({
 
   personalRequestEmploymentType: preprocessEnum(
     ["FULL_TIME", "PART_TIME", "TEMPORARY", "CONTRACT", "INTERN"],
-    "PersonalRequest EMployee TYpe must be either 'FULL_TIME', 'PART_TIME', 'TEMPORARY', 'CONTRACT', 'INTERN'."
+    "PersonalRequest Employment Type must be either 'FULL_TIME', 'PART_TIME', 'TEMPORARY', 'CONTRACT', 'INTERN'."
   ),
 
   personalRequestReasonForRequest: preprocessEnum(
@@ -170,12 +170,12 @@ export const personalRequestPutSchema = z.object({
 
   personalRequestReasonEnglishSkill: preprocessEnum(
     ["BASIC", "INTERMEDIATE", "ADVANCED"],
-    "PersonalRequest Gender must be either 'BASIC', 'INTERMEDIATE', 'ADVANCED'."
+    "PersonalRequest English Skill must be either 'BASIC', 'INTERMEDIATE', 'ADVANCED'."
   ),
 
   personalRequestReasonComputerSkill: preprocessEnum(
     ["BASIC", "INTERMEDIATE", "ADVANCED"],
-    "PersonalRequest Gender must be either 'BASIC', 'INTERMEDIATE', 'ADVANCED'."
+    "PersonalRequest Computer Skill must be either 'BASIC', 'INTERMEDIATE', 'ADVANCED'."
   ),
 
   personalRequestReasonOtherSkill: preprocessString(
