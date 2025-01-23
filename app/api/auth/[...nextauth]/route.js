@@ -15,7 +15,8 @@ export const authOptions = {
         userPassword: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+        const ip =
+          req.headers["x-forwarded-for"] || req.connection.remoteAddress;
         await checkRateLimit(ip);
 
         if (!credentials?.userUsername || !credentials?.userPassword) {
@@ -34,7 +35,9 @@ export const authOptions = {
                       EmploymentSiteId: { select: { siteName: true } },
                       EmploymentRoleId: { select: { roleName: true } },
                       EmploymentDivisionId: { select: { divisionName: true } },
-                      EmploymentDepartmentId: { select: { departmentName: true } },
+                      EmploymentDepartmentId: {
+                        select: { departmentName: true },
+                      },
                       EmploymentPositionId: { select: { positionName: true } },
                     },
                   },
@@ -79,7 +82,8 @@ export const authOptions = {
             siteName: firstEmployment?.EmploymentSiteId?.siteName,
             roleName: firstEmployment?.EmploymentRoleId?.roleName,
             divisionName: firstEmployment?.EmploymentDivisionId?.divisionName,
-            departmentName: firstEmployment?.EmploymentDepartmentId?.departmentName,
+            departmentName:
+              firstEmployment?.EmploymentDepartmentId?.departmentName,
             positionName: firstEmployment?.EmploymentPositionId?.positionName,
           };
         } catch (error) {
@@ -100,8 +104,8 @@ export const authOptions = {
         token.employment = user.employment;
         token.branchName = user.branchName;
         token.siteName = user.siteName;
-        token.roleName = user.roleName;
-        token.divisionName = user.divisionName;
+        token.divisionName = user.employee?.employeeEmployment[0]?.EmploymentDivisionId?.divisionName;
+        token.roleName = user.employee?.employeeEmployment[0]?.EmploymentRoleId?.roleName;
         token.departmentName = user.departmentName;
         token.positionName = user.positionName;
       }
@@ -116,8 +120,8 @@ export const authOptions = {
         employment: token.employment,
         branchName: token.branchName,
         siteName: token.siteName,
-        roleName: token.roleName,
         divisionName: token.divisionName,
+        roleName: token.roleName,
         departmentName: token.departmentName,
         positionName: token.positionName,
       };
