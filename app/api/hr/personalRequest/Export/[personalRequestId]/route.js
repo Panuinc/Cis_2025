@@ -56,6 +56,58 @@ export async function GET(request, context) {
         PersonalRequestUpdateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
+
+        //
+        PersonalRequestManagerApproveBy: {
+          select: { employeeFirstname: true, employeeLastname: true },
+          select: {
+            employeeFirstname: true,
+            employeeLastname: true,
+            employeeEmployment: {
+              select: {
+                EmploymentPositionId: { select: { positionName: true } },
+                EmploymentDepartmentId: { select: { departmentName: true } },
+                employmentSignature: true,
+              },
+              take: 1,
+            },
+          },
+        },
+        //
+        //
+        PersonalRequestHrApproveBy: {
+          select: { employeeFirstname: true, employeeLastname: true },
+          select: {
+            employeeFirstname: true,
+            employeeLastname: true,
+            employeeEmployment: {
+              select: {
+                EmploymentPositionId: { select: { positionName: true } },
+                EmploymentDepartmentId: { select: { departmentName: true } },
+                employmentSignature: true,
+              },
+              take: 1,
+            },
+          },
+        },
+        //
+        //
+        PersonalRequestMdApproveBy: {
+          select: { employeeFirstname: true, employeeLastname: true },
+          select: {
+            employeeFirstname: true,
+            employeeLastname: true,
+            employeeEmployment: {
+              select: {
+                EmploymentPositionId: { select: { positionName: true } },
+                EmploymentDepartmentId: { select: { departmentName: true } },
+                employmentSignature: true,
+              },
+              take: 1,
+            },
+          },
+        },
+        //
       },
     });
 
@@ -67,42 +119,66 @@ export async function GET(request, context) {
     }
 
     const formattedCreateAt = personalRequest.personalRequestCreateAt
-    ? new Date(personalRequest.personalRequestCreateAt).toLocaleDateString(
-        "th-TH",
-        { day: "numeric", month: "numeric", year: "numeric" }
-      )
-    : "-";
+      ? new Date(personalRequest.personalRequestCreateAt).toLocaleDateString(
+          "th-TH",
+          { day: "numeric", month: "numeric", year: "numeric" }
+        )
+      : "-";
 
     const formattedDesiredDate = personalRequest.personalRequestDesiredDate
-    ? new Date(personalRequest.personalRequestDesiredDate).toLocaleDateString(
-        "th-TH",
-        { day: "numeric", month: "numeric", year: "numeric" }
-      )
-    : "-";
+      ? new Date(personalRequest.personalRequestDesiredDate).toLocaleDateString(
+          "th-TH",
+          { day: "numeric", month: "numeric", year: "numeric" }
+        )
+      : "-";
 
     const genderValue = personalRequest.personalRequestReasonGender || "";
 
-    const employmentTypeValue = personalRequest.personalRequestEmploymentType || "";
+    const employmentTypeValue =
+      personalRequest.personalRequestEmploymentType || "";
 
-    const reasonForRequestValue = personalRequest.personalRequestReasonForRequest || "";
+    const reasonForRequestValue =
+      personalRequest.personalRequestReasonForRequest || "";
 
     const htmlContent = `
     <html>
     <head>
       <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
       <style>
-        input[type="checkbox"] {
-          -webkit-appearance: checkbox;
-          -moz-appearance: checkbox;
-          appearance: checkbox;
-        }
-      </style>
+          input[type="checkbox"] {
+            -webkit-appearance: checkbox;
+            -moz-appearance: checkbox;
+            appearance: checkbox;
+          }
+          /* CSS สำหรับลายน้ำ */
+          .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 80px;
+            font-weight: bold;
+            color: rgba(255, 0, 0, 0.2); /* สีแดงจาง ๆ สำหรับ Cancel */
+            z-index: 1000;
+            pointer-events: none; /* ไม่ให้ลายน้ำขัดขวางการคลิก */
+          }
+        </style>  
     </head>   
      <body class="font-sans p-8 text-sm">
-      <div class="flex flex-col items-center justify-start w-full h-full gap-2">
+  ${
+    personalRequest.personalRequestStatus === "ApprovedSuccess"
+      ? '<div class="watermark" style="color: rgba(0, 128, 0, 0.2);">Approved</div>'
+      : ["ManagerCancel", "HrCancel", "MdCancel", "Cancel"].includes(
+          personalRequest.personalRequestStatus
+        )
+      ? '<div class="watermark" style="color: rgba(255, 0, 0, 0.2);">Cancel</div>'
+      : ""
+  }      <div class="flex flex-col items-center justify-start w-full h-full gap-2">
         <div class="flex flex-row items-center justify-center w-full gap-2">
           <div class="flex items-center justify-center h-full gap-2">
-            <img src="${process.env.NEXT_PUBLIC_API_URL}/images/company_logo/company_logo.png" class="w-28 min-h-28" />
+            <img src="${
+              process.env.NEXT_PUBLIC_API_URL
+            }/images/company_logo/company_logo.png" class="w-28 min-h-28" />
           </div>
           <div class="flex items-center justify-center w-full h-full gap-2 text-3xl font-[900]">
             ใบขออัตรากำลังคน : Personnel Request
@@ -115,7 +191,13 @@ export async function GET(request, context) {
               ด้วยข้าพเจ้า นาย / นาง / นางสาว
             </div>
             <div class="flex items-center justify-center w-full h-full gap-2 border-b-2">
-              ${personalRequest.PersonalRequestCreateBy ? personalRequest.PersonalRequestCreateBy.employeeFirstname +" " +personalRequest.PersonalRequestCreateBy.employeeLastname: "-"}
+              ${
+                personalRequest.PersonalRequestCreateBy
+                  ? personalRequest.PersonalRequestCreateBy.employeeFirstname +
+                    " " +
+                    personalRequest.PersonalRequestCreateBy.employeeLastname
+                  : "-"
+              }
             </div>
           </div>
           <div class="flex flex-row items-center justify-center w-full h-full gap-2">
@@ -123,7 +205,17 @@ export async function GET(request, context) {
               ตำแหน่ง
             </div>
             <div class="flex items-center justify-center w-full h-full gap-2 border-b-2">
-              ${personalRequest.PersonalRequestCreateBy &&personalRequest.PersonalRequestCreateBy.employeeEmployment &&personalRequest.PersonalRequestCreateBy.employeeEmployment.length > 0 &&personalRequest.PersonalRequestCreateBy.employeeEmployment[0].EmploymentPositionId? personalRequest.PersonalRequestCreateBy.employeeEmployment[0].EmploymentPositionId.positionName: "-"}
+              ${
+                personalRequest.PersonalRequestCreateBy &&
+                personalRequest.PersonalRequestCreateBy.employeeEmployment &&
+                personalRequest.PersonalRequestCreateBy.employeeEmployment
+                  .length > 0 &&
+                personalRequest.PersonalRequestCreateBy.employeeEmployment[0]
+                  .EmploymentPositionId
+                  ? personalRequest.PersonalRequestCreateBy
+                      .employeeEmployment[0].EmploymentPositionId.positionName
+                  : "-"
+              }
             </div>
           </div>
         </div>
@@ -134,7 +226,18 @@ export async function GET(request, context) {
               แผนก
             </div>
             <div class="flex items-center justify-center w-full h-full gap-2 border-b-2">
-              ${personalRequest.PersonalRequestCreateBy &&personalRequest.PersonalRequestCreateBy.employeeEmployment &&personalRequest.PersonalRequestCreateBy.employeeEmployment.length > 0 &&personalRequest.PersonalRequestCreateBy.employeeEmployment[0].EmploymentDepartmentId? personalRequest.PersonalRequestCreateBy.employeeEmployment[0].EmploymentDepartmentId.departmentName: "-"}
+              ${
+                personalRequest.PersonalRequestCreateBy &&
+                personalRequest.PersonalRequestCreateBy.employeeEmployment &&
+                personalRequest.PersonalRequestCreateBy.employeeEmployment
+                  .length > 0 &&
+                personalRequest.PersonalRequestCreateBy.employeeEmployment[0]
+                  .EmploymentDepartmentId
+                  ? personalRequest.PersonalRequestCreateBy
+                      .employeeEmployment[0].EmploymentDepartmentId
+                      .departmentName
+                  : "-"
+              }
             </div>
           </div>
           <div class="flex flex-row items-center justify-center w-full h-full gap-2">
@@ -375,7 +478,14 @@ export async function GET(request, context) {
                 ลงชื่อ
               </div>
               <div class="flex items-center justify-center w-full h-full gap-2">
-                <img src="${process.env.NEXT_PUBLIC_API_URL}/images/signature/${personalRequest.PersonalRequestCreateBy &&personalRequest.PersonalRequestCreateBy.employeeEmployment &&personalRequest.PersonalRequestCreateBy.employeeEmployment.length > 0? personalRequest.PersonalRequestCreateBy.employeeEmployment[0].employmentSignature: " default_signature.png"}" class="w-20 h-20" />
+                <img src="${process.env.NEXT_PUBLIC_API_URL}/images/signature/${
+      personalRequest.PersonalRequestCreateBy &&
+      personalRequest.PersonalRequestCreateBy.employeeEmployment &&
+      personalRequest.PersonalRequestCreateBy.employeeEmployment.length > 0
+        ? personalRequest.PersonalRequestCreateBy.employeeEmployment[0]
+            .employmentSignature
+        : " default_signature.png"
+    }" class="w-20 h-20" />
               </div>
               <div class="flex items-center justify-center w-full h-full gap-2">
                 ผู้ขอเสนอ
@@ -398,7 +508,15 @@ export async function GET(request, context) {
                 ลงชื่อ
               </div>
               <div class="flex items-center justify-center w-full h-full gap-2">
-                <img src="${process.env.NEXT_PUBLIC_API_URL}/images/signature/${personalRequest.PersonalRequestCreateBy &&personalRequest.PersonalRequestCreateBy.employeeEmployment &&personalRequest.PersonalRequestCreateBy.employeeEmployment.length > 0? personalRequest.PersonalRequestCreateBy.employeeEmployment[0].employmentSignature: " default_signature.png"}" class="w-20 h-20" />
+                <img src="${process.env.NEXT_PUBLIC_API_URL}/images/signature/${
+      personalRequest.PersonalRequestManagerApproveBy &&
+      personalRequest.PersonalRequestManagerApproveBy.employeeEmployment &&
+      personalRequest.PersonalRequestManagerApproveBy.employeeEmployment
+        .length > 0
+        ? personalRequest.PersonalRequestManagerApproveBy.employeeEmployment[0]
+            .employmentSignature
+        : " default_signature.png"
+    }" class="w-20 h-20" />
               </div>
               <div class="flex items-center justify-center w-full h-full gap-2">
                 รับทราบ
@@ -424,7 +542,14 @@ export async function GET(request, context) {
                 ลงชื่อ
               </div>
               <div class="flex items-center justify-center w-full h-full gap-2">
-                <img src="${process.env.NEXT_PUBLIC_API_URL}/images/signature/${personalRequest.PersonalRequestCreateBy &&personalRequest.PersonalRequestCreateBy.employeeEmployment &&personalRequest.PersonalRequestCreateBy.employeeEmployment.length > 0? personalRequest.PersonalRequestCreateBy.employeeEmployment[0].employmentSignature: " default_signature.png"}" class="w-20 h-20" />
+                <img src="${process.env.NEXT_PUBLIC_API_URL}/images/signature/${
+      personalRequest.PersonalRequestHrApproveBy &&
+      personalRequest.PersonalRequestHrApproveBy.employeeEmployment &&
+      personalRequest.PersonalRequestHrApproveBy.employeeEmployment.length > 0
+        ? personalRequest.PersonalRequestHrApproveBy.employeeEmployment[0]
+            .employmentSignature
+        : " default_signature.png"
+    }" class="w-20 h-20" />
               </div>
               <div class="flex items-center justify-center w-full h-full gap-2">
                 รับทราบ
@@ -447,7 +572,14 @@ export async function GET(request, context) {
                 ลงชื่อ
               </div>
               <div class="flex items-center justify-center w-full h-full gap-2">
-                <img src="${process.env.NEXT_PUBLIC_API_URL}/images/signature/${personalRequest.PersonalRequestCreateBy &&personalRequest.PersonalRequestCreateBy.employeeEmployment &&personalRequest.PersonalRequestCreateBy.employeeEmployment.length > 0? personalRequest.PersonalRequestCreateBy.employeeEmployment[0].employmentSignature: " default_signature.png"}" class="w-20 h-20" />
+                <img src="${process.env.NEXT_PUBLIC_API_URL}/images/signature/${
+      personalRequest.PersonalRequestMdApproveBy &&
+      personalRequest.PersonalRequestMdApproveBy.employeeEmployment &&
+      personalRequest.PersonalRequestMdApproveBy.employeeEmployment.length > 0
+        ? personalRequest.PersonalRequestMdApproveBy.employeeEmployment[0]
+            .employmentSignature
+        : " default_signature.png"
+    }" class="w-20 h-20" />
               </div>
               <div class="flex items-center justify-center w-full h-full gap-2">
                 รับทราบ
@@ -470,37 +602,36 @@ export async function GET(request, context) {
     </html>
   `;
 
-const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
-const page = await browser.newPage();
+    const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
+    const page = await browser.newPage();
 
-await page.setContent(htmlContent, { waitUntil: "networkidle0" });
+    await page.setContent(htmlContent, { waitUntil: "networkidle0" });
 
-const pdfBuffer = await page.pdf({
-  format: "A4",
-  printBackground: true,
-  displayHeaderFooter: true,
-  headerTemplate: "<div></div>",
-  footerTemplate: `
+    const pdfBuffer = await page.pdf({
+      format: "A4",
+      printBackground: true,
+      displayHeaderFooter: true,
+      headerTemplate: "<div></div>",
+      footerTemplate: `
     <div style="width: 100%; text-align: right; font-size: 10px; padding-right: 10px;">
       FM01-WP-HR1-01 / Rev.00 / 24-02-64
     </div>
   `,
-});
+    });
 
-await browser.close();
+    await browser.close();
 
-return new NextResponse(pdfBuffer, {
-  status: 200,
-  headers: {
-    "Content-Type": "application/pdf",
-    "Content-Disposition": `attachment; filename="personal_request_${personalRequestId}.pdf"`,
-  },
-});
-
-} catch (error) {
-return NextResponse.json(
-  { error: error.message || "Unknown error" },
-  { status: 500 }
-);
-}
+    return new NextResponse(pdfBuffer, {
+      status: 200,
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename="personal_request_${personalRequestId}.pdf"`,
+      },
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: error.message || "Unknown error" },
+      { status: 500 }
+    );
+  }
 }
