@@ -12,6 +12,7 @@ export async function GET(request) {
   let ip;
   try {
     ip = getRequestIP(request);
+    
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
 
