@@ -12,11 +12,10 @@ export async function GET(request) {
   let ip;
   try {
     ip = getRequestIP(request);
-    
+
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
 
-    // ดึง employeeId จาก query parameters
     const { searchParams } = new URL(request.url);
     const employeeIdParam = searchParams.get("employeeId");
     const employeeId = employeeIdParam ? Number(employeeIdParam) : null;
@@ -24,30 +23,24 @@ export async function GET(request) {
     let whereCondition = undefined;
 
     if (employeeId) {
-      // ค้นหาลูกน้องที่มี employmentParentId ตรงกับ employeeId
       const subordinates = await prisma.employment.findMany({
         where: { employmentParentId: employeeId },
         select: { employmentEmployeeId: true },
       });
 
-      // สร้างลิสต์ของ subordinate IDs (ไม่รวม parent เอง)
       const subordinateIds = subordinates.map((e) => e.employmentEmployeeId);
 
-      // กำหนดเงื่อนไข where โดยใช้ OR:
-      // - เงื่อนไขแรก: เอกสารที่สร้างโดย parent เอง (employeeId)
-      // - เงื่อนไขที่สอง: เอกสารที่สร้างโดยลูกน้องและมีสถานะ PendingManagerApprove
       whereCondition = {
         OR: [
           { personalRequestCreateBy: employeeId },
           {
             personalRequestCreateBy: { in: subordinateIds },
-            personalRequestStatus: "PendingManagerApprove"
-          }
-        ]
+            personalRequestStatus: "PendingManagerApprove",
+          },
+        ],
       };
     }
 
-    // ดึงข้อมูล PersonalRequest โดยใช้เงื่อนไข whereCondition ถ้ามี
     const personalRequest = await prisma.personalRequest.findMany({
       where: whereCondition,
       include: {

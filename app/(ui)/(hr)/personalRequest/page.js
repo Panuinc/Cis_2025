@@ -68,16 +68,14 @@ export default function PersonalRequestList() {
   useEffect(() => {
     const fetchPersonalRequest = async () => {
       try {
-        // ดึง employeeId จาก session
         const employeeId = userData?.employee?.employeeId;
-        // ส่ง employeeId เป็น query parameter ไปยัง API
         const response = await fetch(
           `/api/hr/personalRequest?employeeId=${employeeId}`,
           {
             method: "GET",
             headers: {
               "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
-              "user-id": userData?.userId, // ส่ง userId เพื่อใช้ใน API
+              "user-id": userData?.userId,
             },
           }
         );
@@ -110,7 +108,7 @@ export default function PersonalRequestList() {
             method: "GET",
             headers: {
               "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
-              "user-id": userData?.userId, // ส่ง userId เพื่อใช้ใน API
+              "user-id": userData?.userId,
             },
           }
         );
@@ -178,14 +176,9 @@ export default function PersonalRequestList() {
             ? new Date(item.personalRequestUpdateAt).toLocaleString()
             : null;
         case "actions": {
-          // เก็บ employeeId ของผู้ใช้ที่ล็อกอินจาก session
           const loggedInEmployeeId = userData?.employee?.employeeId;
-          // ตรวจสอบว่าผู้สร้างเอกสารคือผู้ใช้ที่ล็อกอินหรือไม่
           const isOwner =
             item.PersonalRequestCreateBy.employeeId === loggedInEmployeeId;
-          // กำหนดเงื่อนไขการแสดงปุ่ม Update:
-          // - หากไม่ใช่เจ้าของ (หมายความว่าเป็นผู้ปกครองของเจ้าของ) ให้แสดงปุ่มเสมอ
-          // - หรือถ้าเป็นเจ้าของและสถานะเป็น PendingManagerApprove ให้แสดงปุ่ม
           const showUpdate =
             !isOwner ||
             (isOwner && item.personalRequestStatus === "PendingManagerApprove");
