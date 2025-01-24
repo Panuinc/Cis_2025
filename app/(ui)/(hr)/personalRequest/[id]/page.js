@@ -171,15 +171,6 @@ export default function PersonalRequestUpdate({ params: paramsPromise }) {
     fetchData();
   }, [fetchData]);
 
-  const isParentOfCreator = useMemo(() => {
-    const creatorEmployments =
-      formData?.PersonalRequestCreateBy?.employeeEmployment || [];
-    return creatorEmployments.some(
-      (employment) =>
-        employment.employmentParentId === userData?.employee?.employeeId
-    );
-  }, [userData, formData]);
-
   const filtereddivision = useMemo(() => {
     if (!formData.personalRequestBranchId) return [];
     return division.filter(
@@ -240,6 +231,15 @@ export default function PersonalRequestUpdate({ params: paramsPromise }) {
       formData.personalRequestDivisionId &&
       formData.personalRequestDepartmentId
   );
+
+  const isParentOfCreator = useMemo(() => {
+    const creatorEmployments =
+      formData?.PersonalRequestCreateBy?.employeeEmployment || [];
+    return creatorEmployments.some(
+      (employment) =>
+        employment.employmentParentId === userData?.employee?.employeeId
+    );
+  }, [userData, formData]);
 
   const handleInputChange = useCallback(
     (field) => (e) => {
