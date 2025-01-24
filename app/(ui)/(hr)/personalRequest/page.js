@@ -31,6 +31,10 @@ export default function PersonalRequestList() {
   const { data: session } = useSession();
   const userData = session?.user || {};
   const isUserLevel = userData?.employee?.employeeLevel === "User";
+  const isUserDivision = userData?.divisionName;
+  console.log("🚀 ~ PersonalRequestList ~ isUserDivision:", isUserDivision)
+  const isUserRole = userData?.roleName;
+  console.log("🚀 ~ PersonalRequestList ~ isUserRole:", isUserRole)
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
