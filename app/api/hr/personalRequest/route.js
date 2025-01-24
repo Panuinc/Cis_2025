@@ -20,25 +20,69 @@ export async function GET(request) {
     const employeeIdParam = searchParams.get("employeeId");
     const employeeId = employeeIdParam ? Number(employeeIdParam) : null;
 
-    let whereCondition = undefined;
+    // รับ userId จาก headers
+    const userId = request.headers.get("user-id");
 
+    // Query ข้อมูล User และ Employee ที่เกี่ยวข้อง
+    const user = await prisma.user.findUnique({
+      where: { userId: Number(userId) },
+      include: {
+        UserEmployeeBy: {
+          include: {
+            employeeEmployment: {
+              include: {
+                EmploymentBranchId: true,
+                EmploymentDivisionId: true,
+                EmploymentRoleId: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    const userDivision =
+      user.UserEmployeeBy?.employeeEmployment[0]?.EmploymentDivisionId
+        ?.divisionName;
+    const userRole =
+      user.UserEmployeeBy?.employeeEmployment[0]?.EmploymentRoleId?.roleName;
+
+    // ดึงข้อมูลลูกน้อง (subordinates) ของผู้ใช้ปัจจุบัน
+    const subordinates = await prisma.employment.findMany({
+      where: { employmentParentId: user.UserEmployeeBy?.employeeId },
+      select: { employmentEmployeeId: true },
+    });
+
+    // สร้าง array ของ subordinateIds
+    const subordinateIds = subordinates.map((e) => e.employmentEmployeeId);
+
+    let whereCondition = {};
+
+    // Case 1: Owner sees all their requests
     if (employeeId) {
-      const subordinates = await prisma.employment.findMany({
-        where: { employmentParentId: employeeId },
-        select: { employmentEmployeeId: true },
-      });
-
-      const subordinateIds = subordinates.map((e) => e.employmentEmployeeId);
-
       whereCondition = {
         OR: [
-          { personalRequestCreateBy: employeeId },
+          { personalRequestCreateBy: employeeId }, // Owner sees all their requests
           {
             personalRequestCreateBy: { in: subordinateIds },
-            personalRequestStatus: "PendingManagerApprove",
+            personalRequestStatus: "PendingManagerApprove", // Parent sees only PendingManagerApprove
           },
         ],
       };
+    }
+
+    // Case 3: HR Manager sees all requests but can only update PendingHrApprove
+    if (userDivision === "บุคคล" && userRole === "Manager") {
+      whereCondition = {}; // HR Manager sees all requests
+    }
+
+    // Case 4: MD sees all requests but can only update PendingMdApprove
+    if (userDivision === "บริหาร" && userRole === "MD") {
+      whereCondition = {}; // MD sees all requests
     }
 
     const personalRequest = await prisma.personalRequest.findMany({
@@ -84,12 +128,10 @@ export async function GET(request) {
       );
     }
 
-    const formattedPersonalRequest = formatPersonalRequestData(personalRequest);
-
     return NextResponse.json(
       {
         message: "PersonalRequest data retrieved successfully",
-        personalRequest: formattedPersonalRequest,
+        personalRequest,
       },
       { status: 200 }
     );

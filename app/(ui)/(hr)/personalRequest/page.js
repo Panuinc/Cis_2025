@@ -32,9 +32,7 @@ export default function PersonalRequestList() {
   const userData = session?.user || {};
   const isUserLevel = userData?.employee?.employeeLevel === "User";
   const isUserDivision = userData?.divisionName;
-  console.log("🚀 ~ PersonalRequestList ~ isUserDivision:", isUserDivision)
   const isUserRole = userData?.roleName;
-  console.log("🚀 ~ PersonalRequestList ~ isUserRole:", isUserRole)
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -49,17 +47,11 @@ export default function PersonalRequestList() {
     return isUserLevel
       ? [
           { name: "No.", uid: "index" },
-          {
-            name: "Document Id",
-            uid: "personalRequestDocumentId",
-          },
+          { name: "Document Id", uid: "personalRequestDocumentId" },
         ]
       : [
           { name: "No.", uid: "index" },
-          {
-            name: "Document Id",
-            uid: "personalRequestDocumentId",
-          },
+          { name: "Document Id", uid: "personalRequestDocumentId" },
           { name: "Create By", uid: "createdBy" },
           { name: "Create At", uid: "personalRequestCreateAt" },
           { name: "Update By", uid: "updatedBy" },
@@ -90,9 +82,7 @@ export default function PersonalRequestList() {
         }
 
         const data = await response.json();
-        const filteredData = data.personalRequest || [];
-
-        setPersonalRequest(filteredData);
+        setPersonalRequest(data.personalRequest || []);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -128,7 +118,6 @@ export default function PersonalRequestList() {
         }
 
         const blob = await response.blob();
-
         const blobURL = window.URL.createObjectURL(blob);
         window.open(blobURL);
       } catch (error) {
@@ -183,9 +172,24 @@ export default function PersonalRequestList() {
           const loggedInEmployeeId = userData?.employee?.employeeId;
           const isOwner =
             item.PersonalRequestCreateBy.employeeId === loggedInEmployeeId;
+          const isParent =
+            item.PersonalRequestCreateBy.employeeId !== loggedInEmployeeId &&
+            item.personalRequestStatus === "PendingManagerApprove";
+          const isHRManager =
+            userData?.divisionName === "บุคคล" &&
+            userData?.roleName === "Manager" &&
+            item.personalRequestStatus === "PendingHrApprove";
+          const isMD =
+            userData?.divisionName === "บริหาร" &&
+            userData?.roleName === "MD" &&
+            item.personalRequestStatus === "PendingMdApprove";
+
           const showUpdate =
-            !isOwner ||
-            (isOwner && item.personalRequestStatus === "PendingManagerApprove");
+            (isOwner &&
+              item.personalRequestStatus === "PendingManagerApprove") ||
+            isParent ||
+            isHRManager ||
+            isMD;
 
           return (
             <div className="relative flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -220,7 +224,7 @@ export default function PersonalRequestList() {
           return item[columnKey];
       }
     },
-    [getFullName, renderChip, handleExport]
+    [getFullName, renderChip, handleExport, userData]
   );
 
   const debouncedSetFilterPersonalRequestValue = useMemo(
