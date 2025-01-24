@@ -241,6 +241,16 @@ export default function PersonalRequestUpdate({ params: paramsPromise }) {
     );
   }, [userData, formData]);
 
+  const isHRManager = useMemo(() => {
+    return (
+      userData?.divisionName === "บุคคล" && userData?.roleName === "Manager"
+    );
+  }, [userData]);
+
+  const isMD = useMemo(() => {
+    return userData?.divisionName === "บริหาร" && userData?.roleName === "MD";
+  }, [userData]);
+
   const handleInputChange = useCallback(
     (field) => (e) => {
       const value = e.target.value;
@@ -335,7 +345,7 @@ export default function PersonalRequestUpdate({ params: paramsPromise }) {
     formDataObject.append("personalRequestReasonManagerApproveBy", userId);
     try {
       const res = await fetch(
-        `/api/hr/personalRequest/${personalRequestId}?action=managerApprove`,
+        `/api/hr/personalRequest/${personalRequestId}?action=managerReject`,
         {
           method: "PUT",
           body: formDataObject,
@@ -389,7 +399,7 @@ export default function PersonalRequestUpdate({ params: paramsPromise }) {
     formDataObject.append("personalRequestReasonHrApproveBy", userId);
     try {
       const res = await fetch(
-        `/api/hr/personalRequest/${personalRequestId}?action=hrApprove`,
+        `/api/hr/personalRequest/${personalRequestId}?action=hrReject`,
         {
           method: "PUT",
           body: formDataObject,
@@ -443,7 +453,7 @@ export default function PersonalRequestUpdate({ params: paramsPromise }) {
     formDataObject.append("personalRequestReasonMdApproveBy", userId);
     try {
       const res = await fetch(
-        `/api/hr/personalRequest/${personalRequestId}?action=mdApprove`,
+        `/api/hr/personalRequest/${personalRequestId}?action=mdReject`,
         {
           method: "PUT",
           body: formDataObject,
@@ -496,13 +506,12 @@ export default function PersonalRequestUpdate({ params: paramsPromise }) {
         amPosition={amPosition}
         amDepartment={amDepartment}
         isParentOfCreator={isParentOfCreator}
-
+        isHRManager={isHRManager} // ส่งค่า isHRManager
+        isMD={isMD} // ส่งค่า isMD
         onManagerApprove={handleManagerApprove}
         onManagerReject={handleManagerReject}
-
         onHrApprove={handleHrApprove}
         onHrReject={handleHrReject}
-        
         onMdApprove={handleMdApprove}
         onMdReject={handleMdReject}
       />
