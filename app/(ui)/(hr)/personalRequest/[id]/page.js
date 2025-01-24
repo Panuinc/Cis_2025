@@ -345,7 +345,7 @@ export default function PersonalRequestUpdate({ params: paramsPromise }) {
     formDataObject.append("personalRequestReasonManagerApproveBy", userId);
     try {
       const res = await fetch(
-        `/api/hr/personalRequest/${personalRequestId}?action=managerReject`,
+        `/api/hr/personalRequest/${personalRequestId}?action=managerApprove`,
         {
           method: "PUT",
           body: formDataObject,
@@ -399,7 +399,7 @@ export default function PersonalRequestUpdate({ params: paramsPromise }) {
     formDataObject.append("personalRequestReasonHrApproveBy", userId);
     try {
       const res = await fetch(
-        `/api/hr/personalRequest/${personalRequestId}?action=hrReject`,
+        `/api/hr/personalRequest/${personalRequestId}?action=hrApprove`,
         {
           method: "PUT",
           body: formDataObject,
@@ -453,7 +453,7 @@ export default function PersonalRequestUpdate({ params: paramsPromise }) {
     formDataObject.append("personalRequestReasonMdApproveBy", userId);
     try {
       const res = await fetch(
-        `/api/hr/personalRequest/${personalRequestId}?action=mdReject`,
+        `/api/hr/personalRequest/${personalRequestId}?action=mdApprove`,
         {
           method: "PUT",
           body: formDataObject,
