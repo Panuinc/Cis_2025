@@ -356,6 +356,114 @@ export default function PersonalRequestUpdate({ params: paramsPromise }) {
     }
   };
 
+  const handleHrApprove = async () => {
+    const formDataObject = new FormData(formRef.current);
+    formDataObject.set("personalRequestStatus", "PendingMdApprove");
+    formDataObject.append("personalRequestReasonHrApproveBy", userId);
+    try {
+      const res = await fetch(
+        `/api/hr/personalRequest/${personalRequestId}?action=hrApprove`,
+        {
+          method: "PUT",
+          body: formDataObject,
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }
+      );
+      const jsonData = await res.json();
+      if (res.ok) {
+        toast.success(jsonData.message);
+        router.push("/personalRequest");
+      } else {
+        toast.error(jsonData.error || "Error approving request");
+      }
+    } catch (err) {
+      toast.error("Error: " + err.message);
+    }
+  };
+
+  const handleHrReject = async () => {
+    const formDataObject = new FormData(formRef.current);
+    formDataObject.set("personalRequestStatus", "HrCancel");
+    formDataObject.append("personalRequestReasonHrApproveBy", userId);
+    try {
+      const res = await fetch(
+        `/api/hr/personalRequest/${personalRequestId}?action=hrApprove`,
+        {
+          method: "PUT",
+          body: formDataObject,
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }
+      );
+      const jsonData = await res.json();
+      if (res.ok) {
+        toast.success("Request rejected successfully");
+        router.push("/personalRequest");
+      } else {
+        toast.error(jsonData.error || "Error rejecting request");
+      }
+    } catch (err) {
+      toast.error("Error: " + err.message);
+    }
+  };
+
+  const handleMdApprove = async () => {
+    const formDataObject = new FormData(formRef.current);
+    formDataObject.set("personalRequestStatus", "ApprovedSuccess");
+    formDataObject.append("personalRequestReasonMdApproveBy", userId);
+    try {
+      const res = await fetch(
+        `/api/hr/personalRequest/${personalRequestId}?action=mdApprove`,
+        {
+          method: "PUT",
+          body: formDataObject,
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }
+      );
+      const jsonData = await res.json();
+      if (res.ok) {
+        toast.success(jsonData.message);
+        router.push("/personalRequest");
+      } else {
+        toast.error(jsonData.error || "Error approving request");
+      }
+    } catch (err) {
+      toast.error("Error: " + err.message);
+    }
+  };
+
+  const handleMdReject = async () => {
+    const formDataObject = new FormData(formRef.current);
+    formDataObject.set("personalRequestStatus", "MdCancel");
+    formDataObject.append("personalRequestReasonMdApproveBy", userId);
+    try {
+      const res = await fetch(
+        `/api/hr/personalRequest/${personalRequestId}?action=mdApprove`,
+        {
+          method: "PUT",
+          body: formDataObject,
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }
+      );
+      const jsonData = await res.json();
+      if (res.ok) {
+        toast.success("Request rejected successfully");
+        router.push("/personalRequest");
+      } else {
+        toast.error(jsonData.error || "Error rejecting request");
+      }
+    } catch (err) {
+      toast.error("Error: " + err.message);
+    }
+  };
+
   const handleClear = useCallback(() => {
     if (formRef.current) formRef.current.reset();
     setFormData(DEFAULT_FORM_DATA);
@@ -388,8 +496,15 @@ export default function PersonalRequestUpdate({ params: paramsPromise }) {
         amPosition={amPosition}
         amDepartment={amDepartment}
         isParentOfCreator={isParentOfCreator}
+
         onManagerApprove={handleManagerApprove}
         onManagerReject={handleManagerReject}
+
+        onHrApprove={handleHrApprove}
+        onHrReject={handleHrReject}
+        
+        onMdApprove={handleMdApprove}
+        onMdReject={handleMdReject}
       />
     </>
   );
