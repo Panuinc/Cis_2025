@@ -30,7 +30,6 @@ export default function FormPersonalRequest({
   onHrReject,
   onMdApprove,
   onMdReject,
-
 }) {
   return (
     <form
@@ -421,7 +420,7 @@ export default function FormPersonalRequest({
         </div>
       </div>
 
-      {!isParentOfCreator && isUpdate && (
+      {!isParentOfCreator && !isHRManager && !isMD && isUpdate && (
         <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
             <Select
@@ -467,34 +466,35 @@ export default function FormPersonalRequest({
         </div>
       </div>
 
-      {isParentOfCreator && (
-        <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <Button
-              size="md"
-              color="success"
-              startContent={<Database />}
-              onPress={onManagerApprove}
-              type="button"
-            >
-              Approved
-            </Button>
+      {isParentOfCreator &&
+        formData.personalRequestStatus === "PendingManagerApprove" && (
+          <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <Button
+                size="md"
+                color="success"
+                startContent={<Database />}
+                onPress={onManagerApprove}
+                type="button"
+              >
+                Manager Approved
+              </Button>
+            </div>
+            <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <Button
+                size="md"
+                color="danger"
+                startContent={<Cancel />}
+                onPress={onManagerReject}
+                type="button"
+              >
+                Manager Cancel
+              </Button>
+            </div>
           </div>
-          <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <Button
-              size="md"
-              color="danger"
-              startContent={<Cancel />}
-              onPress={onManagerReject}
-              type="button"
-            >
-              Cancel
-            </Button>
-          </div>
-        </div>
-      )}
+        )}
 
-      {isHRManager && (
+      {isHRManager && formData.personalRequestStatus === "PendingHrApprove" && (
         <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
             <Button
@@ -504,7 +504,7 @@ export default function FormPersonalRequest({
               onPress={onHrApprove}
               type="button"
             >
-              Approved
+             Hr Approved
             </Button>
           </div>
           <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -515,7 +515,7 @@ export default function FormPersonalRequest({
               onPress={onHrReject}
               type="button"
             >
-              Cancel
+             Hr Cancel
             </Button>
           </div>
         </div>
@@ -531,7 +531,7 @@ export default function FormPersonalRequest({
               onPress={onMdApprove}
               type="button"
             >
-              Approved
+              Md Approved
             </Button>
           </div>
           <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -542,7 +542,7 @@ export default function FormPersonalRequest({
               onPress={onMdReject}
               type="button"
             >
-              Cancel
+             Md Cancel
             </Button>
           </div>
         </div>
