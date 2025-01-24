@@ -42,14 +42,14 @@ export async function GET(request) {
     });
 
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "User not found" },
+        { status: 404 }
+      );
     }
 
-    const userDivision =
-      user.UserEmployeeBy?.employeeEmployment[0]?.EmploymentDivisionId
-        ?.divisionName;
-    const userRole =
-      user.UserEmployeeBy?.employeeEmployment[0]?.EmploymentRoleId?.roleName;
+    const userDivision = user.UserEmployeeBy?.employeeEmployment[0]?.EmploymentDivisionId?.divisionName;
+    const userRole = user.UserEmployeeBy?.employeeEmployment[0]?.EmploymentRoleId?.roleName;
 
     // ดึงข้อมูลลูกน้อง (subordinates) ของผู้ใช้ปัจจุบัน
     const subordinates = await prisma.employment.findMany({
@@ -75,14 +75,16 @@ export async function GET(request) {
       };
     }
 
-    // Case 3: HR Manager sees all requests but can only update PendingHrApprove
+    // Case 3: HR Manager sees all requests but can only update PendingHrApprove or PendingManagerApprove for their subordinates
     if (userDivision === "บุคคล" && userRole === "Manager") {
       whereCondition = {}; // HR Manager sees all requests
     }
 
-    // Case 4: MD sees all requests but can only update PendingMdApprove
+    // Case 4: MD sees only requests with status PendingMdApprove
     if (userDivision === "บริหาร" && userRole === "MD") {
-      whereCondition = {}; // MD sees all requests
+      whereCondition = {
+        personalRequestStatus: "PendingMdApprove",
+      };
     }
 
     const personalRequest = await prisma.personalRequest.findMany({
@@ -132,6 +134,7 @@ export async function GET(request) {
       {
         message: "PersonalRequest data retrieved successfully",
         personalRequest,
+        subordinateIds, 
       },
       { status: 200 }
     );

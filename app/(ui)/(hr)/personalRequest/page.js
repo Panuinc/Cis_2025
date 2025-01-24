@@ -34,6 +34,8 @@ export default function PersonalRequestList() {
   const isUserDivision = userData?.divisionName;
   const isUserRole = userData?.roleName;
 
+  const [subordinateIds, setSubordinateIds] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [personalRequest, setPersonalRequest] = useState([]);
@@ -61,37 +63,38 @@ export default function PersonalRequestList() {
         ];
   }, [isUserLevel]);
 
-  useEffect(() => {
-    const fetchPersonalRequest = async () => {
-      try {
-        const employeeId = userData?.employee?.employeeId;
-        const response = await fetch(
-          `/api/hr/personalRequest?employeeId=${employeeId}`,
-          {
-            method: "GET",
-            headers: {
-              "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
-              "user-id": userData?.userId,
-            },
-          }
-        );
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error);
+useEffect(() => {
+  const fetchPersonalRequest = async () => {
+    try {
+      const employeeId = userData?.employee?.employeeId;
+      const response = await fetch(
+        `/api/hr/personalRequest?employeeId=${employeeId}`,
+        {
+          method: "GET",
+          headers: {
+            "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
+            "user-id": userData?.userId,
+          },
         }
+      );
 
-        const data = await response.json();
-        setPersonalRequest(data.personalRequest || []);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error);
       }
-    };
 
-    fetchPersonalRequest();
-  }, [isUserLevel, userData?.employee?.employeeId, userData?.userId]);
+      const data = await response.json();
+      setPersonalRequest(data.personalRequest || []);
+      setSubordinateIds(data.subordinateIds || []); // เก็บ subordinateIds ใน state
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchPersonalRequest();
+}, [isUserLevel, userData?.employee?.employeeId, userData?.userId]);
 
   const handleExport = useCallback(
     async (personalRequestId) => {
@@ -172,24 +175,41 @@ export default function PersonalRequestList() {
           const loggedInEmployeeId = userData?.employee?.employeeId;
           const isOwner =
             item.PersonalRequestCreateBy.employeeId === loggedInEmployeeId;
-          const isParent =
-            item.PersonalRequestCreateBy.employeeId !== loggedInEmployeeId &&
+          const isSubordinate = subordinateIds.includes(
+            item.PersonalRequestCreateBy.employeeId
+          ); // ตรวจสอบว่าเป็นลูกน้องของตนเองหรือไม่
+
+          // Case 1: Owner sees all their requests and can update if status is PendingManagerApprove
+          const showUpdateOwner =
+            isOwner && item.personalRequestStatus === "PendingManagerApprove";
+
+          // Case 2: Parent sees subordinates' requests and can update if status is PendingManagerApprove
+          const showUpdateParent =
+            isSubordinate &&
             item.personalRequestStatus === "PendingManagerApprove";
+
+          // Case 3: HR Manager sees all requests but can only update if status is PendingHrApprove or PendingManagerApprove for their subordinates
           const isHRManager =
             userData?.divisionName === "บุคคล" &&
-            userData?.roleName === "Manager" &&
-            item.personalRequestStatus === "PendingHrApprove";
+            userData?.roleName === "Manager";
+          const showUpdateHRManager =
+            (isHRManager &&
+              item.personalRequestStatus === "PendingHrApprove") ||
+            (isHRManager &&
+              isSubordinate &&
+              item.personalRequestStatus === "PendingManagerApprove");
+
+          // Case 4: MD sees only requests with status PendingMdApprove and can update if status is PendingMdApprove
           const isMD =
-            userData?.divisionName === "บริหาร" &&
-            userData?.roleName === "MD" &&
-            item.personalRequestStatus === "PendingMdApprove";
+            userData?.divisionName === "บริหาร" && userData?.roleName === "MD";
+          const showUpdateMD =
+            isMD && item.personalRequestStatus === "PendingMdApprove";
 
           const showUpdate =
-            (isOwner &&
-              item.personalRequestStatus === "PendingManagerApprove") ||
-            isParent ||
-            isHRManager ||
-            isMD;
+            showUpdateOwner ||
+            showUpdateParent ||
+            showUpdateHRManager ||
+            showUpdateMD;
 
           return (
             <div className="relative flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -224,7 +244,7 @@ export default function PersonalRequestList() {
           return item[columnKey];
       }
     },
-    [getFullName, renderChip, handleExport, userData]
+    [getFullName, renderChip, handleExport, userData, subordinateIds]
   );
 
   const debouncedSetFilterPersonalRequestValue = useMemo(
