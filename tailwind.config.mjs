@@ -26,6 +26,7 @@ export default {
       fontFamily: {
         prompt: ["var(--prompt)"],
         sulphur_Point: ["var(--sulphur_Point)"],
+        sans: ['Sarabun', 'sans-serif'],
       },
     },
   },

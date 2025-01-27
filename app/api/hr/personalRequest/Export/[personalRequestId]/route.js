@@ -144,6 +144,7 @@ export async function GET(request, context) {
     <html>
     <head>
       <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
       <style>
           input[type="checkbox"] {
             -webkit-appearance: checkbox;
@@ -164,7 +165,7 @@ export async function GET(request, context) {
           }
         </style>  
     </head>   
-     <body class="font-sans p-8 text-sm">
+<body class="font-sans p-8 text-sm" style="font-family: 'Sarabun', sans-serif;">
   ${
     personalRequest.personalRequestStatus === "ApprovedSuccess"
       ? '<div class="watermark" style="color: rgba(0, 128, 0, 0.2);">Approved</div>'
