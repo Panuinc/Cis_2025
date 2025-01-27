@@ -182,6 +182,8 @@ model Employee {
 
   employeeTrainingEmployee TrainingEmployee[] @relation("TrainingEmployeeEmployeeId")
 
+  employeeTrainingEmployeeCheckIn TrainingEmployeeCheckIn[] @relation("TrainingEmployeeCheckInEmployeeId")
+
   @@index([employeeCreateBy])
   @@index([employeeUpdateBy])
 }
@@ -625,7 +627,8 @@ model Training {
   TrainingHrApproveBy Employee? @relation("TrainingHrApproveBy", fields: [trainingReasonHrApproveBy], references: [employeeId])
   TrainingMdApproveBy Employee? @relation("TrainingMdApproveBy", fields: [trainingReasonMdApproveBy], references: [employeeId])
 
-  employeeTrainingTraining TrainingEmployee[] @relation("TrainingEmployeeTrainingId")
+  employeeTrainingTraining        TrainingEmployee[]        @relation("TrainingEmployeeTrainingId")
+  employeeTrainingCheckInTraining TrainingEmployeeCheckIn[] @relation("TrainingEmployeeCheckInTrainingId")
 
   @@index([trainingCreateBy])
   @@index([trainingUpdateBy])
@@ -645,4 +648,19 @@ model TrainingEmployee {
 
   @@index([trainingEmployeeTrainingId])
   @@index([trainingEmployeeEmployeeId])
+}
+
+model TrainingEmployeeCheckIn {
+  trainingEmployeeCheckInId             Int       @id @default(autoincrement())
+  trainingEmployeeCheckInTrainingId     Int
+  trainingEmployeeCheckInEmployeeId     Int
+  trainingEmployeeCheckInTrainingDate   DateTime?
+  trainingEmployeeCheckInMorningCheck   DateTime?
+  trainingEmployeeCheckInAfterNoonCheck DateTime?
+
+  TrainingEmployeeCheckInTrainingId Training? @relation("TrainingEmployeeCheckInTrainingId", fields: [trainingEmployeeCheckInTrainingId], references: [trainingId])
+  TrainingEmployeeCheckInEmployeeId Employee? @relation("TrainingEmployeeCheckInEmployeeId", fields: [trainingEmployeeCheckInEmployeeId], references: [employeeId])
+
+  @@index([trainingEmployeeCheckInTrainingId])
+  @@index([trainingEmployeeCheckInEmployeeId])
 }
