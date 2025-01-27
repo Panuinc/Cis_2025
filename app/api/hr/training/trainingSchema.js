@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   preprocessInt,
+  preprocessDouble,
   preprocessString,
   preprocessEnum,
   preprocessAny,
@@ -9,19 +10,151 @@ import {
 } from "@/lib/zodSchema";
 
 export function formatTrainingData(training) {
-  return formatData(training, [], ["trainingCreateAt", "trainingUpdateAt"]);
+  return formatData(
+    training,
+    [],
+    [
+      "trainingCreateAt",
+      "trainingUpdateAt",
+      "trainingStartDate",
+      "trainingEndDate",
+    ]
+  );
 }
 
 export const trainingPosteSchema = z.object({
+  trainingType: preprocessEnum(
+    [
+      "Training_to_prepare_for_work",
+      "Training_to_upgrade_labor_skills",
+      "Training_to_change_career_fields",
+    ],
+    "Training Type must be either 'Training_to_prepare_for_work', 'Training_to_upgrade_labor_skills', 'Training_to_change_career_fields'."
+  ),
+
   trainingName: preprocessString(
     "Please Enter Training Name",
     "Please Enter Training Name"
+  ),
+
+  trainingObjectives: preprocessString(
+    "Please Enter Training Objectives",
+    "Please Enter Training Objectives"
+  ),
+
+  trainingTargetGroup: preprocessString(
+    "Please Enter Training Target Group",
+    "Please Enter Training Target Group"
+  ),
+
+  trainingInstitutionsType: preprocessEnum(
+    ["Internal", "External"],
+    "Training Type must be either 'Internal', 'External'."
+  ),
+
+  trainingStartDate: preprocessDate.refine(
+    (date) => date === null || date instanceof Date,
+    {
+      message: "Please Enter Start Date",
+    }
+  ),
+
+  trainingEndDate: preprocessDate.refine(
+    (date) => date === null || date instanceof Date,
+    {
+      message: "Please Enter End Date",
+    }
+  ),
+
+  trainingInstitutions: preprocessString(
+    "Please Enter Training Institutions",
+    "Please Enter Training Institutions"
+  ),
+
+  trainingLecturer: preprocessString(
+    "Please Enter Training Lecturer",
+    "Please Enter Training Lecturer"
+  ),
+
+  trainingLocation: preprocessString(
+    "Please Enter Training Location",
+    "Please Enter Training Location"
+  ),
+
+  trainingPrice: preprocessDouble(
+    "Please Enter Training Price",
+    "Please Enter Training Price"
+  ),
+
+  trainingEquipmentPrice: preprocessDouble(
+    "Please Enter Training Equipment Price",
+    "Please Enter Training Equipment Price"
+  ),
+
+  trainingFoodPrice: preprocessDouble(
+    "Please Enter Training Food Price",
+    "Please Enter Training Food Price"
+  ),
+
+  trainingFarePrice: preprocessDouble(
+    "Please Enter Training Fare Price",
+    "Please Enter Training Fare Price"
+  ),
+
+  trainingOtherExpenses: preprocessString(
+    "Please Enter Training Other Expenses",
+    "Please Enter Training Other Expenses"
+  ),
+
+  trainingOtherPrice: preprocessDouble(
+    "Please Enter Training Other Price",
+    "Please Enter Training Other Price"
+  ),
+
+  trainingReferenceDocument: preprocessString(
+    "Please Enter Training Reference Document",
+    "Please Enter Training Reference Document"
+  ),
+
+  trainingRemark: preprocessString(
+    "Please Enter Training Remark",
+    "Please Enter Training Remark"
+  ).optional(),
+
+  trainingRequireKnowledge: preprocessString(
+    "Please Enter Training Require Knowledge",
+    "Please Enter Training Require Knowledge"
   ),
 
   trainingCreateBy: preprocessInt(
     "Training creator ID must be provided.",
     "Training creator ID must be an integer."
   ),
+  trainingEmployee: z.array(trainingEmployeeSchema).optional(),
+});
+
+export function formatTrainingData(trainingArray) {
+  return trainingArray.map((training) => ({
+    ...training,
+    trainingEmployee: training.TrainingEmployee,
+  }));
+}
+
+const trainingEmployeeSchema = z.object({
+  trainingEmployeeId: preprocessInt(
+    "TrainingEmployeeId ID must be provided.",
+    "TrainingEmployeeId ID must be an integer."
+  ).optional(),
+
+  trainingEmployeeTrainingId: preprocessInt(
+    "TrainingEmployeeTrainingId  CV ID must be provided.",
+    "TrainingEmployeeTrainingId  Cv ID must be an integer."
+  ).optional(),
+
+  trainingEmployeeEmployeeId: preprocessInt(
+    "TrainingEmployeeEmployeeId  CV ID must be provided.",
+    "TrainingEmployeeEmployeeId  Cv ID must be an integer."
+  ).optional(),
 });
 
 export const trainingPutSchema = z.object({
@@ -30,17 +163,149 @@ export const trainingPutSchema = z.object({
     "Training ID must be an integer."
   ),
 
+  trainingType: preprocessEnum(
+    [
+      "Training_to_prepare_for_work",
+      "Training_to_upgrade_labor_skills",
+      "Training_to_change_career_fields",
+    ],
+    "Training Type must be either 'Training_to_prepare_for_work', 'Training_to_upgrade_labor_skills', 'Training_to_change_career_fields'."
+  ),
+
   trainingName: preprocessString(
     "Please Enter Training Name",
     "Please Enter Training Name"
   ),
 
+  trainingObjectives: preprocessString(
+    "Please Enter Training Objectives",
+    "Please Enter Training Objectives"
+  ),
+
+  trainingTargetGroup: preprocessString(
+    "Please Enter Training Target Group",
+    "Please Enter Training Target Group"
+  ),
+
+  trainingInstitutionsType: preprocessEnum(
+    ["Internal", "External"],
+    "Training Type must be either 'Internal', 'External'."
+  ),
+
+  trainingStartDate: preprocessDate.refine(
+    (date) => date === null || date instanceof Date,
+    {
+      message: "Please Enter Start Date",
+    }
+  ),
+
+  trainingEndDate: preprocessDate.refine(
+    (date) => date === null || date instanceof Date,
+    {
+      message: "Please Enter End Date",
+    }
+  ),
+
+  trainingInstitutions: preprocessString(
+    "Please Enter Training Institutions",
+    "Please Enter Training Institutions"
+  ),
+
+  trainingLecturer: preprocessString(
+    "Please Enter Training Lecturer",
+    "Please Enter Training Lecturer"
+  ),
+
+  trainingLocation: preprocessString(
+    "Please Enter Training Location",
+    "Please Enter Training Location"
+  ),
+
+  trainingPrice: preprocessDouble(
+    "Please Enter Training Price",
+    "Please Enter Training Price"
+  ),
+
+  trainingEquipmentPrice: preprocessDouble(
+    "Please Enter Training Equipment Price",
+    "Please Enter Training Equipment Price"
+  ),
+
+  trainingFoodPrice: preprocessDouble(
+    "Please Enter Training Food Price",
+    "Please Enter Training Food Price"
+  ),
+
+  trainingFarePrice: preprocessDouble(
+    "Please Enter Training Fare Price",
+    "Please Enter Training Fare Price"
+  ),
+
+  trainingOtherExpenses: preprocessString(
+    "Please Enter Training Other Expenses",
+    "Please Enter Training Other Expenses"
+  ),
+
+  trainingOtherPrice: preprocessDouble(
+    "Please Enter Training Other Price",
+    "Please Enter Training Other Price"
+  ),
+
+  trainingReferenceDocument: preprocessString(
+    "Please Enter Training Reference Document",
+    "Please Enter Training Reference Document"
+  ),
+
+  trainingRemark: preprocessString(
+    "Please Enter Training Remark",
+    "Please Enter Training Remark"
+  ).optional(),
+
+  trainingRequireKnowledge: preprocessString(
+    "Please Enter Training Require Knowledge",
+    "Please Enter Training Require Knowledge"
+  ),
+
   trainingStatus: preprocessEnum(
-    ["Active", "InActive"],
-    "Training Status must be either 'Active', 'InActive'."
+    ["PendingHrApprove", "Cancel"],
+    "Training Type must be either 'PendingHrApprove', 'Cancel'."
   ),
 
   trainingUpdateBy: preprocessInt(
+    "Training updater ID must be provided.",
+    "Training updater ID must be an integer."
+  ),
+});
+
+export const trainingHrApprovePutSchema = z.object({
+  trainingId: preprocessInt(
+    "Training ID must be provided.",
+    "Training ID must be an integer."
+  ),
+
+  trainingStatus: preprocessEnum(
+    ["PendingMdApprove", "HrCancel"],
+    "Training Type must be either 'PendingMdApprove', 'HrCancel'."
+  ),
+
+  trainingReasonHrApproveBy: preprocessInt(
+    "Training updater ID must be provided.",
+    "Training updater ID must be an integer."
+  ),
+});
+
+export const trainingMdApprovePutSchema = z.object({
+  trainingId: preprocessInt(
+    "Training ID must be provided.",
+    "Training ID must be an integer."
+  ),
+
+  trainingStatus: preprocessEnum(
+    ["ApprovedSuccess", "MdCancel"],
+    "Training Type must be either 'ApprovedSuccess', 'MdCancel'."
+  ),
+
+  trainingReasonMdApproveBy: preprocessInt(
     "Training updater ID must be provided.",
     "Training updater ID must be an integer."
   ),
