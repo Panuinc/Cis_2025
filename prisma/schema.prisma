@@ -614,7 +614,7 @@ model Training {
   trainingPostTest          String?                  @db.VarChar(255)
   trainingPictureLink       String?                  @db.VarChar(255)
   trainingCreateBy          Int
-  trainingCreateAt          DateTime
+  trainingCreateAt          DateTime                 @default(now()) @db.Timestamp()
   trainingUpdateBy          Int?
   trainingUpdateAt          DateTime?
   trainingReasonHrApproveBy Int?
