@@ -100,7 +100,7 @@ useEffect(() => {
     async (personalRequestId) => {
       try {
         const response = await fetch(
-          `/api/hr/personalRequest/Export/${personalRequestId}`,
+          `/api/hr/personalRequest/export/${personalRequestId}`,
           {
             method: "GET",
             headers: {
