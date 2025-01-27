@@ -80,6 +80,31 @@ enum PersonalRequestStatus {
   Cancel
 }
 
+enum TrainingType {
+  Training_to_prepare_for_work     @map("Training_to_prepare_for_work")
+  Training_to_upgrade_labor_skills @map("Training_to_upgrade_labor_skills")
+  Training_to_change_career_fields @map("Training_to_change_career_fields")
+}
+
+enum TrainingInstitutionsType {
+  Internal @map("Internal")
+  External @map("External")
+}
+
+enum trainingStatus {
+  PendingHrApprove @map("PendingHrApprove")
+  HrCancel         @map("HrCancel")
+  PendingMdApprove @map("PendingMdApprove")
+  MdCancel         @map("MdCancel")
+  ApprovedSuccess  @map("ApprovedSuccess")
+  Cancel           @map("Cancel")
+}
+
+enum TrainingEmployeeResult {
+  Pass     @map("Pass")
+  Not_Pass @map("Not_Pass")
+}
+
 model Employee {
   employeeId        Int       @id @default(autoincrement())
   employeeTitle     Title
@@ -149,6 +174,13 @@ model Employee {
   managerApprovePersonalRequest PersonalRequest[] @relation("PersonalRequestManagerApproveBy")
   hrApprovePersonalRequest      PersonalRequest[] @relation("PersonalRequestHrApproveBy")
   mdApprovePersonalRequest      PersonalRequest[] @relation("PersonalRequestMdApproveBy")
+
+  createdTraining   Training[] @relation("TrainingCreateBy")
+  updatedTraining   Training[] @relation("TrainingUpdateBy")
+  hrApproveTraining Training[] @relation("TrainingHrApproveBy")
+  mdApproveTraining Training[] @relation("TrainingMdApproveBy")
+
+  employeeTrainingEmployee TrainingEmployee[] @relation("TrainingEmployeeEmployeeId")
 
   @@index([employeeCreateBy])
   @@index([employeeUpdateBy])
@@ -552,4 +584,65 @@ model PersonalRequest {
   @@index([personalRequestDivisionId])
   @@index([personalRequestDepartmentId])
   @@index([personalRequestPositionId])
+}
+
+model Training {
+  trainingId                Int                      @id @default(autoincrement())
+  trainingType              TrainingType
+  trainingName              String                   @db.VarChar(255)
+  trainingObjectives        String                   @db.VarChar(1000)
+  trainingTargetGroup       String                   @db.VarChar(1000)
+  trainingInstitutionsType  TrainingInstitutionsType
+  trainingStartDate         DateTime
+  trainingEndDate           DateTime
+  trainingInstitutions      String                   @db.VarChar(255)
+  trainingLecturer          String                   @db.VarChar(255)
+  trainingLocation          String                   @db.VarChar(255)
+  trainingPrice             Float
+  trainingEquipmentPrice    Float
+  trainingFoodPrice         Float
+  trainingFarePrice         Float
+  trainingOtherExpenses     String                   @db.VarChar(255)
+  trainingOtherPrice        Float
+  trainingReferenceDocument String                   @db.VarChar(255)
+  trainingRemark            String                   @db.VarChar(255)
+  trainingRequireKnowledge  String                   @db.VarChar(255)
+  trainingStatus            trainingStatus
+  trainingPreTest           String                   @db.VarChar(255)
+  trainingPostTest          String                   @db.VarChar(255)
+  trainingPictureLink       String                   @db.VarChar(255)
+  trainingCreateBy          Int
+  trainingCreateAt          DateTime
+  trainingUpdateBy          Int?
+  trainingUpdateAt          DateTime?
+  trainingReasonHrApproveBy Int?
+  trainingReasonHrApproveAt DateTime?
+  trainingReasonMdApproveBy Int?
+  trainingReasonMdApproveAt DateTime?
+
+  TrainingCreateBy    Employee? @relation("TrainingCreateBy", fields: [trainingCreateBy], references: [employeeId])
+  TrainingUpdateBy    Employee? @relation("TrainingUpdateBy", fields: [trainingUpdateBy], references: [employeeId])
+  TrainingHrApproveBy Employee? @relation("TrainingHrApproveBy", fields: [trainingReasonHrApproveBy], references: [employeeId])
+  TrainingMdApproveBy Employee? @relation("TrainingMdApproveBy", fields: [trainingReasonMdApproveBy], references: [employeeId])
+
+  employeeTrainingTraining TrainingEmployee[] @relation("TrainingEmployeeTrainingId")
+
+  @@index([trainingCreateBy])
+  @@index([trainingUpdateBy])
+  @@index([trainingReasonHrApproveBy])
+  @@index([trainingReasonMdApproveBy])
+}
+
+model TrainingEmployee {
+  trainingEmployeeId              Int                    @id @default(autoincrement())
+  trainingEmployeeTrainingId      Int
+  trainingEmployeeEmployeeId      Int
+  trainingEmployeeResult          TrainingEmployeeResult
+  trainingEmployeeCertificateLink String                 @db.VarChar(255)
+
+  TrainingEmployeeTrainingId Training? @relation("TrainingEmployeeTrainingId", fields: [trainingEmployeeTrainingId], references: [trainingId])
+  TrainingEmployeeEmployeeId Employee? @relation("TrainingEmployeeEmployeeId", fields: [trainingEmployeeEmployeeId], references: [employeeId])
+
+  @@index([trainingEmployeeTrainingId])
+  @@index([trainingEmployeeEmployeeId])
 }
