@@ -22,6 +22,69 @@ export function formatTrainingData(training) {
   );
 }
 
+const trainingEmployeeSchema = z.object({
+  trainingEmployeeId: preprocessInt(
+    "TrainingEmployeeId ID must be provided.",
+    "TrainingEmployeeId ID must be an integer."
+  ).optional(),
+
+  trainingEmployeeTrainingId: preprocessInt(
+    "TrainingEmployeeTrainingId  CV ID must be provided.",
+    "TrainingEmployeeTrainingId  Cv ID must be an integer."
+  ).optional(),
+
+  trainingEmployeeEmployeeId: preprocessInt(
+    "TrainingEmployeeEmployeeId  CV ID must be provided.",
+    "TrainingEmployeeEmployeeId  Cv ID must be an integer."
+  ).optional(),
+});
+
+const trainingEmployeeCheckInSchema = z.object({
+  trainingEmployeeCheckInId: preprocessInt(
+    "TrainingEmployeeCheckInId ID must be provided.",
+    "TrainingEmployeeCheckInId ID must be an integer."
+  ).optional(),
+
+  trainingEmployeeCheckInTrainingId: preprocessInt(
+    "TrainingEmployeeCheckInTrainingId  CV ID must be provided.",
+    "TrainingEmployeeCheckInTrainingId  Cv ID must be an integer."
+  ).optional(),
+
+  trainingEmployeeCheckInEmployeeId: preprocessInt(
+    "TrainingEmployeeCheckInEmployeeId  CV ID must be provided.",
+    "TrainingEmployeeCheckInEmployeeId  Cv ID must be an integer."
+  ),
+
+  trainingEmployeeCheckInTrainingDate: preprocessDate.refine(
+    (date) => date === null || date instanceof Date,
+    {
+      message: "Please Enter Start Date",
+    }
+  ),
+
+  trainingEmployeeCheckInMorningCheck: preprocessDate.refine(
+    (date) => date === null || date instanceof Date,
+    {
+      message: "Please Enter Start Date",
+    }
+  ),
+
+  trainingEmployeeCheckInAfterNoonCheck: preprocessDate.refine(
+    (date) => date === null || date instanceof Date,
+    {
+      message: "Please Enter Start Date",
+    }
+  ),
+});
+
+export function formatTrainingsData(trainingArray) {
+  return trainingArray.map((training) => ({
+    ...training,
+    trainingEmployee: training.TrainingEmployee,
+    trainingEmployeeCheckIn: training.TrainingEmployeeCheckIn,
+  }));
+}
+
 export const trainingPosteSchema = z.object({
   trainingType: preprocessEnum(
     [
@@ -132,69 +195,6 @@ export const trainingPosteSchema = z.object({
   ),
   trainingEmployee: z.array(trainingEmployeeSchema).optional(),
   trainingEmployeeCheckIn: z.array(trainingEmployeeCheckInSchema).optional(),
-});
-
-export function formatTrainingData(trainingArray) {
-  return trainingArray.map((training) => ({
-    ...training,
-    trainingEmployee: training.TrainingEmployee,
-    trainingEmployeeCheckIn: training.TrainingEmployeeCheckIn,
-  }));
-}
-
-const trainingEmployeeSchema = z.object({
-  trainingEmployeeId: preprocessInt(
-    "TrainingEmployeeId ID must be provided.",
-    "TrainingEmployeeId ID must be an integer."
-  ).optional(),
-
-  trainingEmployeeTrainingId: preprocessInt(
-    "TrainingEmployeeTrainingId  CV ID must be provided.",
-    "TrainingEmployeeTrainingId  Cv ID must be an integer."
-  ).optional(),
-
-  trainingEmployeeEmployeeId: preprocessInt(
-    "TrainingEmployeeEmployeeId  CV ID must be provided.",
-    "TrainingEmployeeEmployeeId  Cv ID must be an integer."
-  ).optional(),
-});
-
-const trainingEmployeeCheckInSchema = z.object({
-  trainingEmployeeCheckInId: preprocessInt(
-    "TrainingEmployeeCheckInId ID must be provided.",
-    "TrainingEmployeeCheckInId ID must be an integer."
-  ).optional(),
-
-  trainingEmployeeCheckInTrainingId: preprocessInt(
-    "TrainingEmployeeCheckInTrainingId  CV ID must be provided.",
-    "TrainingEmployeeCheckInTrainingId  Cv ID must be an integer."
-  ).optional(),
-
-  trainingEmployeeCheckInEmployeeId: preprocessInt(
-    "TrainingEmployeeCheckInEmployeeId  CV ID must be provided.",
-    "TrainingEmployeeCheckInEmployeeId  Cv ID must be an integer."
-  ),
-
-  trainingEmployeeCheckInTrainingDate: preprocessDate.refine(
-    (date) => date === null || date instanceof Date,
-    {
-      message: "Please Enter Start Date",
-    }
-  ),
-
-  trainingEmployeeCheckInMorningCheck: preprocessDate.refine(
-    (date) => date === null || date instanceof Date,
-    {
-      message: "Please Enter Start Date",
-    }
-  ),
-
-  trainingEmployeeCheckInAfterNoonCheck: preprocessDate.refine(
-    (date) => date === null || date instanceof Date,
-    {
-      message: "Please Enter Start Date",
-    }
-  ),
 });
 
 export const trainingPutSchema = z.object({

@@ -18,6 +18,8 @@ export async function GET(request) {
 
     const training = await prisma.training.findMany({
       include: {
+        employeeTrainingTraining:true,
+        employeeTrainingCheckInTraining:true,
         TrainingCreateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
