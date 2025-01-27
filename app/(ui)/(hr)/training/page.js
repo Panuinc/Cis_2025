@@ -17,8 +17,12 @@ import {
 } from "@nextui-org/react";
 
 const trainingStatusColorMap = {
-  active: "success",
-  inactive: "danger",
+  pendinghrapprove: "warning",
+  hrcancel: "danger",
+  pendingmdapprove: "secondary",
+  mdcancel: "danger",
+  approvedsuccess: "success",
+  cancel: "danger",
 };
 
 export default function TrainingList() {
@@ -72,7 +76,7 @@ export default function TrainingList() {
 
         if (isUserLevel) {
           filteredData = filteredData.filter(
-            (item) => item.trainingStatus?.toLowerCase() === "active"
+            (item) => item.trainingStatus?.toLowerCase() === "pendinghrapprove"
           );
         }
 
