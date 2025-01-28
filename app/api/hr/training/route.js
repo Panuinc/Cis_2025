@@ -7,7 +7,7 @@ import prisma from "@/lib/prisma";
 import { formatTrainingData } from "@/app/api/hr/training/trainingSchema";
 import { getRequestIP } from "@/lib/GetRequestIp";
 import { getLocalNow } from "@/lib/GetLocalNow";
-import { SevenHours } from "@/lib/SevenHours";
+import { SevenHouse } from "@/lib/SevenHouse";
 
 export async function GET(request) {
   let ip;
@@ -93,8 +93,8 @@ export async function POST(request) {
 
     const localNow = getLocalNow();
 
-    const adjustedTrainingStartDate = SevenHours(trainingStartDate);
-    const adjustedTrainingEndDate = SevenHours(trainingEndDate);
+    const adjustedTrainingStartDate = SevenHouse(trainingStartDate);
+    const adjustedTrainingEndDate = SevenHouse(trainingEndDate);
 
     const createEmployee = (trainingEmployee || []).map((emp) => ({
       trainingEmployeeEmployeeId: emp.trainingEmployeeEmployeeId,
