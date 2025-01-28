@@ -326,6 +326,9 @@ export const trainingPutSchema = z.object({
     "Training updater ID must be provided.",
     "Training updater ID must be an integer."
   ),
+
+  trainingEmployee: z.array(trainingEmployeeSchema).optional(),
+  trainingEmployeeCheckIn: z.array(trainingEmployeeCheckInSchema).optional(),
 });
 
 export const trainingHrApprovePutSchema = z.object({
