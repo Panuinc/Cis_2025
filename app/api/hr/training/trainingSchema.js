@@ -1,4 +1,3 @@
-// app/api/hr/training/trainingSchema.js
 import { z } from "zod";
 import {
   preprocessInt,
@@ -10,7 +9,6 @@ import {
   formatData,
 } from "@/lib/zodSchema";
 
-// ช่วยฟอร์แมตวันที่ก่อนส่งออก
 export function formatTrainingData(training) {
   return formatData(
     training,
@@ -24,7 +22,6 @@ export function formatTrainingData(training) {
   );
 }
 
-// ---- child schemas ----
 const trainingEmployeeSchema = z.object({
   trainingEmployeeId: preprocessInt(
     "TrainingEmployeeId ID must be provided.",
@@ -80,7 +77,6 @@ const trainingEmployeeCheckInSchema = z.object({
   ),
 });
 
-// เอาไว้ format array ของ Training
 export function formatTrainingsData(trainingArray) {
   return trainingArray.map((training) => ({
     ...training,
@@ -89,7 +85,6 @@ export function formatTrainingsData(trainingArray) {
   }));
 }
 
-// ---- main schemas ----
 export const trainingPosteSchema = z.object({
   trainingType: preprocessEnum(
     [
@@ -179,7 +174,6 @@ export const trainingPosteSchema = z.object({
     "Please Enter Training Other Price"
   ),
 
-  // ให้เป็น optional
   trainingSumPrice: preprocessDouble(
     "Please Enter Training Sum Price",
     "Please Enter Training Sum Price"
@@ -205,7 +199,6 @@ export const trainingPosteSchema = z.object({
     "Training creator ID must be an integer."
   ),
 
-  // Nested
   trainingEmployee: z.array(trainingEmployeeSchema).optional(),
   trainingEmployeeCheckIn: z.array(trainingEmployeeCheckInSchema).optional(),
 });
