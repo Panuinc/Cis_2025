@@ -1,7 +1,15 @@
 "use client";
 import React from "react";
-import { Input, Button, Select, SelectItem } from "@nextui-org/react";
 import { Cancel, Database } from "@/components/icons/icons";
+import CommonTable from "@/components/CommonTable";
+import {
+  Input,
+  Button,
+  Select,
+  SelectItem,
+  Textarea,
+  Checkbox,
+} from "@nextui-org/react";
 
 export default function FormTraining({
   formRef,
@@ -10,15 +18,130 @@ export default function FormTraining({
   errors = {},
   formData,
   handleInputChange,
+  handleSelect,
   isUpdate = false,
   operatedBy = "",
+  selectedIds,
+  branch,
+  employees,
+
+  site,
+  division,
+  department,
+  parent,
+  filteredEmployees,
+
+  filteredsite,
+  filtereddivision,
+  filtereddepartment,
+  filteredparent,
+  isbranchselected,
+  isBranchAndDivisionSelected,
+
+  filterBranch,
+  setFilterBranch,
+  filterSite,
+  setFilterSite,
+  filterDivision,
+  setFilterDivision,
+  filterDepartment,
+  setFilterDepartment,
+  filterParent,
+  setFilterParent,
+  sequentialMode,
+  setSequentialMode,
+  showEmployeeSection,
+  setShowEmployeeSection,
 }) {
+  const columns = [
+    { name: "Select", uid: "select" },
+    { name: "ID", uid: "id" },
+    { name: "Name", uid: "name" },
+    { name: "Branch", uid: "branch" },
+    { name: "Site", uid: "site" },
+    { name: "Division", uid: "division" },
+    { name: "Department", uid: "department" },
+    { name: "Parent Name", uid: "parentName" },
+  ];
+
+  const renderCell = (item, columnKey) => {
+    const employment = item.employeeEmployment?.[0] || {};
+    const parentName = employment.EmploymentParentBy
+      ? `${employment.EmploymentParentBy.employeeFirstname} ${employment.EmploymentParentBy.employeeLastname}`
+      : "-";
+
+    switch (columnKey) {
+      case "select":
+        return (
+          <Checkbox
+            size="lg"
+            color="warning"
+            isSelected={selectedIds.includes(item.employeeId)}
+            onChange={(e) => handleSelect(e.target.checked, item.employeeId)}
+          />
+        );
+      case "id":
+        return item.employeeId;
+      case "name":
+        return `${item.employeeFirstname} ${item.employeeLastname}`;
+      case "branch":
+        return employment.EmploymentBranchId?.branchName || "-";
+      case "site":
+        return employment.EmploymentSiteId?.siteName || "-";
+      case "division":
+        return employment.EmploymentDivisionId?.divisionName || "-";
+      case "department":
+        return employment.EmploymentDepartmentId?.departmentName || "-";
+      case "parentName":
+        return parentName;
+      default:
+        return "";
+    }
+  };
+
   return (
     <form
       ref={formRef}
       onSubmit={onSubmit}
       className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
     >
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Select
+            name="trainingType"
+            label="Training Type"
+            placeholder="Please Select Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.trainingType || ""}
+            selectedKeys={[formData.trainingType] || ""}
+            onChange={handleInputChange("trainingType")}
+            isInvalid={!!errors.trainingType}
+            errorMessage={errors.trainingType}
+          >
+            <SelectItem
+              value="Training_to_prepare_for_work"
+              key="Training_to_prepare_for_work"
+            >
+              Training_to_prepare_for_work
+            </SelectItem>
+            <SelectItem
+              value="Training_to_upgrade_labor_skills"
+              key="Training_to_upgrade_labor_skills"
+            >
+              Training_to_upgrade_labor_skills
+            </SelectItem>
+            <SelectItem
+              value="Training_to_change_career_fields"
+              key="Training_to_change_career_fields"
+            >
+              Training_to_change_career_fields
+            </SelectItem>
+          </Select>
+        </div>
+      </div>
+
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
@@ -35,7 +158,321 @@ export default function FormTraining({
             errorMessage={errors.trainingName}
           />
         </div>
-        {isUpdate && (
+      </div>
+
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Textarea
+            name="trainingObjectives"
+            type="text"
+            label="Training Objectives"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.trainingObjectives || ""}
+            onChange={handleInputChange("trainingObjectives")}
+            isInvalid={!!errors.trainingObjectives}
+            errorMessage={errors.trainingObjectives}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Textarea
+            name="trainingTargetGroup"
+            type="text"
+            label="Training Target Group"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.trainingTargetGroup || ""}
+            onChange={handleInputChange("trainingTargetGroup")}
+            isInvalid={!!errors.trainingTargetGroup}
+            errorMessage={errors.trainingTargetGroup}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Select
+            name="trainingInstitutionsType"
+            label="Training Institutions Type"
+            placeholder="Please Select Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.trainingInstitutionsType || ""}
+            selectedKeys={[formData.trainingInstitutionsType] || ""}
+            onChange={handleInputChange("trainingInstitutionsType")}
+            isInvalid={!!errors.trainingInstitutionsType}
+            errorMessage={errors.trainingInstitutionsType}
+          >
+            <SelectItem value="Internal" key="Internal">
+              Internal
+            </SelectItem>
+            <SelectItem value="External" key="External">
+              External
+            </SelectItem>
+          </Select>
+        </div>
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Input
+            type="datetime-local"
+            name="trainingStartDate"
+            label="Training Start Work"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.trainingStartDate || ""}
+            onChange={handleInputChange("trainingStartDate")}
+            isInvalid={!!errors.trainingStartDate}
+            errorMessage={errors.trainingStartDate}
+          />
+        </div>
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Input
+            type="datetime-local"
+            name="trainingEndDate"
+            label="Training End Work"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.trainingEndDate || ""}
+            onChange={handleInputChange("trainingEndDate")}
+            isInvalid={!!errors.trainingEndDate}
+            errorMessage={errors.trainingEndDate}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Input
+            name="trainingInstitutions"
+            type="text"
+            label="Training Institutions"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.trainingInstitutions || ""}
+            onChange={handleInputChange("trainingInstitutions")}
+            isInvalid={!!errors.trainingInstitutions}
+            errorMessage={errors.trainingInstitutions}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Input
+            name="trainingLecturer"
+            type="text"
+            label="Training Lecturer"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.trainingLecturer || ""}
+            onChange={handleInputChange("trainingLecturer")}
+            isInvalid={!!errors.trainingLecturer}
+            errorMessage={errors.trainingLecturer}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Input
+            name="trainingLocation"
+            type="text"
+            label="Training Location"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.trainingLocation || ""}
+            onChange={handleInputChange("trainingLocation")}
+            isInvalid={!!errors.trainingLocation}
+            errorMessage={errors.trainingLocation}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Input
+            name="trainingPrice"
+            type="number"
+            label="Training Price"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.trainingPrice || ""}
+            onChange={handleInputChange("trainingPrice")}
+            isInvalid={!!errors.trainingPrice}
+            errorMessage={errors.trainingPrice}
+          />
+        </div>
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Input
+            name="trainingEquipmentPrice"
+            type="number"
+            label="Training Equipment Price"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.trainingEquipmentPrice || ""}
+            onChange={handleInputChange("trainingEquipmentPrice")}
+            isInvalid={!!errors.trainingEquipmentPrice}
+            errorMessage={errors.trainingEquipmentPrice}
+          />
+        </div>
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Input
+            name="trainingFoodPrice"
+            type="number"
+            label="Training Food Price"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.trainingFoodPrice || ""}
+            onChange={handleInputChange("trainingFoodPrice")}
+            isInvalid={!!errors.trainingFoodPrice}
+            errorMessage={errors.trainingFoodPrice}
+          />
+        </div>
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Input
+            name="trainingFarePrice"
+            type="number"
+            label="Training Fare Price"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.trainingFarePrice || ""}
+            onChange={handleInputChange("trainingFarePrice")}
+            isInvalid={!!errors.trainingFarePrice}
+            errorMessage={errors.trainingFarePrice}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Input
+            name="trainingOtherExpenses"
+            type="text"
+            label="Training Other Expenses"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.trainingOtherExpenses || ""}
+            onChange={handleInputChange("trainingOtherExpenses")}
+            isInvalid={!!errors.trainingOtherExpenses}
+            errorMessage={errors.trainingOtherExpenses}
+          />
+        </div>
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Input
+            name="trainingOtherPrice"
+            type="number"
+            label="Training Other Price"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.trainingOtherPrice || ""}
+            onChange={handleInputChange("trainingOtherPrice")}
+            isInvalid={!!errors.trainingOtherPrice}
+            errorMessage={errors.trainingOtherPrice}
+          />
+        </div>
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Input
+            name="trainingSumPrice"
+            type="number"
+            label="Training Sum Price"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.trainingSumPrice || ""}
+            onChange={handleInputChange("trainingSumPrice")}
+            isInvalid={!!errors.trainingSumPrice}
+            errorMessage={errors.trainingSumPrice}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Input
+            name="trainingReferenceDocument"
+            type="text"
+            label="Training Reference Document"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.trainingReferenceDocument || ""}
+            onChange={handleInputChange("trainingReferenceDocument")}
+            isInvalid={!!errors.trainingReferenceDocument}
+            errorMessage={errors.trainingReferenceDocument}
+          />
+        </div>
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Input
+            name="trainingRemark"
+            type="text"
+            label="Training Remark"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.trainingRemark || ""}
+            onChange={handleInputChange("trainingRemark")}
+            isInvalid={!!errors.trainingRemark}
+            errorMessage={errors.trainingReferentrainingRemarkceDocument}
+          />
+        </div>
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Select
+            name="trainingRequireKnowledge"
+            label="Training Require Knowledge"
+            placeholder="Please Select Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.trainingRequireKnowledge || ""}
+            selectedKeys={[formData.trainingRequireKnowledge] || ""}
+            onChange={handleInputChange("trainingRequireKnowledge")}
+            isInvalid={!!errors.trainingRequireKnowledge}
+            errorMessage={errors.trainingRequireKnowledge}
+          >
+            <SelectItem value="Yes" key="Yes">
+              Yes
+            </SelectItem>
+            <SelectItem value="No" key="No">
+              No
+            </SelectItem>
+          </Select>
+        </div>
+      </div>
+
+      {isUpdate && (
+        <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
             <Select
               name="trainingStatus"
@@ -50,16 +487,17 @@ export default function FormTraining({
               isInvalid={!!errors.trainingStatus}
               errorMessage={errors.trainingStatus}
             >
-              <SelectItem value="InActive" key="InActive">
-                InActive
+              <SelectItem value="PendingHrApprove" key="PendingHrApprove">
+                PendingHrApprove
               </SelectItem>
-              <SelectItem value="Active" key="Active">
-                Active
+              <SelectItem value="Cancel" key="Cancel">
+                Cancel
               </SelectItem>
             </Select>
           </div>
-        )}
-      </div>
+        </div>
+      )}
+
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
@@ -75,6 +513,236 @@ export default function FormTraining({
           />
         </div>
       </div>
+
+      {!showEmployeeSection && (
+        <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Button
+            size="md"
+            color="primary"
+            onPress={() => setShowEmployeeSection(true)}
+          >
+            Select Employee
+          </Button>
+        </div>
+      )}
+      
+      {showEmployeeSection && (
+        <>
+          <div className="flex justify-end w-full p-2">
+            <Button
+              size="md"
+              color={sequentialMode ? "warning" : "primary"}
+              onPress={() => setSequentialMode((prev) => !prev)}
+            >
+              {sequentialMode
+                ? "Close Sequential Mode"
+                : "Open Sequential Mode"}
+            </Button>
+          </div>
+          <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                <Select
+                  label="Filter Branch"
+                  placeholder="Select Branch"
+                  labelPlacement="outside"
+                  size="lg"
+                  variant="bordered"
+                  value={filterBranch}
+                  onChange={(e) => setFilterBranch(e.target.value)}
+                >
+                  <SelectItem value="">All Branches</SelectItem>
+                  {branch.map((branch) => (
+                    <SelectItem
+                      key={branch.branchId}
+                      value={branch.branchId.toString()}
+                    >
+                      {branch.branchName}
+                    </SelectItem>
+                  ))}
+                </Select>
+              </div>
+              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                <Select
+                  label="Filter Site"
+                  placeholder="Select Site"
+                  labelPlacement="outside"
+                  size="lg"
+                  variant="bordered"
+                  value={filterSite}
+                  onChange={(e) => setFilterSite(e.target.value)}
+                  isDisabled={sequentialMode ? !filterBranch : false}
+                >
+                  <SelectItem value="">All Sites</SelectItem>
+                  {site
+                    .filter((site) => {
+                      return sequentialMode && filterBranch
+                        ? site.siteBranchId === Number(filterBranch)
+                        : true;
+                    })
+                    .map((site) => (
+                      <SelectItem
+                        key={site.siteId}
+                        value={site.siteId.toString()}
+                      >
+                        {site.siteName}
+                      </SelectItem>
+                    ))}
+                </Select>
+              </div>
+              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                <Select
+                  label="Filter Division"
+                  placeholder="Select Division"
+                  labelPlacement="outside"
+                  size="lg"
+                  variant="bordered"
+                  value={filterDivision}
+                  onChange={(e) => setFilterDivision(e.target.value)}
+                  isDisabled={sequentialMode ? !filterBranch : false}
+                >
+                  <SelectItem value="">All Divisions</SelectItem>
+                  {division
+                    .filter((division) => {
+                      return sequentialMode && filterBranch
+                        ? division.divisionBranchId === Number(filterBranch)
+                        : true;
+                    })
+                    .map((division) => (
+                      <SelectItem
+                        key={division.divisionId}
+                        value={division.divisionId.toString()}
+                      >
+                        {division.divisionName}
+                      </SelectItem>
+                    ))}
+                </Select>
+              </div>
+              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                <Select
+                  label="Filter Department"
+                  placeholder="Select Department"
+                  labelPlacement="outside"
+                  size="lg"
+                  variant="bordered"
+                  value={filterDepartment}
+                  onChange={(e) => setFilterDepartment(e.target.value)}
+                  isDisabled={sequentialMode ? !filterDivision : false}
+                >
+                  <SelectItem value="">All Departments</SelectItem>
+                  {department
+                    .filter((department) => {
+                      return sequentialMode && filterDivision
+                        ? department.departmentBranchId ===
+                            Number(filterBranch) &&
+                            department.departmentDivisionId ===
+                              Number(filterDivision)
+                        : true;
+                    })
+                    .map((department) => (
+                      <SelectItem
+                        key={department.departmentId}
+                        value={department.departmentId.toString()}
+                      >
+                        {department.departmentName}
+                      </SelectItem>
+                    ))}
+                </Select>
+              </div>
+              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                <Select
+                  label="Filter Parent"
+                  placeholder="Select Parent"
+                  labelPlacement="outside"
+                  size="lg"
+                  variant="bordered"
+                  value={filterParent}
+                  onChange={(e) => setFilterParent(e.target.value)}
+                  isDisabled={sequentialMode ? !filterDivision : false}
+                >
+                  <SelectItem value="">All Parents</SelectItem>
+                  {parent
+                    .filter((parent) => {
+                      return sequentialMode && filterDivision
+                        ? parent.employeeStatus === "Active" &&
+                            parent.employeeEmployment?.some(
+                              (emp) =>
+                                emp.employmentBranchId ===
+                                  Number(filterBranch) &&
+                                emp.employmentDivisionId ===
+                                  Number(filterDivision)
+                            )
+                        : true;
+                    })
+                    .map((parent) => (
+                      <SelectItem
+                        key={parent.employeeId}
+                        value={parent.employeeId.toString()}
+                      >
+                        {`${parent.employeeFirstname} ${parent.employeeLastname}`}
+                      </SelectItem>
+                    ))}
+                </Select>
+              </div>
+            </div>
+
+            <div className="flex flex-col xl:flex-row items-start justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <div
+                className={`flex flex-col items-start justify-center w-full p-2 gap-2 border-2 border-dark border-dashed ${
+                  selectedIds.length > 0 ? "xl:w-1/2" : ""
+                }`}
+              >
+                <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed font-[600]">
+                  All Employee
+                </div>
+                <CommonTable
+                  columns={columns}
+                  items={filteredEmployees
+                    .filter((emp) => !selectedIds.includes(emp.employeeId))
+                    .map((emp, index) => ({
+                      ...emp,
+                      _index: emp.employeeId || index,
+                    }))}
+                  loading={false}
+                  renderCell={renderCell}
+                  page={1}
+                  pages={1}
+                  onPageChange={() => {}}
+                  rowsPerPage={filteredEmployees.length}
+                  onRowsPerPageChange={() => {}}
+                  emptyContentText="No employees found"
+                />
+              </div>
+
+              {selectedIds.length > 0 && (
+                <div className="flex flex-col items-start justify-center w-full xl:w-1/2 p-2 gap-2 border-2 border-dark border-dashed">
+                  <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed font-[600]">
+                    Select Employee
+                  </div>
+                  <CommonTable
+                    columns={columns}
+                    items={employees
+                      .filter((emp) => selectedIds.includes(emp.employeeId))
+                      .map((emp, index) => ({
+                        ...emp,
+                        _index: emp.employeeId || index,
+                      }))}
+                    loading={false}
+                    renderCell={renderCell}
+                    page={1}
+                    pages={1}
+                    onPageChange={() => {}}
+                    rowsPerPage={selectedIds.length}
+                    onRowsPerPageChange={() => {}}
+                    emptyContentText="No selected employees"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </>
+      )}
+
       <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Button

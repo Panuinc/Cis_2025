@@ -14,7 +14,28 @@ import React, {
 
 const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
 const DEFAULT_FORM_DATA = {
+  trainingType: "",
   trainingName: "",
+  trainingObjectives: "",
+  trainingTargetGroup: "",
+
+  trainingInstitutionsType: "",
+  trainingStartDate: "",
+  trainingEndDate: "",
+  trainingInstitutions: "",
+  trainingLecturer: "",
+
+  trainingLocation: "",
+  trainingPrice: "",
+  trainingEquipmentPrice: "",
+  trainingFoodPrice: "",
+  trainingFarePrice: "",
+
+  trainingOtherExpenses: "",
+  trainingOtherPrice: "",
+  trainingReferenceDocument: "",
+  trainingRemark: "",
+  trainingRequireKnowledge: "",
 };
 
 export default function TrainingCreate() {
@@ -32,9 +53,209 @@ export default function TrainingCreate() {
 
   const router = useRouter();
   const [errors, setErrors] = useState({});
+  const [branch, setBranch] = useState([]);
+  const [site, setSite] = useState([]);
+  const [division, setDivision] = useState([]);
+  const [department, setDepartment] = useState([]);
+  const [parent, setParent] = useState([]);
+  const [employees, setEmployees] = useState([]);
+  const [selectedIds, setSelectedIds] = useState([]);
   const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
 
+  const [filterBranch, setFilterBranch] = useState("");
+  const [filterSite, setFilterSite] = useState("");
+  const [filterDivision, setFilterDivision] = useState("");
+  const [filterDepartment, setFilterDepartment] = useState("");
+  const [filterParent, setFilterParent] = useState("");
+
+  const [sequentialMode, setSequentialMode] = useState(false);
+  const [showEmployeeSection, setShowEmployeeSection] = useState(false);
+
   const formRef = useRef(null);
+
+  //
+  const fetchData = useCallback(async () => {
+    try {
+      const [
+        branchRes,
+        siteRes,
+        divisionRes,
+        departmentRes,
+        parentRes,
+        employeeRes,
+      ] = await Promise.all([
+        fetch(`/api/hr/branch`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
+        fetch(`/api/hr/site`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
+        fetch(`/api/hr/division`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
+        fetch(`/api/hr/department`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
+        fetch(`/api/hr/employee`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
+        fetch(`/api/hr/employee`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
+      ]);
+
+      const branchData = await branchRes.json();
+      if (branchRes.ok) {
+        const activeBranch = (branchData.branch || []).filter(
+          (branch) => branch.branchStatus === "Active"
+        );
+        setBranch(activeBranch);
+      } else {
+        toast.error(branchData.error);
+      }
+
+      const siteData = await siteRes.json();
+      if (siteRes.ok) {
+        const activeSite = (siteData.site || []).filter(
+          (site) => site.siteStatus === "Active"
+        );
+        setSite(activeSite);
+      } else {
+        toast.error(siteData.error);
+      }
+
+      const divisionData = await divisionRes.json();
+      if (divisionRes.ok) {
+        const activeDivision = (divisionData.division || []).filter(
+          (division) => division.divisionStatus === "Active"
+        );
+        setDivision(activeDivision);
+      } else {
+        toast.error(divisionData.error);
+      }
+
+      const departmentData = await departmentRes.json();
+      if (departmentRes.ok) {
+        const activeDepartment = (departmentData.department || []).filter(
+          (department) => department.departmentStatus === "Active"
+        );
+        setDepartment(activeDepartment);
+      } else {
+        toast.error(departmentData.error);
+      }
+
+      const parentData = await parentRes.json();
+      if (parentRes.ok) {
+        const activeParent = (parentData.employee || []).filter(
+          (parent) =>
+            parent.employeeStatus === "Active" &&
+            parent.employeeEmployment?.some(
+              (emp) => emp?.EmploymentRoleId?.roleName === "Manager"
+            )
+        );
+        setParent(activeParent);
+      } else {
+        toast.error(parentData.error);
+      }
+
+      const employeeData = await employeeRes.json();
+      if (employeeRes.ok) {
+        const activeEmployee = (employeeData.employee || []).filter(
+          (employee) => employee.employeeStatus === "Active"
+        );
+        setEmployees(activeEmployee);
+      } else {
+        toast.error(employeeData.error);
+      }
+    } catch (error) {
+      toast.error("Error fetching data");
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const filteredsite = useMemo(() => {
+    if (!formData.employmentBranchId) return [];
+    return site.filter(
+      (site) =>
+        site.siteStatus === "Active" &&
+        site.siteBranchId == formData.employmentBranchId
+    );
+  }, [formData.employmentBranchId, site]);
+
+  const filtereddivision = useMemo(() => {
+    if (!formData.employmentBranchId) return [];
+    return division.filter(
+      (division) =>
+        division.divisionStatus === "Active" &&
+        division.divisionBranchId == formData.employmentBranchId
+    );
+  }, [formData.employmentBranchId, division]);
+
+  const isbranchselected = Boolean(formData.employmentBranchId);
+
+  const filtereddepartment = useMemo(() => {
+    if (!formData.employmentBranchId && !formData.employmentDivisionId) {
+      return [];
+    }
+    return department.filter(
+      (department) =>
+        department.departmentStatus === "Active" &&
+        department.departmentBranchId == formData.employmentBranchId &&
+        department.departmentDivisionId == formData.employmentDivisionId
+    );
+  }, [formData.employmentBranchId, formData.employmentDivisionId, department]);
+
+  const filteredparent = useMemo(() => {
+    if (!formData.employmentBranchId && !formData.employmentDivisionId) {
+      return [];
+    }
+    return parent.filter(
+      (parent) =>
+        parent.employeeStatus === "Active" &&
+        parent.employeeEmployment?.some(
+          (emp) =>
+            emp.employmentBranchId == formData.employmentBranchId &&
+            emp.employmentDivisionId == formData.employmentDivisionId
+        )
+    );
+  }, [formData.employmentBranchId, formData.employmentDivisionId, parent]);
+
+  const isBranchAndDivisionSelected = Boolean(
+    formData.employmentBranchId && formData.employmentDivisionId
+  );
+
+  const handleSelect = useCallback((checked, empId) => {
+    setSelectedIds((prevSelected) => {
+      if (checked) {
+        return [...prevSelected, empId];
+      } else {
+        return prevSelected.filter((id) => id !== empId);
+      }
+    });
+  }, []);
+
+  //
 
   const handleInputChange = useCallback(
     (field) => (e) => {
@@ -96,6 +317,43 @@ export default function TrainingCreate() {
     setErrors({});
   }, []);
 
+  //
+  const filteredEmployees = useMemo(() => {
+    return employees.filter((emp) => {
+      const employment = emp.employeeEmployment?.[0] || {};
+      const matchBranch = filterBranch
+        ? employment.employmentBranchId === Number(filterBranch)
+        : true;
+      const matchSite = filterSite
+        ? employment.employmentSiteId === Number(filterSite)
+        : true;
+      const matchDivision = filterDivision
+        ? employment.employmentDivisionId === Number(filterDivision)
+        : true;
+      const matchDepartment = filterDepartment
+        ? employment.employmentDepartmentId === Number(filterDepartment)
+        : true;
+      const matchParent = filterParent
+        ? employment.employmentParentId === Number(filterParent)
+        : true;
+      return (
+        matchBranch &&
+        matchSite &&
+        matchDivision &&
+        matchDepartment &&
+        matchParent
+      );
+    });
+  }, [
+    employees,
+    filterBranch,
+    filterSite,
+    filterDivision,
+    filterDepartment,
+    filterParent,
+  ]);
+  //
+
   return (
     <>
       <TopicHeader topic="Training Create" />
@@ -107,6 +365,35 @@ export default function TrainingCreate() {
         errors={errors}
         setErrors={setErrors}
         formData={formData}
+        selectedIds={selectedIds}
+        branch={branch}
+        site={site}
+        division={division}
+        department={department}
+        parent={parent}
+        employees={employees}
+        filteredsite={filteredsite}
+        filtereddivision={filtereddivision}
+        filtereddepartment={filtereddepartment}
+        filteredparent={filteredparent}
+        isbranchselected={isbranchselected}
+        isBranchAndDivisionSelected={isBranchAndDivisionSelected}
+        filterBranch={filterBranch}
+        setFilterBranch={setFilterBranch}
+        filterSite={filterSite}
+        setFilterSite={setFilterSite}
+        filterDivision={filterDivision}
+        setFilterDivision={setFilterDivision}
+        filterDepartment={filterDepartment}
+        setFilterDepartment={setFilterDepartment}
+        filterParent={filterParent}
+        setFilterParent={setFilterParent}
+        filteredEmployees={filteredEmployees}
+        sequentialMode={sequentialMode}
+        setSequentialMode={setSequentialMode}
+        showEmployeeSection={showEmployeeSection}
+        setShowEmployeeSection={setShowEmployeeSection}
+        handleSelect={handleSelect}
         handleInputChange={handleInputChange}
         operatedBy={operatedBy}
       />
