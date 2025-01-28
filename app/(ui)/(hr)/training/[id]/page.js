@@ -28,14 +28,14 @@ const DEFAULT_FORM_DATA = {
   trainingLecturer: "",
 
   trainingLocation: "",
-  trainingPrice: "",
-  trainingEquipmentPrice: "",
-  trainingFoodPrice: "",
-  trainingFarePrice: "",
+  trainingPrice: 0,
+  trainingEquipmentPrice: 0,
+  trainingFoodPrice: 0,
+  trainingFarePrice: 0,
 
   trainingOtherExpenses: "",
-  trainingOtherPrice: "",
-  trainingSumPrice: "",
+  trainingOtherPrice: 0,
+  trainingSumPrice: 0,
   trainingReferenceDocument: "",
   trainingRemark: "",
   trainingRequireKnowledge: "",
@@ -83,25 +83,25 @@ export default function TrainingUpdate({ params: paramsPromise }) {
 
   useEffect(() => {
     const {
-      trainingPrice = "0",
-      trainingEquipmentPrice = "0",
-      trainingFoodPrice = "0",
-      trainingFarePrice = "0",
-      trainingOtherPrice = "0",
+      trainingPrice = 0,
+      trainingEquipmentPrice = 0,
+      trainingFoodPrice = 0,
+      trainingFarePrice = 0,
+      trainingOtherPrice = 0,
       trainingSumPrice,
     } = formData;
 
     const sumNumber =
-      parseFloat(trainingPrice || "0") +
-      parseFloat(trainingEquipmentPrice || "0") +
-      parseFloat(trainingFoodPrice || "0") +
-      parseFloat(trainingFarePrice || "0") +
-      parseFloat(trainingOtherPrice || "0");
+      parseFloat(trainingPrice) +
+      parseFloat(trainingEquipmentPrice) +
+      parseFloat(trainingFoodPrice) +
+      parseFloat(trainingFarePrice) +
+      parseFloat(trainingOtherPrice);
 
-    if (sumNumber.toString() !== trainingSumPrice) {
+    if (sumNumber !== parseFloat(trainingSumPrice)) {
       setFormData((prev) => ({
         ...prev,
-        trainingSumPrice: sumNumber.toString(),
+        trainingSumPrice: sumNumber,
       }));
     }
   }, [
@@ -187,13 +187,14 @@ export default function TrainingUpdate({ params: paramsPromise }) {
         toast.error("Error updating training: " + error.message);
       }
     },
-    [trainingId, router, userId]
+    [trainingId, router, userId, selectedIds]
   );
 
   const handleClear = useCallback(() => {
     if (formRef.current) formRef.current.reset();
     setFormData(DEFAULT_FORM_DATA);
     setErrors({});
+    setSelectedIds([]);
   }, []);
 
   const fetchData = useCallback(async () => {
@@ -307,6 +308,11 @@ export default function TrainingUpdate({ params: paramsPromise }) {
       if (trainingRes.ok) {
         const training = trainingData.training[0];
         setFormData(training);
+
+        const existingEmployeeIds = training.employeeTrainingTraining.map(
+          (et) => et.trainingEmployeeEmployeeId
+        );
+        setSelectedIds(existingEmployeeIds);
       } else {
         toast.error(trainingData.error);
       }

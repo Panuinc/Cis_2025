@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Cancel, Database } from "@/components/icons/icons";
 import CommonTable from "@/components/CommonTable";
 import {
@@ -93,6 +93,12 @@ export default function FormTraining({
     }
   };
 
+  useEffect(() => {
+    if (isUpdate) {
+      setShowEmployeeSection(true);
+    }
+  }, [isUpdate, setShowEmployeeSection]);
+
   return (
     <form
       ref={formRef}
@@ -136,7 +142,6 @@ export default function FormTraining({
         </div>
       </div>
 
-      {/* Training Name */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
@@ -155,7 +160,6 @@ export default function FormTraining({
         </div>
       </div>
 
-      {/* Training Objectives */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Textarea
@@ -173,7 +177,6 @@ export default function FormTraining({
         </div>
       </div>
 
-      {/* Training Target Group */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Textarea
@@ -191,7 +194,6 @@ export default function FormTraining({
         </div>
       </div>
 
-      {/* Institutions Type, StartDate, EndDate */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Select
@@ -247,7 +249,6 @@ export default function FormTraining({
         </div>
       </div>
 
-      {/* Institutions */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
@@ -266,7 +267,6 @@ export default function FormTraining({
         </div>
       </div>
 
-      {/* Lecturer */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
@@ -285,7 +285,6 @@ export default function FormTraining({
         </div>
       </div>
 
-      {/* Location */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
@@ -304,7 +303,6 @@ export default function FormTraining({
         </div>
       </div>
 
-      {/* trainingPrice, trainingEquipmentPrice, trainingFoodPrice, trainingFarePrice */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
@@ -368,7 +366,6 @@ export default function FormTraining({
         </div>
       </div>
 
-      {/* otherExpenses, otherPrice, sumPrice */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
@@ -401,7 +398,6 @@ export default function FormTraining({
           />
         </div>
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          {/* ไม่ให้ผู้ใช้แก้ จึงใส่ readOnly */}
           <Input
             name="trainingSumPrice"
             type="number"
@@ -419,7 +415,6 @@ export default function FormTraining({
         </div>
       </div>
 
-      {/* Reference Document, Remark, Knowledge */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
@@ -474,7 +469,6 @@ export default function FormTraining({
         </div>
       </div>
 
-      {/* ถ้า isUpdate = true อาจจะโชว์ส่วนของ trainingStatus ให้แก้ไข */}
       {isUpdate && (
         <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -501,7 +495,6 @@ export default function FormTraining({
         </div>
       )}
 
-      {/* Operated By */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
@@ -518,8 +511,7 @@ export default function FormTraining({
         </div>
       </div>
 
-      {/* ปุ่มกดแสดง Section เลือก Employee */}
-      {!showEmployeeSection && (
+      {!isUpdate && !showEmployeeSection && (
         <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Button
             size="md"
@@ -531,7 +523,6 @@ export default function FormTraining({
         </div>
       )}
 
-      {/* ส่วนเลือก/แสดง Employees */}
       {showEmployeeSection && (
         <>
           <div className="flex justify-end w-full p-2">
@@ -547,7 +538,6 @@ export default function FormTraining({
           </div>
 
           <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            {/* Filter */}
             <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 <Select
@@ -684,9 +674,7 @@ export default function FormTraining({
               </div>
             </div>
 
-            {/* ตาราง Employees (All Employee vs Selected) */}
             <div className="flex flex-col xl:flex-row items-start justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              {/* All Employees */}
               <div
                 className={`flex flex-col items-start justify-center w-full p-2 gap-2 border-2 border-dark border-dashed ${
                   selectedIds.length > 0 ? "xl:w-1/2" : ""
@@ -714,7 +702,6 @@ export default function FormTraining({
                 />
               </div>
 
-              {/* Selected Employees */}
               {selectedIds.length > 0 && (
                 <div className="flex flex-col items-start justify-center w-full xl:w-1/2 p-2 gap-2 border-2 border-dark border-dashed">
                   <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed font-[600]">
@@ -744,7 +731,6 @@ export default function FormTraining({
         </>
       )}
 
-      {/* Submit/Cancel */}
       <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Button
