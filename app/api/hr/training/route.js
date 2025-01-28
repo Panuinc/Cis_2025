@@ -1,6 +1,8 @@
+// app/api/hr/training/route.js
+
 import { NextResponse } from "next/server";
 import { handleErrors, handleGetErrors } from "@/lib/errorHandler";
-import { trainingPosteSchema } from "@/app/api/hr/training/trainingSchema";
+import { trainingPosteSchema } from "@/app/api/hr/training/trainingSchema"; // Zod schema
 import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
 import prisma from "@/lib/prisma";
@@ -8,6 +10,7 @@ import { formatTrainingData } from "@/app/api/hr/training/trainingSchema";
 import { getRequestIP } from "@/lib/GetRequestIp";
 import { getLocalNow } from "@/lib/GetLocalNow";
 
+// ======================== GET handler ========================
 export async function GET(request) {
   let ip;
   try {
@@ -18,6 +21,7 @@ export async function GET(request) {
 
     const training = await prisma.training.findMany({
       include: {
+        // เอารายการที่อยู่ในตารางลูกมาให้ด้วย
         employeeTrainingTraining: true,
         employeeTrainingCheckInTraining: true,
         TrainingCreateBy: {
@@ -50,6 +54,7 @@ export async function GET(request) {
   }
 }
 
+// ======================== POST handler ========================
 export async function POST(request) {
   let ip;
   try {
@@ -59,80 +64,72 @@ export async function POST(request) {
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
 
-    // อ่านข้อมูลจาก FormData
+    // 1) อ่านข้อมูลจาก FormData
     const formData = await request.formData();
     let dataObj = {};
 
     for (const [key, value] of formData.entries()) {
       // หากเป็น key ที่เป็น Array ของ Object ต้อง JSON.parse
-      if (["trainingEmployee", "trainingEmployeeCheckIn"].includes(key)) {
+      if (key === "trainingEmployee") {
         dataObj[key] = JSON.parse(value);
       } else {
         dataObj[key] = value;
       }
     }
 
-    // ตรวจสอบความถูกต้องของข้อมูลด้วย Zod
+    // 2) ตรวจสอบความถูกต้องของข้อมูลด้วย Zod
     const parsedData = trainingPosteSchema.parse(dataObj);
 
-    // แยกข้อมูลที่จะสร้างในตารางลูก
-    const { trainingEmployee, trainingEmployeeCheckIn, ...trainingData } =
-      parsedData;
+    // 3) แยกข้อมูล
+    const {
+      // ดึงค่าที่จำเป็น
+      trainingEmployee,
+      trainingStartDate, // สำคัญ: ต้องมีการส่งเข้ามา และ schema ก็รองรับ
+      ...trainingData
+    } = parsedData;
 
-    // เวลา Local ปัจจุบัน (ถ้ามีฟังก์ชัน getLocalNow)
+    // เวลา Local ปัจจุบัน
     const localNow = getLocalNow();
 
-    // ถ้าอยากเขียนฟังก์ชัน processEntries คล้ายในตัวอย่าง ก็ทำได้
-    // แต่กรณี create ใหม่ เราไม่จำเป็นต้องแยก "update" กับ "create"
-    // จึงสามารถเขียนสั้น ๆ ได้เช่นนี้
-    function processEntries(entries, fields) {
-      return (entries || []).map((e) =>
-        Object.fromEntries(fields.map((field) => [field, e[field]]))
-      );
-    }
+    // 4) เตรียมข้อมูลสำหรับตาราง TrainingEmployee
+    const createEmployee = (trainingEmployee || []).map((emp) => ({
+      // ฟิลด์หลัก
+      trainingEmployeeEmployeeId: emp.trainingEmployeeEmployeeId,
+      // ถ้ามีฟิลด์อื่น (เช่น trainingEmployeeResult) ให้ใส่เพิ่มได้
+    }));
 
-    // ฟิลด์ของ TrainingEmployee
-    const trainingEmployeeFields = [
-      "trainingEmployeeEmployeeId",
-      "trainingEmployeeResult", // ถ้ามี
-      "trainingEmployeeCertificateLink", // ถ้ามี
-    ];
+    // 5) เตรียมข้อมูลสำหรับตาราง TrainingEmployeeCheckIn (สร้างอัตโนมัติ)
+    const createCheckIn = (trainingEmployee || []).map((emp) => ({
+      trainingEmployeeCheckInEmployeeId: emp.trainingEmployeeEmployeeId,
+      trainingEmployeeCheckInTrainingDate: trainingStartDate
+        ? new Date(trainingStartDate)
+        : null,
+      trainingEmployeeCheckInMorningCheck: null,
+      trainingEmployeeCheckInAfterNoonCheck: null,
+    }));
 
-    // ฟิลด์ของ TrainingEmployeeCheckIn
-    const trainingEmployeeCheckInFields = [
-      "trainingEmployeeCheckInEmployeeId",
-      "trainingEmployeeCheckInTrainingDate",
-      "trainingEmployeeCheckInMorningCheck",
-      "trainingEmployeeCheckInAfterNoonCheck",
-    ];
-
-    // เตรียมข้อมูลสำหรับ create
-    const createEmployee = processEntries(
-      trainingEmployee,
-      trainingEmployeeFields
-    );
-    const createCheckIn = processEntries(
-      trainingEmployeeCheckIn,
-      trainingEmployeeCheckInFields
-    );
-
-    // สร้าง Training พร้อม Nested create ลงตารางลูก
+    // 6) สร้าง Training + Nested Create ลงตารางลูก
     const newTraining = await prisma.training.create({
       data: {
         ...trainingData,
+        // บังคับให้มี trainingStartDate
+        // สมมติว่า trainingStartDate ถูก parse เป็น Date ใน schema แล้ว
+        trainingStartDate: new Date(trainingStartDate),
+
         trainingCreateAt: localNow,
 
-        // สร้างผู้เข้าอบรม
+        // สร้าง TrainingEmployee
         employeeTrainingTraining: {
           create: createEmployee,
         },
 
-        // สร้างข้อมูล Check-in
+        // สร้าง TrainingEmployeeCheckIn
         employeeTrainingCheckInTraining: {
           create: createCheckIn,
         },
       },
       include: {
+        // include ตารางลูก
         employeeTrainingTraining: true,
         employeeTrainingCheckInTraining: true,
       },

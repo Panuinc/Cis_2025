@@ -606,6 +606,7 @@ model Training {
   trainingFarePrice         Float
   trainingOtherExpenses     String                   @db.VarChar(255)
   trainingOtherPrice        Float
+  trainingSumPrice          Float
   trainingReferenceDocument String                   @db.VarChar(255)
   trainingRemark            String                   @db.VarChar(255)
   trainingRequireKnowledge  String                   @db.VarChar(255)

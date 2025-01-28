@@ -1,3 +1,4 @@
+// app/components/form/hr/training/FormTraining.js
 "use client";
 import React from "react";
 import { Cancel, Database } from "@/components/icons/icons";
@@ -22,21 +23,15 @@ export default function FormTraining({
   isUpdate = false,
   operatedBy = "",
   selectedIds,
+
+  // ข้อมูล/ฟังก์ชันสำหรับฟิลเตอร์และตาราง employees
   branch,
   employees,
-
   site,
   division,
   department,
   parent,
   filteredEmployees,
-
-  filteredsite,
-  filtereddivision,
-  filtereddepartment,
-  filteredparent,
-  isbranchselected,
-  isBranchAndDivisionSelected,
 
   filterBranch,
   setFilterBranch,
@@ -48,11 +43,13 @@ export default function FormTraining({
   setFilterDepartment,
   filterParent,
   setFilterParent,
+
   sequentialMode,
   setSequentialMode,
   showEmployeeSection,
   setShowEmployeeSection,
 }) {
+  // columns สำหรับตารางพนักงาน
   const columns = [
     { name: "Select", uid: "select" },
     { name: "ID", uid: "id" },
@@ -115,7 +112,7 @@ export default function FormTraining({
             size="lg"
             variant="bordered"
             value={formData.trainingType || ""}
-            selectedKeys={[formData.trainingType] || ""}
+            selectedKeys={[formData.trainingType] || []}
             onChange={handleInputChange("trainingType")}
             isInvalid={!!errors.trainingType}
             errorMessage={errors.trainingType}
@@ -142,6 +139,7 @@ export default function FormTraining({
         </div>
       </div>
 
+      {/* Training Name */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
@@ -160,11 +158,11 @@ export default function FormTraining({
         </div>
       </div>
 
+      {/* Training Objectives */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Textarea
             name="trainingObjectives"
-            type="text"
             label="Training Objectives"
             placeholder="Please Enter Data"
             labelPlacement="outside"
@@ -178,11 +176,11 @@ export default function FormTraining({
         </div>
       </div>
 
+      {/* Training Target Group */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Textarea
             name="trainingTargetGroup"
-            type="text"
             label="Training Target Group"
             placeholder="Please Enter Data"
             labelPlacement="outside"
@@ -196,6 +194,7 @@ export default function FormTraining({
         </div>
       </div>
 
+      {/* Institutions Type, StartDate, EndDate */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Select
@@ -223,7 +222,7 @@ export default function FormTraining({
           <Input
             type="datetime-local"
             name="trainingStartDate"
-            label="Training Start Work"
+            label="Training Start"
             placeholder="Please Enter Data"
             labelPlacement="outside"
             size="lg"
@@ -238,12 +237,12 @@ export default function FormTraining({
           <Input
             type="datetime-local"
             name="trainingEndDate"
-            label="Training End Work"
+            label="Training End"
             placeholder="Please Enter Data"
             labelPlacement="outside"
             size="lg"
             variant="bordered"
-            value={formData.trainingEndDate || ""}
+            value={formData.trainingEndDate}
             onChange={handleInputChange("trainingEndDate")}
             isInvalid={!!errors.trainingEndDate}
             errorMessage={errors.trainingEndDate}
@@ -251,6 +250,7 @@ export default function FormTraining({
         </div>
       </div>
 
+      {/* Institutions */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
@@ -269,6 +269,7 @@ export default function FormTraining({
         </div>
       </div>
 
+      {/* Lecturer */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
@@ -287,6 +288,7 @@ export default function FormTraining({
         </div>
       </div>
 
+      {/* Location */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
@@ -305,6 +307,7 @@ export default function FormTraining({
         </div>
       </div>
 
+      {/* trainingPrice, trainingEquipmentPrice, trainingFoodPrice, trainingFarePrice */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
@@ -325,7 +328,7 @@ export default function FormTraining({
           <Input
             name="trainingEquipmentPrice"
             type="number"
-            label="Training Equipment Price"
+            label="Equipment Price"
             placeholder="Please Enter Data"
             labelPlacement="outside"
             size="lg"
@@ -340,7 +343,7 @@ export default function FormTraining({
           <Input
             name="trainingFoodPrice"
             type="number"
-            label="Training Food Price"
+            label="Food Price"
             placeholder="Please Enter Data"
             labelPlacement="outside"
             size="lg"
@@ -355,7 +358,7 @@ export default function FormTraining({
           <Input
             name="trainingFarePrice"
             type="number"
-            label="Training Fare Price"
+            label="Fare Price"
             placeholder="Please Enter Data"
             labelPlacement="outside"
             size="lg"
@@ -368,12 +371,13 @@ export default function FormTraining({
         </div>
       </div>
 
+      {/* otherExpenses, otherPrice, sumPrice */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
             name="trainingOtherExpenses"
             type="text"
-            label="Training Other Expenses"
+            label="Other Expenses"
             placeholder="Please Enter Data"
             labelPlacement="outside"
             size="lg"
@@ -388,7 +392,7 @@ export default function FormTraining({
           <Input
             name="trainingOtherPrice"
             type="number"
-            label="Training Other Price"
+            label="Other Price"
             placeholder="Please Enter Data"
             labelPlacement="outside"
             size="lg"
@@ -400,11 +404,12 @@ export default function FormTraining({
           />
         </div>
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          {/* ไม่ให้ผู้ใช้แก้ จึงใส่ readOnly */}
           <Input
             name="trainingSumPrice"
             type="number"
             label="Training Sum Price"
-            placeholder="Please Enter Data"
+            placeholder="Auto Calculate"
             labelPlacement="outside"
             size="lg"
             variant="bordered"
@@ -412,16 +417,18 @@ export default function FormTraining({
             onChange={handleInputChange("trainingSumPrice")}
             isInvalid={!!errors.trainingSumPrice}
             errorMessage={errors.trainingSumPrice}
+            isReadOnly={true}
           />
         </div>
       </div>
 
+      {/* Reference Document, Remark, Knowledge */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
             name="trainingReferenceDocument"
             type="text"
-            label="Training Reference Document"
+            label="Reference Document"
             placeholder="Please Enter Data"
             labelPlacement="outside"
             size="lg"
@@ -444,18 +451,17 @@ export default function FormTraining({
             value={formData.trainingRemark || ""}
             onChange={handleInputChange("trainingRemark")}
             isInvalid={!!errors.trainingRemark}
-            errorMessage={errors.trainingReferentrainingRemarkceDocument}
+            errorMessage={errors.trainingRemark}
           />
         </div>
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Select
             name="trainingRequireKnowledge"
-            label="Training Require Knowledge"
+            label="Require Knowledge?"
             placeholder="Please Select Data"
             labelPlacement="outside"
             size="lg"
             variant="bordered"
-            value={formData.trainingRequireKnowledge || ""}
             selectedKeys={[formData.trainingRequireKnowledge] || ""}
             onChange={handleInputChange("trainingRequireKnowledge")}
             isInvalid={!!errors.trainingRequireKnowledge}
@@ -471,6 +477,7 @@ export default function FormTraining({
         </div>
       </div>
 
+      {/* ถ้า isUpdate = true อาจจะโชว์ส่วนของ trainingStatus ให้แก้ไข */}
       {isUpdate && (
         <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -481,7 +488,6 @@ export default function FormTraining({
               labelPlacement="outside"
               size="lg"
               variant="bordered"
-              value={formData.trainingStatus || ""}
               selectedKeys={[formData.trainingStatus] || ""}
               onChange={handleInputChange("trainingStatus")}
               isInvalid={!!errors.trainingStatus}
@@ -498,6 +504,7 @@ export default function FormTraining({
         </div>
       )}
 
+      {/* Operated By */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
@@ -514,6 +521,7 @@ export default function FormTraining({
         </div>
       </div>
 
+      {/* ปุ่มกดแสดง Section เลือก Employee */}
       {!showEmployeeSection && (
         <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Button
@@ -525,7 +533,8 @@ export default function FormTraining({
           </Button>
         </div>
       )}
-      
+
+      {/* ส่วนเลือก/แสดง Employees */}
       {showEmployeeSection && (
         <>
           <div className="flex justify-end w-full p-2">
@@ -539,7 +548,9 @@ export default function FormTraining({
                 : "Open Sequential Mode"}
             </Button>
           </div>
+
           <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            {/* Filter */}
             <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 <Select
@@ -548,16 +559,13 @@ export default function FormTraining({
                   labelPlacement="outside"
                   size="lg"
                   variant="bordered"
-                  value={filterBranch}
+                  selectedKeys={[filterBranch] || []}
                   onChange={(e) => setFilterBranch(e.target.value)}
                 >
                   <SelectItem value="">All Branches</SelectItem>
-                  {branch.map((branch) => (
-                    <SelectItem
-                      key={branch.branchId}
-                      value={branch.branchId.toString()}
-                    >
-                      {branch.branchName}
+                  {branch.map((b) => (
+                    <SelectItem key={b.branchId} value={b.branchId.toString()}>
+                      {b.branchName}
                     </SelectItem>
                   ))}
                 </Select>
@@ -569,23 +577,20 @@ export default function FormTraining({
                   labelPlacement="outside"
                   size="lg"
                   variant="bordered"
-                  value={filterSite}
+                  selectedKeys={[filterSite] || []}
                   onChange={(e) => setFilterSite(e.target.value)}
                   isDisabled={sequentialMode ? !filterBranch : false}
                 >
                   <SelectItem value="">All Sites</SelectItem>
                   {site
-                    .filter((site) => {
-                      return sequentialMode && filterBranch
-                        ? site.siteBranchId === Number(filterBranch)
-                        : true;
-                    })
-                    .map((site) => (
-                      <SelectItem
-                        key={site.siteId}
-                        value={site.siteId.toString()}
-                      >
-                        {site.siteName}
+                    .filter((s) =>
+                      sequentialMode && filterBranch
+                        ? s.siteBranchId === Number(filterBranch)
+                        : true
+                    )
+                    .map((s) => (
+                      <SelectItem key={s.siteId} value={s.siteId.toString()}>
+                        {s.siteName}
                       </SelectItem>
                     ))}
                 </Select>
@@ -597,23 +602,23 @@ export default function FormTraining({
                   labelPlacement="outside"
                   size="lg"
                   variant="bordered"
-                  value={filterDivision}
+                  selectedKeys={[filterDivision] || []}
                   onChange={(e) => setFilterDivision(e.target.value)}
                   isDisabled={sequentialMode ? !filterBranch : false}
                 >
                   <SelectItem value="">All Divisions</SelectItem>
                   {division
-                    .filter((division) => {
-                      return sequentialMode && filterBranch
-                        ? division.divisionBranchId === Number(filterBranch)
-                        : true;
-                    })
-                    .map((division) => (
+                    .filter((d) =>
+                      sequentialMode && filterBranch
+                        ? d.divisionBranchId === Number(filterBranch)
+                        : true
+                    )
+                    .map((d) => (
                       <SelectItem
-                        key={division.divisionId}
-                        value={division.divisionId.toString()}
+                        key={d.divisionId}
+                        value={d.divisionId.toString()}
                       >
-                        {division.divisionName}
+                        {d.divisionName}
                       </SelectItem>
                     ))}
                 </Select>
@@ -625,26 +630,24 @@ export default function FormTraining({
                   labelPlacement="outside"
                   size="lg"
                   variant="bordered"
-                  value={filterDepartment}
+                  selectedKeys={[filterDepartment] || []}
                   onChange={(e) => setFilterDepartment(e.target.value)}
                   isDisabled={sequentialMode ? !filterDivision : false}
                 >
                   <SelectItem value="">All Departments</SelectItem>
                   {department
-                    .filter((department) => {
-                      return sequentialMode && filterDivision
-                        ? department.departmentBranchId ===
-                            Number(filterBranch) &&
-                            department.departmentDivisionId ===
-                              Number(filterDivision)
-                        : true;
-                    })
-                    .map((department) => (
+                    .filter((dept) =>
+                      sequentialMode && filterDivision
+                        ? dept.departmentBranchId === Number(filterBranch) &&
+                          dept.departmentDivisionId === Number(filterDivision)
+                        : true
+                    )
+                    .map((dept) => (
                       <SelectItem
-                        key={department.departmentId}
-                        value={department.departmentId.toString()}
+                        key={dept.departmentId}
+                        value={dept.departmentId.toString()}
                       >
-                        {department.departmentName}
+                        {dept.departmentName}
                       </SelectItem>
                     ))}
                 </Select>
@@ -656,37 +659,37 @@ export default function FormTraining({
                   labelPlacement="outside"
                   size="lg"
                   variant="bordered"
-                  value={filterParent}
+                  selectedKeys={[filterParent] || []}
                   onChange={(e) => setFilterParent(e.target.value)}
                   isDisabled={sequentialMode ? !filterDivision : false}
                 >
                   <SelectItem value="">All Parents</SelectItem>
                   {parent
-                    .filter((parent) => {
-                      return sequentialMode && filterDivision
-                        ? parent.employeeStatus === "Active" &&
-                            parent.employeeEmployment?.some(
-                              (emp) =>
-                                emp.employmentBranchId ===
-                                  Number(filterBranch) &&
-                                emp.employmentDivisionId ===
-                                  Number(filterDivision)
-                            )
-                        : true;
-                    })
-                    .map((parent) => (
+                    .filter((p) =>
+                      sequentialMode && filterDivision
+                        ? p.employeeEmployment?.some(
+                            (emp) =>
+                              emp.employmentBranchId === Number(filterBranch) &&
+                              emp.employmentDivisionId ===
+                                Number(filterDivision)
+                          )
+                        : true
+                    )
+                    .map((p) => (
                       <SelectItem
-                        key={parent.employeeId}
-                        value={parent.employeeId.toString()}
+                        key={p.employeeId}
+                        value={p.employeeId.toString()}
                       >
-                        {`${parent.employeeFirstname} ${parent.employeeLastname}`}
+                        {`${p.employeeFirstname} ${p.employeeLastname}`}
                       </SelectItem>
                     ))}
                 </Select>
               </div>
             </div>
 
+            {/* ตาราง Employees (All Employee vs Selected) */}
             <div className="flex flex-col xl:flex-row items-start justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              {/* All Employees */}
               <div
                 className={`flex flex-col items-start justify-center w-full p-2 gap-2 border-2 border-dark border-dashed ${
                   selectedIds.length > 0 ? "xl:w-1/2" : ""
@@ -714,10 +717,11 @@ export default function FormTraining({
                 />
               </div>
 
+              {/* Selected Employees */}
               {selectedIds.length > 0 && (
                 <div className="flex flex-col items-start justify-center w-full xl:w-1/2 p-2 gap-2 border-2 border-dark border-dashed">
                   <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed font-[600]">
-                    Select Employee
+                    Selected Employee
                   </div>
                   <CommonTable
                     columns={columns}
@@ -743,6 +747,7 @@ export default function FormTraining({
         </>
       )}
 
+      {/* Submit/Cancel */}
       <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Button

@@ -1,3 +1,4 @@
+// app/api/hr/training/trainingSchema.js
 import { z } from "zod";
 import {
   preprocessInt,
@@ -9,6 +10,7 @@ import {
   formatData,
 } from "@/lib/zodSchema";
 
+// ช่วยฟอร์แมตวันที่ก่อนส่งออก
 export function formatTrainingData(training) {
   return formatData(
     training,
@@ -22,6 +24,7 @@ export function formatTrainingData(training) {
   );
 }
 
+// ---- child schemas ----
 const trainingEmployeeSchema = z.object({
   trainingEmployeeId: preprocessInt(
     "TrainingEmployeeId ID must be provided.",
@@ -29,13 +32,13 @@ const trainingEmployeeSchema = z.object({
   ).optional(),
 
   trainingEmployeeTrainingId: preprocessInt(
-    "TrainingEmployeeTrainingId  CV ID must be provided.",
-    "TrainingEmployeeTrainingId  Cv ID must be an integer."
+    "TrainingEmployeeTrainingId must be provided.",
+    "TrainingEmployeeTrainingId must be an integer."
   ).optional(),
 
   trainingEmployeeEmployeeId: preprocessInt(
-    "TrainingEmployeeEmployeeId  CV ID must be provided.",
-    "TrainingEmployeeEmployeeId  Cv ID must be an integer."
+    "trainingEmployeeEmployeeId must be provided.",
+    "trainingEmployeeEmployeeId must be an integer."
   ).optional(),
 });
 
@@ -46,13 +49,13 @@ const trainingEmployeeCheckInSchema = z.object({
   ).optional(),
 
   trainingEmployeeCheckInTrainingId: preprocessInt(
-    "TrainingEmployeeCheckInTrainingId  CV ID must be provided.",
-    "TrainingEmployeeCheckInTrainingId  Cv ID must be an integer."
+    "TrainingEmployeeCheckInTrainingId must be provided.",
+    "TrainingEmployeeCheckInTrainingId must be an integer."
   ).optional(),
 
   trainingEmployeeCheckInEmployeeId: preprocessInt(
-    "TrainingEmployeeCheckInEmployeeId  CV ID must be provided.",
-    "TrainingEmployeeCheckInEmployeeId  Cv ID must be an integer."
+    "TrainingEmployeeCheckInEmployeeId must be provided.",
+    "TrainingEmployeeCheckInEmployeeId must be an integer."
   ),
 
   trainingEmployeeCheckInTrainingDate: preprocessDate.refine(
@@ -77,6 +80,7 @@ const trainingEmployeeCheckInSchema = z.object({
   ),
 });
 
+// เอาไว้ format array ของ Training
 export function formatTrainingsData(trainingArray) {
   return trainingArray.map((training) => ({
     ...training,
@@ -85,6 +89,7 @@ export function formatTrainingsData(trainingArray) {
   }));
 }
 
+// ---- main schemas ----
 export const trainingPosteSchema = z.object({
   trainingType: preprocessEnum(
     [
@@ -92,7 +97,7 @@ export const trainingPosteSchema = z.object({
       "Training_to_upgrade_labor_skills",
       "Training_to_change_career_fields",
     ],
-    "Training Type must be either 'Training_to_prepare_for_work', 'Training_to_upgrade_labor_skills', 'Training_to_change_career_fields'."
+    "Training Type must be one of 'Training_to_prepare_for_work', 'Training_to_upgrade_labor_skills', or 'Training_to_change_career_fields'."
   ),
 
   trainingName: preprocessString(
@@ -112,7 +117,7 @@ export const trainingPosteSchema = z.object({
 
   trainingInstitutionsType: preprocessEnum(
     ["Internal", "External"],
-    "Training Type must be either 'Internal', 'External'."
+    "Training Type must be either 'Internal' or 'External'."
   ),
 
   trainingStartDate: preprocessDate.refine(
@@ -173,6 +178,12 @@ export const trainingPosteSchema = z.object({
     "Please Enter Training Other Price",
     "Please Enter Training Other Price"
   ),
+
+  // ให้เป็น optional
+  trainingSumPrice: preprocessDouble(
+    "Please Enter Training Sum Price",
+    "Please Enter Training Sum Price"
+  ).optional(),
 
   trainingReferenceDocument: preprocessString(
     "Please Enter Training Reference Document",
@@ -193,6 +204,8 @@ export const trainingPosteSchema = z.object({
     "Training creator ID must be provided.",
     "Training creator ID must be an integer."
   ),
+
+  // Nested
   trainingEmployee: z.array(trainingEmployeeSchema).optional(),
   trainingEmployeeCheckIn: z.array(trainingEmployeeCheckInSchema).optional(),
 });
@@ -209,7 +222,7 @@ export const trainingPutSchema = z.object({
       "Training_to_upgrade_labor_skills",
       "Training_to_change_career_fields",
     ],
-    "Training Type must be either 'Training_to_prepare_for_work', 'Training_to_upgrade_labor_skills', 'Training_to_change_career_fields'."
+    "Training Type must be one of 'Training_to_prepare_for_work', 'Training_to_upgrade_labor_skills', or 'Training_to_change_career_fields'."
   ),
 
   trainingName: preprocessString(
@@ -291,6 +304,11 @@ export const trainingPutSchema = z.object({
     "Please Enter Training Other Price"
   ),
 
+  trainingSumPrice: preprocessDouble(
+    "Please Enter Training Sum Price",
+    "Please Enter Training Sum Price"
+  ).optional(),
+
   trainingReferenceDocument: preprocessString(
     "Please Enter Training Reference Document",
     "Please Enter Training Reference Document"
@@ -308,7 +326,7 @@ export const trainingPutSchema = z.object({
 
   trainingStatus: preprocessEnum(
     ["PendingHrApprove", "Cancel"],
-    "Training Type must be either 'PendingHrApprove', 'Cancel'."
+    "Training Status must be either 'PendingHrApprove' or 'Cancel'."
   ),
 
   trainingUpdateBy: preprocessInt(
@@ -325,7 +343,7 @@ export const trainingHrApprovePutSchema = z.object({
 
   trainingStatus: preprocessEnum(
     ["PendingMdApprove", "HrCancel"],
-    "Training Type must be either 'PendingMdApprove', 'HrCancel'."
+    "Training Status must be either 'PendingMdApprove' or 'HrCancel'."
   ),
 
   trainingReasonHrApproveBy: preprocessInt(
@@ -342,7 +360,7 @@ export const trainingMdApprovePutSchema = z.object({
 
   trainingStatus: preprocessEnum(
     ["ApprovedSuccess", "MdCancel"],
-    "Training Type must be either 'ApprovedSuccess', 'MdCancel'."
+    "Training Status must be either 'ApprovedSuccess' or 'MdCancel'."
   ),
 
   trainingReasonMdApproveBy: preprocessInt(
