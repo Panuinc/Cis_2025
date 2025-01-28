@@ -29,6 +29,8 @@ export async function GET(request, context) {
     const training = await prisma.training.findMany({
       where: { trainingId: trainingId },
       include: {
+        employeeTrainingTraining: true,
+        employeeTrainingCheckInTraining: true,
         TrainingCreateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
@@ -95,7 +97,10 @@ export async function PUT(request, context) {
     });
 
     return NextResponse.json(
-      { message: "Training data updated successfully", training: updatedTraining },
+      {
+        message: "Training data updated successfully",
+        training: updatedTraining,
+      },
       { status: 200 }
     );
   } catch (error) {
