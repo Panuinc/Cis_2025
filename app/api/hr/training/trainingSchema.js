@@ -58,23 +58,29 @@ const trainingEmployeeCheckInSchema = z.object({
   trainingEmployeeCheckInTrainingDate: preprocessDate.refine(
     (date) => date === null || date instanceof Date,
     {
-      message: "Please Enter Start Date",
+      message: "Please Enter Training Date",
     }
   ),
 
-  trainingEmployeeCheckInMorningCheck: preprocessDate.refine(
-    (date) => date === null || date instanceof Date,
-    {
-      message: "Please Enter Start Date",
-    }
-  ),
+  trainingEmployeeCheckInMorningCheck: preprocessDate.refine()
+    .nullable()
+    .optional() // ทำให้ optional
+    .refine(
+      (date) => date === null || date instanceof Date,
+      {
+        message: "Please Enter Morning Date",
+      }
+    ),
 
-  trainingEmployeeCheckInAfterNoonCheck: preprocessDate.refine(
-    (date) => date === null || date instanceof Date,
-    {
-      message: "Please Enter Start Date",
-    }
-  ),
+  trainingEmployeeCheckInAfterNoonCheck: preprocessDate.refine()
+    .nullable()
+    .optional() // ทำให้ optional
+    .refine(
+      (date) => date === null || date instanceof Date,
+      {
+        message: "Please Enter AfterNoon Date",
+      }
+    ),
 });
 
 export function formatTrainingsData(trainingArray) {

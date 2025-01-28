@@ -154,6 +154,21 @@ export default function TrainingUpdate({ params: paramsPromise }) {
         JSON.stringify(trainingEmployeeArray)
       );
 
+      const trainingEmployeeCheckInArray = selectedIds.map((empId) => ({
+        trainingEmployeeCheckInEmployeeId: empId,
+        // ใช้ formData.trainingStartDate แทน someDateValue
+        trainingEmployeeCheckInTrainingDate: formData.trainingStartDate
+          ? new Date(formData.trainingStartDate)
+          : null,
+
+        trainingEmployeeCheckInMorningCheck: null,
+        trainingEmployeeCheckInAfterNoonCheck: null,
+      }));
+      formDataObject.append(
+        "trainingEmployeeCheckIn",
+        JSON.stringify(trainingEmployeeCheckInArray)
+      );
+
       try {
         const res = await fetch(`/api/hr/training/${trainingId}`, {
           method: "PUT",
