@@ -156,7 +156,6 @@ export default function TrainingUpdate({ params: paramsPromise }) {
 
       const trainingEmployeeCheckInArray = selectedIds.map((empId) => ({
         trainingEmployeeCheckInEmployeeId: empId,
-        // ใช้ formData.trainingStartDate แทน someDateValue
         trainingEmployeeCheckInTrainingDate: formData.trainingStartDate
           ? new Date(formData.trainingStartDate)
           : null,

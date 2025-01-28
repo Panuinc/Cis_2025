@@ -91,7 +91,6 @@ export async function PUT(request, context) {
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
 
-    // แปลง formData เป็น object
     const formData = await request.formData();
     const dataObj = {};
 
@@ -103,7 +102,6 @@ export async function PUT(request, context) {
       }
     }
 
-    // parse กับ Zod
     const parsedData = trainingPutSchema.parse({
       ...dataObj,
       trainingId,
@@ -119,7 +117,6 @@ export async function PUT(request, context) {
 
     const localNow = getLocalNow();
 
-    // ใช้ SevenHouse สำหรับปรับวันที่
     const adjustedTrainingStartDate = trainingStartDate
       ? SevenHouse(trainingStartDate)
       : null;
@@ -127,7 +124,6 @@ export async function PUT(request, context) {
       ? SevenHouse(trainingEndDate)
       : null;
 
-    // update ข้อมูล Training หลัก
     await prisma.training.update({
       where: { trainingId: parseInt(trainingId, 10) },
       data: {
@@ -138,19 +134,17 @@ export async function PUT(request, context) {
       },
     });
 
-    // -- อัปเดต trainingEmployeeCheckInTrainingDate สำหรับบันทึกที่มีอยู่ --
     if (trainingEmployeeCheckIn && trainingEmployeeCheckIn.length > 0) {
       await prisma.trainingEmployeeCheckIn.updateMany({
         where: { trainingEmployeeCheckInTrainingId: parseInt(trainingId, 10) },
         data: {
           trainingEmployeeCheckInTrainingDate: adjustedTrainingStartDate,
-          trainingEmployeeCheckInMorningCheck: null, // หรือปรับตามความต้องการ
-          trainingEmployeeCheckInAfterNoonCheck: null, // หรือปรับตามความต้องการ
+          trainingEmployeeCheckInMorningCheck: null,
+          trainingEmployeeCheckInAfterNoonCheck: null,
         },
       });
     }
 
-    // -- เพิ่มของใหม่เฉพาะ TrainingEmployee --
     if (trainingEmployee && trainingEmployee.length > 0) {
       const existingTrainingEmployee = await prisma.trainingEmployee.findMany({
         where: { trainingEmployeeTrainingId: parseInt(trainingId, 10) },
@@ -161,7 +155,6 @@ export async function PUT(request, context) {
         (emp) => emp.trainingEmployeeEmployeeId
       );
 
-      // หาตัวที่ยังไม่มีใน DB
       const newEmployeeToCreate = trainingEmployee
         .filter(
           (emp) => !existingEmpIds.includes(emp.trainingEmployeeEmployeeId)
@@ -179,7 +172,6 @@ export async function PUT(request, context) {
       }
     }
 
-    // -- เพิ่มของใหม่เฉพาะ TrainingEmployeeCheckIn --
     if (trainingEmployeeCheckIn && trainingEmployeeCheckIn.length > 0) {
       const existingCheckIn = await prisma.trainingEmployeeCheckIn.findMany({
         where: {
@@ -201,7 +193,7 @@ export async function PUT(request, context) {
           trainingEmployeeCheckInTrainingId: parseInt(trainingId, 10),
           trainingEmployeeCheckInEmployeeId:
             ch.trainingEmployeeCheckInEmployeeId,
-          trainingEmployeeCheckInTrainingDate: adjustedTrainingStartDate, // ใช้ adjustedTrainingStartDate แทน ch.trainingEmployeeCheckInTrainingDate
+          trainingEmployeeCheckInTrainingDate: adjustedTrainingStartDate,
           trainingEmployeeCheckInMorningCheck:
             ch.trainingEmployeeCheckInMorningCheck
               ? SevenHouse(ch.trainingEmployeeCheckInMorningCheck)
@@ -220,7 +212,6 @@ export async function PUT(request, context) {
       }
     }
 
-    // ดึงข้อมูลกลับมาให้ client ดู
     const updatedTraining = await prisma.training.findUnique({
       where: { trainingId: parseInt(trainingId, 10) },
       include: {

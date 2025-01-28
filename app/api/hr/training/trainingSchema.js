@@ -62,25 +62,21 @@ const trainingEmployeeCheckInSchema = z.object({
     }
   ),
 
-  trainingEmployeeCheckInMorningCheck: preprocessDate.refine()
+  trainingEmployeeCheckInMorningCheck: preprocessDate
+    .refine()
     .nullable()
-    .optional() // ทำให้ optional
-    .refine(
-      (date) => date === null || date instanceof Date,
-      {
-        message: "Please Enter Morning Date",
-      }
-    ),
+    .optional()
+    .refine((date) => date === null || date instanceof Date, {
+      message: "Please Enter Morning Date",
+    }),
 
-  trainingEmployeeCheckInAfterNoonCheck: preprocessDate.refine()
+  trainingEmployeeCheckInAfterNoonCheck: preprocessDate
+    .refine()
     .nullable()
-    .optional() // ทำให้ optional
-    .refine(
-      (date) => date === null || date instanceof Date,
-      {
-        message: "Please Enter AfterNoon Date",
-      }
-    ),
+    .optional()
+    .refine((date) => date === null || date instanceof Date, {
+      message: "Please Enter AfterNoon Date",
+    }),
 });
 
 export function formatTrainingsData(trainingArray) {
