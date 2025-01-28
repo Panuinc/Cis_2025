@@ -16,7 +16,29 @@ import React, {
 const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
 
 const DEFAULT_FORM_DATA = {
+  trainingType: "",
   trainingName: "",
+  trainingObjectives: "",
+  trainingTargetGroup: "",
+
+  trainingInstitutionsType: "",
+  trainingStartDate: "",
+  trainingEndDate: "",
+  trainingInstitutions: "",
+  trainingLecturer: "",
+
+  trainingLocation: "",
+  trainingPrice: "",
+  trainingEquipmentPrice: "",
+  trainingFoodPrice: "",
+  trainingFarePrice: "",
+
+  trainingOtherExpenses: "",
+  trainingOtherPrice: "",
+  trainingSumPrice: "",
+  trainingReferenceDocument: "",
+  trainingRemark: "",
+  trainingRequireKnowledge: "",
   trainingStatus: "",
 };
 
@@ -38,36 +60,58 @@ export default function TrainingUpdate({ params: paramsPromise }) {
 
   const router = useRouter();
   const [errors, setErrors] = useState({});
+
+  const [branch, setBranch] = useState([]);
+  const [site, setSite] = useState([]);
+  const [division, setDivision] = useState([]);
+  const [department, setDepartment] = useState([]);
+  const [parent, setParent] = useState([]);
+  const [employees, setEmployees] = useState([]);
+  const [selectedIds, setSelectedIds] = useState([]);
   const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
+
+  const [filterBranch, setFilterBranch] = useState("");
+  const [filterSite, setFilterSite] = useState("");
+  const [filterDivision, setFilterDivision] = useState("");
+  const [filterDepartment, setFilterDepartment] = useState("");
+  const [filterParent, setFilterParent] = useState("");
+
+  const [sequentialMode, setSequentialMode] = useState(false);
+  const [showEmployeeSection, setShowEmployeeSection] = useState(false);
 
   const formRef = useRef(null);
 
-  const fetchData = useCallback(async () => {
-    try {
-      const [trainingRes] = await Promise.all([
-        fetch(`/api/hr/training/${trainingId}`, {
-          method: "GET",
-          headers: {
-            "secret-token": SECRET_TOKEN,
-          },
-        }),
-      ]);
-
-      const trainingData = await trainingRes.json();
-      if (trainingRes.ok) {
-        const training = trainingData.training[0];
-        setFormData(training);
-      } else {
-        toast.error(trainingData.error);
-      }
-    } catch (error) {
-      toast.error("Error fetching data");
-    }
-  }, [trainingId]);
-
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    const {
+      trainingPrice = "0",
+      trainingEquipmentPrice = "0",
+      trainingFoodPrice = "0",
+      trainingFarePrice = "0",
+      trainingOtherPrice = "0",
+      trainingSumPrice,
+    } = formData;
+
+    const sumNumber =
+      parseFloat(trainingPrice || "0") +
+      parseFloat(trainingEquipmentPrice || "0") +
+      parseFloat(trainingFoodPrice || "0") +
+      parseFloat(trainingFarePrice || "0") +
+      parseFloat(trainingOtherPrice || "0");
+
+    if (sumNumber.toString() !== trainingSumPrice) {
+      setFormData((prev) => ({
+        ...prev,
+        trainingSumPrice: sumNumber.toString(),
+      }));
+    }
+  }, [
+    formData.trainingPrice,
+    formData.trainingEquipmentPrice,
+    formData.trainingFoodPrice,
+    formData.trainingFarePrice,
+    formData.trainingOtherPrice,
+    formData.trainingSumPrice,
+  ]);
 
   const handleInputChange = useCallback(
     (field) => (e) => {
@@ -84,12 +128,31 @@ export default function TrainingUpdate({ params: paramsPromise }) {
     []
   );
 
+  const handleSelect = useCallback((checked, empId) => {
+    setSelectedIds((prevSelected) => {
+      if (checked) {
+        return [...prevSelected, empId];
+      } else {
+        return prevSelected.filter((id) => id !== empId);
+      }
+    });
+  }, []);
+
   const handleSubmit = useCallback(
     async (event) => {
       event.preventDefault();
 
       const formDataObject = new FormData(formRef.current);
+
       formDataObject.append("trainingUpdateBy", userId);
+
+      const trainingEmployeeArray = selectedIds.map((empId) => ({
+        trainingEmployeeEmployeeId: empId,
+      }));
+      formDataObject.append(
+        "trainingEmployee",
+        JSON.stringify(trainingEmployeeArray)
+      );
 
       try {
         const res = await fetch(`/api/hr/training/${trainingId}`, {
@@ -133,6 +196,164 @@ export default function TrainingUpdate({ params: paramsPromise }) {
     setErrors({});
   }, []);
 
+  const fetchData = useCallback(async () => {
+    try {
+      const [
+        branchRes,
+        siteRes,
+        divisionRes,
+        departmentRes,
+        parentRes,
+        employeeRes,
+        trainingRes,
+      ] = await Promise.all([
+        fetch(`/api/hr/branch`, {
+          method: "GET",
+          headers: { "secret-token": SECRET_TOKEN },
+        }),
+        fetch(`/api/hr/site`, {
+          method: "GET",
+          headers: { "secret-token": SECRET_TOKEN },
+        }),
+        fetch(`/api/hr/division`, {
+          method: "GET",
+          headers: { "secret-token": SECRET_TOKEN },
+        }),
+        fetch(`/api/hr/department`, {
+          method: "GET",
+          headers: { "secret-token": SECRET_TOKEN },
+        }),
+        fetch(`/api/hr/employee`, {
+          method: "GET",
+          headers: { "secret-token": SECRET_TOKEN },
+        }),
+        fetch(`/api/hr/employee`, {
+          method: "GET",
+          headers: { "secret-token": SECRET_TOKEN },
+        }),
+        fetch(`/api/hr/training/${trainingId}`, {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }),
+      ]);
+
+      const branchData = await branchRes.json();
+      if (branchRes.ok) {
+        const activeBranch = (branchData.branch || []).filter(
+          (b) => b.branchStatus === "Active"
+        );
+        setBranch(activeBranch);
+      } else {
+        toast.error(branchData.error);
+      }
+
+      const siteData = await siteRes.json();
+      if (siteRes.ok) {
+        const activeSite = (siteData.site || []).filter(
+          (s) => s.siteStatus === "Active"
+        );
+        setSite(activeSite);
+      } else {
+        toast.error(siteData.error);
+      }
+
+      const divisionData = await divisionRes.json();
+      if (divisionRes.ok) {
+        const activeDivision = (divisionData.division || []).filter(
+          (d) => d.divisionStatus === "Active"
+        );
+        setDivision(activeDivision);
+      } else {
+        toast.error(divisionData.error);
+      }
+
+      const departmentData = await departmentRes.json();
+      if (departmentRes.ok) {
+        const activeDepartment = (departmentData.department || []).filter(
+          (dept) => dept.departmentStatus === "Active"
+        );
+        setDepartment(activeDepartment);
+      } else {
+        toast.error(departmentData.error);
+      }
+
+      const parentData = await parentRes.json();
+      if (parentRes.ok) {
+        const activeParent = (parentData.employee || []).filter(
+          (p) =>
+            p.employeeStatus === "Active" &&
+            p.employeeEmployment?.some(
+              (emp) => emp?.EmploymentRoleId?.roleName === "Manager"
+            )
+        );
+        setParent(activeParent);
+      } else {
+        toast.error(parentData.error);
+      }
+
+      const employeeData = await employeeRes.json();
+      if (employeeRes.ok) {
+        const activeEmployee = (employeeData.employee || []).filter(
+          (emp) => emp.employeeStatus === "Active"
+        );
+        setEmployees(activeEmployee);
+      } else {
+        toast.error(employeeData.error);
+      }
+
+      const trainingData = await trainingRes.json();
+      if (trainingRes.ok) {
+        const training = trainingData.training[0];
+        setFormData(training);
+      } else {
+        toast.error(trainingData.error);
+      }
+    } catch (error) {
+      toast.error("Error fetching data");
+    }
+  }, [trainingId]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const filteredEmployees = useMemo(() => {
+    return employees.filter((emp) => {
+      const employment = emp.employeeEmployment?.[0] || {};
+      const matchBranch = filterBranch
+        ? employment.employmentBranchId === Number(filterBranch)
+        : true;
+      const matchSite = filterSite
+        ? employment.employmentSiteId === Number(filterSite)
+        : true;
+      const matchDivision = filterDivision
+        ? employment.employmentDivisionId === Number(filterDivision)
+        : true;
+      const matchDepartment = filterDepartment
+        ? employment.employmentDepartmentId === Number(filterDepartment)
+        : true;
+      const matchParent = filterParent
+        ? employment.employmentParentId === Number(filterParent)
+        : true;
+      return (
+        matchBranch &&
+        matchSite &&
+        matchDivision &&
+        matchDepartment &&
+        matchParent
+      );
+    });
+  }, [
+    employees,
+    filterBranch,
+    filterSite,
+    filterDivision,
+    filterDepartment,
+    filterParent,
+  ]);
+
   return (
     <>
       <TopicHeader topic="Training Update" />
@@ -145,8 +366,31 @@ export default function TrainingUpdate({ params: paramsPromise }) {
         setErrors={setErrors}
         formData={formData}
         handleInputChange={handleInputChange}
-        isUpdate={true}
+        handleSelect={handleSelect}
+        selectedIds={selectedIds}
         operatedBy={operatedBy}
+        branch={branch}
+        site={site}
+        division={division}
+        department={department}
+        parent={parent}
+        employees={employees}
+        filteredEmployees={filteredEmployees}
+        filterBranch={filterBranch}
+        setFilterBranch={setFilterBranch}
+        filterSite={filterSite}
+        setFilterSite={setFilterSite}
+        filterDivision={filterDivision}
+        setFilterDivision={setFilterDivision}
+        filterDepartment={filterDepartment}
+        setFilterDepartment={setFilterDepartment}
+        filterParent={filterParent}
+        setFilterParent={setFilterParent}
+        sequentialMode={sequentialMode}
+        setSequentialMode={setSequentialMode}
+        showEmployeeSection={showEmployeeSection}
+        setShowEmployeeSection={setShowEmployeeSection}
+        isUpdate={true}
       />
     </>
   );
