@@ -1,11 +1,9 @@
-// app/(somewhere)/TrainingCreate.js
 "use client";
-
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import TopicHeader from "@/components/form/TopicHeader";
-import FormTraining from "@/components/form/hr/training/FormTraining"; // ไฟล์ Form UI
+import FormTraining from "@/components/form/hr/training/FormTraining";
 import React, {
   useState,
   useRef,
@@ -16,7 +14,6 @@ import React, {
 
 const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
 
-// ค่าเริ่มต้นของฟอร์ม
 const DEFAULT_FORM_DATA = {
   trainingType: "",
   trainingName: "",
@@ -37,7 +34,6 @@ const DEFAULT_FORM_DATA = {
 
   trainingOtherExpenses: "",
   trainingOtherPrice: "",
-  // ค่า sum จะคำนวณอัตโนมัติ ไม่ให้ผู้ใช้แก้เอง
   trainingSumPrice: "",
   trainingReferenceDocument: "",
   trainingRemark: "",
@@ -80,17 +76,14 @@ export default function TrainingCreate() {
 
   const formRef = useRef(null);
 
-  //===================== useEffect สำหรับคำนวณ sum ====================
-
   useEffect(() => {
-    // parse เป็น float ทั้งหมด (ถ้าเป็นช่องว่างให้กลายเป็น 0)
     const {
       trainingPrice = "0",
       trainingEquipmentPrice = "0",
       trainingFoodPrice = "0",
       trainingFarePrice = "0",
       trainingOtherPrice = "0",
-      trainingSumPrice, // ไว้เช็คก่อนเซ็ตค่า
+      trainingSumPrice,
     } = formData;
 
     const sumNumber =
@@ -100,7 +93,6 @@ export default function TrainingCreate() {
       parseFloat(trainingFarePrice || "0") +
       parseFloat(trainingOtherPrice || "0");
 
-    // ถ้าไม่เท่ากับของเดิม จึงค่อยเซ็ต (กัน setState ซ้ำไม่สิ้นสุด)
     if (sumNumber.toString() !== trainingSumPrice) {
       setFormData((prev) => ({
         ...prev,
@@ -116,7 +108,6 @@ export default function TrainingCreate() {
     formData.trainingSumPrice,
   ]);
 
-  //===================== handle input =====================
   const handleInputChange = useCallback(
     (field) => (e) => {
       const { value } = e.target;
@@ -125,7 +116,6 @@ export default function TrainingCreate() {
         [field]: value,
       }));
 
-      // เคลียร์ error เฉพาะ field เมื่อมีการเปลี่ยนแปลง
       setErrors((prevErr) => {
         if (prevErr[field]) {
           const { [field]: _, ...rest } = prevErr;
@@ -137,7 +127,6 @@ export default function TrainingCreate() {
     []
   );
 
-  //===================== handle select employee =====================
   const handleSelect = useCallback((checked, empId) => {
     setSelectedIds((prevSelected) => {
       if (checked) {
@@ -148,18 +137,14 @@ export default function TrainingCreate() {
     });
   }, []);
 
-  //===================== handle submit =====================
   const handleSubmit = useCallback(
     async (event) => {
       event.preventDefault();
 
-      // สร้าง FormData จาก <form ref={formRef}>
       const formDataObject = new FormData(formRef.current);
 
-      // เพิ่ม trainingCreateBy
       formDataObject.append("trainingCreateBy", userId);
 
-      // เปลี่ยน selectedIds -> [{ trainingEmployeeEmployeeId: xxx }, ...]
       const trainingEmployeeArray = selectedIds.map((empId) => ({
         trainingEmployeeEmployeeId: empId,
       }));
@@ -182,7 +167,6 @@ export default function TrainingCreate() {
             router.push("/training");
           }, 2000);
         } else {
-          // ถ้าเกิด Error จาก Zod
           if (jsonData.details) {
             const fieldErrorObj = jsonData.details.reduce((acc, err) => {
               const fieldName = err.field && err.field[0];
@@ -202,7 +186,6 @@ export default function TrainingCreate() {
     [router, userId, selectedIds]
   );
 
-  //===================== handle clear/reset =====================
   const handleClear = useCallback(() => {
     if (formRef.current) formRef.current.reset();
     setFormData(DEFAULT_FORM_DATA);
@@ -210,10 +193,8 @@ export default function TrainingCreate() {
     setErrors({});
   }, []);
 
-  //===================== ตัวอย่าง fetchData ถ้าต้องการข้อมูล branch/employee =====================
   const fetchData = useCallback(async () => {
     try {
-      // ตัวอย่าง fetch branch, site, division, department, parent, employee
       const [
         branchRes,
         siteRes,
@@ -320,7 +301,6 @@ export default function TrainingCreate() {
     fetchData();
   }, [fetchData]);
 
-  //===================== ฟิลเตอร์ employee =====================
   const filteredEmployees = useMemo(() => {
     return employees.filter((emp) => {
       const employment = emp.employeeEmployment?.[0] || {};
@@ -356,7 +336,6 @@ export default function TrainingCreate() {
     filterParent,
   ]);
 
-  //===================== render =====================
   return (
     <>
       <TopicHeader topic="Training Create" />
@@ -372,7 +351,6 @@ export default function TrainingCreate() {
         handleSelect={handleSelect}
         selectedIds={selectedIds}
         operatedBy={operatedBy}
-        // props สำหรับฟิลเตอร์/ตารางเลือกพนักงาน
         branch={branch}
         site={site}
         division={division}

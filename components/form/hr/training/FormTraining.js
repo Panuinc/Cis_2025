@@ -1,4 +1,3 @@
-// app/components/form/hr/training/FormTraining.js
 "use client";
 import React from "react";
 import { Cancel, Database } from "@/components/icons/icons";
@@ -24,7 +23,6 @@ export default function FormTraining({
   operatedBy = "",
   selectedIds,
 
-  // ข้อมูล/ฟังก์ชันสำหรับฟิลเตอร์และตาราง employees
   branch,
   employees,
   site,
@@ -49,7 +47,6 @@ export default function FormTraining({
   showEmployeeSection,
   setShowEmployeeSection,
 }) {
-  // columns สำหรับตารางพนักงาน
   const columns = [
     { name: "Select", uid: "select" },
     { name: "ID", uid: "id" },
