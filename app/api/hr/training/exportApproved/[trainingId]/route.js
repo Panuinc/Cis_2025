@@ -496,11 +496,11 @@ export async function GET(request, context) {
             </div>
             <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                 ${
-                   training.TrainingCreateBy
-                     ? `${training.TrainingCreateBy.employeeFirstname} ${training.TrainingCreateBy.employeeLastname}`
-                     : "-"
-                 }
+                ( ${
+                  training.TrainingCreateBy
+                    ? `${training.TrainingCreateBy.employeeFirstname} ${training.TrainingCreateBy.employeeLastname}`
+                    : "-"
+                })
               </div>
             </div>
             <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -529,11 +529,11 @@ export async function GET(request, context) {
             </div>
             <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                ${
-                  training.TrainingHrApproveBy
-                    ? `${training.TrainingHrApproveBy.employeeFirstname} ${training.TrainingHrApproveBy.employeeLastname}`
-                    : "-"
-                }
+             (   ${
+               training.TrainingHrApproveBy
+                 ? `${training.TrainingHrApproveBy.employeeFirstname} ${training.TrainingHrApproveBy.employeeLastname}`
+                 : "-"
+             })
               </div>
             </div>
             <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -568,11 +568,11 @@ export async function GET(request, context) {
             </div>
             <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-                ${
-                  training.TrainingMdApproveBy
-                    ? `${training.TrainingMdApproveBy.employeeFirstname} ${training.TrainingMdApproveBy.employeeLastname}`
-                    : "-"
-                }
+              (  ${
+                training.TrainingMdApproveBy
+                  ? `${training.TrainingMdApproveBy.employeeFirstname} ${training.TrainingMdApproveBy.employeeLastname}`
+                  : "-"
+              })
               </div>
             </div>
             <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
