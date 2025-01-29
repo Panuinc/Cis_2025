@@ -646,15 +646,16 @@ export async function GET(request, context) {
           include: {
             TrainingEmployeeEmployeeId: {
               select: {
-                employeeId: true, // เพิ่มการเลือกรหัสพนักงาน
+                employeeId: true, // เพิ่มการเลือก employeeId
                 employeeFirstname: true,
                 employeeLastname: true,
                 employeeEmployment: {
                   select: {
                     EmploymentPositionId: { select: { positionName: true } },
                     EmploymentDivisionId: { select: { divisionName: true } },
-                    employmentSignature: true, // เพิ่มการเลือกลายเซ็น
+                    employmentSignature: true, // เลือกลายเซ็น
                   },
+                  take: 1, // จำกัดให้เลือกแค่ 1 รายการ
                 },
               },
             },
@@ -664,20 +665,19 @@ export async function GET(request, context) {
           include: {
             TrainingEmployeeCheckInEmployeeId: {
               select: {
-                employeeId: true, // เพิ่มการเลือกรหัสพนักงาน
+                employeeId: true, // เพิ่มการเลือก employeeId
                 employeeFirstname: true,
                 employeeLastname: true,
                 employeeEmployment: {
-                  // เพิ่มการเลือกลายเซ็นของผู้เช็คอิน
                   select: {
                     employmentSignature: true,
                   },
+                  take: 1,
                 },
               },
             },
           },
         },
-        // ... ส่วนอื่น ๆ ของ include
         TrainingCreateBy: {
           select: {
             employeeFirstname: true,
@@ -767,20 +767,20 @@ export async function GET(request, context) {
               // ค้นหาข้อมูลการเช็คอินสำหรับพนักงานคนนี้
               const checkIn = training.employeeTrainingCheckInTraining.find(
                 (ci) =>
-                  ci.trainingEmployeeCheckInEmployeeId.employeeId ===
+                  ci.TrainingEmployeeCheckInEmployeeId.employeeId ===
                   item.TrainingEmployeeEmployeeId.employeeId
               );
 
               // ตรวจสอบการเช็คอินเช้า
               const morningCheck =
                 checkIn && checkIn.trainingEmployeeCheckInMorningCheck
-                  ? `<img src="${process.env.NEXT_PUBLIC_API_URL}/path_to_signatures/${checkIn.TrainingEmployeeCheckInEmployeeId.employeeEmployment.employmentSignature}" alt="Signature" class="w-16 h-auto" />`
+                  ? `<img src="${process.env.NEXT_PUBLIC_API_URL}/images/signature/${checkIn.TrainingEmployeeCheckInEmployeeId.employeeEmployment[0]?.employmentSignature}" alt="Signature" class="w-16 h-auto" />`
                   : "-";
 
               // ตรวจสอบการเช็คอินบ่าย
               const afternoonCheck =
                 checkIn && checkIn.trainingEmployeeCheckInAfterNoonCheck
-                  ? `<img src="${process.env.NEXT_PUBLIC_API_URL}/path_to_signatures/${checkIn.TrainingEmployeeCheckInEmployeeId.employeeEmployment.employmentSignature}" alt="Signature" class="w-16 h-auto" />`
+                  ? `<img src="${process.env.NEXT_PUBLIC_API_URL}/images/signature/${checkIn.TrainingEmployeeCheckInEmployeeId.employeeEmployment[0]?.employmentSignature}" alt="Signature" class="w-16 h-auto" />`
                   : "-";
 
               // ตรวจสอบผลการอบรม
