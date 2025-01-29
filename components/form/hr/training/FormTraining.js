@@ -495,22 +495,6 @@ export default function FormTraining({
         </div>
       )}
 
-      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <Input
-            name="Operated By"
-            type="text"
-            label="Operated By"
-            placeholder="Please Enter Data"
-            labelPlacement="outside"
-            size="lg"
-            variant="bordered"
-            value={operatedBy}
-            isReadOnly={true}
-          />
-        </div>
-      </div>
-
       {!isUpdate && !showEmployeeSection && (
         <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Button
@@ -730,6 +714,22 @@ export default function FormTraining({
           </div>
         </>
       )}
+
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Input
+            name="Operated By"
+            type="text"
+            label="Operated By"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={operatedBy}
+            isReadOnly={true}
+          />
+        </div>
+      </div>
 
       <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
