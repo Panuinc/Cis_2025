@@ -106,23 +106,23 @@ export async function GET(request, context) {
         })
       : "-";
 
-const startDate = new Date(training.trainingStartDate);
-const startYear = startDate.getUTCFullYear();
-const startMonth = String(startDate.getUTCMonth() + 1).padStart(2, "0");
-const startDay = String(startDate.getUTCDate()).padStart(2, "0");
-const startHours = String(startDate.getUTCHours()).padStart(2, "0");
-const startMinutes = String(startDate.getUTCMinutes()).padStart(2, "0");
+    const startDate = new Date(training.trainingStartDate);
+    const startYear = startDate.getUTCFullYear();
+    const startMonth = String(startDate.getUTCMonth() + 1).padStart(2, "0");
+    const startDay = String(startDate.getUTCDate()).padStart(2, "0");
+    const startHours = String(startDate.getUTCHours()).padStart(2, "0");
+    const startMinutes = String(startDate.getUTCMinutes()).padStart(2, "0");
 
-const formattedStartDate = `${startYear}-${startMonth}-${startDay} ${startHours}:${startMinutes}`;
+    const formattedStartDate = `${startYear}-${startMonth}-${startDay} ${startHours}:${startMinutes}`;
 
-const endDate = new Date(training.trainingEndDate);
-const endYear = endDate.getUTCFullYear();
-const endMonth = String(endDate.getUTCMonth() + 1).padStart(2, "0");
-const endDay = String(endDate.getUTCDate()).padStart(2, "0");
-const endHours = String(endDate.getUTCHours()).padStart(2, "0");
-const endMinutes = String(endDate.getUTCMinutes()).padStart(2, "0");
+    const endDate = new Date(training.trainingEndDate);
+    const endYear = endDate.getUTCFullYear();
+    const endMonth = String(endDate.getUTCMonth() + 1).padStart(2, "0");
+    const endDay = String(endDate.getUTCDate()).padStart(2, "0");
+    const endHours = String(endDate.getUTCHours()).padStart(2, "0");
+    const endMinutes = String(endDate.getUTCMinutes()).padStart(2, "0");
 
-const formattedEndDate = `${endYear}-${endMonth}-${endDay} ${endHours}:${endMinutes}`;
+    const formattedEndDate = `${endYear}-${endMonth}-${endDay} ${endHours}:${endMinutes}`;
 
     const TrainingType = training.trainingType || "";
     const InstitutionsType = training.trainingInstitutionsType || "";
@@ -620,4 +620,3 @@ const formattedEndDate = `${endYear}-${endMonth}-${endDay} ${endHours}:${endMinu
     );
   }
 }
-
