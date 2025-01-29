@@ -91,16 +91,53 @@ export default function TrainingList() {
     fetchTraining();
   }, [isUserLevel, userData?.employee?.employeeId, userData?.userId]);
 
-  const handleExport = useCallback(
+  const handleExportApproved = useCallback(
     async (trainingId) => {
       try {
-        const response = await fetch(`/api/hr/training/export/${trainingId}`, {
-          method: "GET",
-          headers: {
-            "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
-            "user-id": userData?.userId,
-          },
-        });
+        const response = await fetch(
+          `/api/hr/training/exportApproved/${trainingId}`,
+          {
+            method: "GET",
+            headers: {
+              "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
+              "user-id": userData?.userId,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error(
+            "Export failed with status:",
+            response.status,
+            errorText
+          );
+          throw new Error("Failed to export PDF");
+        }
+
+        const blob = await response.blob();
+        const blobURL = window.URL.createObjectURL(blob);
+        window.open(blobURL);
+      } catch (error) {
+        console.error("Export PDF error:", error);
+      }
+    },
+    [userData?.userId]
+  );
+
+  const handleExportList = useCallback(
+    async (trainingId) => {
+      try {
+        const response = await fetch(
+          `/api/hr/training/exportList/${trainingId}`,
+          {
+            method: "GET",
+            headers: {
+              "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
+              "user-id": userData?.userId,
+            },
+          }
+        );
 
         if (!response.ok) {
           const errorText = await response.text();
@@ -203,12 +240,20 @@ export default function TrainingList() {
                     </DropdownItem>
                   )}
                   <DropdownItem
-                    key="export"
+                    key="exportApproved"
                     variant="flat"
                     color="warning"
-                    onPress={() => handleExport(item.trainingId)}
+                    onPress={() => handleExportApproved(item.trainingId)}
                   >
-                    Export PDF
+                    Export Approved PDF
+                  </DropdownItem>
+                  <DropdownItem
+                    key="exportList"
+                    variant="flat"
+                    color="warning"
+                    onPress={() => handleExportList(item.trainingId)}
+                  >
+                    Export List PDF
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
@@ -219,7 +264,7 @@ export default function TrainingList() {
           return item[columnKey];
       }
     },
-    [getFullName, renderChip, handleExport, userData]
+    [getFullName, renderChip, handleExportApproved, handleExportList, userData]
   );
 
   const debouncedSetFilterTrainingValue = useMemo(
