@@ -168,6 +168,8 @@ export default function TrainingUpdate({ params: paramsPromise }) {
         JSON.stringify(trainingEmployeeCheckInArray)
       );
 
+      formDataObject.append("selectedIds", JSON.stringify(selectedIds));
+
       try {
         const res = await fetch(`/api/hr/training/${trainingId}`, {
           method: "PUT",
@@ -194,14 +196,20 @@ export default function TrainingUpdate({ params: paramsPromise }) {
               return acc;
             }, {});
             setErrors(fieldErrorObj);
+
+            const errorMessages = jsonData.details.map(
+              (err) => `${err.field.join(".")} : ${err.message}`
+            );
+            toast.error(errorMessages.join("\n"));
+          } else {
+            toast.error(jsonData.error || "Error updating training");
           }
-          toast.error(jsonData.error || "Error updating training");
         }
       } catch (error) {
         toast.error("Error updating training: " + error.message);
       }
     },
-    [trainingId, router, userId, selectedIds]
+    [trainingId, router, userId, selectedIds, formData.trainingStartDate]
   );
 
   const handleClear = useCallback(() => {

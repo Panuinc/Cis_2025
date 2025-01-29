@@ -328,9 +328,20 @@ export const trainingPutSchema = z.object({
     "Training updater ID must be provided.",
     "Training updater ID must be an integer."
   ),
-
-  trainingEmployee: z.array(trainingEmployeeSchema).optional(),
-  trainingEmployeeCheckIn: z.array(trainingEmployeeCheckInSchema).optional(),
+  trainingEmployee: z.array(
+    z.object({
+      trainingEmployeeEmployeeId: z.number(),
+    })
+  ),
+  trainingEmployeeCheckIn: z.array(
+    z.object({
+      trainingEmployeeCheckInEmployeeId: z.number(),
+      trainingEmployeeCheckInTrainingDate: z.string().nullable(),
+      trainingEmployeeCheckInMorningCheck: z.string().nullable(),
+      trainingEmployeeCheckInAfterNoonCheck: z.string().nullable(),
+    })
+  ),
+  selectedIds: z.array(z.number()),
 });
 
 export const trainingHrApprovePutSchema = z.object({

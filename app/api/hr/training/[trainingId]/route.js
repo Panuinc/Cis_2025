@@ -95,7 +95,11 @@ export async function PUT(request, context) {
     const dataObj = {};
 
     for (const [key, value] of formData.entries()) {
-      if (key === "trainingEmployee" || key === "trainingEmployeeCheckIn") {
+      if (
+        key === "trainingEmployee" ||
+        key === "trainingEmployeeCheckIn" ||
+        key === "selectedIds"
+      ) {
         dataObj[key] = JSON.parse(value);
       } else {
         dataObj[key] = value;
@@ -104,7 +108,7 @@ export async function PUT(request, context) {
 
     const parsedData = trainingPutSchema.parse({
       ...dataObj,
-      trainingId,
+      trainingId: parseInt(trainingId, 10),
     });
 
     const {
@@ -112,6 +116,7 @@ export async function PUT(request, context) {
       trainingEmployeeCheckIn,
       trainingStartDate,
       trainingEndDate,
+      selectedIds,
       ...updateData
     } = parsedData;
 
@@ -124,28 +129,17 @@ export async function PUT(request, context) {
       ? SevenHouse(trainingEndDate)
       : null;
 
-    await prisma.training.update({
-      where: { trainingId: parseInt(trainingId, 10) },
-      data: {
-        ...updateData,
-        trainingStartDate: adjustedTrainingStartDate,
-        trainingEndDate: adjustedTrainingEndDate,
-        trainingUpdateAt: localNow,
-      },
-    });
-
-    if (trainingEmployeeCheckIn && trainingEmployeeCheckIn.length > 0) {
-      await prisma.trainingEmployeeCheckIn.updateMany({
-        where: { trainingEmployeeCheckInTrainingId: parseInt(trainingId, 10) },
+    await prisma.$transaction(async (prisma) => {
+      await prisma.training.update({
+        where: { trainingId: parseInt(trainingId, 10) },
         data: {
-          trainingEmployeeCheckInTrainingDate: adjustedTrainingStartDate,
-          trainingEmployeeCheckInMorningCheck: null,
-          trainingEmployeeCheckInAfterNoonCheck: null,
+          ...updateData,
+          trainingStartDate: adjustedTrainingStartDate,
+          trainingEndDate: adjustedTrainingEndDate,
+          trainingUpdateAt: localNow,
         },
       });
-    }
 
-    if (trainingEmployee && trainingEmployee.length > 0) {
       const existingTrainingEmployee = await prisma.trainingEmployee.findMany({
         where: { trainingEmployeeTrainingId: parseInt(trainingId, 10) },
         select: { trainingEmployeeEmployeeId: true },
@@ -155,62 +149,120 @@ export async function PUT(request, context) {
         (emp) => emp.trainingEmployeeEmployeeId
       );
 
-      const newEmployeeToCreate = trainingEmployee
-        .filter(
-          (emp) => !existingEmpIds.includes(emp.trainingEmployeeEmployeeId)
-        )
-        .map((emp) => ({
-          trainingEmployeeTrainingId: parseInt(trainingId, 10),
-          trainingEmployeeEmployeeId: emp.trainingEmployeeEmployeeId,
-        }));
+      if (trainingEmployeeCheckIn && trainingEmployeeCheckIn.length > 0) {
+        try {
+          await prisma.trainingEmployeeCheckIn.updateMany({
+            where: {
+              trainingEmployeeCheckInTrainingId: parseInt(trainingId, 10),
+            },
+            data: {
+              trainingEmployeeCheckInTrainingDate: adjustedTrainingStartDate,
+              trainingEmployeeCheckInMorningCheck: null,
+              trainingEmployeeCheckInAfterNoonCheck: null,
+            },
+          });
+        } catch (updateError) {
+          console.error("Error updating trainingEmployeeCheckIn:", updateError);
+          throw updateError;
+        }
+      }
 
-      if (newEmployeeToCreate.length > 0) {
-        await prisma.trainingEmployee.createMany({
-          data: newEmployeeToCreate,
-          skipDuplicates: true,
+      if (trainingEmployee && trainingEmployee.length > 0) {
+        const newEmployeeToCreate = trainingEmployee
+          .filter(
+            (emp) => !existingEmpIds.includes(emp.trainingEmployeeEmployeeId)
+          )
+          .map((emp) => ({
+            trainingEmployeeTrainingId: parseInt(trainingId, 10),
+            trainingEmployeeEmployeeId: emp.trainingEmployeeEmployeeId,
+          }));
+
+        if (newEmployeeToCreate.length > 0) {
+          await prisma.trainingEmployee.createMany({
+            data: newEmployeeToCreate,
+            skipDuplicates: true,
+          });
+
+          existingEmpIds.push(
+            ...newEmployeeToCreate.map((emp) => emp.trainingEmployeeEmployeeId)
+          );
+        }
+      }
+
+      if (trainingEmployeeCheckIn && trainingEmployeeCheckIn.length > 0) {
+        const existingCheckIn = await prisma.trainingEmployeeCheckIn.findMany({
+          where: {
+            trainingEmployeeCheckInTrainingId: parseInt(trainingId, 10),
+          },
+          select: { trainingEmployeeCheckInEmployeeId: true },
+        });
+
+        const existingCheckInIds = existingCheckIn.map(
+          (ch) => ch.trainingEmployeeCheckInEmployeeId
+        );
+
+        const newCheckInToCreate = trainingEmployeeCheckIn
+          .filter(
+            (ch) =>
+              !existingCheckInIds.includes(ch.trainingEmployeeCheckInEmployeeId)
+          )
+          .map((ch) => ({
+            trainingEmployeeCheckInTrainingId: parseInt(trainingId, 10),
+            trainingEmployeeCheckInEmployeeId:
+              ch.trainingEmployeeCheckInEmployeeId,
+            trainingEmployeeCheckInTrainingDate: adjustedTrainingStartDate,
+            trainingEmployeeCheckInMorningCheck:
+              ch.trainingEmployeeCheckInMorningCheck
+                ? SevenHouse(ch.trainingEmployeeCheckInMorningCheck)
+                : null,
+            trainingEmployeeCheckInAfterNoonCheck:
+              ch.trainingEmployeeCheckInAfterNoonCheck
+                ? SevenHouse(ch.trainingEmployeeCheckInAfterNoonCheck)
+                : null,
+          }));
+
+        if (newCheckInToCreate.length > 0) {
+          await prisma.trainingEmployeeCheckIn.createMany({
+            data: newCheckInToCreate,
+            skipDuplicates: true,
+          });
+        }
+      }
+
+      if (selectedIds && Array.isArray(selectedIds)) {
+        const employeesToDelete = existingEmpIds.filter(
+          (id) => !selectedIds.includes(id)
+        );
+
+        if (employeesToDelete.length > 0) {
+          await prisma.trainingEmployeeCheckIn.deleteMany({
+            where: {
+              trainingEmployeeCheckInTrainingId: parseInt(trainingId, 10),
+              trainingEmployeeCheckInEmployeeId: { in: employeesToDelete },
+            },
+          });
+
+          await prisma.trainingEmployee.deleteMany({
+            where: {
+              trainingEmployeeTrainingId: parseInt(trainingId, 10),
+              trainingEmployeeEmployeeId: { in: employeesToDelete },
+            },
+          });
+        }
+      } else {
+        await prisma.trainingEmployeeCheckIn.deleteMany({
+          where: {
+            trainingEmployeeCheckInTrainingId: parseInt(trainingId, 10),
+          },
+        });
+
+        await prisma.trainingEmployee.deleteMany({
+          where: {
+            trainingEmployeeTrainingId: parseInt(trainingId, 10),
+          },
         });
       }
-    }
-
-    if (trainingEmployeeCheckIn && trainingEmployeeCheckIn.length > 0) {
-      const existingCheckIn = await prisma.trainingEmployeeCheckIn.findMany({
-        where: {
-          trainingEmployeeCheckInTrainingId: parseInt(trainingId, 10),
-        },
-        select: { trainingEmployeeCheckInEmployeeId: true },
-      });
-
-      const existingCheckInIds = existingCheckIn.map(
-        (ch) => ch.trainingEmployeeCheckInEmployeeId
-      );
-
-      const newCheckInToCreate = trainingEmployeeCheckIn
-        .filter(
-          (ch) =>
-            !existingCheckInIds.includes(ch.trainingEmployeeCheckInEmployeeId)
-        )
-        .map((ch) => ({
-          trainingEmployeeCheckInTrainingId: parseInt(trainingId, 10),
-          trainingEmployeeCheckInEmployeeId:
-            ch.trainingEmployeeCheckInEmployeeId,
-          trainingEmployeeCheckInTrainingDate: adjustedTrainingStartDate,
-          trainingEmployeeCheckInMorningCheck:
-            ch.trainingEmployeeCheckInMorningCheck
-              ? SevenHouse(ch.trainingEmployeeCheckInMorningCheck)
-              : null,
-          trainingEmployeeCheckInAfterNoonCheck:
-            ch.trainingEmployeeCheckInAfterNoonCheck
-              ? SevenHouse(ch.trainingEmployeeCheckInAfterNoonCheck)
-              : null,
-        }));
-
-      if (newCheckInToCreate.length > 0) {
-        await prisma.trainingEmployeeCheckIn.createMany({
-          data: newCheckInToCreate,
-          skipDuplicates: true,
-        });
-      }
-    }
+    });
 
     const updatedTraining = await prisma.training.findUnique({
       where: { trainingId: parseInt(trainingId, 10) },
