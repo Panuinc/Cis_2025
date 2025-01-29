@@ -113,6 +113,16 @@ export default function TrainingUpdate({ params: paramsPromise }) {
     formData.trainingSumPrice,
   ]);
 
+  const isHRManager = useMemo(() => {
+    return (
+      userData?.divisionName === "บุคคล" && userData?.roleName === "Manager"
+    );
+  }, [userData]);
+
+  const isMD = useMemo(() => {
+    return userData?.divisionName === "บริหาร" && userData?.roleName === "MD";
+  }, [userData]);
+
   const handleInputChange = useCallback(
     (field) => (e) => {
       const value = e.target.value;
@@ -171,13 +181,16 @@ export default function TrainingUpdate({ params: paramsPromise }) {
       formDataObject.append("selectedIds", JSON.stringify(selectedIds));
 
       try {
-        const res = await fetch(`/api/hr/training/${trainingId}`, {
-          method: "PUT",
-          body: formDataObject,
-          headers: {
-            "secret-token": SECRET_TOKEN,
-          },
-        });
+        const res = await fetch(
+          `/api/hr/training/${trainingId}?action=update`,
+          {
+            method: "PUT",
+            body: formDataObject,
+            headers: {
+              "secret-token": SECRET_TOKEN,
+            },
+          }
+        );
 
         const jsonData = await res.json();
 
@@ -211,6 +224,117 @@ export default function TrainingUpdate({ params: paramsPromise }) {
     },
     [trainingId, router, userId, selectedIds, formData.trainingStartDate]
   );
+
+  //
+  const handleHrApprove = async () => {
+    const formDataObject = new FormData(formRef.current);
+    formDataObject.set("trainingStatus", "PendingMdApprove");
+    formDataObject.append("trainingReasonHrApproveBy", userId);
+    try {
+      const res = await fetch(
+        `/api/hr/training/${trainingId}?action=hrApprove`,
+        {
+          method: "PUT",
+          body: formDataObject,
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }
+      );
+      const jsonData = await res.json();
+      if (res.ok) {
+        toast.success(jsonData.message);
+        router.push("/training");
+      } else {
+        toast.error(jsonData.error || "Error approving request");
+      }
+    } catch (err) {
+      toast.error("Error: " + err.message);
+    }
+  };
+
+  const handleHrReject = async () => {
+    const formDataObject = new FormData(formRef.current);
+    formDataObject.set("trainingStatus", "HrCancel");
+    formDataObject.append("trainingReasonHrApproveBy", userId);
+    try {
+      const res = await fetch(
+        `/api/hr/training/${trainingId}?action=hrApprove`,
+        {
+          method: "PUT",
+          body: formDataObject,
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }
+      );
+      const jsonData = await res.json();
+      if (res.ok) {
+        toast.success("Request rejected successfully");
+        router.push("/training");
+      } else {
+        toast.error(jsonData.error || "Error rejecting request");
+      }
+    } catch (err) {
+      toast.error("Error: " + err.message);
+    }
+  };
+
+  const handleMdApprove = async () => {
+    const formDataObject = new FormData(formRef.current);
+    formDataObject.set("trainingStatus", "ApprovedSuccess");
+    formDataObject.append("trainingReasonMdApproveBy", userId);
+    try {
+      const res = await fetch(
+        `/api/hr/training/${trainingId}?action=mdApprove`,
+        {
+          method: "PUT",
+          body: formDataObject,
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }
+      );
+      const jsonData = await res.json();
+      if (res.ok) {
+        toast.success(jsonData.message);
+        router.push("/training");
+      } else {
+        toast.error(jsonData.error || "Error approving request");
+      }
+    } catch (err) {
+      toast.error("Error: " + err.message);
+    }
+  };
+
+  const handleMdReject = async () => {
+    const formDataObject = new FormData(formRef.current);
+    formDataObject.set("trainingStatus", "MdCancel");
+    formDataObject.append("trainingReasonMdApproveBy", userId);
+    try {
+      const res = await fetch(
+        `/api/hr/training/${trainingId}?action=mdApprove`,
+        {
+          method: "PUT",
+          body: formDataObject,
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }
+      );
+      const jsonData = await res.json();
+      if (res.ok) {
+        toast.success("Request rejected successfully");
+        router.push("/training");
+      } else {
+        toast.error(jsonData.error || "Error rejecting request");
+      }
+    } catch (err) {
+      toast.error("Error: " + err.message);
+    }
+  };
+
+  //
 
   const handleClear = useCallback(() => {
     if (formRef.current) formRef.current.reset();
@@ -419,6 +543,14 @@ export default function TrainingUpdate({ params: paramsPromise }) {
         showEmployeeSection={showEmployeeSection}
         setShowEmployeeSection={setShowEmployeeSection}
         isUpdate={true}
+
+        isHRManager={isHRManager}
+        isMD={isMD}
+        onHrApprove={handleHrApprove}
+        onHrReject={handleHrReject}
+        onMdApprove={handleMdApprove}
+        onMdReject={handleMdReject}
+
       />
     </>
   );

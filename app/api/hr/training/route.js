@@ -17,7 +17,64 @@ export async function GET(request) {
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
 
+    const { searchParams } = new URL(request.url);
+    const employeeIdParam = searchParams.get("employeeId");
+    const employeeId = employeeIdParam ? Number(employeeIdParam) : null;
+
+    // รับ userId จาก headers
+    const userId = request.headers.get("user-id");
+
+    // Query ข้อมูล User และ Employee ที่เกี่ยวข้อง
+    const user = await prisma.user.findUnique({
+      where: { userId: Number(userId) },
+      include: {
+        UserEmployeeBy: {
+          include: {
+            employeeEmployment: {
+              include: {
+                EmploymentBranchId: true,
+                EmploymentDivisionId: true,
+                EmploymentRoleId: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    const userDivision =
+      user.UserEmployeeBy?.employeeEmployment[0]?.EmploymentDivisionId
+        ?.divisionName;
+    const userRole =
+      user.UserEmployeeBy?.employeeEmployment[0]?.EmploymentRoleId?.roleName;
+
+    let whereCondition = {};
+
+    // Case 1: Owner sees all their requests
+    if (employeeId) {
+      whereCondition = {
+        trainingCreateBy: employeeId, // Owner sees all their requests
+      };
+    }
+
+    // Case 3: HR Manager sees all requests but can only update PendingHrApprove or PendingMdApprove for their subordinates
+    if (userDivision === "บุคคล" && userRole === "Manager") {
+      whereCondition = {}; // HR Manager sees all requests
+    }
+
+    // Case 4: MD sees only requests with status PendingMdApprove
+    if (userDivision === "บริหาร" && userRole === "MD") {
+      whereCondition = {
+        trainingStatus: "PendingMdApprove",
+      };
+    }
+
     const training = await prisma.training.findMany({
+      where: whereCondition,
       include: {
         employeeTrainingTraining: {
           include: {
@@ -34,7 +91,17 @@ export async function GET(request) {
           },
         },
         TrainingCreateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: {
+            employeeId: true,
+            employeeFirstname: true,
+            employeeLastname: true,
+            employeeEmployment: {
+              select: {
+                employmentSignature: true,
+              },
+              take: 1,
+            },
+          },
         },
         TrainingUpdateBy: {
           select: { employeeFirstname: true, employeeLastname: true },

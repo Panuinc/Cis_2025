@@ -18,18 +18,20 @@ import {
 
 const trainingStatusColorMap = {
   pendinghrapprove: "warning",
-  hrcancel: "danger",
-  pendingmdapprove: "secondary",
-  mdcancel: "danger",
+  pendingmdapprove: "primary",
   approvedsuccess: "success",
   cancel: "danger",
+  hrcancel: "danger",
+  mdcancel: "danger",
 };
 
 export default function TrainingList() {
   const { data: session } = useSession();
   const userData = session?.user || {};
   const isUserLevel = userData?.employee?.employeeLevel === "User";
-  
+  const isUserDivision = userData?.divisionName;
+  const isUserRole = userData?.roleName;
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [training, setTraining] = useState([]);
@@ -42,11 +44,11 @@ export default function TrainingList() {
     return isUserLevel
       ? [
           { name: "No.", uid: "index" },
-          { name: "Training Name", uid: "trainingName" },
+          { name: "Document Id", uid: "trainingName" },
         ]
       : [
           { name: "No.", uid: "index" },
-          { name: "Training Name", uid: "trainingName" },
+          { name: "Document Id", uid: "trainingName" },
           { name: "Create By", uid: "createdBy" },
           { name: "Create At", uid: "trainingCreateAt" },
           { name: "Update By", uid: "updatedBy" },
@@ -59,12 +61,17 @@ export default function TrainingList() {
   useEffect(() => {
     const fetchTraining = async () => {
       try {
-        const response = await fetch("/api/hr/training", {
-          method: "GET",
-          headers: {
-            "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
-          },
-        });
+        const employeeId = userData?.employee?.employeeId;
+        const response = await fetch(
+          `/api/hr/training?employeeId=${employeeId}`,
+          {
+            method: "GET",
+            headers: {
+              "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
+              "user-id": userData?.userId,
+            },
+          }
+        );
 
         if (!response.ok) {
           const errorData = await response.json();
@@ -72,15 +79,8 @@ export default function TrainingList() {
         }
 
         const data = await response.json();
-        let filteredData = data.training || [];
-
-        if (isUserLevel) {
-          filteredData = filteredData.filter(
-            (item) => item.trainingStatus?.toLowerCase() === "pendinghrapprove"
-          );
-        }
-
-        setTraining(filteredData);
+        setTraining(data.training || []);
+        // ลบการตั้งค่า subordinateIds ออก
       } catch (err) {
         setError(err.message);
       } finally {
@@ -89,7 +89,38 @@ export default function TrainingList() {
     };
 
     fetchTraining();
-  }, [isUserLevel]);
+  }, [isUserLevel, userData?.employee?.employeeId, userData?.userId]);
+
+  const handleExport = useCallback(
+    async (trainingId) => {
+      try {
+        const response = await fetch(`/api/hr/training/export/${trainingId}`, {
+          method: "GET",
+          headers: {
+            "secret-token": process.env.NEXT_PUBLIC_SECRET_TOKEN,
+            "user-id": userData?.userId,
+          },
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error(
+            "Export failed with status:",
+            response.status,
+            errorText
+          );
+          throw new Error("Failed to export PDF");
+        }
+
+        const blob = await response.blob();
+        const blobURL = window.URL.createObjectURL(blob);
+        window.open(blobURL);
+      } catch (error) {
+        console.error("Export PDF error:", error);
+      }
+    },
+    [userData?.userId]
+  );
 
   const getFullName = useCallback((user) => {
     if (!user) return null;
@@ -125,12 +156,38 @@ export default function TrainingList() {
         case "createdBy":
           return getFullName(item.TrainingCreateBy);
         case "trainingCreateAt":
-          return item.trainingCreateAt || null;
+          return new Date(item.trainingCreateAt).toLocaleString();
         case "updatedBy":
           return getFullName(item.TrainingUpdateBy);
         case "trainingUpdateAt":
-          return item.trainingUpdateAt || null;
-        case "actions":
+          return item.trainingUpdateAt
+            ? new Date(item.trainingUpdateAt).toLocaleString()
+            : null;
+        case "actions": {
+          const loggedInEmployeeId = userData?.employee?.employeeId;
+          const isOwner =
+            item.TrainingCreateBy.employeeId === loggedInEmployeeId;
+
+          // Case 1: Owner sees all their requests and can update if status is PendingHrApprove
+          const showUpdateOwner =
+            isOwner && item.trainingStatus === "PendingHrApprove";
+
+          // Case 3: HR Manager sees all requests but can only update if status is PendingHrApprove
+          const isHRManager =
+            userData?.divisionName === "บุคคล" &&
+            userData?.roleName === "Manager";
+          const showUpdateHRManager =
+            isHRManager && item.trainingStatus === "PendingHrApprove";
+
+          // Case 4: MD sees only requests with status PendingMdApprove and can update if status is PendingMdApprove
+          const isMD =
+            userData?.divisionName === "บริหาร" && userData?.roleName === "MD";
+          const showUpdateMD =
+            isMD && item.trainingStatus === "PendingMdApprove";
+
+          const showUpdate =
+            showUpdateOwner || showUpdateHRManager || showUpdateMD;
+
           return (
             <div className="relative flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <Dropdown>
@@ -140,18 +197,29 @@ export default function TrainingList() {
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu>
-                  <DropdownItem key="edit" variant="flat" color="warning">
-                    <Link href={`/training/${item.trainingId}`}>Update</Link>
+                  {showUpdate && (
+                    <DropdownItem key="edit" variant="flat" color="warning">
+                      <Link href={`/training/${item.trainingId}`}>Update</Link>
+                    </DropdownItem>
+                  )}
+                  <DropdownItem
+                    key="export"
+                    variant="flat"
+                    color="warning"
+                    onPress={() => handleExport(item.trainingId)}
+                  >
+                    Export PDF
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             </div>
           );
+        }
         default:
           return item[columnKey];
       }
     },
-    [getFullName, renderChip]
+    [getFullName, renderChip, handleExport, userData]
   );
 
   const debouncedSetFilterTrainingValue = useMemo(

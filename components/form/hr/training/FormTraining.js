@@ -46,6 +46,13 @@ export default function FormTraining({
   setSequentialMode,
   showEmployeeSection,
   setShowEmployeeSection,
+
+  isHRManager,
+  isMD,
+  onHrApprove,
+  onHrReject,
+  onMdApprove,
+  onMdReject,
 }) {
   const columns = [
     { name: "Select", uid: "select" },
@@ -731,29 +738,84 @@ export default function FormTraining({
         </div>
       </div>
 
-      <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-        <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <Button
-            size="md"
-            color="success"
-            startContent={<Database />}
-            type="submit"
-          >
-            Submit
-          </Button>
+      {isHRManager && (
+        <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <Button
+              size="md"
+              color="success"
+              startContent={<Database />}
+              onPress={onHrApprove}
+              type="button"
+            >
+              Hr Approved
+            </Button>
+          </div>
+          <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <Button
+              size="md"
+              color="danger"
+              startContent={<Cancel />}
+              onPress={onHrReject}
+              type="button"
+            >
+              Hr Cancel
+            </Button>
+          </div>
         </div>
-        <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <Button
-            size="md"
-            color="danger"
-            startContent={<Cancel />}
-            onPress={onClear}
-            type="button"
-          >
-            Cancel
-          </Button>
+      )}
+
+      {isMD && (
+        <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <Button
+              size="md"
+              color="success"
+              startContent={<Database />}
+              onPress={onMdApprove}
+              type="button"
+            >
+              Md Approved
+            </Button>
+          </div>
+          <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <Button
+              size="md"
+              color="danger"
+              startContent={<Cancel />}
+              onPress={onMdReject}
+              type="button"
+            >
+              Md Cancel
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
+      {!isHRManager && !isMD && (
+        <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <Button
+              size="md"
+              color="success"
+              startContent={<Database />}
+              type="submit"
+            >
+              Submit
+            </Button>
+          </div>
+          <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <Button
+              size="md"
+              color="danger"
+              startContent={<Cancel />}
+              onPress={onClear}
+              type="button"
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      )}
     </form>
   );
 }
