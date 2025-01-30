@@ -14,16 +14,12 @@ export default function FormTrainingResult({
   isUpdate = false,
   operatedBy = "",
 
-  employees,
-  filteredEmployees,
-
   handleTrainingEmployeeResultChange,
   handleTrainingEmployeeCertificateChange,
 }) {
   const columns = [
     { name: "ชื่อ", uid: "firstName" },
     { name: "นามสกุล", uid: "lastName" },
-    { name: "รหัสพนักงาน", uid: "employeeCode" },
     { name: "ผลการฝึกอบรม", uid: "result" },
     { name: "ลิงก์ใบรับรอง", uid: "certificateLink" },
   ];
@@ -36,9 +32,6 @@ export default function FormTrainingResult({
         return employee?.employeeFirstname || "-";
       case "lastName":
         return employee?.employeeLastname || "-";
-      case "employeeCode":
-        // สมมติว่ามีฟิลด์ `employmentCardNumber` ใน employee
-        return item.employeeEmployment?.[0]?.employmentCardNumber || "-";
       case "result": {
         return (
           <Switch
