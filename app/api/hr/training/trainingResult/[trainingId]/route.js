@@ -39,13 +39,6 @@ export async function GET(request, context) {
             },
           },
         },
-        employeeTrainingCheckInTraining: {
-          include: {
-            TrainingEmployeeCheckInEmployeeId: {
-              select: { employeeFirstname: true, employeeLastname: true },
-            },
-          },
-        },
         TrainingCreateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
@@ -114,24 +107,19 @@ export async function PUT(request, context) {
     const dataObj = {};
 
     for (const [key, value] of formData.entries()) {
-      if (
-        key === "trainingEmployee" ||
-        key === "trainingEmployeeCheckIn" ||
-        key === "selectedIds"
-      ) {
+      if (key === "trainingEmployee") {
         dataObj[key] = JSON.parse(value);
       } else {
         dataObj[key] = value;
       }
     }
 
-    // อัพเดตเฉพาะฟิลด์ที่ต้องการ
     const parsedData = trainingUpdateSchema.parse({
       trainingId: parseInt(trainingId, 10),
       trainingPreTest: dataObj.trainingPreTest,
       trainingPostTest: dataObj.trainingPostTest,
-      // trainingPictureLink จะจัดการไฟล์ในขั้นตอนถัดไป
-      trainingEmployee: dataObj.trainingEmployee, // สมมติว่าเป็น array ของพนักงาน
+      trainingPictureLink: dataObj.trainingPictureLink,
+      trainingEmployee: dataObj.trainingEmployee,
     });
 
     const localNow = getLocalNow();
@@ -143,14 +131,13 @@ export async function PUT(request, context) {
       uploadedTrainingPictureLink = await uploadFile(
         trainingPictureFile,
         "trainingPicture",
-        "training", // สามารถปรับตามความเหมาะสม
         trainingId
       );
     }
 
-    // เริ่ม Transaction เพื่ออัพเดตข้อมูล
+    // เริ่ม Transaction เพื่ออัปเดตข้อมูล
     await prisma.$transaction(async (prismaTx) => {
-      // อัพเดตข้อมูล Training หลัก
+      // อัปเดตข้อมูล Training หลัก
       await prismaTx.training.update({
         where: { trainingId: parseInt(trainingId, 10) },
         data: {
@@ -195,7 +182,7 @@ export async function PUT(request, context) {
       }
     });
 
-    // ดึงข้อมูลที่อัพเดตแล้วมาแสดง
+    // ดึงข้อมูลที่อัปเดตแล้วมาแสดง
     const updatedTraining = await prisma.training.findUnique({
       where: { trainingId: parseInt(trainingId, 10) },
       include: {
@@ -206,23 +193,10 @@ export async function PUT(request, context) {
             },
           },
         },
-        employeeTrainingCheckInTraining: {
-          include: {
-            TrainingEmployeeCheckInEmployeeId: {
-              select: { employeeFirstname: true, employeeLastname: true },
-            },
-          },
-        },
         TrainingCreateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
         TrainingUpdateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
-        },
-        TrainingHrApproveBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
-        },
-        TrainingMdApproveBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
       },
