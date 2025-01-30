@@ -35,7 +35,15 @@ export async function GET(request, context) {
         employeeTrainingTraining: {
           include: {
             TrainingEmployeeEmployeeId: {
-              select: { employeeFirstname: true, employeeLastname: true },
+              select: {
+                employeeFirstname: true,
+                employeeLastname: true,
+                employeeEmployment: {
+                  select: {
+                    employmentNumber: true,
+                  },
+                },
+              },
             },
           },
         },
