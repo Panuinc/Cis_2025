@@ -37,6 +37,27 @@ const trainingEmployeeSchema = z.object({
     "trainingEmployeeEmployeeId must be provided.",
     "trainingEmployeeEmployeeId must be an integer."
   ).optional(),
+
+  trainingEmployeeResult: preprocessEnum(
+    ["Pass", "Not_Pass"],
+    "Training Employee Result must be either 'Pass' or 'Not_Pass'."
+  ).optional(),
+
+  trainingEmployeeCertificateLink: z
+    .string()
+    .url("Please provide a valid URL for the certificate link.")
+    .optional()
+    .refine(
+      (val, ctx) => {
+        if (ctx.parent.trainingEmployeeResult === "Pass" && !val) {
+          return false;
+        }
+        return true;
+      },
+      {
+        message: "Certificate link is required when result is Pass.",
+      }
+    ),
 });
 
 const trainingEmployeeCheckInSchema = z.object({
@@ -86,6 +107,33 @@ export function formatTrainingsData(trainingArray) {
     trainingEmployeeCheckIn: training.TrainingEmployeeCheckIn,
   }));
 }
+
+export const trainingUpdateSchema = z.object({
+  trainingId: preprocessInt(
+    "Training ID must be provided.",
+    "Training ID must be an integer."
+  ),
+
+  trainingPreTest: preprocessString(
+    "Please Enter Training Pre Test",
+    "Please Enter Training Pre Test"
+  ).optional(),
+
+  trainingPostTest: preprocessString(
+    "Please Enter Training Post Test",
+    "Please Enter Training Post Test"
+  ).optional(),
+
+  trainingPictureLink: preprocessString(
+    "Please Enter Training Picture Link",
+    "Please Enter Training Picture Link"
+  ).optional(),
+
+  trainingEmployee: z.array(trainingEmployeeSchema).optional(),
+  trainingEmployeeCheckIn: z.array(trainingEmployeeCheckInSchema).optional(),
+
+  selectedIds: z.array(z.number()).optional(),
+});
 
 export const trainingPosteSchema = z.object({
   trainingType: preprocessEnum(

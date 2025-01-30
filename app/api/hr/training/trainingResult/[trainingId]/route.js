@@ -1,10 +1,6 @@
 import { NextResponse } from "next/server";
 import { handleErrors, handleGetErrors } from "@/lib/errorHandler";
-import {
-  trainingPutSchema,
-  trainingHrApprovePutSchema,
-  trainingMdApprovePutSchema,
-} from "@/app/api/hr/training/trainingSchema";
+import { trainingUpdateSchema } from "@/app/api/hr/training/trainingSchema";
 import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
 import prisma from "@/lib/prisma";
@@ -12,6 +8,8 @@ import { formatTrainingData } from "@/app/api/hr/training/trainingSchema";
 import { getRequestIP } from "@/lib/GetRequestIp";
 import { getLocalNow } from "@/lib/GetLocalNow";
 import { SevenHouse } from "@/lib/SevenHouse";
+import { writeFile } from "fs/promises";
+import path from "path";
 
 export async function GET(request, context) {
   let ip;
@@ -78,12 +76,29 @@ export async function GET(request, context) {
   }
 }
 
+async function uploadFile(file, folder, employmentNumber, trainingId) {
+  if (!file?.name || file.size === 0) {
+    return null;
+  }
+
+  const extension = path.extname(file.name).toLowerCase() || ".png";
+  const fileName = `${employmentNumber}_${trainingId}_${Date.now()}${extension}`;
+  const filePath = path
+    .join("public/images", folder, fileName)
+    .replace(/\\/g, "/");
+  await writeFile(
+    path.join(process.cwd(), filePath),
+    Buffer.from(await file.arrayBuffer())
+  );
+  return `/images/${folder}/${fileName}`;
+}
+
 export async function PUT(request, context) {
   let ip;
   try {
     ip = getRequestIP(request);
 
-    const params = await context.params;
+    const params = context.params;
     const { trainingId } = params;
     if (!trainingId) {
       return NextResponse.json(
@@ -94,16 +109,6 @@ export async function PUT(request, context) {
 
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
-
-    const { searchParams } = new URL(request.url);
-    const action = searchParams.get("action");
-
-    if (!action) {
-      return NextResponse.json(
-        { error: "Query parameter 'action' is required" },
-        { status: 400 }
-      );
-    }
 
     const formData = await request.formData();
     const dataObj = {};
@@ -120,216 +125,77 @@ export async function PUT(request, context) {
       }
     }
 
-    let parsedData, updateData, message;
+    // อัพเดตเฉพาะฟิลด์ที่ต้องการ
+    const parsedData = trainingUpdateSchema.parse({
+      trainingId: parseInt(trainingId, 10),
+      trainingPreTest: dataObj.trainingPreTest,
+      trainingPostTest: dataObj.trainingPostTest,
+      // trainingPictureLink จะจัดการไฟล์ในขั้นตอนถัดไป
+      trainingEmployee: dataObj.trainingEmployee, // สมมติว่าเป็น array ของพนักงาน
+    });
+
     const localNow = getLocalNow();
 
-    switch (action) {
-      case "update":
-        {
-          // update แบบปกติ
-          parsedData = trainingPutSchema.parse({
-            ...dataObj,
-            trainingId: parseInt(trainingId, 10),
-          });
-          const {
-            trainingEmployee,
-            trainingEmployeeCheckIn,
-            trainingStartDate,
-            trainingEndDate,
-            selectedIds,
-            ...rest
-          } = parsedData;
-
-          // จัดการวันที่
-          const adjustedTrainingStartDate = trainingStartDate
-            ? SevenHouse(trainingStartDate)
-            : null;
-          const adjustedTrainingEndDate = trainingEndDate
-            ? SevenHouse(trainingEndDate)
-            : null;
-
-          // updateData หลัก
-          updateData = {
-            ...rest,
-            trainingStartDate: adjustedTrainingStartDate,
-            trainingEndDate: adjustedTrainingEndDate,
-            trainingUpdateAt: localNow,
-          };
-          message = "Training data updated successfully";
-
-          // จากนั้นจัดการอัพเดต trainingEmployee, trainingCheckIn ใน transaction
-          await prisma.$transaction(async (prismaTx) => {
-            // update Training หลัก
-            await prismaTx.training.update({
-              where: { trainingId: parseInt(trainingId, 10) },
-              data: updateData,
-            });
-
-            // จัดการ trainingEmployee & trainingCheckIn (เหมือนโค้ดเดิม)
-            // ... (โค้ดจัดการ add/remove ตาม selectedIds)
-            // -- ตัวอย่างสรุปย่อ --
-            const existing = await prismaTx.trainingEmployee.findMany({
-              where: { trainingEmployeeTrainingId: parseInt(trainingId, 10) },
-              select: { trainingEmployeeEmployeeId: true },
-            });
-            const existingEmpIds = existing.map(
-              (emp) => emp.trainingEmployeeEmployeeId
-            );
-
-            if (trainingEmployeeCheckIn && trainingEmployeeCheckIn.length > 0) {
-              // updateMany reset checkIn date, etc.
-              await prismaTx.trainingEmployeeCheckIn.updateMany({
-                where: {
-                  trainingEmployeeCheckInTrainingId: parseInt(trainingId, 10),
-                },
-                data: {
-                  trainingEmployeeCheckInTrainingDate:
-                    adjustedTrainingStartDate,
-                  trainingEmployeeCheckInMorningCheck: null,
-                  trainingEmployeeCheckInAfterNoonCheck: null,
-                },
-              });
-            }
-
-            if (trainingEmployee && trainingEmployee.length > 0) {
-              // create ใหม่เฉพาะที่ยังไม่มี
-              const newToCreate = trainingEmployee
-                .filter(
-                  (emp) =>
-                    !existingEmpIds.includes(emp.trainingEmployeeEmployeeId)
-                )
-                .map((emp) => ({
-                  trainingEmployeeTrainingId: parseInt(trainingId, 10),
-                  trainingEmployeeEmployeeId: emp.trainingEmployeeEmployeeId,
-                }));
-              if (newToCreate.length > 0) {
-                await prismaTx.trainingEmployee.createMany({
-                  data: newToCreate,
-                  skipDuplicates: true,
-                });
-              }
-            }
-
-            if (trainingEmployeeCheckIn && trainingEmployeeCheckIn.length > 0) {
-              // create checkIn ใหม่เฉพาะที่ยังไม่มี
-              const existingCheckIn =
-                await prismaTx.trainingEmployeeCheckIn.findMany({
-                  where: {
-                    trainingEmployeeCheckInTrainingId: parseInt(trainingId, 10),
-                  },
-                  select: { trainingEmployeeCheckInEmployeeId: true },
-                });
-              const existingCheckInIds = existingCheckIn.map(
-                (ch) => ch.trainingEmployeeCheckInEmployeeId
-              );
-              const newCheckInToCreate = trainingEmployeeCheckIn
-                .filter(
-                  (ch) =>
-                    !existingCheckInIds.includes(
-                      ch.trainingEmployeeCheckInEmployeeId
-                    )
-                )
-                .map((ch) => ({
-                  trainingEmployeeCheckInTrainingId: parseInt(trainingId, 10),
-                  trainingEmployeeCheckInEmployeeId:
-                    ch.trainingEmployeeCheckInEmployeeId,
-                  trainingEmployeeCheckInTrainingDate:
-                    adjustedTrainingStartDate,
-                  trainingEmployeeCheckInMorningCheck: null,
-                  trainingEmployeeCheckInAfterNoonCheck: null,
-                }));
-              if (newCheckInToCreate.length > 0) {
-                await prismaTx.trainingEmployeeCheckIn.createMany({
-                  data: newCheckInToCreate,
-                  skipDuplicates: true,
-                });
-              }
-            }
-
-            // ลบพนักงานที่ไม่อยู่ใน selectedIds
-            if (selectedIds && Array.isArray(selectedIds)) {
-              const employeesToDelete = existingEmpIds.filter(
-                (id) => !selectedIds.includes(id)
-              );
-              if (employeesToDelete.length > 0) {
-                await prismaTx.trainingEmployeeCheckIn.deleteMany({
-                  where: {
-                    trainingEmployeeCheckInTrainingId: parseInt(trainingId, 10),
-                    trainingEmployeeCheckInEmployeeId: {
-                      in: employeesToDelete,
-                    },
-                  },
-                });
-                await prismaTx.trainingEmployee.deleteMany({
-                  where: {
-                    trainingEmployeeTrainingId: parseInt(trainingId, 10),
-                    trainingEmployeeEmployeeId: { in: employeesToDelete },
-                  },
-                });
-              }
-            } else {
-              // หากไม่มี selectedIds เลย (เคลียร์ทั้งหมด)
-              await prismaTx.trainingEmployeeCheckIn.deleteMany({
-                where: {
-                  trainingEmployeeCheckInTrainingId: parseInt(trainingId, 10),
-                },
-              });
-              await prismaTx.trainingEmployee.deleteMany({
-                where: {
-                  trainingEmployeeTrainingId: parseInt(trainingId, 10),
-                },
-              });
-            }
-          });
-        }
-        break;
-
-      case "hrApprove":
-        {
-          // ถ้า HR Manager กด Approve หรือ Cancel
-          // ตัวอย่างสั้น ๆ
-          parsedData = trainingHrApprovePutSchema.parse({
-            ...dataObj,
-            trainingId: parseInt(trainingId, 10),
-          });
-          updateData = {
-            trainingStatus: parsedData.trainingStatus,
-            trainingReasonHrApproveBy: parsedData.trainingReasonHrApproveBy,
-            trainingReasonHrApproveAt: localNow,
-          };
-          message = "Training data updated By HR successfully";
-          await prisma.training.update({
-            where: { trainingId: parseInt(trainingId, 10) },
-            data: updateData,
-          });
-        }
-        break;
-
-      case "mdApprove":
-        {
-          // ถ้า MD กด Approve หรือ Cancel
-          parsedData = trainingMdApprovePutSchema.parse({
-            ...dataObj,
-            trainingId: parseInt(trainingId, 10),
-          });
-          updateData = {
-            trainingStatus: parsedData.trainingStatus,
-            trainingReasonMdApproveBy: parsedData.trainingReasonMdApproveBy,
-            trainingReasonMdApproveAt: localNow,
-          };
-          message = "Training data updated By MD successfully";
-          await prisma.training.update({
-            where: { trainingId: parseInt(trainingId, 10) },
-            data: updateData,
-          });
-        }
-        break;
-
-      default:
-        return NextResponse.json({ error: "Invalid action" }, { status: 400 });
+    // อัพโหลดไฟล์ trainingPictureLink หากมีการเปลี่ยนแปลง
+    let uploadedTrainingPictureLink = parsedData.trainingPictureLink;
+    const trainingPictureFile = formData.get("trainingPictureLink");
+    if (trainingPictureFile && trainingPictureFile.size > 0) {
+      uploadedTrainingPictureLink = await uploadFile(
+        trainingPictureFile,
+        "trainingPicture",
+        "training", // สามารถปรับตามความเหมาะสม
+        trainingId
+      );
     }
 
-    // ดึงข้อมูลมาโชว์หลังอัพเดต
+    // เริ่ม Transaction เพื่ออัพเดตข้อมูล
+    await prisma.$transaction(async (prismaTx) => {
+      // อัพเดตข้อมูล Training หลัก
+      await prismaTx.training.update({
+        where: { trainingId: parseInt(trainingId, 10) },
+        data: {
+          trainingPreTest: parsedData.trainingPreTest,
+          trainingPostTest: parsedData.trainingPostTest,
+          trainingPictureLink: uploadedTrainingPictureLink || undefined,
+          trainingUpdateAt: localNow,
+        },
+      });
+
+      // จัดการ trainingEmployeeResult และ trainingEmployeeCertificateLink
+      if (
+        parsedData.trainingEmployee &&
+        parsedData.trainingEmployee.length > 0
+      ) {
+        for (const emp of parsedData.trainingEmployee) {
+          let certificateLink = emp.trainingEmployeeCertificateLink;
+          const certificateFile = formData.get(
+            `trainingEmployeeCertificateLink_${emp.trainingEmployeeId}`
+          );
+          if (
+            emp.trainingEmployeeResult === "Pass" &&
+            certificateFile &&
+            certificateFile.size > 0
+          ) {
+            certificateLink = await uploadFile(
+              certificateFile,
+              "certificate",
+              "employee", // สามารถปรับตามต้องการ
+              trainingId
+            );
+          }
+
+          await prismaTx.trainingEmployee.update({
+            where: { trainingEmployeeId: emp.trainingEmployeeId },
+            data: {
+              trainingEmployeeResult: emp.trainingEmployeeResult,
+              trainingEmployeeCertificateLink: certificateLink || undefined,
+            },
+          });
+        }
+      }
+    });
+
+    // ดึงข้อมูลที่อัพเดตแล้วมาแสดง
     const updatedTraining = await prisma.training.findUnique({
       where: { trainingId: parseInt(trainingId, 10) },
       include: {
@@ -353,6 +219,12 @@ export async function PUT(request, context) {
         TrainingUpdateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
+        TrainingHrApproveBy: {
+          select: { employeeFirstname: true, employeeLastname: true },
+        },
+        TrainingMdApproveBy: {
+          select: { employeeFirstname: true, employeeLastname: true },
+        },
       },
     });
 
@@ -360,7 +232,7 @@ export async function PUT(request, context) {
 
     return NextResponse.json(
       {
-        message,
+        message: "Training data updated successfully",
         training: formattedTraining,
       },
       { status: 200 }

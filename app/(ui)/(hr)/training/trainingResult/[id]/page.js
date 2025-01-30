@@ -40,6 +40,11 @@ const DEFAULT_FORM_DATA = {
   trainingRemark: "",
   trainingRequireKnowledge: "",
   trainingStatus: "",
+  trainingPreTest: "",
+  trainingPostTest: "",
+  trainingPictureLink: "",
+  trainingEmployee: [], // เพิ่มฟิลด์ใหม่
+  trainingEmployeeCheckIn: [], // เพิ่มฟิลด์ใหม่
 };
 
 export default function TrainingResultUpdate({ params: paramsPromise }) {
@@ -78,6 +83,11 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
 
   const [sequentialMode, setSequentialMode] = useState(false);
   const [showEmployeeSection, setShowEmployeeSection] = useState(false);
+
+  // สถานะการแบ่งหน้า
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const formRef = useRef(null);
 
@@ -157,7 +167,7 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
       formDataObject.append("trainingUpdateBy", userId);
 
       const trainingEmployeeArray = selectedIds.map((empId) => ({
-        trainingEmployeeEmployeeId: empId,
+        trainingEmployeeId: empId, // ใช้ trainingEmployeeId แทน employeeId
       }));
       formDataObject.append(
         "trainingEmployee",
@@ -225,7 +235,7 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
     [trainingId, router, userId, selectedIds, formData.trainingStartDate]
   );
 
-  //
+  // ฟังก์ชันสำหรับการอนุมัติและปฏิเสธจาก HR และ MD
   const handleHrApprove = async () => {
     const formDataObject = new FormData(formRef.current);
     formDataObject.set("trainingStatus", "PendingMdApprove");
@@ -334,8 +344,7 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
     }
   };
 
-  //
-
+  // ฟังก์ชันเคลียร์ฟอร์ม
   const handleClear = useCallback(() => {
     if (formRef.current) formRef.current.reset();
     setFormData(DEFAULT_FORM_DATA);
@@ -343,6 +352,7 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
     setSelectedIds([]);
   }, []);
 
+  // ฟังก์ชันดึงข้อมูลจาก API
   const fetchData = useCallback(async () => {
     try {
       const [
@@ -453,12 +463,36 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
       const trainingData = await trainingRes.json();
       if (trainingRes.ok) {
         const training = trainingData.training[0];
-        setFormData(training);
+        // เพิ่มฟิลด์ _index ให้กับ trainingEmployee
+        const preparedTrainingEmployees = training.employeeTrainingTraining.map(
+          (et, index) => ({
+            ...et,
+            _index: index + 1, // เพิ่มฟิลด์ _index ให้แต่ละ trainingEmployee
+          })
+        );
+        const preparedTrainingCheckIns = training.employeeTrainingCheckInTraining.map(
+          (ch, index) => ({
+            ...ch,
+            _index: index + 1, // เพิ่มฟิลด์ _index ให้แต่ละ trainingEmployeeCheckIn
+          })
+        );
 
-        const existingEmployeeIds = training.employeeTrainingTraining.map(
-          (et) => et.trainingEmployeeEmployeeId
+        setFormData({
+          ...training,
+          trainingEmployee: preparedTrainingEmployees,
+          trainingEmployeeCheckIn: preparedTrainingCheckIns,
+        });
+
+        const existingEmployeeIds = preparedTrainingEmployees.map(
+          (et) => et.trainingEmployeeId // ใช้ trainingEmployeeId แทน trainingEmployeeEmployeeId
         );
         setSelectedIds(existingEmployeeIds);
+
+        // ตั้งค่าการแบ่งหน้า
+        const totalItems = preparedTrainingEmployees.length;
+        const calculatedPages = Math.ceil(totalItems / rowsPerPage) || 1;
+        setPages(calculatedPages);
+        setPage(1); // เริ่มต้นที่หน้า 1
       } else {
         toast.error(trainingData.error);
       }
@@ -506,6 +540,34 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
     filterParent,
   ]);
 
+  // การแบ่งหน้าและการเปลี่ยนแปลงหน้าปัจจุบัน
+  const handlePageChange = useCallback((newPage) => {
+    setPage(newPage);
+  }, []);
+
+  const handleRowsPerPageChange = useCallback((newRowsPerPage) => {
+    setRowsPerPage(newRowsPerPage);
+    setPage(1); // รีเซ็ตหน้าเป็น 1 เมื่อเปลี่ยนจำนวนแถวต่อหน้า
+  }, []);
+
+  // คำนวณรายการที่จะแสดงในหน้าปัจจุบัน
+  const paginatedTrainingEmployees = useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    return formData.trainingEmployee.slice(start, end);
+  }, [formData.trainingEmployee, page, rowsPerPage]);
+
+  const totalPages = useMemo(() => {
+    return Math.ceil(formData.trainingEmployee.length / rowsPerPage) || 1;
+  }, [formData.trainingEmployee.length, rowsPerPage]);
+
+  useEffect(() => {
+    setPages(totalPages);
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [totalPages, page]);
+
   return (
     <>
       <TopicHeader topic="Training Result Update" />
@@ -551,6 +613,14 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
         onMdApprove={handleMdApprove}
         onMdReject={handleMdReject}
 
+        // ส่งค่าการแบ่งหน้าไปยัง FormTrainingResult
+        page={page}
+        pages={pages}
+        onPageChange={handlePageChange}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={handleRowsPerPageChange}
+        paginatedTrainingEmployees={paginatedTrainingEmployees} // ส่งรายการที่แบ่งหน้าแล้ว
+        totalPages={totalPages} // ส่งจำนวนหน้าทั้งหมด
       />
     </>
   );
