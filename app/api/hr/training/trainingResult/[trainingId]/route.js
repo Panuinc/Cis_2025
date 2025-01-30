@@ -91,7 +91,7 @@ export async function PUT(request, context) {
   try {
     ip = getRequestIP(request);
 
-    const params = context.params;
+    const params = await context.params;
     const { trainingId } = params;
     if (!trainingId) {
       return NextResponse.json(
@@ -138,7 +138,10 @@ export async function PUT(request, context) {
       ) {
         for (const emp of parsedData.trainingEmployee) {
           let certificateLink = emp.trainingEmployeeCertificateLink;
-          const certificateFile = payload[`trainingEmployeeCertificateLink_${emp.trainingEmployeeId}`];
+          const certificateFile =
+            payload[
+              `trainingEmployeeCertificateLink_${emp.trainingEmployeeId}`
+            ];
           if (
             emp.trainingEmployeeResult === "Pass" &&
             certificateFile &&
