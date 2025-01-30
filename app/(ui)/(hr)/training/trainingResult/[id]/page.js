@@ -81,7 +81,7 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
         ...prev,
         trainingEmployee: prev.trainingEmployee.map((emp) =>
           emp.trainingEmployeeId === employeeId
-            ? { ...emp, trainingEmployeeCertificateLink: newLink }
+            ? { ...emp, trainingEmployeeCertificatePicture: newLink }
             : emp
         ),
       }));
@@ -96,8 +96,8 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
       const trainingEmployeeArray = formData.trainingEmployee.map((emp) => ({
         trainingEmployeeId: emp.trainingEmployeeId,
         trainingEmployeeResult: emp.trainingEmployeeResult || "Not_Pass",
-        trainingEmployeeCertificateLink:
-          emp.trainingEmployeeCertificateLink || "",
+        trainingEmployeeCertificatePicture:
+          emp.trainingEmployeeCertificatePicture || "",
       }));
 
       const payload = {
@@ -189,7 +189,7 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
           trainingEmployee: training.employeeTrainingTraining.map((et) => ({
             trainingEmployeeId: et.trainingEmployeeId,
             trainingEmployeeResult: et.trainingEmployeeResult,
-            trainingEmployeeCertificateLink: et.trainingEmployeeCertificateLink,
+            trainingEmployeeCertificatePicture: et.trainingEmployeeCertificatePicture,
             TrainingEmployeeEmployeeId: et.TrainingEmployeeEmployeeId,
           })),
         });

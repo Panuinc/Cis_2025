@@ -50,22 +50,22 @@ export default function FormTrainingResult({
       case "certificateLink": {
         return item.trainingEmployeeResult === "Pass" ? (
           <Input
-            name="trainingEmployeeCertificateLink"
+            name="trainingEmployeeCertificatePicture"
             type="text"
             label="Training Certificate"
             placeholder="Please Enter Data"
             labelPlacement="outside"
             size="lg"
             variant="bordered"
-            value={item.trainingEmployeeCertificateLink || ""}
+            value={item.trainingEmployeeCertificatePicture || ""}
             onChange={(e) =>
               handleTrainingEmployeeCertificateChange(
                 item.trainingEmployeeId,
                 e.target.value
               )
             }
-            isInvalid={!!errors.trainingEmployeeCertificateLink}
-            errorMessage={errors.trainingEmployeeCertificateLink}
+            isInvalid={!!errors.trainingEmployeeCertificatePicture}
+            errorMessage={errors.trainingEmployeeCertificatePicture}
             clearable
           />
         ) : (

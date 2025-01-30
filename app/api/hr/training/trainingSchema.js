@@ -43,7 +43,7 @@ const trainingEmployeeSchema = z.object({
     "Training Employee Result must be either 'Pass' or 'Not_Pass'."
   ).optional(),
 
-  trainingEmployeeCertificateLink: preprocessAny({
+  trainingEmployeeCertificatePicture: preprocessAny({
     url: z.string(),
     description: z.string(),
   }),

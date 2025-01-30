@@ -125,8 +125,8 @@ export async function PUT(request, context) {
             where: { trainingEmployeeId: emp.trainingEmployeeId },
             data: {
               trainingEmployeeResult: emp.trainingEmployeeResult,
-              trainingEmployeeCertificateLink:
-                emp.trainingEmployeeCertificateLink || undefined,
+              trainingEmployeeCertificatePicture:
+                emp.trainingEmployeeCertificatePicture || undefined,
             },
           });
         }
