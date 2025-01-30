@@ -36,6 +36,7 @@ export default function FormTrainingResult({
         return (
           <Switch
             isSelected={item.trainingEmployeeResult === "Pass"}
+            color="success"
             onChange={(e) => {
               const newResult = e.target.checked ? "Pass" : "Not_Pass";
               handleTrainingEmployeeResultChange(
