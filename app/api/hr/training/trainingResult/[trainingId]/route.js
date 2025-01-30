@@ -103,37 +103,20 @@ export async function PUT(request, context) {
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
 
-    const formData = await request.formData();
-    const dataObj = {};
-
-    for (const [key, value] of formData.entries()) {
-      if (key === "trainingEmployee") {
-        dataObj[key] = JSON.parse(value);
-      } else {
-        dataObj[key] = value;
-      }
-    }
+    const payload = await request.json();
 
     const parsedData = trainingUpdateSchema.parse({
       trainingId: parseInt(trainingId, 10),
-      trainingPreTest: dataObj.trainingPreTest,
-      trainingPostTest: dataObj.trainingPostTest,
-      trainingPictureLink: dataObj.trainingPictureLink,
-      trainingEmployee: dataObj.trainingEmployee,
+      trainingPreTest: payload.trainingPreTest,
+      trainingPostTest: payload.trainingPostTest,
+      trainingPictureLink: payload.trainingPictureLink,
+      trainingEmployee: payload.trainingEmployee,
     });
 
     const localNow = getLocalNow();
 
-    // อัพโหลดไฟล์ trainingPictureLink หากมีการเปลี่ยนแปลง
-    let uploadedTrainingPictureLink = parsedData.trainingPictureLink;
-    const trainingPictureFile = formData.get("trainingPictureLink");
-    if (trainingPictureFile && trainingPictureFile.size > 0) {
-      uploadedTrainingPictureLink = await uploadFile(
-        trainingPictureFile,
-        "trainingPicture",
-        trainingId
-      );
-    }
+    // ใช้ค่า trainingPictureLink จาก payload โดยตรง
+    const uploadedTrainingPictureLink = parsedData.trainingPictureLink;
 
     // เริ่ม Transaction เพื่ออัปเดตข้อมูล
     await prisma.$transaction(async (prismaTx) => {
@@ -155,9 +138,7 @@ export async function PUT(request, context) {
       ) {
         for (const emp of parsedData.trainingEmployee) {
           let certificateLink = emp.trainingEmployeeCertificateLink;
-          const certificateFile = formData.get(
-            `trainingEmployeeCertificateLink_${emp.trainingEmployeeId}`
-          );
+          const certificateFile = payload[`trainingEmployeeCertificateLink_${emp.trainingEmployeeId}`];
           if (
             emp.trainingEmployeeResult === "Pass" &&
             certificateFile &&

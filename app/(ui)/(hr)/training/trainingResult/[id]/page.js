@@ -10,7 +10,7 @@ import React, {
   useEffect,
   useCallback,
   useMemo,
-  use,
+  use
 } from "react";
 
 const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
@@ -122,26 +122,31 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
 
       const formDataObject = new FormData(formRef.current);
 
-      formDataObject.append("trainingId", trainingId);
-
+      // เนื่องจากเราใช้ input แบบ text สำหรับ trainingPictureLink จึงไม่ต้องแปลงเป็น FormData
+      // ดังนั้นเราจะสร้าง object สำหรับส่งไปยัง API
       const trainingEmployeeArray = formData.trainingEmployee.map((emp) => ({
         trainingEmployeeId: emp.trainingEmployeeId,
         trainingEmployeeResult: emp.trainingEmployeeResult || "Not_Pass",
         trainingEmployeeCertificateLink:
           emp.trainingEmployeeCertificateLink || "",
       }));
-      formDataObject.append(
-        "trainingEmployee",
-        JSON.stringify(trainingEmployeeArray)
-      );
+
+      const payload = {
+        trainingId: parseInt(trainingId, 10),
+        trainingPreTest: formData.trainingPreTest,
+        trainingPostTest: formData.trainingPostTest,
+        trainingPictureLink: formData.trainingPictureLink,
+        trainingEmployee: trainingEmployeeArray,
+      };
 
       try {
         const res = await fetch(`/api/hr/training/trainingResult/${trainingId}`, {
           method: "PUT",
-          body: formDataObject,
           headers: {
+            "Content-Type": "application/json",
             "secret-token": SECRET_TOKEN,
           },
+          body: JSON.stringify(payload),
         });
 
         const jsonData = await res.json();
@@ -174,7 +179,7 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
         toast.error("Error updating training: " + error.message);
       }
     },
-    [trainingId, router, formData.trainingEmployee]
+    [trainingId, router, formData.trainingEmployee, formData.trainingPictureLink, formData.trainingPreTest, formData.trainingPostTest]
   );
 
   // ฟังก์ชันเคลียร์ฟอร์ม

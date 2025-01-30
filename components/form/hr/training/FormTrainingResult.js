@@ -165,47 +165,14 @@ export default function FormTrainingResult({
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
             name="trainingPictureLink"
-            type="file"
+            type="url"
             label="Training Picture Link"
-            placeholder="Please Upload Picture"
+            placeholder="Please Enter Data"
             labelPlacement="outside"
             size="lg"
             variant="bordered"
-            accept=".jpg,.jpeg,.png,.pdf"
-            onChange={async (e) => {
-              const file = e.target.files[0];
-              if (file) {
-                try {
-                  const formDataUpload = new FormData();
-                  formDataUpload.append("file", file);
-
-                  const res = await fetch(`/api/hr/training/upload`, {
-                    method: "POST",
-                    body: formDataUpload,
-                    headers: {
-                      "secret-token": SECRET_TOKEN,
-                    },
-                  });
-
-                  const jsonData = await res.json();
-
-                  if (res.ok) {
-                    const url = jsonData.url;
-                    // อัปเดตลิงก์ใน formData
-                    setFormData((prev) => ({
-                      ...prev,
-                      trainingPictureLink: url,
-                    }));
-                    toast.success("Picture uploaded successfully");
-                  } else {
-                    toast.error(jsonData.error || "Error uploading picture");
-                  }
-                } catch (error) {
-                  console.error("File upload failed:", error);
-                  toast.error("File upload failed");
-                }
-              }
-            }}
+            value={formData.trainingPictureLink || ""}
+            onChange={handleInputChange("trainingPictureLink")}
             isInvalid={!!errors.trainingPictureLink}
             errorMessage={errors.trainingPictureLink}
           />

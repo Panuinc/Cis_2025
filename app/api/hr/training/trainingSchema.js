@@ -43,21 +43,10 @@ const trainingEmployeeSchema = z.object({
     "Training Employee Result must be either 'Pass' or 'Not_Pass'."
   ).optional(),
 
-  trainingEmployeeCertificateLink: z
-    .string()
-    .url("Please provide a valid URL for the certificate link.")
-    .optional()
-    .refine(
-      (val, ctx) => {
-        if (ctx.parent.trainingEmployeeResult === "Pass" && !val) {
-          return false;
-        }
-        return true;
-      },
-      {
-        message: "Certificate link is required when result is Pass.",
-      }
-    ),
+  trainingEmployeeCertificateLink: preprocessAny({
+    url: z.string(),
+    description: z.string(),
+  }),
 });
 
 const trainingEmployeeCheckInSchema = z.object({
