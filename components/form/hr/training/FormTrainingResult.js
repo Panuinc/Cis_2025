@@ -18,10 +18,10 @@ export default function FormTrainingResult({
   handleTrainingEmployeeCertificateChange,
 }) {
   const columns = [
-    { name: "ชื่อ", uid: "firstName" },
-    { name: "นามสกุล", uid: "lastName" },
-    { name: "ผลการฝึกอบรม", uid: "result" },
-    { name: "ลิงก์ใบรับรอง", uid: "certificateLink" },
+    { name: "FirstName", uid: "firstName" },
+    { name: "LastName", uid: "lastName" },
+    { name: "Result", uid: "result" },
+    { name: "Certificate", uid: "certificateLink" },
   ];
 
   const renderCell = (item, columnKey) => {
