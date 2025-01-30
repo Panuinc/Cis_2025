@@ -40,64 +40,11 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
 
   const router = useRouter();
   const [errors, setErrors] = useState({});
-  const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
+
   const [employees, setEmployees] = useState([]);
+  const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
 
   const formRef = useRef(null);
-
-  const fetchData = useCallback(async () => {
-    try {
-      // ดึงข้อมูลผลการฝึกอบรม
-      const trainingRes = await fetch(
-        `/api/hr/training/trainingResult/${trainingId}`,
-        {
-          method: "GET",
-          headers: {
-            "secret-token": SECRET_TOKEN,
-          },
-        }
-      );
-
-      const trainingData = await trainingRes.json();
-      if (trainingRes.ok) {
-        const training = trainingData.training[0];
-        setFormData({
-          trainingPreTest: training.trainingPreTest || "",
-          trainingPostTest: training.trainingPostTest || "",
-          trainingPictureLink: training.trainingPictureLink || "",
-          trainingEmployee: training.employeeTrainingTraining.map((et) => ({
-            trainingEmployeeId: et.trainingEmployeeId,
-            trainingEmployeeResult: et.trainingEmployeeResult,
-            trainingEmployeeCertificateLink: et.trainingEmployeeCertificateLink,
-            TrainingEmployeeEmployeeId: et.TrainingEmployeeEmployeeId, // เพิ่มข้อมูลนี้
-          })),
-        });
-      } else {
-        toast.error(trainingData.error);
-      }
-
-      // ดึงข้อมูลพนักงานทั้งหมด
-      const employeeRes = await fetch(`/api/hr/employee`, {
-        method: "GET",
-        headers: { "secret-token": SECRET_TOKEN },
-      });
-      const employeeData = await employeeRes.json();
-      if (employeeRes.ok) {
-        const activeEmployee = (employeeData.employee || []).filter(
-          (emp) => emp.employeeStatus === "Active"
-        );
-        setEmployees(activeEmployee);
-      } else {
-        toast.error(employeeData.error);
-      }
-    } catch (error) {
-      toast.error("Error fetching data");
-    }
-  }, [trainingId]);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
 
   const handleInputChange = useCallback(
     (field) => (e) => {
@@ -129,47 +76,17 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
     []
   );
 
-  // ฟังก์ชันจัดการการเปลี่ยนแปลงลิงก์ใบรับรอง
+  // ปรับฟังก์ชันการเปลี่ยนแปลงลิงก์ใบรับรองเป็น input text ธรรมดา
   const handleTrainingEmployeeCertificateChange = useCallback(
-    (employeeId, file) => {
-      if (!file) return;
-
-      const uploadCertificate = async () => {
-        try {
-          const uploadFormData = new FormData();
-          uploadFormData.append("file", file);
-
-          const res = await fetch(`/api/hr/training/upload`, {
-            method: "POST",
-            body: uploadFormData,
-            headers: {
-              "secret-token": SECRET_TOKEN,
-            },
-          });
-
-          const jsonData = await res.json();
-
-          if (res.ok) {
-            const url = jsonData.url;
-            setFormData((prev) => ({
-              ...prev,
-              trainingEmployee: prev.trainingEmployee.map((emp) =>
-                emp.trainingEmployeeId === employeeId
-                  ? { ...emp, trainingEmployeeCertificateLink: url }
-                  : emp
-              ),
-            }));
-            toast.success("Certificate uploaded successfully");
-          } else {
-            toast.error(jsonData.error || "Error uploading certificate");
-          }
-        } catch (error) {
-          console.error("File upload failed:", error);
-          toast.error("File upload failed");
-        }
-      };
-
-      uploadCertificate();
+    (employeeId, newLink) => {
+      setFormData((prev) => ({
+        ...prev,
+        trainingEmployee: prev.trainingEmployee.map((emp) =>
+          emp.trainingEmployeeId === employeeId
+            ? { ...emp, trainingEmployeeCertificateLink: newLink }
+            : emp
+        ),
+      }));
     },
     []
   );
@@ -177,8 +94,6 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
   const handleSubmit = useCallback(
     async (event) => {
       event.preventDefault();
-
-      const formDataObject = new FormData(formRef.current);
 
       // เนื่องจากเราใช้ input แบบ text สำหรับ trainingPictureLink จึงไม่ต้องแปลงเป็น FormData
       // ดังนั้นเราจะสร้าง object สำหรับส่งไปยัง API
@@ -250,11 +165,66 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
     ]
   );
 
+  // ฟังก์ชันเคลียร์ฟอร์ม
   const handleClear = useCallback(() => {
     if (formRef.current) formRef.current.reset();
     setFormData(DEFAULT_FORM_DATA);
     setErrors({});
   }, []);
+
+  // ฟังก์ชันดึงข้อมูลจาก API
+  const fetchData = useCallback(async () => {
+    try {
+      const trainingRes = await fetch(
+        `/api/hr/training/trainingResult/${trainingId}`,
+        {
+          method: "GET",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+        }
+      );
+
+      const trainingData = await trainingRes.json();
+      if (trainingRes.ok) {
+        const training = trainingData.training[0];
+        setFormData({
+          trainingPreTest: training.trainingPreTest || "",
+          trainingPostTest: training.trainingPostTest || "",
+          trainingPictureLink: training.trainingPictureLink || "",
+          trainingEmployee: training.employeeTrainingTraining.map((et) => ({
+            trainingEmployeeId: et.trainingEmployeeId,
+            trainingEmployeeResult: et.trainingEmployeeResult,
+            trainingEmployeeCertificateLink: et.trainingEmployeeCertificateLink,
+            TrainingEmployeeEmployeeId: et.TrainingEmployeeEmployeeId, // เพิ่มข้อมูลนี้
+          })),
+        });
+      } else {
+        toast.error(trainingData.error);
+      }
+
+      // ดึงข้อมูลพนักงานทั้งหมด
+      const employeeRes = await fetch(`/api/hr/employee`, {
+        method: "GET",
+        headers: { "secret-token": SECRET_TOKEN },
+      });
+      const employeeData = await employeeRes.json();
+      if (employeeRes.ok) {
+        const activeEmployee = (employeeData.employee || []).filter(
+          (emp) => emp.employeeStatus === "Active"
+        );
+        setEmployees(activeEmployee);
+      } else {
+        toast.error(employeeData.error);
+      }
+    } catch (error) {
+      toast.error("Error fetching data");
+    }
+  }, [trainingId]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   return (
     <>
@@ -265,7 +235,6 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
         onSubmit={handleSubmit}
         onClear={handleClear}
         errors={errors}
-        setErrors={setErrors}
         formData={formData}
         handleInputChange={handleInputChange}
         operatedBy={operatedBy}

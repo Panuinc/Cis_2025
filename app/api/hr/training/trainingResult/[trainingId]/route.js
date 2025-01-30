@@ -7,8 +7,6 @@ import prisma from "@/lib/prisma";
 import { formatTrainingData } from "@/app/api/hr/training/trainingSchema";
 import { getRequestIP } from "@/lib/GetRequestIp";
 import { getLocalNow } from "@/lib/GetLocalNow";
-import { writeFile } from "fs/promises";
-import path from "path";
 
 export async function GET(request, context) {
   let ip;
@@ -76,23 +74,6 @@ export async function GET(request, context) {
   }
 }
 
-async function uploadFile(file, folder, employmentNumber, trainingId) {
-  if (!file?.name || file.size === 0) {
-    return null;
-  }
-
-  const extension = path.extname(file.name).toLowerCase() || ".png";
-  const fileName = `${employmentNumber}_${trainingId}_${Date.now()}${extension}`;
-  const filePath = path
-    .join("public/images", folder, fileName)
-    .replace(/\\/g, "/");
-  await writeFile(
-    path.join(process.cwd(), filePath),
-    Buffer.from(await file.arrayBuffer())
-  );
-  return `/images/${folder}/${fileName}`;
-}
-
 export async function PUT(request, context) {
   let ip;
   try {
@@ -144,29 +125,12 @@ export async function PUT(request, context) {
         parsedData.trainingEmployee.length > 0
       ) {
         for (const emp of parsedData.trainingEmployee) {
-          let certificateLink = emp.trainingEmployeeCertificateLink;
-          const certificateFile =
-            payload[
-              `trainingEmployeeCertificateLink_${emp.trainingEmployeeId}`
-            ];
-          if (
-            emp.trainingEmployeeResult === "Pass" &&
-            certificateFile &&
-            certificateFile.size > 0
-          ) {
-            certificateLink = await uploadFile(
-              certificateFile,
-              "certificate",
-              "employee", // สามารถปรับตามต้องการ
-              trainingId
-            );
-          }
-
           await prismaTx.trainingEmployee.update({
             where: { trainingEmployeeId: emp.trainingEmployeeId },
             data: {
               trainingEmployeeResult: emp.trainingEmployeeResult,
-              trainingEmployeeCertificateLink: certificateLink || undefined,
+              trainingEmployeeCertificateLink:
+                emp.trainingEmployeeCertificateLink || undefined,
             },
           });
         }

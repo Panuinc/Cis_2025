@@ -49,15 +49,24 @@ export default function FormTrainingResult({
       }
       case "certificateLink": {
         return item.trainingEmployeeResult === "Pass" ? (
-          <input
-            type="file"
-            accept=".pdf,.jpg,.png"
+          <Input
+            name="trainingEmployeeCertificateLink"
+            type="text"
+            label="Training Certificate"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={item.trainingEmployeeCertificateLink || ""}
             onChange={(e) =>
               handleTrainingEmployeeCertificateChange(
                 item.trainingEmployeeId,
-                e.target.files[0]
+                e.target.value
               )
             }
+            isInvalid={!!errors.trainingEmployeeCertificateLink}
+            errorMessage={errors.trainingEmployeeCertificateLink}
+            clearable
           />
         ) : (
           "-"

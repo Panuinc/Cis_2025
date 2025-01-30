@@ -645,7 +645,7 @@ model TrainingEmployee {
   trainingEmployeeCertificateLink String?                @db.VarChar(255)
 
   TrainingEmployeeTrainingId Training? @relation("TrainingEmployeeTrainingId", fields: [trainingEmployeeTrainingId], references: [trainingId])
-  TrainingEmployeeEmployeeId Employee? @relation("TrainingEmployeeEmployeeId", fields: [trainingEmployeeEmployeeId], references: [employeeId])
+  TrainingEmployeeEmployeeId Employee @relation("TrainingEmployeeEmployeeId", fields: [trainingEmployeeEmployeeId], references: [employeeId])
 
   @@index([trainingEmployeeTrainingId])
   @@index([trainingEmployeeEmployeeId])
