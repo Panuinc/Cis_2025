@@ -189,7 +189,8 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
           trainingEmployee: training.employeeTrainingTraining.map((et) => ({
             trainingEmployeeId: et.trainingEmployeeId,
             trainingEmployeeResult: et.trainingEmployeeResult,
-            trainingEmployeeCertificatePicture: et.trainingEmployeeCertificatePicture,
+            trainingEmployeeCertificatePicture:
+              et.trainingEmployeeCertificatePicture,
             TrainingEmployeeEmployeeId: et.TrainingEmployeeEmployeeId,
           })),
         });
