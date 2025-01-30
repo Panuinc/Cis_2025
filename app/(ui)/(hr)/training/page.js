@@ -44,11 +44,23 @@ export default function TrainingList() {
     return isUserLevel
       ? [
           { name: "No.", uid: "index" },
-          { name: "Document Id", uid: "trainingName" },
+          { name: "Training Name", uid: "trainingName" },
+          { name: "Training Type", uid: "trainingType" },
+          { name: "Training Location", uid: "trainingLocation" },
+          { name: "Total Participants", uid: "totalParticipants" },
+          { name: "Training Start Date", uid: "trainingStartDate" },
+          { name: "Training End Date", uid: "trainingEndDate" },
+
+
         ]
       : [
           { name: "No.", uid: "index" },
-          { name: "Document Id", uid: "trainingName" },
+          { name: "Training Name", uid: "trainingName" },
+          { name: "Training Type", uid: "trainingType" },
+          { name: "Training Location", uid: "trainingLocation" },
+          { name: "Total Participants", uid: "totalParticipants" },
+          { name: "Training Start Date", uid: "trainingStartDate" },
+          { name: "Training End Date", uid: "trainingEndDate" },
           { name: "Create By", uid: "createdBy" },
           { name: "Create At", uid: "trainingCreateAt" },
           { name: "Update By", uid: "updatedBy" },
@@ -200,31 +212,33 @@ export default function TrainingList() {
           return item.trainingUpdateAt
             ? new Date(item.trainingUpdateAt).toLocaleString()
             : null;
+        case "totalParticipants":
+          return item.employeeTrainingTraining?.length || 0; // นับจำนวนผู้เข้าร่วมอบรม
         case "actions": {
           const loggedInEmployeeId = userData?.employee?.employeeId;
           const isOwner =
             item.TrainingCreateBy.employeeId === loggedInEmployeeId;
-
+  
           // Case 1: Owner sees all their requests and can update if status is PendingHrApprove
           const showUpdateOwner =
             isOwner && item.trainingStatus === "PendingHrApprove";
-
+  
           // Case 3: HR Manager sees all requests but can only update if status is PendingHrApprove
           const isHRManager =
             userData?.divisionName === "บุคคล" &&
             userData?.roleName === "Manager";
           const showUpdateHRManager =
             isHRManager && item.trainingStatus === "PendingHrApprove";
-
+  
           // Case 4: MD sees only requests with status PendingMdApprove and can update if status is PendingMdApprove
           const isMD =
             userData?.divisionName === "บริหาร" && userData?.roleName === "MD";
           const showUpdateMD =
             isMD && item.trainingStatus === "PendingMdApprove";
-
+  
           const showUpdate =
             showUpdateOwner || showUpdateHRManager || showUpdateMD;
-
+  
           return (
             <div className="relative flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <Dropdown>
@@ -266,7 +280,7 @@ export default function TrainingList() {
     },
     [getFullName, renderChip, handleExportApproved, handleExportList, userData]
   );
-
+  
   const debouncedSetFilterTrainingValue = useMemo(
     () =>
       debounce((value) => {
