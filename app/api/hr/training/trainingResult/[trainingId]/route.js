@@ -7,7 +7,6 @@ import prisma from "@/lib/prisma";
 import { formatTrainingData } from "@/app/api/hr/training/trainingSchema";
 import { getRequestIP } from "@/lib/GetRequestIp";
 import { getLocalNow } from "@/lib/GetLocalNow";
-import { SevenHouse } from "@/lib/SevenHouse";
 import { writeFile } from "fs/promises";
 import path from "path";
 
