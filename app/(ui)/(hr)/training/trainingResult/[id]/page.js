@@ -61,7 +61,6 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
     []
   );
 
-  // ฟังก์ชันจัดการการเปลี่ยนแปลงผลการฝึกอบรม
   const handleTrainingEmployeeResultChange = useCallback(
     (employeeId, newResult) => {
       setFormData((prev) => ({
@@ -76,7 +75,6 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
     []
   );
 
-  // ปรับฟังก์ชันการเปลี่ยนแปลงลิงก์ใบรับรองเป็น input text ธรรมดา
   const handleTrainingEmployeeCertificateChange = useCallback(
     (employeeId, newLink) => {
       setFormData((prev) => ({
@@ -95,8 +93,6 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
     async (event) => {
       event.preventDefault();
 
-      // เนื่องจากเราใช้ input แบบ text สำหรับ trainingPictureLink จึงไม่ต้องแปลงเป็น FormData
-      // ดังนั้นเราจะสร้าง object สำหรับส่งไปยัง API
       const trainingEmployeeArray = formData.trainingEmployee.map((emp) => ({
         trainingEmployeeId: emp.trainingEmployeeId,
         trainingEmployeeResult: emp.trainingEmployeeResult || "Not_Pass",
@@ -165,14 +161,12 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
     ]
   );
 
-  // ฟังก์ชันเคลียร์ฟอร์ม
   const handleClear = useCallback(() => {
     if (formRef.current) formRef.current.reset();
     setFormData(DEFAULT_FORM_DATA);
     setErrors({});
   }, []);
 
-  // ฟังก์ชันดึงข้อมูลจาก API
   const fetchData = useCallback(async () => {
     try {
       const trainingRes = await fetch(
@@ -196,14 +190,13 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
             trainingEmployeeId: et.trainingEmployeeId,
             trainingEmployeeResult: et.trainingEmployeeResult,
             trainingEmployeeCertificateLink: et.trainingEmployeeCertificateLink,
-            TrainingEmployeeEmployeeId: et.TrainingEmployeeEmployeeId, // เพิ่มข้อมูลนี้
+            TrainingEmployeeEmployeeId: et.TrainingEmployeeEmployeeId,
           })),
         });
       } else {
         toast.error(trainingData.error);
       }
 
-      // ดึงข้อมูลพนักงานทั้งหมด
       const employeeRes = await fetch(`/api/hr/employee`, {
         method: "GET",
         headers: { "secret-token": SECRET_TOKEN },
@@ -239,12 +232,12 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
         handleInputChange={handleInputChange}
         operatedBy={operatedBy}
         employees={employees}
-        filteredEmployees={employees} // เนื่องจากเราไม่ต้องการฟิลเตอร์เพิ่มเติม
+        filteredEmployees={employees}
         isUpdate={true}
-        handleTrainingEmployeeResultChange={handleTrainingEmployeeResultChange} // ส่งฟังก์ชันไปยัง FormTrainingResult
+        handleTrainingEmployeeResultChange={handleTrainingEmployeeResultChange}
         handleTrainingEmployeeCertificateChange={
           handleTrainingEmployeeCertificateChange
-        } // ส่งฟังก์ชันไปยัง FormTrainingResult
+        }
       />
     </>
   );

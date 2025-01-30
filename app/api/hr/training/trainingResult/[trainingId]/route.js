@@ -103,12 +103,9 @@ export async function PUT(request, context) {
 
     const localNow = getLocalNow();
 
-    // ใช้ค่า trainingPictureLink จาก payload โดยตรง
     const uploadedTrainingPictureLink = parsedData.trainingPictureLink;
 
-    // เริ่ม Transaction เพื่ออัปเดตข้อมูล
     await prisma.$transaction(async (prismaTx) => {
-      // อัปเดตข้อมูล Training หลัก
       await prismaTx.training.update({
         where: { trainingId: parseInt(trainingId, 10) },
         data: {
@@ -119,7 +116,6 @@ export async function PUT(request, context) {
         },
       });
 
-      // จัดการ trainingEmployeeResult และ trainingEmployeeCertificateLink
       if (
         parsedData.trainingEmployee &&
         parsedData.trainingEmployee.length > 0
@@ -137,7 +133,6 @@ export async function PUT(request, context) {
       }
     });
 
-    // ดึงข้อมูลที่อัปเดตแล้วมาแสดง
     const updatedTraining = await prisma.training.findUnique({
       where: { trainingId: parseInt(trainingId, 10) },
       include: {

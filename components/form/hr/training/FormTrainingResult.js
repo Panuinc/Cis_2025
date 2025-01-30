@@ -127,7 +127,6 @@ export default function FormTrainingResult({
         </div>
       )}
 
-      {/* ฟิลด์ฟอร์มที่ต้องการอัปเดต */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
@@ -182,7 +181,6 @@ export default function FormTrainingResult({
         </div>
       </div>
 
-      {/* Operated By */}
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
@@ -199,7 +197,6 @@ export default function FormTrainingResult({
         </div>
       </div>
 
-      {/* ปุ่ม Submit และ Cancel */}
       <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Button
