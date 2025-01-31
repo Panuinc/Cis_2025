@@ -63,17 +63,16 @@ const trainingEmployeeCheckInSchema = z.object({
   trainingEmployeeCheckInEmployeeId: preprocessInt(
     "TrainingEmployeeCheckInEmployeeId must be provided.",
     "TrainingEmployeeCheckInEmployeeId must be an integer."
-  ),
+  ).optional(),
 
-  trainingEmployeeCheckInTrainingDate: preprocessDate.refine(
-    (date) => date === null || date instanceof Date,
-    {
+  trainingEmployeeCheckInTrainingDate: preprocessDate
+    .refine((date) => date === null || date instanceof Date, {
       message: "Please Enter Training Date",
-    }
-  ),
+    })
+    .nullable()
+    .optional(),
 
   trainingEmployeeCheckInMorningCheck: preprocessDate
-    .refine()
     .nullable()
     .optional()
     .refine((date) => date === null || date instanceof Date, {
@@ -81,7 +80,6 @@ const trainingEmployeeCheckInSchema = z.object({
     }),
 
   trainingEmployeeCheckInAfterNoonCheck: preprocessDate
-    .refine()
     .nullable()
     .optional()
     .refine((date) => date === null || date instanceof Date, {
@@ -117,7 +115,6 @@ export const trainingUpdateSchema = z.object({
     "Please Enter Training Picture Link",
     "Please Enter Training Picture Link"
   ).optional(),
-
   trainingEmployee: z.array(trainingEmployeeSchema).optional(),
   trainingEmployeeCheckIn: z.array(trainingEmployeeCheckInSchema).optional(),
 
@@ -240,6 +237,8 @@ export const trainingPosteSchema = z.object({
 
   trainingEmployee: z.array(trainingEmployeeSchema).optional(),
   trainingEmployeeCheckIn: z.array(trainingEmployeeCheckInSchema).optional(),
+
+  selectedIds: z.array(z.number()).optional(),
 });
 
 export const trainingPutSchema = z.object({

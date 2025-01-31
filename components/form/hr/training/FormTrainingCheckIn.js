@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
-import { Switch, Input, Button } from "@nextui-org/react";
-import { Cancel, Database } from "@/components/icons/icons";
+import { Input, Button } from "@nextui-org/react";
 
 export default function FormTrainingCheckIn({
   formRef,
@@ -12,89 +11,52 @@ export default function FormTrainingCheckIn({
   handleInputChange,
   isUpdate = false,
   operatedBy = "",
-  handleTrainingEmployeeResultChange,
-  handleTrainingEmployeeCertificateChange,
+  handleTrainingEmployeeCheckInMorningCheckChange,
+  handleTrainingEmployeeCheckInAfterNoonCheckChange,
 }) {
   const columns = [
-    { name: "FirstName", uid: "firstName" },
-    { name: "LastName", uid: "lastName" },
-    { name: "Result", uid: "result" },
-    { name: "Certificate", uid: "certificateLink" },
+    { name: "First Name", uid: "firstName" },
+    { name: "Last Name", uid: "lastName" },
+    { name: "Morning Check", uid: "morningCheck" },
+    { name: "AfterNoon Check", uid: "afterNoonCheck" },
   ];
 
   const renderCell = (item, columnKey) => {
-    const employee = item.TrainingEmployeeEmployeeId;
+    const employee = item.TrainingEmployeeCheckInEmployeeId;
 
     switch (columnKey) {
       case "firstName":
         return employee?.employeeFirstname || "-";
       case "lastName":
         return employee?.employeeLastname || "-";
-      case "result": {
+      case "morningCheck":
         return (
-          <Switch
-            isSelected={item.trainingEmployeeResult === "Pass"}
-            color="success"
-            onChange={(e) => {
-              const newResult = e.target.checked ? "Pass" : "Not_Pass";
-              handleTrainingEmployeeResultChange(
-                item.trainingEmployeeId,
-                newResult
-              );
-            }}
+          <Input
+            type="datetime-local"
+            value={item.trainingEmployeeCheckInMorningCheck || ""}
+            onChange={(e) =>
+              handleTrainingEmployeeCheckInMorningCheckChange(
+                item.trainingEmployeeCheckInId,
+                e.target.value
+              )
+            }
+            placeholder="Enter Morning Check Time"
           />
         );
-      }
-      case "certificateLink": {
-        const hasCertificate = item.trainingEmployeeCertificatePicture;
-
-        return item.trainingEmployeeResult === "Pass" ? (
-          hasCertificate ? (
-            <div className="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <Button
-                size="md"
-                color="primary"
-                className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
-                onPress={() => {
-                  const imageUrl = `/images/certificateFile/${item.trainingEmployeeCertificatePicture}`;
-                  window.open(imageUrl, "_blank");
-                }}
-              >
-                ดูรูปภาพ
-              </Button>
-              <Button
-                size="md"
-                color="warning"
-                className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
-                onPress={() => {
-                  handleTrainingEmployeeCertificateChange(
-                    item.trainingEmployeeId,
-                    null
-                  );
-                }}
-              >
-                เปลี่ยนไฟล์
-              </Button>
-            </div>
-          ) : (
-            <Input
-              name="trainingEmployeeCertificatePicture"
-              type="file"
-              size="lg"
-              variant="bordered"
-              onChange={(e) => {
-                const file = e.target.files[0];
-                handleTrainingEmployeeCertificateChange(
-                  item.trainingEmployeeId,
-                  file
-                );
-              }}
-            />
-          )
-        ) : (
-          "-"
+      case "afterNoonCheck":
+        return (
+          <Input
+            type="datetime-local"
+            value={item.trainingEmployeeCheckInAfterNoonCheck || ""}
+            onChange={(e) =>
+              handleTrainingEmployeeCheckInAfterNoonCheckChange(
+                item.trainingEmployeeCheckInId,
+                e.target.value
+              )
+            }
+            placeholder="Enter AfterNoon Check Time"
+          />
         );
-      }
       default:
         return "";
     }
@@ -122,9 +84,9 @@ export default function FormTrainingCheckIn({
               </tr>
             </thead>
             <tbody>
-              {formData.trainingEmployee.length > 0 ? (
-                formData.trainingEmployee.map((item) => (
-                  <tr key={item.trainingEmployeeId}>
+              {formData.trainingEmployeeCheckIn.length > 0 ? (
+                formData.trainingEmployeeCheckIn.map((item) => (
+                  <tr key={item.trainingEmployeeCheckInId}>
                     {columns.map((column) => (
                       <td
                         key={column.uid}
@@ -148,6 +110,14 @@ export default function FormTrainingCheckIn({
             </tbody>
           </table>
         </div>
+      </div>
+      <div className="flex gap-4">
+        <Button type="submit" color="primary">
+          Update
+        </Button>
+        <Button type="button" color="warning" onPass={onClear}>
+          Clear
+        </Button>
       </div>
     </form>
   );

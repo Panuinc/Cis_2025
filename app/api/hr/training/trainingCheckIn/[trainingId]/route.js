@@ -1,3 +1,5 @@
+// route.js
+
 import { NextResponse } from "next/server";
 import { handleErrors, handleGetErrors } from "@/lib/errorHandler";
 import { trainingUpdateSchema } from "@/app/api/hr/training/trainingSchema";
@@ -65,7 +67,7 @@ export async function GET(request, context) {
         },
       },
     });
-    
+
     if (!training?.length) {
       return NextResponse.json(
         { error: "No training data found" },
@@ -112,7 +114,7 @@ export async function PUT(request, context) {
       trainingPreTest: payload.trainingPreTest,
       trainingPostTest: payload.trainingPostTest,
       trainingPictureLink: payload.trainingPictureLink,
-      trainingEmployee: JSON.parse(payload.trainingEmployee),
+      trainingEmployeeCheckIn: JSON.parse(payload.trainingEmployeeCheckIn || "[]"),
     });
 
     const localNow = getLocalNow();
@@ -129,59 +131,27 @@ export async function PUT(request, context) {
       });
 
       if (
-        parsedData.trainingEmployee &&
-        parsedData.trainingEmployee.length > 0
+        parsedData.trainingEmployeeCheckIn &&
+        parsedData.trainingEmployeeCheckIn.length > 0
       ) {
-        for (const emp of parsedData.trainingEmployee) {
-          const existingTrainingEmployee =
-            await prismaTx.trainingEmployee.findUnique({
-              where: { trainingEmployeeId: emp.trainingEmployeeId },
-            });
-
-          if (!existingTrainingEmployee) {
-            throw new Error(
-              `TrainingEmployee with ID ${emp.trainingEmployeeId} not found`
-            );
-          }
-
-          const employment = await prismaTx.employment.findFirst({
-            where: {
-              employmentEmployeeId:
-                existingTrainingEmployee.trainingEmployeeEmployeeId,
-            },
+        for (const checkIn of parsedData.trainingEmployeeCheckIn) {
+          const existingCheckIn = await prismaTx.trainingEmployeeCheckIn.findUnique({
+            where: { trainingEmployeeCheckInId: checkIn.trainingEmployeeCheckInId },
           });
 
-          if (!employment) {
-            throw new Error(
-              `Employment data for TrainingEmployee ID ${emp.trainingEmployeeId} not found`
-            );
+          if (!existingCheckIn) {
+            throw new Error(`TrainingEmployeeCheckIn with ID ${checkIn.trainingEmployeeCheckInId} not found`);
           }
 
-          const employmentNumber = employment.employmentNumber;
-
-          const file = formData.get(
-            `trainingEmployeeCertificatePicture_${emp.trainingEmployeeId}`
-          );
-          let fileName =
-            existingTrainingEmployee.trainingEmployeeCertificatePicture;
-
-          if (file && file.name) {
-            const extension = path.extname(file.name).toLowerCase() || ".png";
-            fileName = `${employmentNumber}_${emp.trainingEmployeeId}${extension}`;
-            const filePath = path.join(
-              "public",
-              "images",
-              "certificateFile",
-              fileName
-            );
-            await writeFile(filePath, Buffer.from(await file.arrayBuffer()));
-          }
-
-          await prismaTx.trainingEmployee.update({
-            where: { trainingEmployeeId: emp.trainingEmployeeId },
+          await prismaTx.trainingEmployeeCheckIn.update({
+            where: { trainingEmployeeCheckInId: checkIn.trainingEmployeeCheckInId },
             data: {
-              trainingEmployeeResult: emp.trainingEmployeeResult,
-              trainingEmployeeCertificatePicture: fileName || undefined,
+              trainingEmployeeCheckInMorningCheck: checkIn.trainingEmployeeCheckInMorningCheck
+                ? new Date(checkIn.trainingEmployeeCheckInMorningCheck)
+                : null,
+              trainingEmployeeCheckInAfterNoonCheck: checkIn.trainingEmployeeCheckInAfterNoonCheck
+                ? new Date(checkIn.trainingEmployeeCheckInAfterNoonCheck)
+                : null,
             },
           });
         }
@@ -191,9 +161,9 @@ export async function PUT(request, context) {
     const updatedTraining = await prisma.training.findUnique({
       where: { trainingId: parseInt(trainingId, 10) },
       include: {
-        employeeTrainingTraining: {
+        employeeTrainingCheckInTraining: {
           include: {
-            TrainingEmployeeEmployeeId: {
+            TrainingEmployeeCheckInEmployeeId: {
               select: { employeeFirstname: true, employeeLastname: true },
             },
           },

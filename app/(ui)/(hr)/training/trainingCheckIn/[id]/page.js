@@ -10,7 +10,7 @@ import React, {
   useEffect,
   useCallback,
   useMemo,
-  use,
+  use
 } from "react";
 
 const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
@@ -19,7 +19,7 @@ const DEFAULT_FORM_DATA = {
   trainingPreTest: "",
   trainingPostTest: "",
   trainingPictureLink: "",
-  trainingEmployee: [],
+  trainingEmployeeCheckIn: [],
 };
 
 export default function TrainingCheckIntUpdate({ params: paramsPromise }) {
@@ -61,28 +61,28 @@ export default function TrainingCheckIntUpdate({ params: paramsPromise }) {
     []
   );
 
-  const handleTrainingEmployeeResultChange = useCallback(
-    (employeeId, newResult) => {
+  const handleTrainingEmployeeCheckInMorningCheckChange = useCallback(
+    (checkInId, newMorningCheck) => {
       setFormData((prev) => ({
         ...prev,
-        trainingEmployee: prev.trainingEmployee.map((emp) =>
-          emp.trainingEmployeeId === employeeId
-            ? { ...emp, trainingEmployeeResult: newResult }
-            : emp
+        trainingEmployeeCheckIn: prev.trainingEmployeeCheckIn.map((checkIn) =>
+          checkIn.trainingEmployeeCheckInId === checkInId
+            ? { ...checkIn, trainingEmployeeCheckInMorningCheck: newMorningCheck }
+            : checkIn
         ),
       }));
     },
     []
   );
 
-  const handleTrainingEmployeeCertificateChange = useCallback(
-    (employeeId, file) => {
+  const handleTrainingEmployeeCheckInAfterNoonCheckChange = useCallback(
+    (checkInId, newAfterNoonCheck) => {
       setFormData((prev) => ({
         ...prev,
-        trainingEmployee: prev.trainingEmployee.map((emp) =>
-          emp.trainingEmployeeId === employeeId
-            ? { ...emp, trainingEmployeeCertificatePicture: file }
-            : emp
+        trainingEmployeeCheckIn: prev.trainingEmployeeCheckIn.map((checkIn) =>
+          checkIn.trainingEmployeeCheckInId === checkInId
+            ? { ...checkIn, trainingEmployeeCheckInAfterNoonCheck: newAfterNoonCheck }
+            : checkIn
         ),
       }));
     },
@@ -93,12 +93,12 @@ export default function TrainingCheckIntUpdate({ params: paramsPromise }) {
     async (event) => {
       event.preventDefault();
 
-      if (!Array.isArray(formData.trainingEmployee)) {
+      if (!Array.isArray(formData.trainingEmployeeCheckIn)) {
         console.error(
-          "trainingEmployee is not an array:",
-          formData.trainingEmployee
+          "trainingEmployeeCheckIn is not an array:",
+          formData.trainingEmployeeCheckIn
         );
-        toast.error("Invalid training employee data");
+        toast.error("Invalid training employee check-in data");
         return;
       }
 
@@ -111,22 +111,15 @@ export default function TrainingCheckIntUpdate({ params: paramsPromise }) {
         formData.trainingPictureLink
       );
       formDataPayload.append(
-        "trainingEmployee",
-        JSON.stringify(formData.trainingEmployee)
+        "trainingEmployeeCheckIn",
+        JSON.stringify(formData.trainingEmployeeCheckIn)
       );
 
-      formData.trainingEmployee.forEach((emp) => {
-        if (emp.trainingEmployeeCertificatePicture instanceof File) {
-          formDataPayload.append(
-            `trainingEmployeeCertificatePicture_${emp.trainingEmployeeId}`,
-            emp.trainingEmployeeCertificatePicture
-          );
-        }
-      });
+      // หากมีไฟล์ที่ต้องอัพโหลด ให้จัดการตามต้องการ (ถ้ามี)
 
       try {
         const res = await fetch(
-          `/api/hr/training/trainingResult/${trainingId}`,
+          `/api/hr/training/trainingCheckIn/${trainingId}`,
           {
             method: "PUT",
             headers: {
@@ -169,12 +162,13 @@ export default function TrainingCheckIntUpdate({ params: paramsPromise }) {
     [
       trainingId,
       router,
-      formData.trainingEmployee,
+      formData.trainingEmployeeCheckIn,
       formData.trainingPictureLink,
       formData.trainingPreTest,
       formData.trainingPostTest,
     ]
   );
+
   const handleClear = useCallback(() => {
     if (formRef.current) formRef.current.reset();
     setFormData(DEFAULT_FORM_DATA);
@@ -184,7 +178,7 @@ export default function TrainingCheckIntUpdate({ params: paramsPromise }) {
   const fetchData = useCallback(async () => {
     try {
       const trainingRes = await fetch(
-        `/api/hr/training/trainingResult/${trainingId}`,
+        `/api/hr/training/trainingCheckIn/${trainingId}`,
         {
           method: "GET",
           headers: {
@@ -202,13 +196,16 @@ export default function TrainingCheckIntUpdate({ params: paramsPromise }) {
           trainingPreTest: training.trainingPreTest || "",
           trainingPostTest: training.trainingPostTest || "",
           trainingPictureLink: training.trainingPictureLink || "",
-          trainingEmployee:
-            training.employeeTrainingTraining?.map((et) => ({
-              trainingEmployeeId: et.trainingEmployeeId,
-              trainingEmployeeResult: et.trainingEmployeeResult,
-              trainingEmployeeCertificatePicture:
-                et.trainingEmployeeCertificatePicture,
-              TrainingEmployeeEmployeeId: et.TrainingEmployeeEmployeeId,
+          trainingEmployeeCheckIn:
+            training.employeeTrainingCheckInTraining?.map((checkIn) => ({
+              trainingEmployeeCheckInId: checkIn.trainingEmployeeCheckInId,
+              trainingEmployeeCheckInMorningCheck: checkIn.trainingEmployeeCheckInMorningCheck
+                ? new Date(checkIn.trainingEmployeeCheckInMorningCheck).toISOString().slice(0, 16)
+                : "",
+              trainingEmployeeCheckInAfterNoonCheck: checkIn.trainingEmployeeCheckInAfterNoonCheck
+                ? new Date(checkIn.trainingEmployeeCheckInAfterNoonCheck).toISOString().slice(0, 16)
+                : "",
+              TrainingEmployeeCheckInEmployeeId: checkIn.TrainingEmployeeCheckInEmployeeId,
             })) || [],
         });
       } else {
@@ -232,6 +229,7 @@ export default function TrainingCheckIntUpdate({ params: paramsPromise }) {
       toast.error("Error fetching data");
     }
   }, [trainingId]);
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
@@ -251,10 +249,8 @@ export default function TrainingCheckIntUpdate({ params: paramsPromise }) {
         employees={employees}
         filteredEmployees={employees}
         isUpdate={true}
-        handleTrainingEmployeeResultChange={handleTrainingEmployeeResultChange}
-        handleTrainingEmployeeCertificateChange={
-          handleTrainingEmployeeCertificateChange
-        }
+        handleTrainingEmployeeCheckInMorningCheckChange={handleTrainingEmployeeCheckInMorningCheckChange}
+        handleTrainingEmployeeCheckInAfterNoonCheckChange={handleTrainingEmployeeCheckInAfterNoonCheckChange}
       />
     </>
   );
