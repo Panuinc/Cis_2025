@@ -46,17 +46,46 @@ export default function FormTrainingResult({
         );
       }
       case "certificateLink": {
+        const hasCertificate = item.trainingEmployeeCertificatePicture;
+
         return item.trainingEmployeeResult === "Pass" ? (
-          <input
-            type="file"
-            onChange={(e) => {
-              const file = e.target.files[0];
-              handleTrainingEmployeeCertificateChange(
-                item.trainingEmployeeId,
-                file
-              );
-            }}
-          />
+          hasCertificate ? (
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                color="primary"
+                onPress={() => {
+                  const imageUrl = `/images/certificateFile/${item.trainingEmployeeCertificatePicture}`;
+                  window.open(imageUrl, "_blank");
+                }}
+              >
+                ดูรูปภาพ
+              </Button>
+              <Button
+                size="sm"
+                color="warning"
+                onPress={() => {
+                  handleTrainingEmployeeCertificateChange(
+                    item.trainingEmployeeId,
+                    null
+                  );
+                }}
+              >
+                เปลี่ยนไฟล์
+              </Button>
+            </div>
+          ) : (
+            <input
+              type="file"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                handleTrainingEmployeeCertificateChange(
+                  item.trainingEmployeeId,
+                  file
+                );
+              }}
+            />
+          )
         ) : (
           "-"
         );
