@@ -194,7 +194,7 @@ export async function GET(request, context) {
           : ""
       }
 
-      <div class="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <div class="flex flex-col items-center justify-start w-full h-full">
         <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
           <div class="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
             <img src="${
@@ -475,7 +475,7 @@ export async function GET(request, context) {
           </div>
         </div>
 
-        <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed mt-10">
+        <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
           <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
             <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
