@@ -256,6 +256,11 @@ export default function TrainingList() {
                       Training Result
                     </Link>
                   </DropdownItem>
+                  <DropdownItem key="checkIn" variant="flat" color="warning">
+                    <Link href={`/training/trainingCheckIn/${item.trainingId}`}>
+                      Training Check In
+                    </Link>
+                  </DropdownItem>
                   <DropdownItem
                     key="exportApproved"
                     variant="flat"
