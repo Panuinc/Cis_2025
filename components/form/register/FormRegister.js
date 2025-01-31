@@ -22,13 +22,13 @@ export default function FormRegister({
     <form
       ref={formRef}
       onSubmit={onSubmit}
-      className="flex flex-col items-center justify-start w-full h-full xl:w-4/12 p-2 gap-2 border-2 bg-white bg-opacity-75 rounded-3xl shadow-md overflow-auto"
+      className="flex flex-col items-center justify-start w-full h-full xl:w-4/12 p-2 gap-2 border-2 border-dark border-dashed bg-white rounded-3xl overflow-auto"
     >
-      <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-lg font-[600]">
+      <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed text-lg font-[600]">
         Register
       </div>
-      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2">
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2">
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Select
             name="employeeTitle"
             label="Title"
@@ -54,7 +54,7 @@ export default function FormRegister({
             </SelectItem>
           </Select>
         </div>
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
             type="text"
             name="employeeFirstname"
@@ -71,8 +71,8 @@ export default function FormRegister({
           />
         </div>
       </div>
-      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2">
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2">
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
             type="text"
             name="employeeLastname"
@@ -88,7 +88,7 @@ export default function FormRegister({
             errorMessage={errors.employeeLastname}
           />
         </div>
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
             type="text"
             name="employeeNickname"
@@ -105,8 +105,8 @@ export default function FormRegister({
           />
         </div>
       </div>
-      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2">
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2">
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
             type="email"
             name="employeeEmail"
@@ -122,7 +122,7 @@ export default function FormRegister({
             errorMessage={errors.employeeEmail}
           />
         </div>
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
             type="number"
             name="employeeTel"
@@ -139,8 +139,8 @@ export default function FormRegister({
           />
         </div>
       </div>
-      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2">
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2">
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
             type="number"
             name="employeeIdCard"
@@ -156,7 +156,7 @@ export default function FormRegister({
             errorMessage={errors.employeeIdCard}
           />
         </div>
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Select
             name="employeeCitizen"
             label="Citizen"
@@ -189,8 +189,8 @@ export default function FormRegister({
           </Select>
         </div>
       </div>
-      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2">
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2">
+      <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Select
             name="employeeGender"
             label="Gender"
@@ -213,7 +213,7 @@ export default function FormRegister({
             </SelectItem>
           </Select>
         </div>
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
             name="employeeBirthday"
             type="date"
@@ -230,12 +230,12 @@ export default function FormRegister({
           />
         </div>
       </div>
-      <div className="flex items-center justify-center w-full h-full p-2 gap-2">
+      <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <Button size="lg" color="success" className="w-1/2" type="submit">
           Register
         </Button>
       </div>
-      <div className="flex items-center justify-start w-full h-full p-2 gap-2">
+      <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         If You Have Account
         <Link href="/" className="font-[600] text-success">
           Login
