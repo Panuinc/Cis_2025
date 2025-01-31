@@ -130,7 +130,12 @@ export async function PUT(request, context) {
           if (file && file.name) {
             const extension = path.extname(file.name).toLowerCase() || ".png";
             fileName = `${emp.trainingEmployeeId}_${Date.now()}${extension}`;
-            const filePath = path.join("public","images", "certificateFile", fileName);
+            const filePath = path.join(
+              "public",
+              "images",
+              "certificateFile",
+              fileName
+            );
             await writeFile(filePath, Buffer.from(await file.arrayBuffer()));
           }
 
