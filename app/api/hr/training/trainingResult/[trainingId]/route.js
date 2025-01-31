@@ -103,15 +103,13 @@ export async function PUT(request, context) {
 
     const localNow = getLocalNow();
 
-    const uploadedTrainingPictureLink = parsedData.trainingPictureLink;
-
     await prisma.$transaction(async (prismaTx) => {
       await prismaTx.training.update({
         where: { trainingId: parseInt(trainingId, 10) },
         data: {
           trainingPreTest: parsedData.trainingPreTest,
           trainingPostTest: parsedData.trainingPostTest,
-          trainingPictureLink: uploadedTrainingPictureLink || undefined,
+          trainingPictureLink: parsedData.trainingPictureLink,
           trainingUpdateAt: localNow,
         },
       });
