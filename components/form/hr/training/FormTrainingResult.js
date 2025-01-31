@@ -2,7 +2,6 @@
 import React from "react";
 import { Switch, Input, Button } from "@nextui-org/react";
 import { Cancel, Database } from "@/components/icons/icons";
-import toast from "react-hot-toast";
 
 export default function FormTrainingResult({
   formRef,
