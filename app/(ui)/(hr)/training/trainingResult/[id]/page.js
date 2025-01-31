@@ -76,12 +76,12 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
   );
 
   const handleTrainingEmployeeCertificateChange = useCallback(
-    (employeeId, newLink) => {
+    (employeeId, file) => {
       setFormData((prev) => ({
         ...prev,
         trainingEmployee: prev.trainingEmployee.map((emp) =>
           emp.trainingEmployeeId === employeeId
-            ? { ...emp, trainingEmployeeCertificatePicture: newLink }
+            ? { ...emp, trainingEmployeeCertificatePicture: file }
             : emp
         ),
       }));
@@ -93,20 +93,38 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
     async (event) => {
       event.preventDefault();
 
-      const trainingEmployeeArray = formData.trainingEmployee.map((emp) => ({
-        trainingEmployeeId: emp.trainingEmployeeId,
-        trainingEmployeeResult: emp.trainingEmployeeResult || "Not_Pass",
-        trainingEmployeeCertificatePicture:
-          emp.trainingEmployeeCertificatePicture || "",
-      }));
+      // Ensure trainingEmployee is an array
+      if (!Array.isArray(formData.trainingEmployee)) {
+        console.error(
+          "trainingEmployee is not an array:",
+          formData.trainingEmployee
+        );
+        toast.error("Invalid training employee data");
+        return;
+      }
 
-      const payload = {
-        trainingId: parseInt(trainingId, 10),
-        trainingPreTest: formData.trainingPreTest,
-        trainingPostTest: formData.trainingPostTest,
-        trainingPictureLink: formData.trainingPictureLink,
-        trainingEmployee: trainingEmployeeArray,
-      };
+      const formDataPayload = new FormData();
+      formDataPayload.append("trainingId", trainingId);
+      formDataPayload.append("trainingPreTest", formData.trainingPreTest);
+      formDataPayload.append("trainingPostTest", formData.trainingPostTest);
+      formDataPayload.append(
+        "trainingPictureLink",
+        formData.trainingPictureLink
+      );
+      formDataPayload.append(
+        "trainingEmployee",
+        JSON.stringify(formData.trainingEmployee)
+      );
+
+      // Append files for each employee
+      formData.trainingEmployee.forEach((emp) => {
+        if (emp.trainingEmployeeCertificatePicture instanceof File) {
+          formDataPayload.append(
+            `trainingEmployeeCertificatePicture_${emp.trainingEmployeeId}`,
+            emp.trainingEmployeeCertificatePicture
+          );
+        }
+      });
 
       try {
         const res = await fetch(
@@ -114,10 +132,9 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
           {
             method: "PUT",
             headers: {
-              "Content-Type": "application/json",
               "secret-token": SECRET_TOKEN,
             },
-            body: JSON.stringify(payload),
+            body: formDataPayload,
           }
         );
 
@@ -160,7 +177,6 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
       formData.trainingPostTest,
     ]
   );
-
   const handleClear = useCallback(() => {
     if (formRef.current) formRef.current.reset();
     setFormData(DEFAULT_FORM_DATA);
@@ -182,17 +198,20 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
       const trainingData = await trainingRes.json();
       if (trainingRes.ok) {
         const training = trainingData.training[0];
+        console.log("Fetched training data:", training); // Debug log
+
         setFormData({
           trainingPreTest: training.trainingPreTest || "",
           trainingPostTest: training.trainingPostTest || "",
           trainingPictureLink: training.trainingPictureLink || "",
-          trainingEmployee: training.employeeTrainingTraining.map((et) => ({
-            trainingEmployeeId: et.trainingEmployeeId,
-            trainingEmployeeResult: et.trainingEmployeeResult,
-            trainingEmployeeCertificatePicture:
-              et.trainingEmployeeCertificatePicture,
-            TrainingEmployeeEmployeeId: et.TrainingEmployeeEmployeeId,
-          })),
+          trainingEmployee:
+            training.employeeTrainingTraining?.map((et) => ({
+              trainingEmployeeId: et.trainingEmployeeId,
+              trainingEmployeeResult: et.trainingEmployeeResult,
+              trainingEmployeeCertificatePicture:
+                et.trainingEmployeeCertificatePicture,
+              TrainingEmployeeEmployeeId: et.TrainingEmployeeEmployeeId,
+            })) || [], // Fallback to an empty array
         });
       } else {
         toast.error(trainingData.error);
@@ -215,7 +234,6 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
       toast.error("Error fetching data");
     }
   }, [trainingId]);
-
   useEffect(() => {
     fetchData();
   }, [fetchData]);

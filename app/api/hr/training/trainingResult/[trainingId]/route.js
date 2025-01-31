@@ -7,6 +7,8 @@ import prisma from "@/lib/prisma";
 import { formatTrainingData } from "@/app/api/hr/training/trainingSchema";
 import { getRequestIP } from "@/lib/GetRequestIp";
 import { getLocalNow } from "@/lib/GetLocalNow";
+import { writeFile } from "fs/promises";
+import path from "path";
 
 export async function GET(request, context) {
   let ip;
@@ -91,14 +93,15 @@ export async function PUT(request, context) {
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
 
-    const payload = await request.json();
+    const formData = await request.formData();
+    const payload = Object.fromEntries(formData.entries());
 
     const parsedData = trainingUpdateSchema.parse({
       trainingId: parseInt(trainingId, 10),
       trainingPreTest: payload.trainingPreTest,
       trainingPostTest: payload.trainingPostTest,
       trainingPictureLink: payload.trainingPictureLink,
-      trainingEmployee: payload.trainingEmployee,
+      trainingEmployee: JSON.parse(payload.trainingEmployee),
     });
 
     const localNow = getLocalNow();
@@ -119,12 +122,23 @@ export async function PUT(request, context) {
         parsedData.trainingEmployee.length > 0
       ) {
         for (const emp of parsedData.trainingEmployee) {
+          const file = formData.get(
+            `trainingEmployeeCertificatePicture_${emp.trainingEmployeeId}`
+          );
+          let fileName = emp.trainingEmployeeCertificatePicture;
+
+          if (file && file.name) {
+            const extension = path.extname(file.name).toLowerCase() || ".png";
+            fileName = `${emp.trainingEmployeeId}_${Date.now()}${extension}`;
+            const filePath = path.join("public","images", "certificateFile", fileName);
+            await writeFile(filePath, Buffer.from(await file.arrayBuffer()));
+          }
+
           await prismaTx.trainingEmployee.update({
             where: { trainingEmployeeId: emp.trainingEmployeeId },
             data: {
               trainingEmployeeResult: emp.trainingEmployeeResult,
-              trainingEmployeeCertificatePicture:
-                emp.trainingEmployeeCertificatePicture || undefined,
+              trainingEmployeeCertificatePicture: fileName || undefined,
             },
           });
         }

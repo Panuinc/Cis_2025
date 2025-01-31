@@ -12,7 +12,6 @@ export default function FormTrainingResult({
   handleInputChange,
   isUpdate = false,
   operatedBy = "",
-
   handleTrainingEmployeeResultChange,
   handleTrainingEmployeeCertificateChange,
 }) {
@@ -48,24 +47,15 @@ export default function FormTrainingResult({
       }
       case "certificateLink": {
         return item.trainingEmployeeResult === "Pass" ? (
-          <Input
-            name="trainingEmployeeCertificatePicture"
-            type="text"
-            label="Training Certificate"
-            placeholder="Please Enter Data"
-            labelPlacement="outside"
-            size="lg"
-            variant="bordered"
-            value={item.trainingEmployeeCertificatePicture || ""}
-            onChange={(e) =>
+          <input
+            type="file"
+            onChange={(e) => {
+              const file = e.target.files[0];
               handleTrainingEmployeeCertificateChange(
                 item.trainingEmployeeId,
-                e.target.value
-              )
-            }
-            isInvalid={!!errors.trainingEmployeeCertificatePicture}
-            errorMessage={errors.trainingEmployeeCertificatePicture}
-            clearable
+                file
+              );
+            }}
           />
         ) : (
           "-"
