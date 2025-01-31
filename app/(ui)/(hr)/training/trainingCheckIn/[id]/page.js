@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import TopicHeader from "@/components/form/TopicHeader";
-import FormTrainingResult from "@/components/form/hr/training/FormTrainingResult";
+import FormTrainingCheckIn from "@/components/form/hr/training/FormTrainingCheckIn";
 import React, {
   useState,
   useRef,
@@ -240,7 +240,7 @@ export default function TrainingCheckIntUpdate({ params: paramsPromise }) {
     <>
       <TopicHeader topic="Training Check In Update" />
       <Toaster position="top-right" />
-      <FormTrainingResult
+      <FormTrainingCheckIn
         formRef={formRef}
         onSubmit={handleSubmit}
         onClear={handleClear}
