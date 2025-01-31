@@ -31,15 +31,26 @@ export async function GET(request, context) {
     const training = await prisma.training.findMany({
       where: { trainingId: trainingId },
       include: {
-        employeeTrainingTraining: {
+        employeeTrainingCheckInTraining: {
           include: {
-            TrainingEmployeeEmployeeId: {
+            TrainingEmployeeCheckInEmployeeId: {
               select: {
                 employeeFirstname: true,
                 employeeLastname: true,
                 employeeEmployment: {
                   select: {
                     employmentNumber: true,
+                    employmentSignature: true,
+                    EmploymentPositionId: {
+                      select: {
+                        positionName: true,
+                      },
+                    },
+                    EmploymentDivisionId: {
+                      select: {
+                        divisionName: true,
+                      },
+                    },
                   },
                 },
               },
@@ -54,7 +65,7 @@ export async function GET(request, context) {
         },
       },
     });
-
+    
     if (!training?.length) {
       return NextResponse.json(
         { error: "No training data found" },
