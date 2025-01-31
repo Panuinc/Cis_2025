@@ -93,7 +93,6 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
     async (event) => {
       event.preventDefault();
 
-      // Ensure trainingEmployee is an array
       if (!Array.isArray(formData.trainingEmployee)) {
         console.error(
           "trainingEmployee is not an array:",
@@ -116,7 +115,6 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
         JSON.stringify(formData.trainingEmployee)
       );
 
-      // Append files for each employee
       formData.trainingEmployee.forEach((emp) => {
         if (emp.trainingEmployeeCertificatePicture instanceof File) {
           formDataPayload.append(
@@ -198,7 +196,7 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
       const trainingData = await trainingRes.json();
       if (trainingRes.ok) {
         const training = trainingData.training[0];
-        console.log("Fetched training data:", training); // Debug log
+        console.log("Fetched training data:", training);
 
         setFormData({
           trainingPreTest: training.trainingPreTest || "",
@@ -211,7 +209,7 @@ export default function TrainingResultUpdate({ params: paramsPromise }) {
               trainingEmployeeCertificatePicture:
                 et.trainingEmployeeCertificatePicture,
               TrainingEmployeeEmployeeId: et.TrainingEmployeeEmployeeId,
-            })) || [], // Fallback to an empty array
+            })) || [],
         });
       } else {
         toast.error(trainingData.error);
