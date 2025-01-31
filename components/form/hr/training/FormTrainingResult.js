@@ -50,10 +50,11 @@ export default function FormTrainingResult({
 
         return item.trainingEmployeeResult === "Pass" ? (
           hasCertificate ? (
-            <div className="flex gap-2">
+            <div className="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <Button
-                size="sm"
+                size="md"
                 color="primary"
+                className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
                 onPress={() => {
                   const imageUrl = `/images/certificateFile/${item.trainingEmployeeCertificatePicture}`;
                   window.open(imageUrl, "_blank");
@@ -62,8 +63,9 @@ export default function FormTrainingResult({
                 ดูรูปภาพ
               </Button>
               <Button
-                size="sm"
+                size="md"
                 color="warning"
+                className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
                 onPress={() => {
                   handleTrainingEmployeeCertificateChange(
                     item.trainingEmployeeId,
@@ -75,8 +77,11 @@ export default function FormTrainingResult({
               </Button>
             </div>
           ) : (
-            <input
+            <Input
+              name="trainingEmployeeCertificatePicture"
               type="file"
+              size="lg"
+              variant="bordered"
               onChange={(e) => {
                 const file = e.target.files[0];
                 handleTrainingEmployeeCertificateChange(
@@ -101,15 +106,15 @@ export default function FormTrainingResult({
       onSubmit={onSubmit}
       className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
     >
-      {isUpdate && (
-        <div className="w-full p-2 border-2 border-dark border-dashed">
+      <div className="w-full p-2 border-2 border-dark border-dashed">
+        <div className="overflow-auto">
           <table className="min-w-full border-collapse">
             <thead>
               <tr>
                 {columns.map((column) => (
                   <th
                     key={column.uid}
-                    className="px-4 py-2 border border-gray-300 bg-gray-200 text-left"
+                    className="px-4 py-2 border-2 border-dark border-dashed bg-gray-200 text-left"
                   >
                     {column.name}
                   </th>
@@ -123,7 +128,7 @@ export default function FormTrainingResult({
                     {columns.map((column) => (
                       <td
                         key={column.uid}
-                        className="px-4 py-2 border border-gray-300"
+                        className="px-4 py-2 border-2 border-dark border-dashed"
                       >
                         {renderCell(item, column.uid)}
                       </td>
@@ -134,7 +139,7 @@ export default function FormTrainingResult({
                 <tr>
                   <td
                     colSpan={columns.length}
-                    className="px-4 py-2 border border-gray-300 text-center"
+                    className="px-4 py-2 border-2 border-dark border-dashed text-center"
                   >
                     No Employees Found
                   </td>
@@ -143,7 +148,7 @@ export default function FormTrainingResult({
             </tbody>
           </table>
         </div>
-      )}
+      </div>
 
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
