@@ -107,6 +107,7 @@ export async function PUT(request, context) {
     const localNow = getLocalNow();
 
     await prisma.$transaction(async (prismaTx) => {
+      // อัปเดตข้อมูล training หลัก
       await prismaTx.training.update({
         where: { trainingId: parseInt(trainingId, 10) },
         data: {
@@ -117,19 +118,34 @@ export async function PUT(request, context) {
         },
       });
 
-      if (
-        parsedData.trainingEmployee &&
-        parsedData.trainingEmployee.length > 0
-      ) {
+      if (parsedData.trainingEmployee && parsedData.trainingEmployee.length > 0) {
         for (const emp of parsedData.trainingEmployee) {
-          const file = formData.get(
-            `trainingEmployeeCertificatePicture_${emp.trainingEmployeeId}`
-          );
-          let fileName = emp.trainingEmployeeCertificatePicture;
+          // ดึงข้อมูล trainingEmployee ที่มีอยู่
+          const existingTrainingEmployee = await prismaTx.trainingEmployee.findUnique({
+            where: { trainingEmployeeId: emp.trainingEmployeeId },
+          });
+
+          if (!existingTrainingEmployee) {
+            throw new Error(`TrainingEmployee with ID ${emp.trainingEmployeeId} not found`);
+          }
+
+          // ดึงข้อมูล employment สำหรับ trainingEmployee นั้น
+          const employment = await prismaTx.employment.findFirst({
+            where: { employmentEmployeeId: existingTrainingEmployee.trainingEmployeeEmployeeId },
+          });
+
+          if (!employment) {
+            throw new Error(`Employment data for TrainingEmployee ID ${emp.trainingEmployeeId} not found`);
+          }
+
+          const employmentNumber = employment.employmentNumber;
+
+          const file = formData.get(`trainingEmployeeCertificatePicture_${emp.trainingEmployeeId}`);
+          let fileName = existingTrainingEmployee.trainingEmployeeCertificatePicture;
 
           if (file && file.name) {
             const extension = path.extname(file.name).toLowerCase() || ".png";
-            fileName = `${emp.trainingEmployeeId}_${Date.now()}${extension}`;
+            fileName = `${employmentNumber}_${emp.trainingEmployeeId}${extension}`;
             const filePath = path.join(
               "public",
               "images",
