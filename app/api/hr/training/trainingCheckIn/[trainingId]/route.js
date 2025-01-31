@@ -111,7 +111,7 @@ export async function PUT(request, context) {
       payload.trainingEmployeeCheckIn || "[]"
     );
 
-    const localNow = getLocalNow(); // ใช้เวลา Local
+    const localNow = getLocalNow();
 
     await prisma.$transaction(async (prismaTx) => {
       for (const checkIn of trainingEmployeeCheckIn) {
@@ -135,11 +135,11 @@ export async function PUT(request, context) {
           data: {
             trainingEmployeeCheckInMorningCheck:
               checkIn.trainingEmployeeCheckInMorningCheck
-                ? new Date(localNow) // ใช้เวลา Local
+                ? new Date(localNow)
                 : existingCheckIn.trainingEmployeeCheckInMorningCheck,
             trainingEmployeeCheckInAfterNoonCheck:
               checkIn.trainingEmployeeCheckInAfterNoonCheck
-                ? new Date(localNow) // ใช้เวลา Local
+                ? new Date(localNow)
                 : existingCheckIn.trainingEmployeeCheckInAfterNoonCheck,
           },
         });

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import TopicHeader from "@/components/form/TopicHeader";
 import FormTrainingCheckIn from "@/components/form/hr/training/FormTrainingCheckIn";
-import { getLocalNow } from "@/lib/GetLocalNow"; 
+import { getLocalNow } from "@/lib/GetLocalNow";
 import React, {
   useState,
   useRef,
@@ -64,32 +64,38 @@ export default function TrainingCheckIntUpdate({ params: paramsPromise }) {
 
   const handleTrainingEmployeeCheckInMorningCheckChange = useCallback(
     async (checkInId) => {
-      const localNow = getLocalNow(); // ใช้เวลา Local
-  
+      const localNow = getLocalNow();
+
       try {
         const updatedCheckIn = formData.trainingEmployeeCheckIn.map((checkIn) =>
           checkIn.trainingEmployeeCheckInId === checkInId
             ? { ...checkIn, trainingEmployeeCheckInMorningCheck: localNow }
             : checkIn
         );
-  
+
         setFormData((prev) => ({
           ...prev,
           trainingEmployeeCheckIn: updatedCheckIn,
         }));
-  
+
         const formDataPayload = new FormData();
         formDataPayload.append("trainingId", trainingId);
-        formDataPayload.append("trainingEmployeeCheckIn", JSON.stringify(updatedCheckIn));
-  
-        const res = await fetch(`/api/hr/training/trainingCheckIn/${trainingId}`, {
-          method: "PUT",
-          headers: {
-            "secret-token": SECRET_TOKEN,
-          },
-          body: formDataPayload,
-        });
-  
+        formDataPayload.append(
+          "trainingEmployeeCheckIn",
+          JSON.stringify(updatedCheckIn)
+        );
+
+        const res = await fetch(
+          `/api/hr/training/trainingCheckIn/${trainingId}`,
+          {
+            method: "PUT",
+            headers: {
+              "secret-token": SECRET_TOKEN,
+            },
+            body: formDataPayload,
+          }
+        );
+
         const jsonData = await res.json();
         if (res.ok) {
           toast.success("Check-in updated successfully!");
@@ -102,35 +108,41 @@ export default function TrainingCheckIntUpdate({ params: paramsPromise }) {
     },
     [trainingId, formData]
   );
-  
+
   const handleTrainingEmployeeCheckInAfterNoonCheckChange = useCallback(
     async (checkInId) => {
-      const localNow = getLocalNow(); // ใช้เวลา Local
-  
+      const localNow = getLocalNow();
+
       try {
         const updatedCheckIn = formData.trainingEmployeeCheckIn.map((checkIn) =>
           checkIn.trainingEmployeeCheckInId === checkInId
             ? { ...checkIn, trainingEmployeeCheckInAfterNoonCheck: localNow }
             : checkIn
         );
-  
+
         setFormData((prev) => ({
           ...prev,
           trainingEmployeeCheckIn: updatedCheckIn,
         }));
-  
+
         const formDataPayload = new FormData();
         formDataPayload.append("trainingId", trainingId);
-        formDataPayload.append("trainingEmployeeCheckIn", JSON.stringify(updatedCheckIn));
-  
-        const res = await fetch(`/api/hr/training/trainingCheckIn/${trainingId}`, {
-          method: "PUT",
-          headers: {
-            "secret-token": SECRET_TOKEN,
-          },
-          body: formDataPayload,
-        });
-  
+        formDataPayload.append(
+          "trainingEmployeeCheckIn",
+          JSON.stringify(updatedCheckIn)
+        );
+
+        const res = await fetch(
+          `/api/hr/training/trainingCheckIn/${trainingId}`,
+          {
+            method: "PUT",
+            headers: {
+              "secret-token": SECRET_TOKEN,
+            },
+            body: formDataPayload,
+          }
+        );
+
         const jsonData = await res.json();
         if (res.ok) {
           toast.success("Check-in updated successfully!");
@@ -143,7 +155,7 @@ export default function TrainingCheckIntUpdate({ params: paramsPromise }) {
     },
     [trainingId, formData]
   );
-  
+
   const handleSubmit = useCallback(
     async (event) => {
       event.preventDefault();
@@ -169,8 +181,6 @@ export default function TrainingCheckIntUpdate({ params: paramsPromise }) {
         "trainingEmployeeCheckIn",
         JSON.stringify(formData.trainingEmployeeCheckIn)
       );
-
-      // หากมีไฟล์ที่ต้องอัพโหลด ให้จัดการตามต้องการ (ถ้ามี)
 
       try {
         const res = await fetch(
