@@ -194,36 +194,36 @@ export async function GET(request, context) {
           : ""
       }
 
-      <div class="flex flex-col items-center justify-start w-full h-full">
-        <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
-          <div class="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <div class="flex flex-col items-center justify-start w-full h-full p-0.5 ">
+        <div class="flex flex-row items-center justify-center w-full p-0.5">
+          <div class="flex items-center justify-center h-full">
             <img src="${
               process.env.NEXT_PUBLIC_API_URL
             }/images/company_logo/company_logo.png" class="w-28 min-h-28" />
           </div>
-          <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed text-3xl font-[900]">
+          <div class="flex items-center justify-center w-full h-full p-0.5  text-3xl font-[900]">
             แบบขออนุมัติเพื่อเข้าอบรม - สัมนา
           </div>
         </div>
 
-        <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
-          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div class="flex flex-row items-center justify-center w-full p-0.5">
+          <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+            <div class="flex items-center justify-start w-full h-full p-0.5 ">
               1. ชื่อหลักสูตร
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+            <div class="flex items-center justify-start w-full h-full p-0.5  border-b-2 ">
               ${training.trainingName || "-"}
             </div>
           </div>
         </div>
 
-        <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
-          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div class="flex flex-row items-center justify-center w-full p-0.5">
+          <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+            <div class="flex items-center justify-start w-full h-full p-0.5 ">
               2. ประเภทหลักสูตร
             </div>
-            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <label class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+              <label class="flex items-center justify-start w-full h-full p-0.5 gap-2">
                 <input
                   type="checkbox"
                   class="form-checkbox h-5 w-5"
@@ -235,7 +235,7 @@ export async function GET(request, context) {
                 />
                 <span>prepare</span>
               </label>
-              <label class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <label class="flex items-center justify-start w-full h-full p-0.5 gap-2">
                 <input
                   type="checkbox"
                   class="form-checkbox h-5 w-5"
@@ -247,7 +247,7 @@ export async function GET(request, context) {
                 />
                 <span>upgrade skills</span>
               </label>
-              <label class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <label class="flex items-center justify-start w-full h-full p-0.5 gap-2">
                 <input
                   type="checkbox"
                   class="form-checkbox h-5 w-5"
@@ -263,35 +263,35 @@ export async function GET(request, context) {
           </div>
         </div>
 
-        <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
-          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div class="flex flex-row items-center justify-center w-full p-0.5">
+          <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+            <div class="flex items-center justify-start w-full h-full p-0.5 ">
               3. วัตถุประสงค์
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+            <div class="flex items-center justify-start w-full h-full p-0.5  border-b-2 ">
               ${training.trainingObjectives || "-"}
             </div>
           </div>
         </div>
 
-        <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
-          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div class="flex flex-row items-center justify-center w-full p-0.5">
+          <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+            <div class="flex items-center justify-start w-full h-full p-0.5 ">
               4. กลุ่มเป้านหมาย
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+            <div class="flex items-center justify-start w-full h-full p-0.5  border-b-2 ">
               ${training.trainingTargetGroup || "-"}
             </div>
           </div>
         </div>
 
-        <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
-          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div class="flex flex-row items-center justify-center w-full p-0.5">
+          <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+            <div class="flex items-center justify-start w-full h-full p-0.5 ">
               5. สถาบันที่จัดฝึกอบรม/วิทยากร
             </div>
-            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <label class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+              <label class="flex items-center justify-start w-full h-full p-0.5 gap-2">
                 <input
                   type="checkbox"
                   class="form-checkbox h-5 w-5"
@@ -299,7 +299,7 @@ export async function GET(request, context) {
                 />
                 <span>Internal</span>
               </label>
-              <label class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <label class="flex items-center justify-start w-full h-full p-0.5 gap-2">
                 <input
                   type="checkbox"
                   class="form-checkbox h-5 w-5"
@@ -311,70 +311,70 @@ export async function GET(request, context) {
           </div>
         </div>
 
-         <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
-          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div class="flex flex-row items-center justify-center w-full p-0.5">
+          <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+            <div class="flex items-center justify-start w-full h-full p-0.5 ">
               5.1 สถาบันที่ฝึกอบรม
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+            <div class="flex items-center justify-start w-full h-full p-0.5  border-b-2 ">
               ${training.trainingInstitutions || "-"}
             </div>
           </div>
         </div>
 
-        <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
-          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div class="flex flex-row items-center justify-center w-full p-0.5">
+          <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+            <div class="flex items-center justify-start w-full h-full p-0.5 ">
               5.2 วิทยากร
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+            <div class="flex items-center justify-start w-full h-full p-0.5  border-b-2 ">
               ${training.trainingLecturer || "-"}
             </div>
           </div>
         </div>
 
-        <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
-          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div class="flex flex-row items-center justify-center w-full p-0.5">
+          <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+            <div class="flex items-center justify-start w-full h-full p-0.5 ">
               5.3 สถานที่ฝึกอบรม
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+            <div class="flex items-center justify-start w-full h-full p-0.5  border-b-2 ">
               ${training.trainingLocation || "-"}
             </div>
           </div>
         </div>
 
-        <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
-          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div class="flex flex-row items-center justify-center w-full p-0.5">
+          <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+            <div class="flex items-center justify-start w-full h-full p-0.5 ">
               6 กำหนดระยะเวลา
             </div>
           </div>
-          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+            <div class="flex items-center justify-start w-full h-full p-0.5 ">
               วัน/เดือน/ปี
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+            <div class="flex items-center justify-start w-full h-full p-0.5  border-b-2 ">
               ${formattedStartDate}
             </div>
           </div>
-          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+            <div class="flex items-center justify-start w-full h-full p-0.5 ">
               ถึง
             </div>
           </div>
-           <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+            <div class="flex items-center justify-start w-full h-full p-0.5 ">
               วัน/เดือน/ปี
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+            <div class="flex items-center justify-start w-full h-full p-0.5  border-b-2 ">
               ${formattedEndDate}
             </div>
           </div>
         </div>
 
-        <div class="flex flex-col items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
-          <table class="min-w-full border-collapse">
+        <div class="flex flex-col items-center justify-center w-full p-0.5">
+          <table class="min-w-full p-0.5 border-collapse">
             <thead class="bg-gray-200">
               <tr>
                 <th class="border px-4 py-2">ลำดับ</th>
@@ -389,99 +389,99 @@ export async function GET(request, context) {
           </table>
         </div>
 
-        <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div class="flex flex-row items-center justify-center w-full p-0.5">
+          <div class="flex items-center justify-start w-full h-full p-0.5 ">
             7 ค่าใช้จ่ายในการฝึกอบรมณ์ - สัมนา
           </div>
         </div>
 
-        <div class="flex flex-row items-center justify-center w-11/12 h-full p-2 gap-2 border-2 border-dark border-dashed">
-          <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div class="flex flex-row items-center justify-center w-11/12">
+          <div class="flex flex-col items-center justify-center w-full h-full p-0.5 ">
+            <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+              <div class="flex items-center justify-start w-full h-full p-0.5 ">
                 7.1 ค่าฝึกอบรม/เอกสาร/วิทยากร
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+              <div class="flex items-center justify-center w-full h-full p-0.5  border-b-2">
                 ${training.trainingPrice || "-"}
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+              <div class="flex items-center justify-center w-full h-full p-0.5  ">
                 บาท
               </div>
             </div>
 
-            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+              <div class="flex items-center justify-start w-full h-full p-0.5 ">
                 7.2 ค่าห้องอบรมแลอุปกรณ์
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+              <div class="flex items-center justify-center w-full h-full p-0.5  border-b-2">
                 ${training.trainingEquipmentPrice || "-"}
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+              <div class="flex items-center justify-start w-full h-full p-0.5 ">
                 บาท
               </div>
             </div>
 
-            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+              <div class="flex items-center justify-start w-full h-full p-0.5 ">
                 7.3 ค่าอาหาร
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+              <div class="flex items-center justify-center w-full h-full p-0.5  border-b-2">
                 ${training.trainingFoodPrice || "-"}
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+              <div class="flex items-center justify-start w-full h-full p-0.5 ">
                 บาท
               </div>
             </div>
           </div>
 
-          <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <div class="flex flex-col items-center justify-center w-full h-full p-0.5 ">
+            <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+              <div class="flex items-center justify-start w-full h-full p-0.5 ">
                 7.4 ค่ายานพาหนะ
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+              <div class="flex items-center justify-center w-full h-full p-0.5  border-b-2">
                 ${training.trainingFarePrice || "-"}
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+              <div class="flex items-center justify-start w-full h-full p-0.5 ">
                 บาท
               </div>
             </div>
 
-            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+              <div class="flex items-center justify-start w-full h-full p-0.5 ">
                 7.5 อื่นๆ
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+              <div class="flex items-center justify-center w-full h-full p-0.5  border-b-2">
                 ${training.trainingOtherExpenses || "-"}   ${
       training.trainingOtherPrice || "-"
     }
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+              <div class="flex items-center justify-start w-full h-full p-0.5 ">
                 บาท
               </div>
             </div>
 
-            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+              <div class="flex items-center justify-start w-full h-full p-0.5 ">
                 รวม
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+              <div class="flex items-center justify-center w-full h-full p-0.5  border-b-2">
                 ${training.trainingSumPrice || "-"}
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+              <div class="flex items-center justify-start w-full h-full p-0.5 ">
                 บาท
               </div>
             </div>
           </div>
         </div>
 
-        <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
-          <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div class="flex flex-row items-center justify-center w-full p-0.5">
+          <div class="flex flex-col items-center justify-center w-full h-full p-0.5 ">
+            <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+              <div class="flex items-center justify-center w-full h-full p-0.5 ">
                 ลงชื่อ
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <div class="flex items-center justify-center w-full h-full p-0.5  border-b-2">
                 <img src="${process.env.NEXT_PUBLIC_API_URL}/images/signature/${
       training.TrainingCreateBy &&
       training.TrainingCreateBy.employeeEmployment &&
@@ -490,12 +490,12 @@ export async function GET(request, context) {
         : "default_signature.png"
     }" class="w-20 h-20" />
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <div class="flex items-center justify-center w-full h-full p-0.5 ">
                 ผู้ขออนุมัติ
               </div>
             </div>
-            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+              <div class="flex items-center justify-center w-full h-full p-0.5 ">
                 ( ${
                   training.TrainingCreateBy
                     ? `${training.TrainingCreateBy.employeeFirstname} ${training.TrainingCreateBy.employeeLastname}`
@@ -503,18 +503,18 @@ export async function GET(request, context) {
                 })
               </div>
             </div>
-            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+              <div class="flex items-center justify-center w-full h-full p-0.5 ">
                 ผู้จัดทำ
               </div>
             </div>
           </div>
-          <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <div class="flex flex-col items-center justify-center w-full h-full p-0.5 ">
+            <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+              <div class="flex items-center justify-center w-full h-full p-0.5 ">
                 ลงชื่อ
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <div class="flex items-center justify-center w-full h-full p-0.5  border-b-2">
                 <img src="${process.env.NEXT_PUBLIC_API_URL}/images/signature/${
       training.TrainingHrApproveBy &&
       training.TrainingHrApproveBy.employeeEmployment &&
@@ -523,12 +523,12 @@ export async function GET(request, context) {
         : "default_signature.png"
     }" class="w-20 h-20" />
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <div class="flex items-center justify-center w-full h-full p-0.5 ">
                 ผู้ทบทวน
               </div>
             </div>
-            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+              <div class="flex items-center justify-center w-full h-full p-0.5 ">
              (   ${
                training.TrainingHrApproveBy
                  ? `${training.TrainingHrApproveBy.employeeFirstname} ${training.TrainingHrApproveBy.employeeLastname}`
@@ -536,24 +536,24 @@ export async function GET(request, context) {
              })
               </div>
             </div>
-            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+              <div class="flex items-center justify-center w-full h-full p-0.5 ">
                 ผู้จัดการฝ่ายทรัพยากรบุคคล
               </div>
             </div>
           </div>
         </div>
 
-        <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
-          <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div class="flex flex-row items-center justify-center w-full p-0.5">
+          <div class="flex flex-col items-center justify-center w-full h-full p-0.5 ">
             <!-- ช่องว่าง -->
           </div>
-          <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <div class="flex flex-col items-center justify-center w-full h-full p-0.5 ">
+            <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+              <div class="flex items-center justify-center w-full h-full p-0.5 ">
                 ลงชื่อ
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <div class="flex items-center justify-center w-full h-full p-0.5  border-b-2">
                 <img src="${process.env.NEXT_PUBLIC_API_URL}/images/signature/${
       training.TrainingMdApproveBy &&
       training.TrainingMdApproveBy.employeeEmployment &&
@@ -562,12 +562,12 @@ export async function GET(request, context) {
         : "default_signature.png"
     }" class="w-20 h-20" />
               </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <div class="flex items-center justify-center w-full h-full p-0.5 ">
                 รับทราบ
               </div>
             </div>
-            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+              <div class="flex items-center justify-center w-full h-full p-0.5 ">
               (  ${
                 training.TrainingMdApproveBy
                   ? `${training.TrainingMdApproveBy.employeeFirstname} ${training.TrainingMdApproveBy.employeeLastname}`
@@ -575,8 +575,8 @@ export async function GET(request, context) {
               })
               </div>
             </div>
-            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+            <div class="flex flex-row items-center justify-center w-full h-full p-0.5 ">
+              <div class="flex items-center justify-center w-full h-full p-0.5 ">
                 กรรมการผู้จัดการ
               </div>
             </div>
