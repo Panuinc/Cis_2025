@@ -237,81 +237,81 @@ export async function GET(request, context) {
           : ""
       }      
       
-      <div class="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+      <div class="flex flex-col items-center justify-start w-full h-full">
         <!-- ส่วนหัวของเอกสาร -->
-        <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
-          <div class="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div class="flex flex-row items-center justify-center w-full p-1 gap-2">
+          <div class="flex items-center justify-center h-full p-1 gap-2">
             <img src="${
               process.env.NEXT_PUBLIC_API_URL
             }/images/company_logo/company_logo.png" class="w-28 min-h-28" />
           </div>
-          <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed text-3xl font-[900]">
+          <div class="flex items-center justify-center w-full h-full p-1 gap-2 text-3xl font-[900]">
             แบบลงทะเบียนและการประเมินผลการฝึกอบรม
           </div>
         </div>
 
         <!-- ข้อมูลหลักสูตร -->
-        <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
-          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div class="flex flex-row items-center justify-center w-full p-1 gap-2">
+          <div class="flex flex-row items-center justify-center w-full h-full p-1 gap-2">
+            <div class="flex items-center justify-start w-full h-full p-1 gap-2">
               หลักสูตร
             </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+            <div class="flex items-center justify-start w-full h-full p-1 gap-2 border-b-2 ">
               ${training.trainingName || "-"}
             </div>
           </div>
         </div>       
 
         <!-- ระยะเวลา -->
-        <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
-          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <div class="flex flex-row items-center justify-center w-full p-1 gap-2">
+          <div class="flex flex-row items-center justify-center w-full h-full p-1 gap-2">
+            <div class="flex items-center justify-start w-full h-full p-1 gap-2">
              ระยะเวลา
             </div>
           </div>
-          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+          <div class="flex flex-row items-center justify-center w-full h-full p-1 gap-2">
+            <div class="flex items-center justify-start w-full h-full p-1 gap-2 border-b-2 ">
               ${formattedStartDate}
             </div>
           </div>
-          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <div class="flex flex-row items-center justify-center w-full h-full p-1 gap-2">
+            <div class="flex items-center justify-start w-full h-full p-1 gap-2">
               ถึง
             </div>
           </div>
-           <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+           <div class="flex flex-row items-center justify-center w-full h-full p-1 gap-2">
+            <div class="flex items-center justify-start w-full h-full p-1 gap-2 border-b-2 ">
               ${formattedEndDate}
             </div>
           </div>
         </div>  
 
         <!-- สถานที่ -->
-          <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
-           <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-             <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <div class="flex flex-row items-center justify-center w-full p-1 gap-2">
+           <div class="flex flex-row items-center justify-center w-full h-full p-1 gap-2">
+             <div class="flex items-center justify-start w-full h-full p-1 gap-2">
               สถานที่
              </div>
-             <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+            <div class="flex items-center justify-start w-full h-full p-1 gap-2 border-b-2 ">
                ${training.trainingLocation || "-"}
              </div>
            </div>
          </div>
          
          <!-- วิทยากร -->
-         <div class="flex flex-row items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
-           <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
-             <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+         <div class="flex flex-row items-center justify-center w-full p-1 gap-2">
+           <div class="flex flex-row items-center justify-center w-full h-full p-1 gap-2">
+             <div class="flex items-center justify-start w-full h-full p-1 gap-2">
              วิทยากร
              </div>
-             <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed ">
+            <div class="flex items-center justify-start w-full h-full p-1 gap-2 border-b-2 ">
                ${training.trainingLecturer || "-"}
              </div>
            </div>
          </div>  
          
          <!-- ตารางข้อมูลพนักงาน -->
-         <div class="flex flex-col items-center justify-center w-full p-2 gap-2 border-2 border-dark border-dashed">
+         <div class="flex flex-col items-center justify-center w-full p-1 gap-2">
            <table class="min-w-full border-collapse">
              <thead class="bg-gray-200">
                <tr>
