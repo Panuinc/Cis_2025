@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/react";
 
 export default function FormTrainingCheckIn({
@@ -7,6 +8,8 @@ export default function FormTrainingCheckIn({
   handleTrainingEmployeeCheckInMorningCheckChange,
   handleTrainingEmployeeCheckInAfterNoonCheckChange,
 }) {
+  const router = useRouter(); 
+
   const columns = [
     { name: "First Name", uid: "firstName" },
     { name: "Last Name", uid: "lastName" },
@@ -121,6 +124,12 @@ export default function FormTrainingCheckIn({
             )}
           </tbody>
         </table>
+      </div>
+
+      <div className="mt-4">
+        <Button color="primary" onPress={() => router.push("/training")}>
+          Back
+        </Button>
       </div>
     </div>
   );
