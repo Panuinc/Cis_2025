@@ -4,13 +4,14 @@ import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import TopicHeader from "@/components/form/TopicHeader";
 import FormTrainingCheckIn from "@/components/form/hr/training/FormTrainingCheckIn";
+import { getLocalNow } from "@/lib/GetLocalNow"; 
 import React, {
   useState,
   useRef,
   useEffect,
   useCallback,
   useMemo,
-  use
+  use,
 } from "react";
 
 const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
@@ -62,33 +63,87 @@ export default function TrainingCheckIntUpdate({ params: paramsPromise }) {
   );
 
   const handleTrainingEmployeeCheckInMorningCheckChange = useCallback(
-    (checkInId, newMorningCheck) => {
-      setFormData((prev) => ({
-        ...prev,
-        trainingEmployeeCheckIn: prev.trainingEmployeeCheckIn.map((checkIn) =>
+    async (checkInId) => {
+      const localNow = getLocalNow(); // ใช้เวลา Local
+  
+      try {
+        const updatedCheckIn = formData.trainingEmployeeCheckIn.map((checkIn) =>
           checkIn.trainingEmployeeCheckInId === checkInId
-            ? { ...checkIn, trainingEmployeeCheckInMorningCheck: newMorningCheck }
+            ? { ...checkIn, trainingEmployeeCheckInMorningCheck: localNow }
             : checkIn
-        ),
-      }));
+        );
+  
+        setFormData((prev) => ({
+          ...prev,
+          trainingEmployeeCheckIn: updatedCheckIn,
+        }));
+  
+        const formDataPayload = new FormData();
+        formDataPayload.append("trainingId", trainingId);
+        formDataPayload.append("trainingEmployeeCheckIn", JSON.stringify(updatedCheckIn));
+  
+        const res = await fetch(`/api/hr/training/trainingCheckIn/${trainingId}`, {
+          method: "PUT",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+          body: formDataPayload,
+        });
+  
+        const jsonData = await res.json();
+        if (res.ok) {
+          toast.success("Check-in updated successfully!");
+        } else {
+          toast.error(jsonData.error || "Error updating check-in");
+        }
+      } catch (error) {
+        toast.error("Error updating check-in: " + error.message);
+      }
     },
-    []
+    [trainingId, formData]
   );
-
+  
   const handleTrainingEmployeeCheckInAfterNoonCheckChange = useCallback(
-    (checkInId, newAfterNoonCheck) => {
-      setFormData((prev) => ({
-        ...prev,
-        trainingEmployeeCheckIn: prev.trainingEmployeeCheckIn.map((checkIn) =>
+    async (checkInId) => {
+      const localNow = getLocalNow(); // ใช้เวลา Local
+  
+      try {
+        const updatedCheckIn = formData.trainingEmployeeCheckIn.map((checkIn) =>
           checkIn.trainingEmployeeCheckInId === checkInId
-            ? { ...checkIn, trainingEmployeeCheckInAfterNoonCheck: newAfterNoonCheck }
+            ? { ...checkIn, trainingEmployeeCheckInAfterNoonCheck: localNow }
             : checkIn
-        ),
-      }));
+        );
+  
+        setFormData((prev) => ({
+          ...prev,
+          trainingEmployeeCheckIn: updatedCheckIn,
+        }));
+  
+        const formDataPayload = new FormData();
+        formDataPayload.append("trainingId", trainingId);
+        formDataPayload.append("trainingEmployeeCheckIn", JSON.stringify(updatedCheckIn));
+  
+        const res = await fetch(`/api/hr/training/trainingCheckIn/${trainingId}`, {
+          method: "PUT",
+          headers: {
+            "secret-token": SECRET_TOKEN,
+          },
+          body: formDataPayload,
+        });
+  
+        const jsonData = await res.json();
+        if (res.ok) {
+          toast.success("Check-in updated successfully!");
+        } else {
+          toast.error(jsonData.error || "Error updating check-in");
+        }
+      } catch (error) {
+        toast.error("Error updating check-in: " + error.message);
+      }
     },
-    []
+    [trainingId, formData]
   );
-
+  
   const handleSubmit = useCallback(
     async (event) => {
       event.preventDefault();
@@ -199,13 +254,20 @@ export default function TrainingCheckIntUpdate({ params: paramsPromise }) {
           trainingEmployeeCheckIn:
             training.employeeTrainingCheckInTraining?.map((checkIn) => ({
               trainingEmployeeCheckInId: checkIn.trainingEmployeeCheckInId,
-              trainingEmployeeCheckInMorningCheck: checkIn.trainingEmployeeCheckInMorningCheck
-                ? new Date(checkIn.trainingEmployeeCheckInMorningCheck).toISOString().slice(0, 16)
-                : "",
-              trainingEmployeeCheckInAfterNoonCheck: checkIn.trainingEmployeeCheckInAfterNoonCheck
-                ? new Date(checkIn.trainingEmployeeCheckInAfterNoonCheck).toISOString().slice(0, 16)
-                : "",
-              TrainingEmployeeCheckInEmployeeId: checkIn.TrainingEmployeeCheckInEmployeeId,
+              trainingEmployeeCheckInMorningCheck:
+                checkIn.trainingEmployeeCheckInMorningCheck
+                  ? new Date(checkIn.trainingEmployeeCheckInMorningCheck)
+                      .toISOString()
+                      .slice(0, 16)
+                  : "",
+              trainingEmployeeCheckInAfterNoonCheck:
+                checkIn.trainingEmployeeCheckInAfterNoonCheck
+                  ? new Date(checkIn.trainingEmployeeCheckInAfterNoonCheck)
+                      .toISOString()
+                      .slice(0, 16)
+                  : "",
+              TrainingEmployeeCheckInEmployeeId:
+                checkIn.TrainingEmployeeCheckInEmployeeId,
             })) || [],
         });
       } else {
@@ -249,8 +311,12 @@ export default function TrainingCheckIntUpdate({ params: paramsPromise }) {
         employees={employees}
         filteredEmployees={employees}
         isUpdate={true}
-        handleTrainingEmployeeCheckInMorningCheckChange={handleTrainingEmployeeCheckInMorningCheckChange}
-        handleTrainingEmployeeCheckInAfterNoonCheckChange={handleTrainingEmployeeCheckInAfterNoonCheckChange}
+        handleTrainingEmployeeCheckInMorningCheckChange={
+          handleTrainingEmployeeCheckInMorningCheckChange
+        }
+        handleTrainingEmployeeCheckInAfterNoonCheckChange={
+          handleTrainingEmployeeCheckInAfterNoonCheckChange
+        }
       />
     </>
   );

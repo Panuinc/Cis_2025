@@ -1,16 +1,9 @@
 "use client";
 import React from "react";
-import { Input, Button } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 
 export default function FormTrainingCheckIn({
-  formRef,
-  onSubmit,
-  onClear,
-  errors = {},
   formData,
-  handleInputChange,
-  isUpdate = false,
-  operatedBy = "",
   handleTrainingEmployeeCheckInMorningCheckChange,
   handleTrainingEmployeeCheckInAfterNoonCheckChange,
 }) {
@@ -23,6 +16,10 @@ export default function FormTrainingCheckIn({
 
   const renderCell = (item, columnKey) => {
     const employee = item.TrainingEmployeeCheckInEmployeeId;
+    const employment = employee?.employeeEmployment?.[0]; // ดึงข้อมูล employment
+    const signaturePath = employment?.employmentSignature
+      ? `/images/signature/${employment.employmentSignature}`
+      : null;
 
     switch (columnKey) {
       case "firstName":
@@ -30,95 +27,101 @@ export default function FormTrainingCheckIn({
       case "lastName":
         return employee?.employeeLastname || "-";
       case "morningCheck":
-        return (
-          <Input
-            type="datetime-local"
-            value={item.trainingEmployeeCheckInMorningCheck || ""}
-            onChange={(e) =>
+        return item.trainingEmployeeCheckInMorningCheck && signaturePath ? (
+          <img
+            src={signaturePath}
+            alt="Employee Signature"
+            className="h-12 w-auto"
+          />
+        ) : (
+          <Button
+            color="success"
+            onPress={() =>
               handleTrainingEmployeeCheckInMorningCheckChange(
-                item.trainingEmployeeCheckInId,
-                e.target.value
+                item.trainingEmployeeCheckInId
               )
             }
-            placeholder="Enter Morning Check Time"
-          />
+          >
+            {item.trainingEmployeeCheckInMorningCheck
+              ? new Date(
+                  item.trainingEmployeeCheckInMorningCheck
+                ).toLocaleString()
+              : "Check In"}
+          </Button>
         );
+
       case "afterNoonCheck":
-        return (
-          <Input
-            type="datetime-local"
-            value={item.trainingEmployeeCheckInAfterNoonCheck || ""}
-            onChange={(e) =>
+        return item.trainingEmployeeCheckInAfterNoonCheck && signaturePath ? (
+          <img
+            src={signaturePath}
+            alt="Employee Signature"
+            className="h-12 w-auto"
+          />
+        ) : (
+          <Button
+            color="secondary"
+            onPress={() =>
               handleTrainingEmployeeCheckInAfterNoonCheckChange(
-                item.trainingEmployeeCheckInId,
-                e.target.value
+                item.trainingEmployeeCheckInId
               )
             }
-            placeholder="Enter AfterNoon Check Time"
-          />
+          >
+            {item.trainingEmployeeCheckInAfterNoonCheck
+              ? new Date(
+                  item.trainingEmployeeCheckInAfterNoonCheck
+                ).toLocaleString()
+              : "Check In"}
+          </Button>
         );
+
       default:
         return "";
     }
   };
 
   return (
-    <form
-      ref={formRef}
-      onSubmit={onSubmit}
-      className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
-    >
-      <div className="w-full p-2 border-2 border-dark border-dashed">
-        <div className="overflow-auto">
-          <table className="min-w-full border-collapse">
-            <thead>
-              <tr>
-                {columns.map((column) => (
-                  <th
-                    key={column.uid}
-                    className="px-4 py-2 border-2 border-dark border-dashed bg-gray-200 text-left"
-                  >
-                    {column.name}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {formData.trainingEmployeeCheckIn.length > 0 ? (
-                formData.trainingEmployeeCheckIn.map((item) => (
-                  <tr key={item.trainingEmployeeCheckInId}>
-                    {columns.map((column) => (
-                      <td
-                        key={column.uid}
-                        className="px-4 py-2 border-2 border-dark border-dashed"
-                      >
-                        {renderCell(item, column.uid)}
-                      </td>
-                    ))}
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td
-                    colSpan={columns.length}
-                    className="px-4 py-2 border-2 border-dark border-dashed text-center"
-                  >
-                    No Employees Found
-                  </td>
+    <div className="w-full p-2 border-2 border-dark border-dashed">
+      <div className="overflow-auto">
+        <table className="min-w-full border-collapse">
+          <thead>
+            <tr>
+              {columns.map((column) => (
+                <th
+                  key={column.uid}
+                  className="px-4 py-2 border-2 border-dark border-dashed bg-gray-200 text-left"
+                >
+                  {column.name}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {formData.trainingEmployeeCheckIn.length > 0 ? (
+              formData.trainingEmployeeCheckIn.map((item) => (
+                <tr key={item.trainingEmployeeCheckInId}>
+                  {columns.map((column) => (
+                    <td
+                      key={column.uid}
+                      className="px-4 py-2 border-2 border-dark border-dashed"
+                    >
+                      {renderCell(item, column.uid)}
+                    </td>
+                  ))}
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan={columns.length}
+                  className="px-4 py-2 border-2 border-dark border-dashed text-center"
+                >
+                  No Employees Found
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
-      <div className="flex gap-4">
-        <Button type="submit" color="primary">
-          Update
-        </Button>
-        <Button type="button" color="warning" onPass={onClear}>
-          Clear
-        </Button>
-      </div>
-    </form>
+    </div>
   );
 }

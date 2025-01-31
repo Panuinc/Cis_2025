@@ -9,8 +9,6 @@ import prisma from "@/lib/prisma";
 import { formatTrainingData } from "@/app/api/hr/training/trainingSchema";
 import { getRequestIP } from "@/lib/GetRequestIp";
 import { getLocalNow } from "@/lib/GetLocalNow";
-import { writeFile } from "fs/promises";
-import path from "path";
 
 export async function GET(request, context) {
   let ip;
@@ -109,84 +107,50 @@ export async function PUT(request, context) {
     const formData = await request.formData();
     const payload = Object.fromEntries(formData.entries());
 
-    const parsedData = trainingUpdateSchema.parse({
-      trainingId: parseInt(trainingId, 10),
-      trainingPreTest: payload.trainingPreTest,
-      trainingPostTest: payload.trainingPostTest,
-      trainingPictureLink: payload.trainingPictureLink,
-      trainingEmployeeCheckIn: JSON.parse(payload.trainingEmployeeCheckIn || "[]"),
-    });
+    const trainingEmployeeCheckIn = JSON.parse(
+      payload.trainingEmployeeCheckIn || "[]"
+    );
 
-    const localNow = getLocalNow();
+    const localNow = getLocalNow(); // ใช้เวลา Local
 
     await prisma.$transaction(async (prismaTx) => {
-      await prismaTx.training.update({
-        where: { trainingId: parseInt(trainingId, 10) },
-        data: {
-          trainingPreTest: parsedData.trainingPreTest,
-          trainingPostTest: parsedData.trainingPostTest,
-          trainingPictureLink: parsedData.trainingPictureLink,
-          trainingUpdateAt: localNow,
-        },
-      });
-
-      if (
-        parsedData.trainingEmployeeCheckIn &&
-        parsedData.trainingEmployeeCheckIn.length > 0
-      ) {
-        for (const checkIn of parsedData.trainingEmployeeCheckIn) {
-          const existingCheckIn = await prismaTx.trainingEmployeeCheckIn.findUnique({
-            where: { trainingEmployeeCheckInId: checkIn.trainingEmployeeCheckInId },
-          });
-
-          if (!existingCheckIn) {
-            throw new Error(`TrainingEmployeeCheckIn with ID ${checkIn.trainingEmployeeCheckInId} not found`);
-          }
-
-          await prismaTx.trainingEmployeeCheckIn.update({
-            where: { trainingEmployeeCheckInId: checkIn.trainingEmployeeCheckInId },
-            data: {
-              trainingEmployeeCheckInMorningCheck: checkIn.trainingEmployeeCheckInMorningCheck
-                ? new Date(checkIn.trainingEmployeeCheckInMorningCheck)
-                : null,
-              trainingEmployeeCheckInAfterNoonCheck: checkIn.trainingEmployeeCheckInAfterNoonCheck
-                ? new Date(checkIn.trainingEmployeeCheckInAfterNoonCheck)
-                : null,
+      for (const checkIn of trainingEmployeeCheckIn) {
+        const existingCheckIn =
+          await prismaTx.trainingEmployeeCheckIn.findUnique({
+            where: {
+              trainingEmployeeCheckInId: checkIn.trainingEmployeeCheckInId,
             },
           });
+
+        if (!existingCheckIn) {
+          throw new Error(
+            `TrainingEmployeeCheckIn with ID ${checkIn.trainingEmployeeCheckInId} not found`
+          );
         }
+
+        await prismaTx.trainingEmployeeCheckIn.update({
+          where: {
+            trainingEmployeeCheckInId: checkIn.trainingEmployeeCheckInId,
+          },
+          data: {
+            trainingEmployeeCheckInMorningCheck:
+              checkIn.trainingEmployeeCheckInMorningCheck
+                ? new Date(localNow) // ใช้เวลา Local
+                : existingCheckIn.trainingEmployeeCheckInMorningCheck,
+            trainingEmployeeCheckInAfterNoonCheck:
+              checkIn.trainingEmployeeCheckInAfterNoonCheck
+                ? new Date(localNow) // ใช้เวลา Local
+                : existingCheckIn.trainingEmployeeCheckInAfterNoonCheck,
+          },
+        });
       }
     });
 
-    const updatedTraining = await prisma.training.findUnique({
-      where: { trainingId: parseInt(trainingId, 10) },
-      include: {
-        employeeTrainingCheckInTraining: {
-          include: {
-            TrainingEmployeeCheckInEmployeeId: {
-              select: { employeeFirstname: true, employeeLastname: true },
-            },
-          },
-        },
-        TrainingCreateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
-        },
-        TrainingUpdateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
-        },
-      },
-    });
-
-    const formattedTraining = formatTrainingData([updatedTraining]);
-
     return NextResponse.json(
-      {
-        message: "Training data updated successfully",
-        training: formattedTraining,
-      },
+      { message: "Check-in updated successfully!" },
       { status: 200 }
     );
   } catch (error) {
-    return handleErrors(error, ip, "Error updating training data");
+    return handleErrors(error, ip, "Error updating check-in data");
   }
 }
