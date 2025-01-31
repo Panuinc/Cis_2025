@@ -16,7 +16,7 @@ export default function FormTrainingCheckIn({
 
   const renderCell = (item, columnKey) => {
     const employee = item.TrainingEmployeeCheckInEmployeeId;
-    const employment = employee?.employeeEmployment?.[0]; // ดึงข้อมูล employment
+    const employment = employee?.employeeEmployment?.[0];
     const signaturePath = employment?.employmentSignature
       ? `/images/signature/${employment.employmentSignature}`
       : null;
