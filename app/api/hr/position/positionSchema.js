@@ -12,7 +12,7 @@ export function formatPositionData(position) {
   return formatData(position, [], ["positionCreateAt", "positionUpdateAt"]);
 }
 
-export const positionPosteSchema = z.object({
+export const positionPostSchema = z.object({
   positionBranchId: preprocessInt(
     "Branch ID must be provided.",
     "Branch ID must be an integer."

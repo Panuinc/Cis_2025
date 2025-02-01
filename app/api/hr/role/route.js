@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { handleErrors, handleGetErrors } from "@/lib/errorHandler";
-import { rolePosteSchema } from "@/app/api/hr/role/roleSchema";
+import { rolePostSchema } from "@/app/api/hr/role/roleSchema";
 import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
 import prisma from "@/lib/prisma";
@@ -59,7 +59,7 @@ export async function POST(request) {
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
 
-    const parsedData = rolePosteSchema.parse(data);
+    const parsedData = rolePostSchema.parse(data);
 
     const existingRole = await prisma.role.findFirst({
       where: { roleName: parsedData.roleName },

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { handleErrors, handleGetErrors } from "@/lib/errorHandler";
-import { divisionPosteSchema } from "@/app/api/hr/division/divisionSchema";
+import { divisionPostSchema } from "@/app/api/hr/division/divisionSchema";
 import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
 import prisma from "@/lib/prisma";
@@ -62,7 +62,7 @@ export async function POST(request) {
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
 
-    const parsedData = divisionPosteSchema.parse(data);
+    const parsedData = divisionPostSchema.parse(data);
 
     const existingDivision = await prisma.division.findFirst({
       where: { divisionName: parsedData.divisionName },

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { handleErrors, handleGetErrors } from "@/lib/errorHandler";
-import { departmentPosteSchema } from "@/app/api/hr/department/departmentSchema";
+import { departmentPostSchema } from "@/app/api/hr/department/departmentSchema";
 import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
 import prisma from "@/lib/prisma";
@@ -65,7 +65,7 @@ export async function POST(request) {
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
 
-    const parsedData = departmentPosteSchema.parse(data);
+    const parsedData = departmentPostSchema.parse(data);
 
     const existingDepartment = await prisma.department.findFirst({
       where: { departmentName: parsedData.departmentName },

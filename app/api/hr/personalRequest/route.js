@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { handleErrors, handleGetErrors } from "@/lib/errorHandler";
-import { personalRequestPosteSchema } from "@/app/api/hr/personalRequest/personalRequestSchema";
+import { personalRequestPostSchema } from "@/app/api/hr/personalRequest/personalRequestSchema";
 import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
 import prisma from "@/lib/prisma";
@@ -154,7 +154,7 @@ export async function POST(request) {
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
 
-    const parsedData = personalRequestPosteSchema.parse({
+    const parsedData = personalRequestPostSchema.parse({
       ...data,
       personalRequestDesiredDate: new Date(data.personalRequestDesiredDate),
     });

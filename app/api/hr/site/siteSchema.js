@@ -12,7 +12,7 @@ export function formatSiteData(site) {
   return formatData(site, [], ["siteCreateAt", "siteUpdateAt"]);
 }
 
-export const sitePosteSchema = z.object({
+export const sitePostSchema = z.object({
   siteBranchId: preprocessInt(
     "Branch ID must be provided.",
     "Branch ID must be an integer."

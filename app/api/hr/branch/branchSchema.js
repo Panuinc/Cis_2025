@@ -12,7 +12,7 @@ export function formatBranchData(branch) {
   return formatData(branch, [], ["branchCreateAt", "branchUpdateAt"]);
 }
 
-export const branchPosteSchema = z.object({
+export const branchPostSchema = z.object({
   branchName: preprocessString(
     "Please Enter Branch Name",
     "Please Enter Branch Name"

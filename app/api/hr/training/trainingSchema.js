@@ -121,7 +121,7 @@ export const trainingUpdateSchema = z.object({
   selectedIds: z.array(z.number()).optional(),
 });
 
-export const trainingPosteSchema = z.object({
+export const trainingPostSchema = z.object({
   trainingType: preprocessEnum(
     [
       "Training_to_prepare_for_work",

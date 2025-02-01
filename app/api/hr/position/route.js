@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { handleErrors, handleGetErrors } from "@/lib/errorHandler";
-import { positionPosteSchema } from "@/app/api/hr/position/positionSchema";
+import { positionPostSchema } from "@/app/api/hr/position/positionSchema";
 import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
 import prisma from "@/lib/prisma";
@@ -68,7 +68,7 @@ export async function POST(request) {
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
 
-    const parsedData = positionPosteSchema.parse(data);
+    const parsedData = positionPostSchema.parse(data);
 
     const existingPosition = await prisma.position.findFirst({
       where: { positionName: parsedData.positionName },

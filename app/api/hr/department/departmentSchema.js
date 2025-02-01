@@ -16,7 +16,7 @@ export function formatDepartmentData(department) {
   );
 }
 
-export const departmentPosteSchema = z.object({
+export const departmentPostSchema = z.object({
   departmentBranchId: preprocessInt(
     "Branch ID must be provided.",
     "Branch ID must be an integer."

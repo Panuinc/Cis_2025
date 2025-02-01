@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { handleErrors, handleGetErrors } from "@/lib/errorHandler";
-import { trainingPosteSchema } from "@/app/api/hr/training/trainingSchema";
+import { trainingPostSchema } from "@/app/api/hr/training/trainingSchema";
 import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
 import prisma from "@/lib/prisma";
@@ -149,7 +149,7 @@ export async function POST(request) {
       }
     }
 
-    const parsedData = trainingPosteSchema.parse(dataObj);
+    const parsedData = trainingPostSchema.parse(dataObj);
 
     const {
       trainingEmployee,

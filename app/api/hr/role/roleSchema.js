@@ -12,7 +12,7 @@ export function formatRoleData(role) {
   return formatData(role, [], ["roleCreateAt", "roleUpdateAt"]);
 }
 
-export const rolePosteSchema = z.object({
+export const rolePostSchema = z.object({
   roleName: preprocessString(
     "Please Enter Role Name",
     "Please Enter Role Name"

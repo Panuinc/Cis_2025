@@ -12,7 +12,7 @@ export function formatDivisionData(division) {
   return formatData(division, [], ["divisionCreateAt", "divisionUpdateAt"]);
 }
 
-export const divisionPosteSchema = z.object({
+export const divisionPostSchema = z.object({
   divisionBranchId: preprocessInt(
     "Branch ID must be provided.",
     "Branch ID must be an integer."

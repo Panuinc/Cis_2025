@@ -16,7 +16,7 @@ export function formatPersonalRequestData(personalRequest) {
   );
 }
 
-export const personalRequestPosteSchema = z.object({
+export const personalRequestPostSchema = z.object({
   personalRequestDocumentId: preprocessString(
     "Please Enter PersonalRequest Name",
     "Please Enter PersonalRequest Name"

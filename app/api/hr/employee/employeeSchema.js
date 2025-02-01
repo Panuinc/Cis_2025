@@ -16,7 +16,7 @@ export function formatEmployeeData(employee) {
   );
 }
 
-export const employeePosteSchema = z.object({
+export const employeePostSchema = z.object({
   employeeTitle: preprocessEnum(
     ["Mr", "Ms", "Mrs"],
     "Employee Title must be either 'Mr', 'Ms', 'Mrs'."

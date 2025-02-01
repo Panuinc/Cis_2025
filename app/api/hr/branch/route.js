@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { handleErrors, handleGetErrors } from "@/lib/errorHandler";
-import { branchPosteSchema } from "@/app/api/hr/branch/branchSchema";
+import { branchPostSchema } from "@/app/api/hr/branch/branchSchema";
 import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
 import prisma from "@/lib/prisma";
@@ -59,7 +59,7 @@ export async function POST(request) {
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
 
-    const parsedData = branchPosteSchema.parse(data);
+    const parsedData = branchPostSchema.parse(data);
 
     const existingBranch = await prisma.branch.findFirst({
       where: { branchName: parsedData.branchName },
