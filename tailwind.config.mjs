@@ -19,7 +19,6 @@ export default {
         warning: "#FCDA01",
         danger: "#FC637D",
         secondary: "#FEB259",
-        info: "#88B7E8",
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
