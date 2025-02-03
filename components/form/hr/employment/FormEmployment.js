@@ -332,7 +332,7 @@ export default function FormEmployment({
           <div className="flex flex-row items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
             <Button
               size="lg"
-              color="primary"
+              color="success"
               onPress={handleSaveSignature}
               className="flex items-center justify-center h-full p-2 gap-2 border-2 border-dark border-dashed"
             >

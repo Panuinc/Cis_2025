@@ -127,7 +127,7 @@ export default function FormTrainingCheckIn({
       </div>
 
       <div className="mt-4">
-        <Button color="primary" onPress={() => router.push("/training")}>
+        <Button color="success" onPress={() => router.push("/training")}>
           Back
         </Button>
       </div>

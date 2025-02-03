@@ -18,7 +18,7 @@ import {
 
 const trainingStatusColorMap = {
   pendinghrapprove: "warning",
-  pendingmdapprove: "primary",
+  pendingmdapprove: "success",
   approvedsuccess: "success",
   cancel: "danger",
   hrcancel: "danger",

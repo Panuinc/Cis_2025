@@ -89,7 +89,7 @@ function MenuSub({ options, isOpen, isCollapsed }) {
                 <Tooltip
                   content={option.label}
                   size="lg"
-                  color="primary"
+                  color="success"
                   radius="lg"
                   shadow="lg"
                   placement="right"
@@ -138,7 +138,7 @@ function MenuMain({ icons, text, isCollapsed, options, isOpen, onToggle }) {
         <Tooltip
           content={isCollapsed ? text : ""}
           size="lg"
-          color="primary"
+          color="success"
           radius="lg"
           shadow="lg"
           placement="right"

@@ -53,7 +53,7 @@ export default function FormTrainingResult({
             <div className="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <Button
                 size="md"
-                color="primary"
+                color="success"
                 className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
                 onPress={() => {
                   const imageUrl = `/images/certificateFile/${item.trainingEmployeeCertificatePicture}`;
