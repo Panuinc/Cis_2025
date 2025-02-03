@@ -11,49 +11,44 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 3px;
-  height: 3px;
+  width: 0px;
+  height: 0px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(13deg, #76d755 14%, #76d755 64%);
+  background: linear-gradient(13deg, #b79478 14%, #b79478 64%);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(13deg, #76d755 14%, #76d755 64%);
+  background: linear-gradient(13deg, #b79478 14%, #b79478 64%);
 }
 
 ::-webkit-scrollbar-track {
-  background: #ffffff;
+  background: #d6bba0;
   border-radius: 10px;
-  box-shadow: inset 7px 10px 12px #ffffff;
+  box-shadow: inset 7px 10px 12px #d6bba0;
 }
 
 ::selection {
-  background: #171A1B;
+  background: #171a1b;
   color: #ffffff;
   text-shadow: none;
 }
 .shadow-one {
   /* background: #F0F0F3; */
-  box-shadow: 
-    -10px -10px 30px #FFFFFF, 
-    10px 10px 30px rgba(174, 174, 192, 0.4);
+  box-shadow: -10px -10px 30px #ffffff, 10px 10px 30px rgba(174, 174, 192, 0.4);
 }
 
 .shadow-two {
   /* background: #F0F0F3; */
-  box-shadow: 
-    -10px -10px 30px #FFFFFF, 
-    10px 10px 30px rgba(174, 174, 192, 0.4),
+  box-shadow: -10px -10px 30px #ffffff, 10px 10px 30px rgba(174, 174, 192, 0.4),
     inset -10px -10px 10px rgba(174, 174, 192, 0.25),
-    inset 10px 10px 10px #FFFFFF;
+    inset 10px 10px 10px #ffffff;
 }
 
 .shadow-three {
   /* background: #F0F0F3; */
-  box-shadow: 
-    -10px -10px 10px rgba(255, 255, 255, 0.7), 
+  box-shadow: -10px -10px 10px rgba(255, 255, 255, 0.7),
     10px 10px 10px rgba(174, 174, 192, 0.2);
 }
