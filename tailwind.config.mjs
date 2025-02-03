@@ -14,7 +14,6 @@ export default {
         white: "#FFFFFF",
         dark: "#171A1B",
         default: "#F5F5F5",
-        primary: "#CA89DA",
         success: "#93D50A",
         warning: "#FCDA01",
         danger: "#FC637D",
