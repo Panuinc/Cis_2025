@@ -22,7 +22,7 @@ export default function FormRegister({
     <form
       ref={formRef}
       onSubmit={onSubmit}
-      className="flex flex-col items-center justify-start w-full h-full xl:w-4/12 p-2 gap-2 bg-white bg-opacity-50 shadow-lg rounded-3xl overflow-auto"
+      className="flex flex-col items-center justify-start w-full h-full xl:w-4/12 p-2 gap-2 bg-white rounded-3xl overflow-auto"
     >
       <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-lg font-[600] text-danger">
         Register Now!

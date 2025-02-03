@@ -15,7 +15,7 @@ export default function FormIndex({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col items-center justify-center w-full min-h-[500px] xl:w-4/12 p-2 gap-2 bg-white bg-opacity-50 shadow-lg rounded-3xl"
+      className="flex flex-col items-center justify-center w-full min-h-[500px] xl:w-4/12 p-2 gap-2 bg-white rounded-3xl"
     >
       <div className="flex items-center justify-center w-full h-full p-2 gap-2">
         <Image

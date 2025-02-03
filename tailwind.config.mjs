@@ -12,11 +12,11 @@ export default {
     extend: {
       colors: {
         white: "#FFFFFF",
-        dark: "#000000",
-        default: "#E6DCD3",
-        success: "#B4A79E",
-        warning: "#BDA18C",
-        danger: "#3F352C",
+        dark: "#171A1B",
+        default: "#F5F5F5",
+        success: "#93D50A",
+        warning: "#FCDA01",
+        danger: "#FC637D",
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
