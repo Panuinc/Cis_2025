@@ -11,12 +11,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        white: "#FAF3ED",
-        dark: "#1E1204",
-        default: "#D6BBA0",
-        success: "#6D6950",
-        warning: "#998A69",
-        danger: "#B79478",
+        white: "#FFFFFF",
+        dark: "#000000",
+        default: "#E6DCD3",
+        success: "#B4A79E",
+        warning: "#BDA18C",
+        danger: "#3F352C",
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
