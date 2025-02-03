@@ -22,13 +22,13 @@ export default function FormRegister({
     <form
       ref={formRef}
       onSubmit={onSubmit}
-      className="flex flex-col items-center justify-start w-full h-full xl:w-4/12 p-2 gap-2 bg-white rounded-3xl overflow-auto"
+      className="flex flex-col items-center justify-start w-full h-full xl:w-4/12 p-2 gap-2 bg-white bg-opacity-50 shadow-md rounded-3xl overflow-auto"
     >
-      <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-lg font-[600] text-danger">
+      <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-lg font-[600] text-success">
         Register Now!
       </div>
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2">
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-danger">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-success">
           <Select
             name="employeeTitle"
             label="Title"
@@ -36,7 +36,7 @@ export default function FormRegister({
             labelPlacement="outside"
             size="lg"
             variant="bordered"
-            color="danger"
+            color="success"
             startContent={<User />}
             value={formData.employeeTitle || ""}
             selectedKeys={[formData.employeeTitle] || ""}
@@ -55,7 +55,7 @@ export default function FormRegister({
             </SelectItem>
           </Select>
         </div>
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-danger">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-success">
           <Input
             type="text"
             name="employeeFirstname"
@@ -64,7 +64,7 @@ export default function FormRegister({
             labelPlacement="outside"
             size="lg"
             variant="bordered"
-            color="danger"
+            color="success"
             startContent={<User />}
             value={formData.employeeFirstname || ""}
             onChange={handleInputChange("employeeFirstname")}
@@ -74,7 +74,7 @@ export default function FormRegister({
         </div>
       </div>
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2">
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-danger">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-success">
           <Input
             type="text"
             name="employeeLastname"
@@ -83,7 +83,7 @@ export default function FormRegister({
             labelPlacement="outside"
             size="lg"
             variant="bordered"
-            color="danger"
+            color="success"
             startContent={<User />}
             value={formData.employeeLastname || ""}
             onChange={handleInputChange("employeeLastname")}
@@ -91,7 +91,7 @@ export default function FormRegister({
             errorMessage={errors.employeeLastname}
           />
         </div>
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-danger">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-success">
           <Input
             type="text"
             name="employeeNickname"
@@ -100,7 +100,7 @@ export default function FormRegister({
             labelPlacement="outside"
             size="lg"
             variant="bordered"
-            color="danger"
+            color="success"
             startContent={<User />}
             value={formData.employeeNickname || ""}
             onChange={handleInputChange("employeeNickname")}
@@ -110,7 +110,7 @@ export default function FormRegister({
         </div>
       </div>
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2">
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-danger">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-success">
           <Input
             type="email"
             name="employeeEmail"
@@ -119,7 +119,7 @@ export default function FormRegister({
             labelPlacement="outside"
             size="lg"
             variant="bordered"
-            color="danger"
+            color="success"
             startContent={<Email />}
             value={formData.employeeEmail || ""}
             onChange={handleInputChange("employeeEmail")}
@@ -127,7 +127,7 @@ export default function FormRegister({
             errorMessage={errors.employeeEmail}
           />
         </div>
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-danger">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-success">
           <Input
             type="number"
             name="employeeTel"
@@ -136,7 +136,7 @@ export default function FormRegister({
             labelPlacement="outside"
             size="lg"
             variant="bordered"
-            color="danger"
+            color="success"
             startContent={<Contact />}
             value={formData.employeeTel || ""}
             onChange={handleInputChange("employeeTel")}
@@ -146,7 +146,7 @@ export default function FormRegister({
         </div>
       </div>
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2">
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-danger">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-success">
           <Input
             type="number"
             name="employeeIdCard"
@@ -155,7 +155,7 @@ export default function FormRegister({
             labelPlacement="outside"
             size="lg"
             variant="bordered"
-            color="danger"
+            color="success"
             startContent={<Hr />}
             value={formData.employeeIdCard || ""}
             onChange={handleInputChange("employeeIdCard")}
@@ -163,7 +163,7 @@ export default function FormRegister({
             errorMessage={errors.employeeIdCard}
           />
         </div>
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-danger">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-success">
           <Select
             name="employeeCitizen"
             label="Citizen"
@@ -171,7 +171,7 @@ export default function FormRegister({
             labelPlacement="outside"
             size="lg"
             variant="bordered"
-            color="danger"
+            color="success"
             startContent={<User />}
             value={formData.employeeCitizen || ""}
             selectedKeys={[formData.employeeCitizen] || ""}
@@ -198,7 +198,7 @@ export default function FormRegister({
         </div>
       </div>
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2">
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-danger">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-success">
           <Select
             name="employeeGender"
             label="Gender"
@@ -206,7 +206,7 @@ export default function FormRegister({
             labelPlacement="outside"
             size="lg"
             variant="bordered"
-            color="danger"
+            color="success"
             startContent={<Gender />}
             value={formData.employeeGender || ""}
             selectedKeys={[formData.employeeGender] || ""}
@@ -222,7 +222,7 @@ export default function FormRegister({
             </SelectItem>
           </Select>
         </div>
-        <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-danger">
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-success">
           <Input
             name="employeeBirthday"
             type="date"
@@ -231,7 +231,7 @@ export default function FormRegister({
             labelPlacement="outside"
             size="lg"
             variant="bordered"
-            color="danger"
+            color="success"
             startContent={<LeaveWork />}
             value={formData.employeeBirthday || ""}
             onChange={handleInputChange("employeeBirthday")}
@@ -243,16 +243,16 @@ export default function FormRegister({
       <div className="flex items-center justify-center w-full h-full p-2 gap-2">
         <Button
           size="lg"
-          color="danger"
+          color="success"
           className="w-1/2 text-white"
           type="submit"
         >
           Register
         </Button>
       </div>
-      <div className="flex items-center justify-start w-full h-full p-2 gap-2 text-danger">
+      <div className="flex items-center justify-start w-full h-full p-2 gap-2 text-success">
         If You Have Account
-        <Link href="/" className="font-[600] text-danger">
+        <Link href="/" className="font-[600] text-success">
           Login
         </Link>
       </div>

@@ -15,7 +15,7 @@ export default function FormIndex({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col items-center justify-center w-full min-h-[500px] xl:w-4/12 p-2 gap-2 bg-white rounded-3xl"
+      className="flex flex-col items-center justify-center w-full min-h-[500px] xl:w-4/12 p-2 gap-2 bg-white bg-opacity-50 shadow-md rounded-3xl"
     >
       <div className="flex items-center justify-center w-full h-full p-2 gap-2">
         <Image
@@ -27,11 +27,11 @@ export default function FormIndex({
         />
       </div>
 
-      <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-lg font-[600] text-danger">
+      <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-lg font-[600] text-success">
         Channakorn Internal System
       </div>
 
-      <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-danger">
+      <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-success">
         <Input
           type="text"
           label="Username"
@@ -39,7 +39,7 @@ export default function FormIndex({
           labelPlacement="outside"
           size="lg"
           variant="bordered"
-          color="danger"
+          color="success"
           startContent={<User />}
           value={userUsername}
           onChange={(e) => setUserUsername(e.target.value)}
@@ -47,7 +47,7 @@ export default function FormIndex({
         />
       </div>
 
-      <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-danger">
+      <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-success">
         <Input
           type="password"
           label="Password"
@@ -55,7 +55,7 @@ export default function FormIndex({
           labelPlacement="outside"
           size="lg"
           variant="bordered"
-          color="danger"
+          color="success"
           startContent={<Logout />}
           value={userPassword}
           onChange={(e) => setUserPassword(e.target.value)}
@@ -63,8 +63,8 @@ export default function FormIndex({
         />
       </div>
 
-      <div className="flex items-center justify-end w-full h-full p-2 gap-2 text-danger">
-        <Checkbox color="danger" size="md" defaultSelected={false}>
+      <div className="flex items-center justify-end w-full h-full p-2 gap-2 text-success">
+        <Checkbox color="success" size="md" defaultSelected={false}>
           Keep me logged in
         </Checkbox>
       </div>
@@ -72,7 +72,7 @@ export default function FormIndex({
       <div className="flex items-center justify-center w-full h-full p-2 gap-2">
         <Button
           size="lg"
-          color="danger"
+          color="success"
           className="w-1/2 text-white"
           type="submit"
         >
@@ -80,9 +80,9 @@ export default function FormIndex({
         </Button>
       </div>
 
-      <div className="flex items-center justify-start w-full h-full p-2 gap-2 text-danger">
+      <div className="flex items-center justify-start w-full h-full p-2 gap-2 text-success">
         If You Don&#39;t Account
-        <Link href="/register" className="font-[600] text-danger">
+        <Link href="/register" className="font-[600] text-success">
           Register
         </Link>
       </div>
