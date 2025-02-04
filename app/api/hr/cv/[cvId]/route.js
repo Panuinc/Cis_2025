@@ -34,6 +34,7 @@ export async function GET(request, context) {
             projects: true,
           },
         },
+        CvLanguageSkill: true,
         CvCreateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
@@ -48,8 +49,14 @@ export async function GET(request, context) {
     }
 
     const formattedCv = cv.map((item) => {
-      const { CvEducation, CvLicense, CvWorkHistory, CvEmployeeBy, ...rest } =
-        item;
+      const {
+        CvEducation,
+        CvLicense,
+        CvWorkHistory,
+        CvLanguageSkill,
+        CvEmployeeBy,
+        ...rest
+      } = item;
 
       const formattedEmployee = CvEmployeeBy
         ? {
@@ -74,6 +81,7 @@ export async function GET(request, context) {
         educations: CvEducation,
         licenses: CvLicense,
         workHistories: formattedWorkHistories,
+        languageSkills: CvLanguageSkill,
       };
     });
 
@@ -103,7 +111,11 @@ export async function PUT(request, context) {
     const formData = await request.formData();
     let dataObj = {};
     for (const [key, value] of formData.entries()) {
-      if (["educations", "licenses", "workHistories"].includes(key)) {
+      if (
+        ["educations", "licenses", "workHistories", "languageSkills"].includes(
+          key
+        )
+      ) {
         dataObj[key] = JSON.parse(value);
       } else {
         dataObj[key] = value;
@@ -115,7 +127,7 @@ export async function PUT(request, context) {
       cvId,
     });
 
-    const { educations, licenses, workHistories, projects, ...cvData } =
+    const { educations, licenses, workHistories, languageSkills, ...cvData } =
       parsedData;
 
     const localNow = getLocalNow();
@@ -137,18 +149,33 @@ export async function PUT(request, context) {
       return { update, create };
     }
 
+    // Education
     const educationFields = [
       "cvEducationDegree",
       "cvEducationInstitution",
       "cvEducationStartDate",
       "cvEducationEndDate",
     ];
+    const { update: updateEducation, create: createEducation } = processEntries(
+      educations,
+      "cvEducationId",
+      educationFields
+    );
+
+    // License
     const licenseFields = [
       "cvProfessionalLicenseName",
       "cvProfessionalLicenseNumber",
       "cvProfessionalLicenseStartDate",
       "cvProfessionalLicenseEndDate",
     ];
+    const { update: updateLicense, create: createLicense } = processEntries(
+      licenses,
+      "cvProfessionalLicenseId",
+      licenseFields
+    );
+
+    // WorkHistory (มี projects ข้างใน)
     const workHistoryFields = [
       "cvWorkHistoryCompanyName",
       "cvWorkHistoryPosition",
@@ -157,23 +184,14 @@ export async function PUT(request, context) {
     ];
     const projectFields = ["cvProjectName", "cvProjectDescription"];
 
-    const { update: updateEducation, create: createEducation } = processEntries(
-      educations,
-      "cvEducationId",
-      educationFields
-    );
-    const { update: updateLicense, create: createLicense } = processEntries(
-      licenses,
-      "cvProfessionalLicenseId",
-      licenseFields
-    );
-
     const updateWorkHistories = (workHistories || [])
       .filter((e) => e.cvWorkHistoryId)
       .map((e) => {
         const { projects, ...historyData } = e;
+        // process projects
         const { update: updateProjects, create: createProjects } =
           processEntries(projects, "cvProjectId", projectFields);
+
         return {
           where: { cvWorkHistoryId: e.cvWorkHistoryId },
           data: {
@@ -207,22 +225,40 @@ export async function PUT(request, context) {
         };
       });
 
+    // LanguageSkill (ใหม่)
+    const languageSkillFields = [
+      "cvLanguageSkillName",
+      "cvLanguageSkillProficiency",
+    ];
+    const { update: updateLanguageSkill, create: createLanguageSkill } =
+      processEntries(languageSkills, "cvLanguageSkillId", languageSkillFields);
+
+    // อัปเดตลง DB
     const updatedCv = await prisma.cv.update({
       where: { cvId: parseInt(cvId, 10) },
       data: {
         ...cvData,
         cvUpdateAt: localNow,
+
+        // Education
         CvEducation: {
           update: updateEducation,
           create: createEducation,
         },
+        // License
         CvLicense: {
           update: updateLicense,
           create: createLicense,
         },
+        // Work History
         CvWorkHistory: {
           update: updateWorkHistories,
           create: createWorkHistories,
+        },
+        // Language Skill
+        CvLanguageSkill: {
+          update: updateLanguageSkill,
+          create: createLanguageSkill,
         },
       },
     });

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Input, Button } from "@nextui-org/react";
+import { Input, Button, Select, SelectItem } from "@nextui-org/react";
 import { Cancel, Database } from "@/components/icons/icons";
 
 export default function FormCv({
@@ -28,6 +28,10 @@ export default function FormCv({
   handleProjectChange,
   addNewProjectEntry,
   removeProjectEntry,
+
+  handleLanguageSkillChange,
+  addNewLanguageSkillEntry,
+  removeLanguageSkillEntry,
 }) {
   return (
     <form
@@ -101,6 +105,98 @@ export default function FormCv({
             isInvalid={!!errors.employeeEmail}
             errorMessage={errors.employeeEmail}
           />
+        </div>
+      </div>
+      <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        {/* Title */}
+        <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed font-[600]">
+          Language Skills
+        </div>
+
+        {/* Loop แสดงผล Language Skill ที่มีอยู่ */}
+        {formData.languageSkills?.map((skill, index) => (
+          <div
+            key={index}
+            className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed"
+          >
+            {/* แบ่งเป็น 2 ช่อง (Language Name / Proficiency) */}
+            <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                <Input
+                  name={`cvLanguageSkillName_${index}`}
+                  type="text"
+                  label="Language Name"
+                  placeholder="e.g. English, Japanese"
+                  labelPlacement="outside"
+                  size="lg"
+                  variant="bordered"
+                  value={skill.cvLanguageSkillName || ""}
+                  onChange={(e) =>
+                    handleLanguageSkillChange(
+                      index,
+                      "cvLanguageSkillName",
+                      e.target.value
+                    )
+                  }
+                />
+              </div>
+
+              <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+                {/* Select ของ Next UI */}
+                <Select
+                  name={`cvLanguageSkillProficiency_${index}`}
+                  label="Proficiency"
+                  labelPlacement="outside"
+                  variant="bordered"
+                  placeholder="Select Proficiency"
+                  size="lg"
+                  // แปลงค่าใน state เป็น selectedKeys (Set) ของ NextUI
+                  selectedKeys={
+                    skill.cvLanguageSkillProficiency
+                      ? new Set([skill.cvLanguageSkillProficiency])
+                      : new Set(["BASIC"])
+                  }
+                  onSelectionChange={(keys) => {
+                    // แปลง selectedKeys กลับเป็น string ตัวเดียว
+                    const selectedValue = Array.from(keys)[0];
+                    handleLanguageSkillChange(
+                      index,
+                      "cvLanguageSkillProficiency",
+                      selectedValue
+                    );
+                  }}
+                >
+                  <SelectItem key="BASIC">BASIC</SelectItem>
+                  <SelectItem key="INTERMEDIATE">INTERMEDIATE</SelectItem>
+                  <SelectItem key="ADVANCED">ADVANCED</SelectItem>
+                </Select>
+              </div>
+            </div>
+
+            {/* ปุ่ม Cancel Language Skill */}
+            <div className="flex items-center justify-end w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+              <Button
+                size="md"
+                color="danger"
+                startContent={<Cancel />}
+                onPress={() => removeLanguageSkillEntry(index)}
+              >
+                Cancel Language Skill
+              </Button>
+            </div>
+          </div>
+        ))}
+
+        {/* ปุ่ม Add Language Skill */}
+        <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Button
+            size="md"
+            color="warning"
+            startContent={<Database />}
+            onPress={addNewLanguageSkillEntry}
+          >
+            Add Language Skill
+          </Button>
         </div>
       </div>
       <div className="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
@@ -527,7 +623,6 @@ export default function FormCv({
           </Button>
         </div>
       </div>
-
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-start w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input

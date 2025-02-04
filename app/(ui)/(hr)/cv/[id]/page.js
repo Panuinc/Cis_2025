@@ -24,6 +24,7 @@ const DEFAULT_FORM_DATA = {
   educations: [],
   licenses: [],
   workHistories: [],
+  languageSkills: [],
 };
 
 export default function CvUpdate({ params: paramsPromise }) {
@@ -69,6 +70,7 @@ export default function CvUpdate({ params: paramsPromise }) {
           educations: cv.educations || [],
           licenses: cv.licenses || [],
           workHistories: cv.workHistories || [],
+          languageSkills: cv.languageSkills || [],
         });
       } else {
         toast.error(cvData.error);
@@ -248,12 +250,44 @@ export default function CvUpdate({ params: paramsPromise }) {
     });
   }, []);
 
+  const handleLanguageSkillChange = useCallback((index, field, value) => {
+    setFormData((prev) => {
+      const updatedLanguageSkills = [...(prev.languageSkills || [])];
+      updatedLanguageSkills[index] = {
+        ...updatedLanguageSkills[index],
+        [field]: value,
+      };
+      return { ...prev, languageSkills: updatedLanguageSkills };
+    });
+  }, []);
+
+  const addNewLanguageSkillEntry = useCallback(() => {
+    setFormData((prev) => ({
+      ...prev,
+      languageSkills: [
+        ...(prev.languageSkills || []),
+        {
+          cvLanguageSkillName: "",
+          cvLanguageSkillProficiency: "BASIC",
+        },
+      ],
+    }));
+  }, []);
+
+  const removeLanguageSkillEntry = useCallback((index) => {
+    setFormData((prev) => ({
+      ...prev,
+      languageSkills: prev.languageSkills.filter((_, i) => i !== index),
+    }));
+  }, []);
+
   const handleSubmit = useCallback(
     async (event) => {
       event.preventDefault();
 
       const formDataObject = new FormData(formRef.current);
       formDataObject.append("cvUpdateBy", userId);
+
       formDataObject.append(
         "educations",
         JSON.stringify(formData.educations || [])
@@ -265,6 +299,10 @@ export default function CvUpdate({ params: paramsPromise }) {
       formDataObject.append(
         "workHistories",
         JSON.stringify(formData.workHistories || [])
+      );
+      formDataObject.append(
+        "languageSkills",
+        JSON.stringify(formData.languageSkills || [])
       );
 
       try {
@@ -334,6 +372,9 @@ export default function CvUpdate({ params: paramsPromise }) {
         handleProjectChange={handleProjectChange}
         addNewProjectEntry={addNewProjectEntry}
         removeProjectEntry={removeProjectEntry}
+        handleLanguageSkillChange={handleLanguageSkillChange}
+        addNewLanguageSkillEntry={addNewLanguageSkillEntry}
+        removeLanguageSkillEntry={removeLanguageSkillEntry}
       />
     </>
   );

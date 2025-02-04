@@ -128,6 +128,29 @@ const workHistorySchema = z.object({
   projects: z.array(projectSchema).optional(),
 });
 
+const languageSkillSchema = z.object({
+  cvLanguageSkillId: preprocessInt(
+    "CvLanguageSkill ID must be provided.",
+    "CvLanguageSkill ID must be an integer."
+  ).optional(),
+
+  cvLanguageSkillCvId: preprocessInt(
+    "CvLanguageSkill Cv ID must be provided.",
+    "CvLanguageSkill Cv ID must be an integer."
+  ).optional(),
+
+  cvLanguageSkillName: preprocessString(
+    "Please Enter Language Skill Name",
+    "Please Enter Language Skill Name"
+  ),
+
+  cvLanguageSkillProficiency: z.enum(["BASIC", "INTERMEDIATE", "ADVANCED"], {
+    required_error: "Language Skill Proficiency is required",
+    invalid_type_error:
+      "Language Skill Proficiency must be 'BASIC' | 'INTERMEDIATE' | 'ADVANCED'",
+  }),
+});
+
 export function formatCvData(cvArray) {
   return cvArray.map((cv) => ({
     ...cv,
@@ -152,4 +175,5 @@ export const cvPutSchema = z.object({
   educations: z.array(educationSchema).optional(),
   licenses: z.array(licenseSchema).optional(),
   workHistories: z.array(workHistorySchema).optional(),
+  languageSkills: z.array(languageSkillSchema).optional(),
 });
