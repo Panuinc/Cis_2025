@@ -10,7 +10,6 @@ export async function GET(request, context) {
   try {
     ip = getRequestIP(request);
 
-    // รับค่าจาก parameter (ต้องส่ง cvTHId มาใน url)
     const params = await context.params;
     const cvTHId = parseInt(params.cvTHId, 10);
 
@@ -21,15 +20,26 @@ export async function GET(request, context) {
       );
     }
 
-    // ตรวจสอบ secret token และ rate limit
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
 
-    // ดึงข้อมูลจากโมเดล CvTH พร้อมความสัมพันธ์ที่เกี่ยวข้อง
     const cvth = await prisma.cvTH.findUnique({
       where: { cvTHId: cvTHId },
       include: {
-        CvTHEmployeeBy: true,
+        CvTHEmployeeBy: {
+          include: {
+            employeeEmployment: {
+              where: {
+                employmentWorkStatus: "CurrentEmployee",
+              },
+              include: {
+                EmploymentPositionId: {
+                  select: { positionName: true },
+                },
+              },
+            },
+          },
+        },
         CvTHEducation: true,
         CvTHLicense: true,
         CvTHWorkHistory: {
@@ -54,130 +64,33 @@ export async function GET(request, context) {
       );
     }
 
-    // Format วันที่สร้าง (สามารถปรับปรุงเพิ่มเติมได้ตามต้องการ)
-    const formattedCreateAt = cvth.cvTHCreateAt
-      ? new Date(cvth.cvTHCreateAt).toLocaleDateString("th-TH", {
-          day: "numeric",
-          month: "numeric",
-          year: "numeric",
-        })
+    const fullname = cvth.CvTHEmployeeBy
+      ? `${cvth.CvTHEmployeeBy.employeeFirstname} ${cvth.CvTHEmployeeBy.employeeLastname}`
       : "-";
 
-    // สร้างแถวสำหรับตารางการศึกษา
-    const educationRows =
-      cvth.CvTHEducation && cvth.CvTHEducation.length > 0
-        ? cvth.CvTHEducation.map(
-            (edu, index) => `
-        <tr>
-          <td class="border px-4 py-2 text-center">${index + 1}</td>
-          <td class="border px-4 py-2">${edu.cvTHEducationDegree || "-"}</td>
-          <td class="border px-4 py-2">${
-            edu.cvTHEducationInstitution || "-"
-          }</td>
-          <td class="border px-4 py-2">${edu.cvTHEducationStartDate || "-"}</td>
-          <td class="border px-4 py-2">${edu.cvTHEducationEndDate || "-"}</td>
-        </tr>
-      `
-          ).join("")
-        : `
-        <tr>
-          <td class="border px-4 py-2 text-center" colspan="5">ไม่มีข้อมูล</td>
-        </tr>
-      `;
+    const positionName =
+      cvth.CvTHEmployeeBy?.employeeEmployment?.[0]?.EmploymentPositionId
+        ?.positionName || "-";
 
-    // สร้างแถวสำหรับตารางใบอนุญาตวิชาชีพ
-    const licenseRows =
-      cvth.CvTHLicense && cvth.CvTHLicense.length > 0
-        ? cvth.CvTHLicense.map(
-            (lic, index) => `
-        <tr>
-          <td class="border px-4 py-2 text-center">${index + 1}</td>
-          <td class="border px-4 py-2">${
-            lic.cvTHProfessionalLicenseName || "-"
-          }</td>
-          <td class="border px-4 py-2">${
-            lic.cvTHProfessionalLicenseNumber || "-"
-          }</td>
-          <td class="border px-4 py-2">${
-            lic.cvTHProfessionalLicenseStartDate || "-"
-          }</td>
-          <td class="border px-4 py-2">${
-            lic.cvTHProfessionalLicenseEndDate || "-"
-          }</td>
-        </tr>
-      `
-          ).join("")
-        : `
-        <tr>
-          <td class="border px-4 py-2 text-center" colspan="5">ไม่มีข้อมูล</td>
-        </tr>
-      `;
+    const employeeEmail = cvth.CvTHEmployeeBy?.employeeEmail || "-";
 
-    // สร้างแถวสำหรับตารางประวัติการทำงาน (รวมโปรเจ็คที่เกี่ยวข้อง)
-    const workHistoryRows =
-      cvth.CvTHWorkHistory && cvth.CvTHWorkHistory.length > 0
-        ? cvth.CvTHWorkHistory.map((wh, index) => {
-            const projectList =
-              wh.projects && wh.projects.length > 0
-                ? wh.projects.map((proj) => proj.cvTHProjectName).join(", ")
-                : "-";
-            return `
-          <tr>
-            <td class="border px-4 py-2 text-center">${index + 1}</td>
-            <td class="border px-4 py-2">${
-              wh.cvTHWorkHistoryCompanyName || "-"
-            }</td>
-            <td class="border px-4 py-2">${
-              wh.cvTHWorkHistoryPosition || "-"
-            }</td>
-            <td class="border px-4 py-2">${
-              wh.cvTHWorkHistoryStartDate || "-"
-            }</td>
-            <td class="border px-4 py-2">${
-              wh.cvTHWorkHistoryEndDate || "-"
-            }</td>
-            <td class="border px-4 py-2">${projectList}</td>
-          </tr>
-        `;
-          }).join("")
-        : `
-          <tr>
-            <td class="border px-4 py-2 text-center" colspan="6">ไม่มีข้อมูล</td>
-          </tr>
-        `;
+    const formattedBirthday = cvth.CvTHEmployeeBy?.employeeBirthday
+      ? new Date(cvth.CvTHEmployeeBy.employeeBirthday).toLocaleDateString(
+          "th-TH",
+          {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          }
+        )
+      : "-";
 
-    // สร้างแถวสำหรับตารางทักษะภาษา
-    const languageRows =
-      cvth.CvTHLanguageSkill && cvth.CvTHLanguageSkill.length > 0
-        ? cvth.CvTHLanguageSkill.map(
-            (lang, index) => `
-          <tr>
-            <td class="border px-4 py-2 text-center">${index + 1}</td>
-            <td class="border px-4 py-2">${
-              lang.cvTHLanguageSkillName || "-"
-            }</td>
-            <td class="border px-4 py-2">${
-              lang.cvTHLanguageSkillProficiency || "-"
-            }</td>
-          </tr>
-        `
-          ).join("")
-        : `
-          <tr>
-            <td class="border px-4 py-2 text-center" colspan="3">ไม่มีข้อมูล</td>
-          </tr>
-        `;
-
-    // สร้าง HTML สำหรับ Export CvTH
     const htmlContent = `
       <html>
       <head>
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
         <style>
-          body {
-            font-family: 'Sarabun', sans-serif;
-          }
           .watermark {
             position: fixed;
             top: 50%;
@@ -189,104 +102,83 @@ export async function GET(request, context) {
             z-index: 1000;
             pointer-events: none;
           }
+            .bg-header{
+              background: rgba(3, 153, 76);            
+            }
         </style>
       </head>
-      <body class="p-8 text-sm">
-        <div class="watermark">CV</div>
-        <div class="text-center mb-4">
-          <img src="${
-            process.env.NEXT_PUBLIC_API_URL
-          }/images/company_logo/company_logo.png" class="w-28 mx-auto" />
-          <h1 class="text-3xl font-bold">ประวัติส่วนตัว (CV) ภาษาไทย</h1>
+      <body class="font-sans p-8 text-sm" style="font-family: 'Sarabun', sans-serif;">
+        <div class="flex flex-row items-start justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+        <div class="flex flex-col items-center justify-center w-8/12 h-full p-2 gap-2 border-2 border-dashed">
+          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <img src="${
+                process.env.NEXT_PUBLIC_API_URL
+              }/images/company_logo/company_logo.png" class="w-28 mx-auto" />
+            </div>
+            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            ${fullname}
+            </div>
+          </div>
+          <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed bg-header">
+            ${positionName}
+          </div>
+            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            Work Experience
+          </div>
+          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+          ${
+            cvth.CvTHWorkHistory && cvth.CvTHWorkHistory.length > 0
+              ? cvth.CvTHWorkHistory.map(
+                  (wh, index) => `
+
+            <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                ${wh.cvTHWorkHistoryCompanyName || ""}
+              </div>
+               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                 ${wh.cvTHWorkHistoryPosition || ""}
+              </div>
+               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+               ${wh.cvTHWorkHistoryStartDate || ""} - ${
+                    wh.cvTHWorkHistoryEndDate || "PRESENT"
+                  }
+              </div>
+            </div>
+            <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-l-2">
+                ${
+                  wh.projects && wh.projects.length > 0
+                    ? `<ul class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                            ${wh.projects
+                              .map(
+                                (proj) => `
+                              <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                              <span class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">●</span>
+                              <span class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">${proj.cvTHProjectName}</span>
+                              </div>
+                            `
+                              )
+                              .join("")}
+                          </ul>`
+                    : '<div class="text-gray-500">No projects listed</div>'
+                }
+            </div>
+          </div>
+          `
+                ).join("")
+              : '<div class="text-gray-500">No work experience data available</div>'
+          }
+        </div>
+        
+        <div class="flex flex-col items-center justify-center w-4/12 h-full p-2 gap-2 border-2 border-dashed">
+          01
         </div>
 
-        <div class="mb-4">
-          <h2 class="text-xl font-semibold">ข้อมูลพนักงาน</h2>
-          <p>ชื่อ: ${
-            cvth.CvTHEmployeeBy
-              ? cvth.CvTHEmployeeBy.employeeFirstname +
-                " " +
-                cvth.CvTHEmployeeBy.employeeLastname
-              : "-"
-          }</p>
-          <p>วันที่สร้าง: ${formattedCreateAt}</p>
-        </div>
-
-        <div class="mb-4">
-          <h2 class="text-xl font-semibold">ประวัติการศึกษา</h2>
-          <table class="min-w-full border-collapse">
-            <thead class="bg-gray-200">
-              <tr>
-                <th class="border px-4 py-2">ลำดับ</th>
-                <th class="border px-4 py-2">ระดับการศึกษา</th>
-                <th class="border px-4 py-2">สถาบัน</th>
-                <th class="border px-4 py-2">เริ่ม</th>
-                <th class="border px-4 py-2">จบ</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${educationRows}
-            </tbody>
-          </table>
-        </div>
-
-        <div class="mb-4">
-          <h2 class="text-xl font-semibold">ใบอนุญาตวิชาชีพ</h2>
-          <table class="min-w-full border-collapse">
-            <thead class="bg-gray-200">
-              <tr>
-                <th class="border px-4 py-2">ลำดับ</th>
-                <th class="border px-4 py-2">ชื่อใบอนุญาต</th>
-                <th class="border px-4 py-2">หมายเลข</th>
-                <th class="border px-4 py-2">เริ่ม</th>
-                <th class="border px-4 py-2">จบ</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${licenseRows}
-            </tbody>
-          </table>
-        </div>
-
-        <div class="mb-4">
-          <h2 class="text-xl font-semibold">ประวัติการทำงาน</h2>
-          <table class="min-w-full border-collapse">
-            <thead class="bg-gray-200">
-              <tr>
-                <th class="border px-4 py-2">ลำดับ</th>
-                <th class="border px-4 py-2">บริษัท</th>
-                <th class="border px-4 py-2">ตำแหน่ง</th>
-                <th class="border px-4 py-2">เริ่ม</th>
-                <th class="border px-4 py-2">จบ</th>
-                <th class="border px-4 py-2">โปรเจ็คที่เกี่ยวข้อง</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${workHistoryRows}
-            </tbody>
-          </table>
-        </div>
-
-        <div class="mb-4">
-          <h2 class="text-xl font-semibold">ทักษะทางภาษา</h2>
-          <table class="min-w-full border-collapse">
-            <thead class="bg-gray-200">
-              <tr>
-                <th class="border px-4 py-2">ลำดับ</th>
-                <th class="border px-4 py-2">ภาษา</th>
-                <th class="border px-4 py-2">ระดับความสามารถ</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${languageRows}
-            </tbody>
-          </table>
         </div>
       </body>
       </html>
     `;
 
-    // สร้าง PDF โดยใช้ Puppeteer
     const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
     const page = await browser.newPage();
 
