@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Input, Button, Select, SelectItem } from "@nextui-org/react";
 import { Cancel, Database } from "@/components/icons/icons";
 
-export default function FormCv({
+export default function FormCvTH({
   formRef,
   onSubmit,
   onClear,
@@ -123,18 +123,18 @@ export default function FormCv({
             <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 <Input
-                  name={`cvLanguageSkillName_${index}`}
+                  name={`cvTHLanguageSkillName_${index}`}
                   type="text"
                   label="Language Name"
                   placeholder="e.g. English, Japanese"
                   labelPlacement="outside"
                   size="lg"
                   variant="bordered"
-                  value={skill.cvLanguageSkillName || ""}
+                  value={skill.cvTHLanguageSkillName || ""}
                   onChange={(e) =>
                     handleLanguageSkillChange(
                       index,
-                      "cvLanguageSkillName",
+                      "cvTHLanguageSkillName",
                       e.target.value
                     )
                   }
@@ -144,7 +144,7 @@ export default function FormCv({
               <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 {/* Select ของ Next UI */}
                 <Select
-                  name={`cvLanguageSkillProficiency_${index}`}
+                  name={`cvTHLanguageSkillProficiency_${index}`}
                   label="Proficiency"
                   labelPlacement="outside"
                   variant="bordered"
@@ -152,8 +152,8 @@ export default function FormCv({
                   size="lg"
                   // แปลงค่าใน state เป็น selectedKeys (Set) ของ NextUI
                   selectedKeys={
-                    skill.cvLanguageSkillProficiency
-                      ? new Set([skill.cvLanguageSkillProficiency])
+                    skill.cvTHLanguageSkillProficiency
+                      ? new Set([skill.cvTHLanguageSkillProficiency])
                       : new Set(["BASIC"])
                   }
                   onSelectionChange={(keys) => {
@@ -161,7 +161,7 @@ export default function FormCv({
                     const selectedValue = Array.from(keys)[0];
                     handleLanguageSkillChange(
                       index,
-                      "cvLanguageSkillProficiency",
+                      "cvTHLanguageSkillProficiency",
                       selectedValue
                     );
                   }}
@@ -211,18 +211,18 @@ export default function FormCv({
             <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 <Input
-                  name={`cvEducationDegree_${index}`}
+                  name={`cvTHEducationDegree_${index}`}
                   type="text"
                   label="Degree"
                   placeholder="Please Enter Data"
                   labelPlacement="outside"
                   size="lg"
                   variant="bordered"
-                  value={education.cvEducationDegree || ""}
+                  value={education.cvTHEducationDegree || ""}
                   onChange={(e) =>
                     handleEducationChange(
                       index,
-                      "cvEducationDegree",
+                      "cvTHEducationDegree",
                       e.target.value
                     )
                   }
@@ -230,18 +230,18 @@ export default function FormCv({
               </div>
               <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 <Input
-                  name={`cvEducationInstitution_${index}`}
+                  name={`cvTHEducationInstitution_${index}`}
                   type="text"
                   label="Institution"
                   placeholder="Please Enter Data"
                   labelPlacement="outside"
                   size="lg"
                   variant="bordered"
-                  value={education.cvEducationInstitution || ""}
+                  value={education.cvTHEducationInstitution || ""}
                   onChange={(e) =>
                     handleEducationChange(
                       index,
-                      "cvEducationInstitution",
+                      "cvTHEducationInstitution",
                       e.target.value
                     )
                   }
@@ -251,7 +251,7 @@ export default function FormCv({
             <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 <Input
-                  name={`cvEducationStartDate_${index}`}
+                  name={`cvTHEducationStartDate_${index}`}
                   type="number"
                   label="Start Year"
                   placeholder="Please Enter Data"
@@ -260,11 +260,11 @@ export default function FormCv({
                   variant="bordered"
                   min="1900"
                   max={new Date().getFullYear()}
-                  value={education.cvEducationStartDate || ""}
+                  value={education.cvTHEducationStartDate || ""}
                   onChange={(e) =>
                     handleEducationChange(
                       index,
-                      "cvEducationStartDate",
+                      "cvTHEducationStartDate",
                       e.target.value
                     )
                   }
@@ -272,7 +272,7 @@ export default function FormCv({
               </div>
               <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 <Input
-                  name={`cvEducationEndDate_${index}`}
+                  name={`cvTHEducationEndDate_${index}`}
                   type="number"
                   label="End Year"
                   placeholder="Please Enter Data"
@@ -281,11 +281,11 @@ export default function FormCv({
                   variant="bordered"
                   min="1900"
                   max={new Date().getFullYear()}
-                  value={education.cvEducationEndDate || ""}
+                  value={education.cvTHEducationEndDate || ""}
                   onChange={(e) =>
                     handleEducationChange(
                       index,
-                      "cvEducationEndDate",
+                      "cvTHEducationEndDate",
                       e.target.value
                     )
                   }
@@ -327,18 +327,18 @@ export default function FormCv({
             <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 <Input
-                  name={`cvProfessionalLicenseName_${index}`}
+                  name={`cvTHProfessionalLicenseName_${index}`}
                   type="text"
                   label="License Name"
                   placeholder="Please Enter Data"
                   labelPlacement="outside"
                   size="lg"
                   variant="bordered"
-                  value={license.cvProfessionalLicenseName || ""}
+                  value={license.cvTHProfessionalLicenseName || ""}
                   onChange={(e) =>
                     handleLicenseChange(
                       index,
-                      "cvProfessionalLicenseName",
+                      "cvTHProfessionalLicenseName",
                       e.target.value
                     )
                   }
@@ -346,18 +346,18 @@ export default function FormCv({
               </div>
               <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 <Input
-                  name={`cvProfessionalLicenseNumber_${index}`}
+                  name={`cvTHProfessionalLicenseNumber_${index}`}
                   type="text"
                   label="License Number"
                   placeholder="Please Enter Data"
                   labelPlacement="outside"
                   size="lg"
                   variant="bordered"
-                  value={license.cvProfessionalLicenseNumber || ""}
+                  value={license.cvTHProfessionalLicenseNumber || ""}
                   onChange={(e) =>
                     handleLicenseChange(
                       index,
-                      "cvProfessionalLicenseNumber",
+                      "cvTHProfessionalLicenseNumber",
                       e.target.value
                     )
                   }
@@ -367,7 +367,7 @@ export default function FormCv({
             <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 <Input
-                  name={`cvProfessionalLicenseStartDate_${index}`}
+                  name={`cvTHProfessionalLicenseStartDate_${index}`}
                   type="number"
                   label="Start Year"
                   placeholder="Please Enter Data"
@@ -376,11 +376,11 @@ export default function FormCv({
                   variant="bordered"
                   min="1900"
                   max={new Date().getFullYear()}
-                  value={license.cvProfessionalLicenseStartDate || ""}
+                  value={license.cvTHProfessionalLicenseStartDate || ""}
                   onChange={(e) =>
                     handleLicenseChange(
                       index,
-                      "cvProfessionalLicenseStartDate",
+                      "cvTHProfessionalLicenseStartDate",
                       e.target.value
                     )
                   }
@@ -388,7 +388,7 @@ export default function FormCv({
               </div>
               <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 <Input
-                  name={`cvProfessionalLicenseEndDate_${index}`}
+                  name={`cvTHProfessionalLicenseEndDate_${index}`}
                   type="number"
                   label="End Year"
                   placeholder="Please Enter Data"
@@ -397,11 +397,11 @@ export default function FormCv({
                   variant="bordered"
                   min="1900"
                   max={new Date().getFullYear()}
-                  value={license.cvProfessionalLicenseEndDate || ""}
+                  value={license.cvTHProfessionalLicenseEndDate || ""}
                   onChange={(e) =>
                     handleLicenseChange(
                       index,
-                      "cvProfessionalLicenseEndDate",
+                      "cvTHProfessionalLicenseEndDate",
                       e.target.value
                     )
                   }
@@ -443,18 +443,18 @@ export default function FormCv({
             <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 <Input
-                  name={`cvWorkHistoryCompanyName_${wIndex}`}
+                  name={`cvTHWorkHistoryCompanyName_${wIndex}`}
                   type="text"
                   label="Company Name"
                   placeholder="Please Enter Data"
                   labelPlacement="outside"
                   size="lg"
                   variant="bordered"
-                  value={workHistory.cvWorkHistoryCompanyName || ""}
+                  value={workHistory.cvTHWorkHistoryCompanyName || ""}
                   onChange={(e) =>
                     handleWorkHistoryChange(
                       wIndex,
-                      "cvWorkHistoryCompanyName",
+                      "cvTHWorkHistoryCompanyName",
                       e.target.value
                     )
                   }
@@ -462,18 +462,18 @@ export default function FormCv({
               </div>
               <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 <Input
-                  name={`cvWorkHistoryPosition_${wIndex}`}
+                  name={`cvTHWorkHistoryPosition_${wIndex}`}
                   type="text"
                   label="Position"
                   placeholder="Please Enter Data"
                   labelPlacement="outside"
                   size="lg"
                   variant="bordered"
-                  value={workHistory.cvWorkHistoryPosition || ""}
+                  value={workHistory.cvTHWorkHistoryPosition || ""}
                   onChange={(e) =>
                     handleWorkHistoryChange(
                       wIndex,
-                      "cvWorkHistoryPosition",
+                      "cvTHWorkHistoryPosition",
                       e.target.value
                     )
                   }
@@ -483,7 +483,7 @@ export default function FormCv({
             <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
               <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 <Input
-                  name={`cvWorkHistoryStartDate_${wIndex}`}
+                  name={`cvTHWorkHistoryStartDate_${wIndex}`}
                   type="number"
                   label="Start Year"
                   placeholder="Please Enter Data"
@@ -492,11 +492,11 @@ export default function FormCv({
                   variant="bordered"
                   min="1900"
                   max={new Date().getFullYear()}
-                  value={workHistory.cvWorkHistoryStartDate || ""}
+                  value={workHistory.cvTHWorkHistoryStartDate || ""}
                   onChange={(e) =>
                     handleWorkHistoryChange(
                       wIndex,
-                      "cvWorkHistoryStartDate",
+                      "cvTHWorkHistoryStartDate",
                       e.target.value
                     )
                   }
@@ -504,7 +504,7 @@ export default function FormCv({
               </div>
               <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                 <Input
-                  name={`cvWorkHistoryEndDate_${wIndex}`}
+                  name={`cvTHWorkHistoryEndDate_${wIndex}`}
                   type="number"
                   label="End Year"
                   placeholder="Please Enter Data"
@@ -513,11 +513,11 @@ export default function FormCv({
                   variant="bordered"
                   min="1900"
                   max={new Date().getFullYear()}
-                  value={workHistory.cvWorkHistoryEndDate || ""}
+                  value={workHistory.cvTHWorkHistoryEndDate || ""}
                   onChange={(e) =>
                     handleWorkHistoryChange(
                       wIndex,
-                      "cvWorkHistoryEndDate",
+                      "cvTHWorkHistoryEndDate",
                       e.target.value
                     )
                   }
@@ -537,19 +537,19 @@ export default function FormCv({
                   <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                     <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                       <Input
-                        name={`cvProjectName_${wIndex}_${pIndex}`}
+                        name={`cvTHProjectName_${wIndex}_${pIndex}`}
                         type="text"
                         label="Project Name"
                         placeholder="Please Enter Data"
                         labelPlacement="outside"
                         size="lg"
                         variant="bordered"
-                        value={project.cvProjectName || ""}
+                        value={project.cvTHProjectName || ""}
                         onChange={(e) =>
                           handleProjectChange(
                             wIndex,
                             pIndex,
-                            "cvProjectName",
+                            "cvTHProjectName",
                             e.target.value
                           )
                         }
@@ -557,19 +557,19 @@ export default function FormCv({
                     </div>
                     <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
                       <Input
-                        name={`cvProjectDescription_${wIndex}_${pIndex}`}
+                        name={`cvTHProjectDescription_${wIndex}_${pIndex}`}
                         type="text"
                         label="Project Description"
                         placeholder="Please Enter Data"
                         labelPlacement="outside"
                         size="lg"
                         variant="bordered"
-                        value={project.cvProjectDescription || ""}
+                        value={project.cvTHProjectDescription || ""}
                         onChange={(e) =>
                           handleProjectChange(
                             wIndex,
                             pIndex,
-                            "cvProjectDescription",
+                            "cvTHProjectDescription",
                             e.target.value
                           )
                         }

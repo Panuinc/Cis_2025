@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { handleErrors, handleGetErrors } from "@/lib/errorHandler";
-import { cvPutSchema } from "@/app/api/hr/cv/cvSchema";
-import { formatCvData } from "@/app/api/hr/cv/cvSchema";
+import { cvTHPutSchema } from "@/app/api/hr/cvTH/cvTHSchema";
+import { formatCvTHData } from "@/app/api/hr/cvTH/cvTHSchema";
 import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
 import prisma from "@/lib/prisma";
@@ -14,60 +14,60 @@ export async function GET(request, context) {
     ip = getRequestIP(request);
 
     const params = await context.params;
-    const cvId = parseInt(params.cvId, 10);
+    const cvTHId = parseInt(params.cvTHId, 10);
 
-    if (!cvId) {
-      return NextResponse.json({ error: "Cv ID is required" }, { status: 400 });
+    if (!cvTHId) {
+      return NextResponse.json({ error: "CvTH ID is required" }, { status: 400 });
     }
 
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
 
-    const cv = await prisma.cv.findMany({
-      where: { cvId: cvId },
+    const cvTH = await prisma.cvTH.findMany({
+      where: { cvTHId: cvTHId },
       include: {
-        CvEmployeeBy: true,
-        CvEducation: true,
-        CvLicense: true,
-        CvWorkHistory: {
+        CvTHEmployeeBy: true,
+        CvTHEducation: true,
+        CvTHLicense: true,
+        CvTHWorkHistory: {
           include: {
             projects: true,
           },
         },
-        CvLanguageSkill: true,
-        CvCreateBy: {
+        CvTHLanguageSkill: true,
+        CvTHCreateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
-        CvUpdateBy: {
+        CvTHUpdateBy: {
           select: { employeeFirstname: true, employeeLastname: true },
         },
       },
     });
 
-    if (!cv?.length) {
-      return NextResponse.json({ error: "No cv data found" }, { status: 404 });
+    if (!cvTH?.length) {
+      return NextResponse.json({ error: "No cvTH data found" }, { status: 404 });
     }
 
-    const formattedCv = cv.map((item) => {
+    const formattedCvTH = cvTH.map((item) => {
       const {
-        CvEducation,
-        CvLicense,
-        CvWorkHistory,
-        CvLanguageSkill,
-        CvEmployeeBy,
+        CvTHEducation,
+        CvTHLicense,
+        CvTHWorkHistory,
+        CvTHLanguageSkill,
+        CvTHEmployeeBy,
         ...rest
       } = item;
 
-      const formattedEmployee = CvEmployeeBy
+      const formattedEmployee = CvTHEmployeeBy
         ? {
-            ...CvEmployeeBy,
-            employeeBirthday: CvEmployeeBy.employeeBirthday
-              ? CvEmployeeBy.employeeBirthday.toISOString().split("T")[0]
+            ...CvTHEmployeeBy,
+            employeeBirthday: CvTHEmployeeBy.employeeBirthday
+              ? CvTHEmployeeBy.employeeBirthday.toISOString().split("T")[0]
               : null,
           }
         : null;
 
-      const formattedWorkHistories = CvWorkHistory.map((history) => {
+      const formattedWorkHistories = CvTHWorkHistory.map((history) => {
         const { projects, ...historyRest } = history;
         return {
           ...historyRest,
@@ -78,19 +78,19 @@ export async function GET(request, context) {
       return {
         ...rest,
         employee: formattedEmployee,
-        educations: CvEducation,
-        licenses: CvLicense,
+        educations: CvTHEducation,
+        licenses: CvTHLicense,
         workHistories: formattedWorkHistories,
-        languageSkills: CvLanguageSkill,
+        languageSkills: CvTHLanguageSkill,
       };
     });
 
     return NextResponse.json(
-      { message: "Cv data retrieved successfully", cv: formattedCv },
+      { message: "CvTH data retrieved successfully", cvTH: formattedCvTH },
       { status: 200 }
     );
   } catch (error) {
-    return handleGetErrors(error, ip, "Error retrieving cv data");
+    return handleGetErrors(error, ip, "Error retrieving cvTH data");
   }
 }
 
@@ -100,9 +100,9 @@ export async function PUT(request, context) {
     ip = getRequestIP(request);
 
     const params = await context.params;
-    const { cvId } = params;
-    if (!cvId) {
-      return NextResponse.json({ error: "Cv ID is required" }, { status: 400 });
+    const { cvTHId } = params;
+    if (!cvTHId) {
+      return NextResponse.json({ error: "CvTH ID is required" }, { status: 400 });
     }
 
     verifySecretToken(request.headers);
@@ -122,12 +122,12 @@ export async function PUT(request, context) {
       }
     }
 
-    const parsedData = cvPutSchema.parse({
+    const parsedData = cvTHPutSchema.parse({
       ...dataObj,
-      cvId,
+      cvTHId,
     });
 
-    const { educations, licenses, workHistories, languageSkills, ...cvData } =
+    const { educations, licenses, workHistories, languageSkills, ...cvTHData } =
       parsedData;
 
     const localNow = getLocalNow();
@@ -151,49 +151,49 @@ export async function PUT(request, context) {
 
     // Education
     const educationFields = [
-      "cvEducationDegree",
-      "cvEducationInstitution",
-      "cvEducationStartDate",
-      "cvEducationEndDate",
+      "cvTHEducationDegree",
+      "cvTHEducationInstitution",
+      "cvTHEducationStartDate",
+      "cvTHEducationEndDate",
     ];
     const { update: updateEducation, create: createEducation } = processEntries(
       educations,
-      "cvEducationId",
+      "cvTHEducationId",
       educationFields
     );
 
     // License
     const licenseFields = [
-      "cvProfessionalLicenseName",
-      "cvProfessionalLicenseNumber",
-      "cvProfessionalLicenseStartDate",
-      "cvProfessionalLicenseEndDate",
+      "cvTHProfessionalLicenseName",
+      "cvTHProfessionalLicenseNumber",
+      "cvTHProfessionalLicenseStartDate",
+      "cvTHProfessionalLicenseEndDate",
     ];
     const { update: updateLicense, create: createLicense } = processEntries(
       licenses,
-      "cvProfessionalLicenseId",
+      "cvTHProfessionalLicenseId",
       licenseFields
     );
 
     // WorkHistory (มี projects ข้างใน)
     const workHistoryFields = [
-      "cvWorkHistoryCompanyName",
-      "cvWorkHistoryPosition",
-      "cvWorkHistoryStartDate",
-      "cvWorkHistoryEndDate",
+      "cvTHWorkHistoryCompanyName",
+      "cvTHWorkHistoryPosition",
+      "cvTHWorkHistoryStartDate",
+      "cvTHWorkHistoryEndDate",
     ];
-    const projectFields = ["cvProjectName", "cvProjectDescription"];
+    const projectFields = ["cvTHProjectName", "cvTHProjectDescription"];
 
     const updateWorkHistories = (workHistories || [])
-      .filter((e) => e.cvWorkHistoryId)
+      .filter((e) => e.cvTHWorkHistoryId)
       .map((e) => {
         const { projects, ...historyData } = e;
         // process projects
         const { update: updateProjects, create: createProjects } =
-          processEntries(projects, "cvProjectId", projectFields);
+          processEntries(projects, "cvTHProjectId", projectFields);
 
         return {
-          where: { cvWorkHistoryId: e.cvWorkHistoryId },
+          where: { cvTHWorkHistoryId: e.cvTHWorkHistoryId },
           data: {
             ...Object.fromEntries(
               workHistoryFields.map((field) => [field, historyData[field]])
@@ -207,12 +207,12 @@ export async function PUT(request, context) {
       });
 
     const createWorkHistories = (workHistories || [])
-      .filter((e) => !e.cvWorkHistoryId)
+      .filter((e) => !e.cvTHWorkHistoryId)
       .map((e) => {
         const { projects, ...historyData } = e;
         const { create: createProjects } = processEntries(
           projects,
-          "cvProjectId",
+          "cvTHProjectId",
           projectFields
         );
         return {
@@ -227,36 +227,36 @@ export async function PUT(request, context) {
 
     // LanguageSkill (ใหม่)
     const languageSkillFields = [
-      "cvLanguageSkillName",
-      "cvLanguageSkillProficiency",
+      "cvTHLanguageSkillName",
+      "cvTHLanguageSkillProficiency",
     ];
     const { update: updateLanguageSkill, create: createLanguageSkill } =
-      processEntries(languageSkills, "cvLanguageSkillId", languageSkillFields);
+      processEntries(languageSkills, "cvTHLanguageSkillId", languageSkillFields);
 
     // อัปเดตลง DB
-    const updatedCv = await prisma.cv.update({
-      where: { cvId: parseInt(cvId, 10) },
+    const updatedCvTH = await prisma.cvTH.update({
+      where: { cvTHId: parseInt(cvTHId, 10) },
       data: {
-        ...cvData,
-        cvUpdateAt: localNow,
+        ...cvTHData,
+        cvTHUpdateAt: localNow,
 
         // Education
-        CvEducation: {
+        CvTHEducation: {
           update: updateEducation,
           create: createEducation,
         },
         // License
-        CvLicense: {
+        CvTHLicense: {
           update: updateLicense,
           create: createLicense,
         },
         // Work History
-        CvWorkHistory: {
+        CvTHWorkHistory: {
           update: updateWorkHistories,
           create: createWorkHistories,
         },
         // Language Skill
-        CvLanguageSkill: {
+        CvTHLanguageSkill: {
           update: updateLanguageSkill,
           create: createLanguageSkill,
         },
@@ -264,10 +264,10 @@ export async function PUT(request, context) {
     });
 
     return NextResponse.json(
-      { message: "Cv data updated successfully", cv: updatedCv },
+      { message: "CvTH data updated successfully", cvTH: updatedCvTH },
       { status: 200 }
     );
   } catch (error) {
-    return handleErrors(error, ip, "Error updating cv data");
+    return handleErrors(error, ip, "Error updating cvTH data");
   }
 }

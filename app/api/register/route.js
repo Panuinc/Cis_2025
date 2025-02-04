@@ -85,11 +85,19 @@ export async function POST(request) {
       },
     });
 
-    await prisma.cv.create({
+    await prisma.cvTH.create({
       data: {
-        cvEmployeeId: newEmployee.employeeId,
-        cvCreateBy: 1,
-        cvCreateAt: localNow,
+        cvTHEmployeeId: newEmployee.employeeId,
+        cvTHCreateBy: 1,
+        cvTHCreateAt: localNow,
+      },
+    });
+
+    await prisma.cvEN.create({
+      data: {
+        cvENEmployeeId: newEmployee.employeeId,
+        cvENCreateBy: 1,
+        cvENCreateAt: localNow,
       },
     });
 

@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import TopicHeader from "@/components/form/TopicHeader";
-import FormCv from "@/components/form/hr/cv/FormCv";
+import FormCvTH from "@/components/form/hr/cvTH/FormCvTH";
 import React, {
   useState,
   useRef,
@@ -16,7 +16,7 @@ import React, {
 const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
 
 const DEFAULT_FORM_DATA = {
-  cvEmployeeId: "",
+  cvTHEmployeeId: "",
   employeeFirstname: "",
   employeeLastname: "",
   employeeBirthday: "",
@@ -27,7 +27,7 @@ const DEFAULT_FORM_DATA = {
   languageSkills: [],
 };
 
-export default function CvUpdate({ params: paramsPromise }) {
+export default function CvTHUpdate({ params: paramsPromise }) {
   const { data: session } = useSession();
   const userData = session?.user || {};
   const userId = userData?.userId;
@@ -41,7 +41,7 @@ export default function CvUpdate({ params: paramsPromise }) {
   );
 
   const params = use(paramsPromise);
-  const cvId = params.id;
+  const cvTHId = params.id;
 
   const router = useRouter();
   const [errors, setErrors] = useState({});
@@ -51,34 +51,34 @@ export default function CvUpdate({ params: paramsPromise }) {
 
   const fetchData = useCallback(async () => {
     try {
-      const cvRes = await fetch(`/api/hr/cv/${cvId}`, {
+      const cvTHRes = await fetch(`/api/hr/cvTH/${cvTHId}`, {
         method: "GET",
         headers: {
           "secret-token": SECRET_TOKEN,
         },
       });
 
-      const cvData = await cvRes.json();
-      if (cvRes.ok) {
-        const cv = cvData.cv[0];
+      const cvTHData = await cvTHRes.json();
+      if (cvTHRes.ok) {
+        const cvTH = cvTHData.cvTH[0];
         setFormData({
-          cvEmployeeId: cv.cvEmployeeId,
-          employeeFirstname: cv.employee?.employeeFirstname || "",
-          employeeLastname: cv.employee?.employeeLastname || "",
-          employeeBirthday: cv.employee?.employeeBirthday || "",
-          employeeEmail: cv.employee?.employeeEmail || "",
-          educations: cv.educations || [],
-          licenses: cv.licenses || [],
-          workHistories: cv.workHistories || [],
-          languageSkills: cv.languageSkills || [],
+          cvTHEmployeeId: cvTH.cvTHEmployeeId,
+          employeeFirstname: cvTH.employee?.employeeFirstname || "",
+          employeeLastname: cvTH.employee?.employeeLastname || "",
+          employeeBirthday: cvTH.employee?.employeeBirthday || "",
+          employeeEmail: cvTH.employee?.employeeEmail || "",
+          educations: cvTH.educations || [],
+          licenses: cvTH.licenses || [],
+          workHistories: cvTH.workHistories || [],
+          languageSkills: cvTH.languageSkills || [],
         });
       } else {
-        toast.error(cvData.error);
+        toast.error(cvTHData.error);
       }
     } catch (error) {
       toast.error("Error fetching data");
     }
-  }, [cvId]);
+  }, [cvTHId]);
 
   useEffect(() => {
     fetchData();
@@ -116,10 +116,10 @@ export default function CvUpdate({ params: paramsPromise }) {
       educations: [
         ...(prev.educations || []),
         {
-          cvEducationDegree: "",
-          cvEducationInstitution: "",
-          cvEducationStartDate: "",
-          cvEducationEndDate: "",
+          cvTHEducationDegree: "",
+          cvTHEducationInstitution: "",
+          cvTHEducationStartDate: "",
+          cvTHEducationEndDate: "",
         },
       ],
     }));
@@ -149,10 +149,10 @@ export default function CvUpdate({ params: paramsPromise }) {
       licenses: [
         ...(prev.licenses || []),
         {
-          cvProfessionalLicenseName: "",
-          cvProfessionalLicenseNumber: "",
-          cvProfessionalLicenseStartDate: "",
-          cvProfessionalLicenseEndDate: "",
+          cvTHProfessionalLicenseName: "",
+          cvTHProfessionalLicenseNumber: "",
+          cvTHProfessionalLicenseStartDate: "",
+          cvTHProfessionalLicenseEndDate: "",
         },
       ],
     }));
@@ -182,10 +182,10 @@ export default function CvUpdate({ params: paramsPromise }) {
       workHistories: [
         ...(prev.workHistories || []),
         {
-          cvWorkHistoryCompanyName: "",
-          cvWorkHistoryPosition: "",
-          cvWorkHistoryStartDate: "",
-          cvWorkHistoryEndDate: "",
+          cvTHWorkHistoryCompanyName: "",
+          cvTHWorkHistoryPosition: "",
+          cvTHWorkHistoryStartDate: "",
+          cvTHWorkHistoryEndDate: "",
           projects: [],
         },
       ],
@@ -225,8 +225,8 @@ export default function CvUpdate({ params: paramsPromise }) {
       const workHistory = updatedWorkHistories[workIndex] || {};
       const projects = [...(workHistory.projects || [])];
       projects.push({
-        cvProjectName: "",
-        cvProjectDescription: "",
+        cvTHProjectName: "",
+        cvTHProjectDescription: "",
       });
       updatedWorkHistories[workIndex] = {
         ...workHistory,
@@ -267,8 +267,8 @@ export default function CvUpdate({ params: paramsPromise }) {
       languageSkills: [
         ...(prev.languageSkills || []),
         {
-          cvLanguageSkillName: "",
-          cvLanguageSkillProficiency: "BASIC",
+          cvTHLanguageSkillName: "",
+          cvTHLanguageSkillProficiency: "BASIC",
         },
       ],
     }));
@@ -286,7 +286,7 @@ export default function CvUpdate({ params: paramsPromise }) {
       event.preventDefault();
 
       const formDataObject = new FormData(formRef.current);
-      formDataObject.append("cvUpdateBy", userId);
+      formDataObject.append("cvTHUpdateBy", userId);
 
       formDataObject.append(
         "educations",
@@ -306,7 +306,7 @@ export default function CvUpdate({ params: paramsPromise }) {
       );
 
       try {
-        const res = await fetch(`/api/hr/cv/${cvId}`, {
+        const res = await fetch(`/api/hr/cvTH/${cvTHId}`, {
           method: "PUT",
           body: formDataObject,
           headers: {
@@ -332,13 +332,13 @@ export default function CvUpdate({ params: paramsPromise }) {
             }, {});
             setErrors(fieldErrorObj);
           }
-          toast.error(jsonData.error || "Error updating cv");
+          toast.error(jsonData.error || "Error updating cvTH");
         }
       } catch (error) {
-        toast.error("Error updating cv: " + error.message);
+        toast.error("Error updating cvTH: " + error.message);
       }
     },
-    [cvId, router, userId, formData]
+    [cvTHId, router, userId, formData]
   );
 
   const handleClear = useCallback(() => {
@@ -349,9 +349,9 @@ export default function CvUpdate({ params: paramsPromise }) {
 
   return (
     <>
-      <TopicHeader topic="Cv Update" />
+      <TopicHeader topic="CvTH Update" />
       <Toaster position="top-right" />
-      <FormCv
+      <FormCvTH
         formRef={formRef}
         onSubmit={handleSubmit}
         onClear={handleClear}

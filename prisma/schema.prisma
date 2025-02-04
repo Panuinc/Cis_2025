@@ -161,9 +161,13 @@ model Employee {
   createdPosition Position[] @relation("PositionCreateBy")
   updatedPosition Position[] @relation("PositionUpdateBy")
 
-  employeeCv Cv[] @relation("CvEmployeeBy")
-  createdCv  Cv[] @relation("CvCreateBy")
-  updatedCv  Cv[] @relation("CvUpdateBy")
+  employeeCvTH CvTH[] @relation("CvTHEmployeeBy")
+  createdCvTH  CvTH[] @relation("CvTHCreateBy")
+  updatedCvTH  CvTH[] @relation("CvTHUpdateBy")
+
+  employeeCvEN CvEN[] @relation("CvENEmployeeBy")
+  createdCvEN  CvEN[] @relation("CvENCreateBy")
+  updatedCvEN  CvEN[] @relation("CvENUpdateBy")
 
   employeeResume Resume[] @relation("ResumeEmployeeBy")
   createdResume  Resume[] @relation("ResumeCreateBy")
@@ -321,89 +325,174 @@ model Resume {
   @@index([resumeUpdateBy])
 }
 
-model Cv {
-  cvId         Int       @id @default(autoincrement())
-  cvEmployeeId Int
-  cvCreateBy   Int
-  cvCreateAt   DateTime  @default(now()) @db.Timestamp()
-  cvUpdateBy   Int?
-  cvUpdateAt   DateTime?
+model CvTH {
+  cvTHId         Int       @id @default(autoincrement())
+  cvTHEmployeeId Int
+  cvTHCreateBy   Int
+  cvTHCreateAt   DateTime  @default(now()) @db.Timestamp()
+  cvTHUpdateBy   Int?
+  cvTHUpdateAt   DateTime?
 
-  CvEmployeeBy Employee? @relation("CvEmployeeBy", fields: [cvEmployeeId], references: [employeeId])
-  CvCreateBy   Employee? @relation("CvCreateBy", fields: [cvCreateBy], references: [employeeId])
-  CvUpdateBy   Employee? @relation("CvUpdateBy", fields: [cvUpdateBy], references: [employeeId])
+  CvTHEmployeeBy Employee? @relation("CvTHEmployeeBy", fields: [cvTHEmployeeId], references: [employeeId])
+  CvTHCreateBy   Employee? @relation("CvTHCreateBy", fields: [cvTHCreateBy], references: [employeeId])
+  CvTHUpdateBy   Employee? @relation("CvTHUpdateBy", fields: [cvTHUpdateBy], references: [employeeId])
 
-  CvEducation     CvEducation[]
-  CvLicense       CvProfessionalLicense[]
-  CvWorkHistory   CvWorkHistory[]
-  CvLanguageSkill CvLanguageSkill[]
+  CvTHEducation     CvTHEducation[]
+  CvTHLicense       CvTHProfessionalLicense[]
+  CvTHWorkHistory   CvTHWorkHistory[]
+  CvTHLanguageSkill CvTHLanguageSkill[]
 
-  @@index([cvEmployeeId])
-  @@index([cvCreateBy])
-  @@index([cvUpdateBy])
+  @@index([cvTHEmployeeId])
+  @@index([cvTHCreateBy])
+  @@index([cvTHUpdateBy])
 }
 
-model CvEducation {
-  cvEducationId          Int     @id @default(autoincrement())
-  cvEducationCvId        Int
-  cvEducationDegree      String? @db.VarChar(255)
-  cvEducationInstitution String? @db.VarChar(255)
-  cvEducationStartDate   String? @db.VarChar(255)
-  cvEducationEndDate     String? @db.VarChar(255)
+model CvEN {
+  cvENId         Int       @id @default(autoincrement())
+  cvENEmployeeId Int
+  cvENCreateBy   Int
+  cvENCreateAt   DateTime  @default(now()) @db.Timestamp()
+  cvENUpdateBy   Int?
+  cvENUpdateAt   DateTime?
 
-  cv Cv @relation(fields: [cvEducationCvId], references: [cvId])
+  CvENEmployeeBy Employee? @relation("CvENEmployeeBy", fields: [cvENEmployeeId], references: [employeeId])
+  CvENCreateBy   Employee? @relation("CvENCreateBy", fields: [cvENCreateBy], references: [employeeId])
+  CvENUpdateBy   Employee? @relation("CvENUpdateBy", fields: [cvENUpdateBy], references: [employeeId])
 
-  @@index([cvEducationCvId])
+  CvENEducation     CvENEducation[]
+  CvENLicense       CvENProfessionalLicense[]
+  CvENWorkHistory   CvENWorkHistory[]
+  CvENLanguageSkill CvENLanguageSkill[]
+
+  @@index([cvENEmployeeId])
+  @@index([cvENCreateBy])
+  @@index([cvENUpdateBy])
 }
 
-model CvProfessionalLicense {
-  cvProfessionalLicenseId        Int     @id @default(autoincrement())
-  cvProfessionalLicenseCvId      Int
-  cvProfessionalLicenseName      String? @db.VarChar(255)
-  cvProfessionalLicenseNumber    String? @db.VarChar(255)
-  cvProfessionalLicenseStartDate String? @db.VarChar(255)
-  cvProfessionalLicenseEndDate   String? @db.VarChar(255)
+model CvTHEducation {
+  cvTHEducationId          Int     @id @default(autoincrement())
+  cvTHEducationCvTHId      Int
+  cvTHEducationDegree      String? @db.VarChar(255)
+  cvTHEducationInstitution String? @db.VarChar(255)
+  cvTHEducationStartDate   String? @db.VarChar(255)
+  cvTHEducationEndDate     String? @db.VarChar(255)
 
-  cv Cv @relation(fields: [cvProfessionalLicenseCvId], references: [cvId])
+  cvTH CvTH @relation(fields: [cvTHEducationCvTHId], references: [cvTHId])
 
-  @@index([cvProfessionalLicenseCvId])
+  @@index([cvTHEducationCvTHId])
 }
 
-model CvWorkHistory {
-  cvWorkHistoryId          Int     @id @default(autoincrement())
-  cvWorkHistoryCvId        Int
-  cvWorkHistoryCompanyName String? @db.VarChar(255)
-  cvWorkHistoryPosition    String? @db.VarChar(255)
-  cvWorkHistoryStartDate   String? @db.VarChar(255)
-  cvWorkHistoryEndDate     String? @db.VarChar(255)
+model CvENEducation {
+  cvENEducationId          Int     @id @default(autoincrement())
+  cvENEducationCvENId      Int
+  cvENEducationDegree      String? @db.VarChar(255)
+  cvENEducationInstitution String? @db.VarChar(255)
+  cvENEducationStartDate   String? @db.VarChar(255)
+  cvENEducationEndDate     String? @db.VarChar(255)
 
-  cv Cv @relation(fields: [cvWorkHistoryCvId], references: [cvId])
+  cvEN CvEN @relation(fields: [cvENEducationCvENId], references: [cvENId])
 
-  projects CvProject[]
-
-  @@index([cvWorkHistoryCvId])
+  @@index([cvENEducationCvENId])
 }
 
-model CvProject {
-  cvProjectId            Int     @id @default(autoincrement())
-  cvProjectWorkHistoryId Int
-  cvProjectName          String? @db.VarChar(255)
-  cvProjectDescription   String? @db.VarChar(255)
+model CvTHProfessionalLicense {
+  cvTHProfessionalLicenseId        Int     @id @default(autoincrement())
+  cvTHProfessionalLicenseCvTHId    Int
+  cvTHProfessionalLicenseName      String? @db.VarChar(255)
+  cvTHProfessionalLicenseNumber    String? @db.VarChar(255)
+  cvTHProfessionalLicenseStartDate String? @db.VarChar(255)
+  cvTHProfessionalLicenseEndDate   String? @db.VarChar(255)
 
-  cvWorkHistory CvWorkHistory @relation(fields: [cvProjectWorkHistoryId], references: [cvWorkHistoryId])
+  cvTH CvTH @relation(fields: [cvTHProfessionalLicenseCvTHId], references: [cvTHId])
 
-  @@index([cvProjectWorkHistoryId])
+  @@index([cvTHProfessionalLicenseCvTHId])
 }
 
-model CvLanguageSkill {
-  cvLanguageSkillId          Int         @id @default(autoincrement())
-  cvLanguageSkillCvId        Int
-  cvLanguageSkillName        String?     @db.VarChar(255)
-  cvLanguageSkillProficiency SkillLevel?
+model CvENProfessionalLicense {
+  cvENProfessionalLicenseId        Int     @id @default(autoincrement())
+  cvENProfessionalLicenseCvENId    Int
+  cvENProfessionalLicenseName      String? @db.VarChar(255)
+  cvENProfessionalLicenseNumber    String? @db.VarChar(255)
+  cvENProfessionalLicenseStartDate String? @db.VarChar(255)
+  cvENProfessionalLicenseEndDate   String? @db.VarChar(255)
 
-  cv Cv @relation(fields: [cvLanguageSkillCvId], references: [cvId])
+  cvEN CvEN @relation(fields: [cvENProfessionalLicenseCvENId], references: [cvENId])
 
-  @@index([cvLanguageSkillCvId])
+  @@index([cvENProfessionalLicenseCvENId])
+}
+
+model CvTHWorkHistory {
+  cvTHWorkHistoryId          Int     @id @default(autoincrement())
+  cvTHWorkHistoryCvTHId      Int
+  cvTHWorkHistoryCompanyName String? @db.VarChar(255)
+  cvTHWorkHistoryPosition    String? @db.VarChar(255)
+  cvTHWorkHistoryStartDate   String? @db.VarChar(255)
+  cvTHWorkHistoryEndDate     String? @db.VarChar(255)
+
+  cvTH CvTH @relation(fields: [cvTHWorkHistoryCvTHId], references: [cvTHId])
+
+  projects CvTHProject[]
+
+  @@index([cvTHWorkHistoryCvTHId])
+}
+
+model CvENWorkHistory {
+  cvENWorkHistoryId          Int     @id @default(autoincrement())
+  cvENWorkHistoryCvENId      Int
+  cvENWorkHistoryCompanyName String? @db.VarChar(255)
+  cvENWorkHistoryPosition    String? @db.VarChar(255)
+  cvENWorkHistoryStartDate   String? @db.VarChar(255)
+  cvENWorkHistoryEndDate     String? @db.VarChar(255)
+
+  cvEN CvEN @relation(fields: [cvENWorkHistoryCvENId], references: [cvENId])
+
+  projects CvENProject[]
+
+  @@index([cvENWorkHistoryCvENId])
+}
+
+model CvTHProject {
+  cvTHProjectId            Int     @id @default(autoincrement())
+  cvTHProjectWorkHistoryId Int
+  cvTHProjectName          String? @db.VarChar(255)
+  cvTHProjectDescription   String? @db.VarChar(255)
+
+  cvTHWorkHistory CvTHWorkHistory @relation(fields: [cvTHProjectWorkHistoryId], references: [cvTHWorkHistoryId])
+
+  @@index([cvTHProjectWorkHistoryId])
+}
+
+model CvENProject {
+  cvENProjectId            Int     @id @default(autoincrement())
+  cvENProjectWorkHistoryId Int
+  cvENProjectName          String? @db.VarChar(255)
+  cvENProjectDescription   String? @db.VarChar(255)
+
+  cvENWorkHistory CvENWorkHistory @relation(fields: [cvENProjectWorkHistoryId], references: [cvENWorkHistoryId])
+
+  @@index([cvENProjectWorkHistoryId])
+}
+
+model CvTHLanguageSkill {
+  cvTHLanguageSkillId          Int         @id @default(autoincrement())
+  cvTHLanguageSkillCvTHId      Int
+  cvTHLanguageSkillName        String?     @db.VarChar(255)
+  cvTHLanguageSkillProficiency SkillLevel?
+
+  cvTH CvTH @relation(fields: [cvTHLanguageSkillCvTHId], references: [cvTHId])
+
+  @@index([cvTHLanguageSkillCvTHId])
+}
+
+model CvENLanguageSkill {
+  cvENLanguageSkillId          Int         @id @default(autoincrement())
+  cvENLanguageSkillCvENId      Int
+  cvENLanguageSkillName        String?     @db.VarChar(255)
+  cvENLanguageSkillProficiency SkillLevel?
+
+  cvEN CvEN @relation(fields: [cvENLanguageSkillCvENId], references: [cvENId])
+
+  @@index([cvENLanguageSkillCvENId])
 }
 
 model Branch {
