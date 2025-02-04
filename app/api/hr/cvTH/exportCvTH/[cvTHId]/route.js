@@ -136,14 +136,15 @@ export async function GET(request, context) {
     if (cvth.CvTHEducation && cvth.CvTHEducation.length > 0) {
       educationHtml = cvth.CvTHEducation.map((edu) => {
         return `
-            <div class="flex flex-col items-start w-full p-1 border-b">
-              <span><b>Degree:</b> ${edu.cvTHEducationDegree || "-"}</span>
-              <span><b>Institution:</b> ${
-                edu.cvTHEducationInstitution || "-"
-              }</span>
-              <span><b>Year:</b> ${edu.cvTHEducationYear || "-"}</span>
-            </div>
-          `;
+        <div class="flex flex-col items-start w-full p-1 border-b">
+          <span><b>Degree:</b> ${edu.cvTHEducationDegree || "-"}</span>
+          <span><b>Institution:</b> ${
+            edu.cvTHEducationInstitution || "-"
+          }</span>
+          <span><b>Start Date:</b> ${edu.cvTHEducationStartDate || "-"}</span>
+          <span><b>End Date:</b> ${edu.cvTHEducationEndDate || "-"}</span>
+        </div>
+      `;
       }).join("");
     } else {
       educationHtml = '<div class="text-gray-500">No Educations found</div>';
@@ -153,11 +154,21 @@ export async function GET(request, context) {
     if (cvth.CvTHLicense && cvth.CvTHLicense.length > 0) {
       licenseHtml = cvth.CvTHLicense.map((lic) => {
         return `
-            <div class="flex flex-col items-start w-full p-1 border-b">
-              <span><b>License No:</b> ${lic.cvTHLicenseNo || "-"}</span>
-              <span><b>Name:</b> ${lic.cvTHLicenseName || "-"}</span>
-            </div>
-          `;
+        <div class="flex flex-col items-start w-full p-1 border-b">
+          <span><b>License Name:</b> ${
+            lic.cvTHProfessionalLicenseName || "-"
+          }</span>
+          <span><b>License Number:</b> ${
+            lic.cvTHProfessionalLicenseNumber || "-"
+          }</span>
+          <span><b>Start Date:</b> ${
+            lic.cvTHProfessionalLicenseStartDate || "-"
+          }</span>
+          <span><b>End Date:</b> ${
+            lic.cvTHProfessionalLicenseEndDate || "-"
+          }</span>
+        </div>
+      `;
       }).join("");
     } else {
       licenseHtml = '<div class="text-gray-500">No License data</div>';
@@ -167,11 +178,15 @@ export async function GET(request, context) {
     if (cvth.CvTHLanguageSkill && cvth.CvTHLanguageSkill.length > 0) {
       languageSkillHtml = cvth.CvTHLanguageSkill.map((lang) => {
         return `
-            <div class="flex flex-col items-start w-full p-1 border-b">
-              <span><b>Language:</b> ${lang.cvTHLanguage || "-"}</span>
-              <span><b>Level:</b> ${lang.cvTHLanguageLevel || "-"}</span>
-            </div>
-          `;
+        <div class="flex flex-col items-start w-full p-1 border-b">
+          <span><b>Language Name:</b> ${
+            lang.cvTHLanguageSkillName || "-"
+          }</span>
+          <span><b>Proficiency:</b> ${
+            lang.cvTHLanguageSkillProficiency || "-"
+          }</span>
+        </div>
+      `;
       }).join("");
     } else {
       languageSkillHtml =
