@@ -85,6 +85,53 @@ export async function GET(request, context) {
         )
       : "-";
 
+    let workHistoryHtml = "";
+    if (cvth.CvTHWorkHistory && cvth.CvTHWorkHistory.length > 0) {
+      workHistoryHtml = cvth.CvTHWorkHistory.map((wh) => {
+        const projectsHtml =
+          wh.projects && wh.projects.length > 0
+            ? `
+                <ul class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                  ${wh.projects
+                    .map(
+                      (proj) => `
+                    <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                      <span class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">●</span>
+                      <span class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">${proj.cvTHProjectName}</span>
+                    </div>
+                  `
+                    )
+                    .join("")}
+                </ul>
+              `
+            : '<div class="text-gray-500">No projects listed</div>';
+
+        return `
+            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                  ${wh.cvTHWorkHistoryCompanyName || ""}
+                </div>
+                <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                  ${wh.cvTHWorkHistoryPosition || ""}
+                </div>
+                <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                  ${wh.cvTHWorkHistoryStartDate || ""} - ${
+          wh.cvTHWorkHistoryEndDate || "PRESENT"
+        }
+                </div>
+              </div>
+              <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-l-2">
+                ${projectsHtml}
+              </div>
+            </div>
+          `;
+      }).join("");
+    } else {
+      workHistoryHtml =
+        '<div class="text-gray-500">No work experience data available</div>';
+    }
+
     const htmlContent = `
       <html>
       <head>
@@ -102,78 +149,45 @@ export async function GET(request, context) {
             z-index: 1000;
             pointer-events: none;
           }
-            .bg-header{
-              background: rgba(3, 153, 76);            
+          .bg-header {
+            background: rgba(3, 153, 76);
+          }
+          @media print {
+            .page-break {
+              page-break-after: always;
             }
+          }
         </style>
       </head>
       <body class="font-sans p-8 text-sm" style="font-family: 'Sarabun', sans-serif;">
-        <div class="flex flex-row items-start justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-        <div class="flex flex-col items-center justify-center w-8/12 h-full p-2 gap-2 border-2 border-dashed">
-          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-              <img src="${
-                process.env.NEXT_PUBLIC_API_URL
-              }/images/company_logo/company_logo.png" class="w-28 mx-auto" />
-            </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-            ${fullname}
-            </div>
-          </div>
-          <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed bg-header">
-            ${positionName}
-          </div>
-            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-            Work Experience
-          </div>
-          <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-          ${
-            cvth.CvTHWorkHistory && cvth.CvTHWorkHistory.length > 0
-              ? cvth.CvTHWorkHistory.map(
-                  (wh, index) => `
-
-            <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+        <div class="flex flex-row items-start justify-center w-full h-full p-2 gap-2 border-2 border-dashed page-break">
+          <div class="flex flex-col items-center justify-center w-8/12 h-full p-2 gap-2 border-2 border-dashed">
+            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                ${wh.cvTHWorkHistoryCompanyName || ""}
+                <img src="${process.env.NEXT_PUBLIC_API_URL}/images/company_logo/company_logo.png" class="w-28 mx-auto" />
               </div>
-               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                 ${wh.cvTHWorkHistoryPosition || ""}
-              </div>
-               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-               ${wh.cvTHWorkHistoryStartDate || ""} - ${
-                    wh.cvTHWorkHistoryEndDate || "PRESENT"
-                  }
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                ${fullname}
               </div>
             </div>
-            <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-l-2">
-                ${
-                  wh.projects && wh.projects.length > 0
-                    ? `<ul class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                            ${wh.projects
-                              .map(
-                                (proj) => `
-                              <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                              <span class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">●</span>
-                              <span class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">${proj.cvTHProjectName}</span>
-                              </div>
-                            `
-                              )
-                              .join("")}
-                          </ul>`
-                    : '<div class="text-gray-500">No projects listed</div>'
-                }
+            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed bg-header">
+              ${positionName}
+            </div>
+            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              Work Experience
+            </div>
+            <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              ${workHistoryHtml}
             </div>
           </div>
-          `
-                ).join("")
-              : '<div class="text-gray-500">No work experience data available</div>'
-          }
+          <div class="flex flex-col items-center justify-center w-4/12 h-full p-2 gap-2 border-2 border-dashed">
+            01
+          </div>
         </div>
-        
-        <div class="flex flex-col items-center justify-center w-4/12 h-full p-2 gap-2 border-2 border-dashed">
-          01
-        </div>
-
+        <div class="flex flex-row items-start justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+          <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+            <p class="text-center">หน้าที่สอง (หรือถัดไป) แบบเต็ม 12/12</p>
+          </div>
         </div>
       </body>
       </html>
