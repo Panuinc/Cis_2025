@@ -333,9 +333,10 @@ model Cv {
   CvCreateBy   Employee? @relation("CvCreateBy", fields: [cvCreateBy], references: [employeeId])
   CvUpdateBy   Employee? @relation("CvUpdateBy", fields: [cvUpdateBy], references: [employeeId])
 
-  CvEducation   CvEducation[]
-  CvLicense     CvProfessionalLicense[]
-  CvWorkHistory CvWorkHistory[]
+  CvEducation     CvEducation[]
+  CvLicense       CvProfessionalLicense[]
+  CvWorkHistory   CvWorkHistory[]
+  CvLanguageSkill CvLanguageSkill[]
 
   @@index([cvEmployeeId])
   @@index([cvCreateBy])
@@ -392,6 +393,17 @@ model CvProject {
   cvWorkHistory CvWorkHistory @relation(fields: [cvProjectWorkHistoryId], references: [cvWorkHistoryId])
 
   @@index([cvProjectWorkHistoryId])
+}
+
+model CvLanguageSkill {
+  cvLanguageSkillId          Int         @id @default(autoincrement())
+  cvLanguageSkillCvId        Int
+  cvLanguageSkillName        String?     @db.VarChar(255)
+  cvLanguageSkillProficiency SkillLevel?
+
+  cv Cv @relation(fields: [cvLanguageSkillCvId], references: [cvId])
+
+  @@index([cvLanguageSkillCvId])
 }
 
 model Branch {
@@ -638,14 +650,14 @@ model Training {
 }
 
 model TrainingEmployee {
-  trainingEmployeeId              Int                    @id @default(autoincrement())
-  trainingEmployeeTrainingId      Int
-  trainingEmployeeEmployeeId      Int
-  trainingEmployeeResult          TrainingEmployeeResult @default(Not_Pass)
+  trainingEmployeeId                 Int                    @id @default(autoincrement())
+  trainingEmployeeTrainingId         Int
+  trainingEmployeeEmployeeId         Int
+  trainingEmployeeResult             TrainingEmployeeResult @default(Not_Pass)
   trainingEmployeeCertificatePicture String?                @db.VarChar(255)
 
   TrainingEmployeeTrainingId Training? @relation("TrainingEmployeeTrainingId", fields: [trainingEmployeeTrainingId], references: [trainingId])
-  TrainingEmployeeEmployeeId Employee @relation("TrainingEmployeeEmployeeId", fields: [trainingEmployeeEmployeeId], references: [employeeId])
+  TrainingEmployeeEmployeeId Employee  @relation("TrainingEmployeeEmployeeId", fields: [trainingEmployeeEmployeeId], references: [employeeId])
 
   @@index([trainingEmployeeTrainingId])
   @@index([trainingEmployeeEmployeeId])
