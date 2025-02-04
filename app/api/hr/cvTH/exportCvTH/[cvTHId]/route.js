@@ -152,6 +152,9 @@ export async function GET(request, context) {
           .bg-header {
             background: rgba(3, 153, 76);
           }
+          .bg-right {
+            background: rgba(239, 242, 240);
+          }
           @media print {
             .page-break {
               page-break-after: always;
@@ -180,8 +183,37 @@ export async function GET(request, context) {
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed" id="first-page-work-history"></div>
             </div>
           </div>
-          <div class="flex flex-col items-center justify-center w-4/12 h-full p-2 gap-2 border-2 border-dashed">
-            01
+          <div class="flex flex-col items-center justify-center w-4/12 h-full p-2 gap-2 border-2 border-dashed bg-right">
+            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <img src="${process.env.NEXT_PUBLIC_API_URL}/images/company_logo/company_logo.png" class="w-28 mx-auto" />
+            </div>
+            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              ${formattedBirthday}
+            </div>
+            <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              ${employeeEmail}
+            </div>
+            <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                Educations
+              </div><div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                List Educations
+              </div>
+            </div>
+            <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                License No
+              </div><div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                List License No
+              </div>
+            </div>
+            <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                Language Skills
+              </div><div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                List Skills
+              </div>
+            </div>
           </div>
         </div>
         <div class="flex flex-row items-start justify-center w-full h-full p-2 gap-2 border-2 border-dashed page-break second-page">
