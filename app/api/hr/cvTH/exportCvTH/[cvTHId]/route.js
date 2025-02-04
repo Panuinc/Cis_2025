@@ -132,6 +132,52 @@ export async function GET(request, context) {
         '<div class="text-gray-500">No work experience data available</div>';
     }
 
+    let educationHtml = "";
+    if (cvth.CvTHEducation && cvth.CvTHEducation.length > 0) {
+      educationHtml = cvth.CvTHEducation.map((edu) => {
+        return `
+            <div class="flex flex-col items-start w-full p-1 border-b">
+              <span><b>Degree:</b> ${edu.cvTHEducationDegree || "-"}</span>
+              <span><b>Institution:</b> ${
+                edu.cvTHEducationInstitution || "-"
+              }</span>
+              <span><b>Year:</b> ${edu.cvTHEducationYear || "-"}</span>
+            </div>
+          `;
+      }).join("");
+    } else {
+      educationHtml = '<div class="text-gray-500">No Educations found</div>';
+    }
+
+    let licenseHtml = "";
+    if (cvth.CvTHLicense && cvth.CvTHLicense.length > 0) {
+      licenseHtml = cvth.CvTHLicense.map((lic) => {
+        return `
+            <div class="flex flex-col items-start w-full p-1 border-b">
+              <span><b>License No:</b> ${lic.cvTHLicenseNo || "-"}</span>
+              <span><b>Name:</b> ${lic.cvTHLicenseName || "-"}</span>
+            </div>
+          `;
+      }).join("");
+    } else {
+      licenseHtml = '<div class="text-gray-500">No License data</div>';
+    }
+
+    let languageSkillHtml = "";
+    if (cvth.CvTHLanguageSkill && cvth.CvTHLanguageSkill.length > 0) {
+      languageSkillHtml = cvth.CvTHLanguageSkill.map((lang) => {
+        return `
+            <div class="flex flex-col items-start w-full p-1 border-b">
+              <span><b>Language:</b> ${lang.cvTHLanguage || "-"}</span>
+              <span><b>Level:</b> ${lang.cvTHLanguageLevel || "-"}</span>
+            </div>
+          `;
+      }).join("");
+    } else {
+      languageSkillHtml =
+        '<div class="text-gray-500">No language skills data</div>';
+    }
+
     const htmlContent = `
       <html>
       <head>
@@ -196,22 +242,25 @@ export async function GET(request, context) {
             <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
                 Educations
-              </div><div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                List Educations
+              </div>
+              <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                ${educationHtml}
               </div>
             </div>
             <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
                 License No
-              </div><div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                List License No
+              </div>
+              <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                ${licenseHtml}
               </div>
             </div>
             <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
                 Language Skills
-              </div><div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-                List Skills
+              </div>
+              <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
+                ${languageSkillHtml}
               </div>
             </div>
           </div>
