@@ -137,12 +137,10 @@ export async function GET(request, context) {
       educationHtml = cvth.CvTHEducation.map((edu) => {
         return `
         <div class="flex flex-col items-start w-full p-1 border-b">
-          <span><b>Degree:</b> ${edu.cvTHEducationDegree || "-"}</span>
-          <span><b>Institution:</b> ${
-            edu.cvTHEducationInstitution || "-"
-          }</span>
-          <span><b>Start Date:</b> ${edu.cvTHEducationStartDate || "-"}</span>
-          <span><b>End Date:</b> ${edu.cvTHEducationEndDate || "-"}</span>
+          <span>${edu.cvTHEducationDegree || "-"} ${
+          edu.cvTHEducationStartDate || "-"
+        }</span>
+          <span>${edu.cvTHEducationInstitution || "-"}</span>
         </div>
       `;
       }).join("");
@@ -155,18 +153,8 @@ export async function GET(request, context) {
       licenseHtml = cvth.CvTHLicense.map((lic) => {
         return `
         <div class="flex flex-col items-start w-full p-1 border-b">
-          <span><b>License Name:</b> ${
-            lic.cvTHProfessionalLicenseName || "-"
-          }</span>
-          <span><b>License Number:</b> ${
-            lic.cvTHProfessionalLicenseNumber || "-"
-          }</span>
-          <span><b>Start Date:</b> ${
-            lic.cvTHProfessionalLicenseStartDate || "-"
-          }</span>
-          <span><b>End Date:</b> ${
-            lic.cvTHProfessionalLicenseEndDate || "-"
-          }</span>
+          <span> ${lic.cvTHProfessionalLicenseName || "-"}</span>
+          <span> ${lic.cvTHProfessionalLicenseNumber || "-"}</span>          
         </div>
       `;
       }).join("");
@@ -179,12 +167,10 @@ export async function GET(request, context) {
       languageSkillHtml = cvth.CvTHLanguageSkill.map((lang) => {
         return `
         <div class="flex flex-col items-start w-full p-1 border-b">
-          <span><b>Language Name:</b> ${
-            lang.cvTHLanguageSkillName || "-"
-          }</span>
-          <span><b>Proficiency:</b> ${
-            lang.cvTHLanguageSkillProficiency || "-"
-          }</span>
+          <span> ${lang.cvTHLanguageSkillName || "-"} : ${
+          lang.cvTHLanguageSkillProficiency || "-"
+        }</span>
+        
         </div>
       `;
       }).join("");
