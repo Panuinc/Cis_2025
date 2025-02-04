@@ -121,7 +121,7 @@ export async function GET(request, context) {
         }
                 </div>
               </div>
-              <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-l-2">
+              <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
                 ${projectsHtml}
               </div>
             </div>
@@ -176,19 +176,44 @@ export async function GET(request, context) {
             <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
               Work Experience
             </div>
-            <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-              ${workHistoryHtml}
+            <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed work-experience">
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed" id="first-page-work-history"></div>
             </div>
           </div>
           <div class="flex flex-col items-center justify-center w-4/12 h-full p-2 gap-2 border-2 border-dashed">
             01
           </div>
         </div>
-        <div class="flex flex-row items-start justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-          <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
-            <p class="text-center">หน้าที่สอง (หรือถัดไป) แบบเต็ม 12/12</p>
+        <div class="flex flex-row items-start justify-center w-full h-full p-2 gap-2 border-2 border-dashed page-break second-page">
+          <div class="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
+            <div id="second-page-work-history" class="flex flex-col items-center justify-center w-full"></div>
           </div>
         </div>
+        <script>
+          function distributeWorkHistory() {
+            const firstPageWorkHistory = document.getElementById('first-page-work-history');
+            const secondPageWorkHistory = document.getElementById('second-page-work-history');
+            const fullWorkHistory = \`${workHistoryHtml}\`;
+            
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = fullWorkHistory;
+            const workHistoryItems = Array.from(tempDiv.children);
+
+            let firstPageHeight = 0;
+            const firstPageContainer = document.querySelector('.work-experience');
+            const maxFirstPageHeight = firstPageContainer.clientHeight;
+
+            for (let item of workHistoryItems) {
+              if (firstPageHeight + item.clientHeight <= maxFirstPageHeight) {
+                firstPageWorkHistory.appendChild(item);
+                firstPageHeight += item.clientHeight;
+              } else {
+                secondPageWorkHistory.appendChild(item);
+              }
+            }
+          }
+          window.onload = distributeWorkHistory;
+        </script>
       </body>
       </html>
     `;
