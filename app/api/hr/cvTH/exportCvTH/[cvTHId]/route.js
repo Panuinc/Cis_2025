@@ -349,8 +349,8 @@ export async function GET(request, context) {
       printBackground: true,
       displayHeaderFooter: true,
       margin: {
-        top: "40px",
-        bottom: "40px",
+        top: "20px",
+        bottom: "20px",
         left: "80px",
         right: "20px",
       },
