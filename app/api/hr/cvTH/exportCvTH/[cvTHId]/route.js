@@ -109,8 +109,8 @@ export async function GET(request, context) {
                 .map(
                   (proj) => `
                     <div class="flex flex-row items-center justify-center w-full h-full gap-2 border-2">
-                      <span class="flex items-center justify-center h-full p-2 gap-2">●</span>
-                      <span class="flex items-center justify-start w-full h-full p-2 gap-2">
+                      <span class="flex items-center justify-center h-full p-2 gap-2 border-2">●</span>
+                      <span class="flex items-center justify-start w-full h-full p-2 gap-2 border-2">
                         ${proj.cvTHProjectName} , ${proj.cvTHProjectDescription}
                       </span>
                     </div>
@@ -127,10 +127,12 @@ export async function GET(request, context) {
               <div class="flex flex-col items-start justify-start w-full h-full p-2 gap-2 border-2">
                 <b>${wh.cvTHWorkHistoryCompanyName || ""}</b>
                 <b>${wh.cvTHWorkHistoryPosition || ""}</b>
-                <b>${wh.cvTHWorkHistoryStartDate || ""} - ${wh.cvTHWorkHistoryEndDate || ""}</b>
+                <b>${wh.cvTHWorkHistoryStartDate || ""} - ${
+        wh.cvTHWorkHistoryEndDate || ""
+      }</b>
               </div>
             </div>
-            <div class="flex flex-col items-center justify-center w-8/12 h-full p-2 gap-2 border-l-2">
+            <div class="flex flex-col items-center justify-center w-8/12 h-full p-2 gap-2 border-2 border-l-2">
               ${projectsHtml}
             </div>
           </div>
@@ -247,7 +249,7 @@ export async function GET(request, context) {
             <div class="flex items-center justify-start w-full p-2 gap-2 border-2 border-b-2">
               <span class="text-green">${emailIcon}</span> ${employeeEmail}
             </div>
-            <div class="flex flex-col items-center justify-center w-full p-2 gap-2 border-2 border-b-2">
+            <div class="flex flex-col items-center justify-center w-full gap-2 border-2 border-b-2">
               <div class="flex items-center justify-center w-full p-2 gap-2 border-2 text-dark-header">
                 Educations
               </div>
@@ -255,7 +257,7 @@ export async function GET(request, context) {
                 ${educationHtml}
               </div>
             </div>
-            <div class="flex flex-col items-center justify-center w-full p-2 gap-2 border-2 border-b-2">
+            <div class="flex flex-col items-center justify-center w-full gap-2 border-2 border-b-2">
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 text-dark-header">
                 License No
               </div>
@@ -263,7 +265,7 @@ export async function GET(request, context) {
                 ${licenseHtml}
               </div>
             </div>
-            <div class="flex flex-col items-center justify-center w-full p-2 gap-2 border-2 border-b-2">
+            <div class="flex flex-col items-center justify-center w-full gap-2 border-2 border-b-2">
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 text-dark-header">
                 Language Skills
               </div>
@@ -349,8 +351,8 @@ export async function GET(request, context) {
       margin: {
         top: "40px",
         bottom: "40px",
-        left: "40px",
-        right: "40px",
+        left: "80px",
+        right: "20px",
       },
       headerTemplate: "<div></div>",
       footerTemplate: `
