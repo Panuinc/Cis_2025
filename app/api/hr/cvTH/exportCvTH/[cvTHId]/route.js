@@ -198,8 +198,8 @@ export async function GET(request, context) {
           }
         </style>
       </head>
-      <body class="font-sans p-8 text-sm" style="font-family: 'Sarabun', sans-serif;">
-        <div class="flex flex-row items-start justify-center w-full h-full p-2 gap-2 border-2 border-dashed page-break">
+      <body class="font-sans text-sm" style="font-family: 'Sarabun', sans-serif;">
+        <div class="flex flex-row items-start justify-center w-full h-full p-10 gap-2 border-2 border-dashed page-break">
           <div class="flex flex-col items-center justify-center w-8/12 h-full p-2 gap-2 border-2 border-dashed">
             <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
@@ -255,7 +255,7 @@ export async function GET(request, context) {
             </div>
           </div>
         </div>
-        <div class="flex flex-row items-start justify-center w-full h-full p-2 gap-2 border-2 border-dashed page-break second-page">
+        <div class="flex flex-row items-start justify-center w-full h-full p-10 gap-2 border-2 border-dashed page-break second-page">
           <div class="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
             <div id="second-page-work-history" class="flex flex-col items-center justify-center w-full"></div>
           </div>
@@ -300,8 +300,10 @@ export async function GET(request, context) {
       displayHeaderFooter: true,
       headerTemplate: "<div></div>",
       footerTemplate: `
-        <div style="width: 100%; text-align: right; font-size: 10px; padding-right: 10px;">
-          CV Export / Rev.01
+        <div style="position: fixed; bottom: 0; left: 0; right: 0; width: 100%; font-size: 10px; -webkit-print-color-adjust: exact;">
+          <div style="background-color: rgb(3, 153, 76); color: white; padding: 10px; text-align: center;">
+            50/1 หมู่ 20 ซอยงามวงศ์วาน 57 ถนนงามวงศ์วาน แขวงลาดยาว เขตจตุจักร กรุงเทพฯ 10900 โทร 02-105-0999 (30 คู่สาย) แฟกซ์ 02-580-1852
+          </div>
         </div>
       `,
     });
