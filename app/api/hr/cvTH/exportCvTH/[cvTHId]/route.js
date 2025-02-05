@@ -101,7 +101,7 @@ export async function GET(request, context) {
                       (proj) => `
                     <div class="flex flex-row items-center justify-center w-full h-full gap-2">
                       <span class="flex items-center justify-center h-full p-2 gap-2">●</span>
-                      <span class="flex items-center justify-start w-full h-full p-2 gap-2">${proj.cvTHProjectName}</span>
+                      <span class="flex items-center justify-start w-full h-full p-2 gap-2">${proj.cvTHProjectName} , ${proj.cvTHProjectDescription}</span>
                     </div>
                   `
                     )
