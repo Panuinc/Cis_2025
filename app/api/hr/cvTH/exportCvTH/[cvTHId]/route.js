@@ -34,7 +34,7 @@ export async function GET(request, context) {
               },
               include: {
                 EmploymentPositionId: {
-                  select: { positionName: true },
+                  select: { positionNameTH: true },
                 },
               },
             },
@@ -49,10 +49,10 @@ export async function GET(request, context) {
         },
         CvTHLanguageSkill: true,
         CvTHCreateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
         },
         CvTHUpdateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
         },
       },
     });
@@ -65,12 +65,12 @@ export async function GET(request, context) {
     }
 
     const fullname = cvth.CvTHEmployeeBy
-      ? `${cvth.CvTHEmployeeBy.employeeFirstname} ${cvth.CvTHEmployeeBy.employeeLastname}`
+      ? `${cvth.CvTHEmployeeBy.employeeFirstnameTH} ${cvth.CvTHEmployeeBy.employeeLastnameTH}`
       : "-";
 
-    const positionName =
+    const positionNameTH =
       cvth.CvTHEmployeeBy?.employeeEmployment?.[0]?.EmploymentPositionId
-        ?.positionName || "-";
+        ?.positionNameTH || "-";
 
     const employeeEmail = cvth.CvTHEmployeeBy?.employeeEmail || "-";
 
@@ -210,7 +210,7 @@ export async function GET(request, context) {
               </div>
             </div>
             <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed bg-header">
-              ${positionName}
+              ${positionNameTH}
             </div>
             <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
               Work Experience

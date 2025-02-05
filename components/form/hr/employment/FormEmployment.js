@@ -229,7 +229,7 @@ export default function FormEmployment({
           >
             {filteredposition.map((position) => (
               <SelectItem key={position.positionId} value={position.positionId}>
-                {position.positionName}
+                {position.positionNameTH}
               </SelectItem>
             ))}
           </Select>
@@ -274,7 +274,7 @@ export default function FormEmployment({
           >
             {filteredparent.map((parent) => (
               <SelectItem key={parent.employeeId} value={parent.employeeId}>
-                {`${parent.employeeFirstname} ${parent.employeeLastname}`}
+                {`${parent.employeeFirstnameTH} ${parent.employeeLastnameTH}`}
               </SelectItem>
             ))}
           </Select>

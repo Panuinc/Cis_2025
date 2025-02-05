@@ -408,8 +408,8 @@ export default function UiLayout({ children }) {
           >
             <MenuMainOther
               icons={<Hide />}
-              text={`${userData.employee?.employeeFirstname || ""} ${
-                userData.employee?.employeeLastname || ""
+              text={`${userData.employee?.employeeFirstnameTH || ""} ${
+                userData.employee?.employeeLastnameTH || ""
               } `}
               isCollapsed={isCollapsed}
               onClick={handleToggleMenu}

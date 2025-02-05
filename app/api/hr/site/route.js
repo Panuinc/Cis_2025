@@ -22,10 +22,10 @@ export async function GET(request) {
           select: { branchName: true },
         },
         SiteCreateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
         },
         SiteUpdateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
         },
       },
     });

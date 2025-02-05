@@ -106,23 +106,25 @@ enum TrainingEmployeeResult {
 }
 
 model Employee {
-  employeeId        Int       @id @default(autoincrement())
-  employeeTitle     Title
-  employeeFirstname String    @db.VarChar(255)
-  employeeLastname  String    @db.VarChar(255)
-  employeeNickname  String    @db.VarChar(255)
-  employeeEmail     String    @db.VarChar(255)
-  employeeTel       String    @db.VarChar(255)
-  employeeIdCard    String    @db.VarChar(255)
-  employeeBirthday  DateTime
-  employeeCitizen   Citizen
-  employeeGender    Gender
-  employeeLevel     Level     @default(User)
-  employeeStatus    Status    @default(InActive)
-  employeeCreateBy  Int
-  employeeCreateAt  DateTime  @default(now()) @db.Timestamp()
-  employeeUpdateBy  Int?
-  employeeUpdateAt  DateTime?
+  employeeId          Int       @id @default(autoincrement())
+  employeeTitle       Title
+  employeeFirstnameTH String    @db.VarChar(255)
+  employeeLastnameTH  String    @db.VarChar(255)
+  employeeFirstnameEN String    @db.VarChar(255)
+  employeeLastnameEN  String    @db.VarChar(255)
+  employeeNickname    String    @db.VarChar(255)
+  employeeEmail       String    @db.VarChar(255)
+  employeeTel         String    @db.VarChar(255)
+  employeeIdCard      String    @db.VarChar(255)
+  employeeBirthday    DateTime
+  employeeCitizen     Citizen
+  employeeGender      Gender
+  employeeLevel       Level     @default(User)
+  employeeStatus      Status    @default(InActive)
+  employeeCreateBy    Int
+  employeeCreateAt    DateTime  @default(now()) @db.Timestamp()
+  employeeUpdateBy    Int?
+  employeeUpdateAt    DateTime?
 
   EmployeeCreateBy Employee? @relation("CreateEmployeeBy", fields: [employeeCreateBy], references: [employeeId])
   EmployeeUpdateBy Employee? @relation("UpdateEmployeeBy", fields: [employeeUpdateBy], references: [employeeId])
@@ -613,7 +615,8 @@ model Position {
   positionBranchId     Int
   positionDivisionId   Int
   positionDepartmentId Int
-  positionName         String    @db.VarChar(255)
+  positionNameTH       String    @db.VarChar(255)
+  positionNameEN       String    @db.VarChar(255)
   positionStatus       Status    @default(Active)
   positionCreateBy     Int
   positionCreateAt     DateTime  @default(now()) @db.Timestamp()

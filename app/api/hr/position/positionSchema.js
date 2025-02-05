@@ -28,7 +28,7 @@ export const positionPostSchema = z.object({
     "Department ID must be an integer."
   ),
 
-  positionName: preprocessString(
+  positionNameTH: preprocessString(
     "Please Enter Position Name",
     "Please Enter Position Name"
   ),
@@ -45,7 +45,7 @@ export const positionPutSchema = z.object({
     "Position ID must be an integer."
   ),
 
-  positionName: preprocessString(
+  positionNameTH: preprocessString(
     "Please Enter Position Name",
     "Please Enter Position Name"
   ),

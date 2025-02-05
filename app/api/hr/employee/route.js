@@ -34,13 +34,13 @@ export async function GET(request) {
               select: { departmentName: true },
             },
             EmploymentPositionId: {
-              select: { positionName: true },
+              select: { positionNameTH: true },
             },
             EmploymentRoleId: {
               select: { roleName: true },
             },
             EmploymentParentBy: {
-              select: { employeeFirstname: true, employeeLastname: true },
+              select: { employeeFirstnameTH: true, employeeLastnameTH: true },
             },
           },
         },
@@ -49,10 +49,10 @@ export async function GET(request) {
         employeeCvEN: true,
         employeeResume: true,
         EmployeeCreateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
         },
         EmployeeUpdateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
         },
       },
     });

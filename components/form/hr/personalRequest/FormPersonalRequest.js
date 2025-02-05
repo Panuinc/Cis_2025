@@ -192,7 +192,7 @@ export default function FormPersonalRequest({
           >
             {filteredposition.map((position) => (
               <SelectItem key={position.positionId} value={position.positionId}>
-                {position.positionName}
+                {position.positionNameTH}
               </SelectItem>
             ))}
           </Select>

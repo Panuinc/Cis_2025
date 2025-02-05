@@ -30,11 +30,11 @@ export async function GET(request, context) {
           include: {
             TrainingEmployeeEmployeeId: {
               select: {
-                employeeFirstname: true,
-                employeeLastname: true,
+                employeeFirstnameTH: true,
+                employeeLastnameTH: true,
                 employeeEmployment: {
                   select: {
-                    EmploymentPositionId: { select: { positionName: true } },
+                    EmploymentPositionId: { select: { positionNameTH: true } },
                     EmploymentDivisionId: { select: { divisionName: true } },
                   },
                 },
@@ -45,14 +45,14 @@ export async function GET(request, context) {
         employeeTrainingCheckInTraining: {
           include: {
             TrainingEmployeeCheckInEmployeeId: {
-              select: { employeeFirstname: true, employeeLastname: true },
+              select: { employeeFirstnameTH: true, employeeLastnameTH: true },
             },
           },
         },
         TrainingCreateBy: {
           select: {
-            employeeFirstname: true,
-            employeeLastname: true,
+            employeeFirstnameTH: true,
+            employeeLastnameTH: true,
             employeeEmployment: {
               select: {
                 employmentSignature: true,
@@ -62,12 +62,12 @@ export async function GET(request, context) {
           },
         },
         TrainingUpdateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
         },
         TrainingHrApproveBy: {
           select: {
-            employeeFirstname: true,
-            employeeLastname: true,
+            employeeFirstnameTH: true,
+            employeeLastnameTH: true,
             employeeEmployment: {
               select: {
                 employmentSignature: true,
@@ -78,8 +78,8 @@ export async function GET(request, context) {
         },
         TrainingMdApproveBy: {
           select: {
-            employeeFirstname: true,
-            employeeLastname: true,
+            employeeFirstnameTH: true,
+            employeeLastnameTH: true,
             employeeEmployment: {
               select: {
                 employmentSignature: true,
@@ -138,11 +138,11 @@ export async function GET(request, context) {
           <tr>
             <td class="border px-4 py-2 text-center">${index + 1}</td>
             <td class="border px-4 py-2">${
-              item.TrainingEmployeeEmployeeId.employeeFirstname
-            } ${item.TrainingEmployeeEmployeeId.employeeLastname}</td>
+              item.TrainingEmployeeEmployeeId.employeeFirstnameTH
+            } ${item.TrainingEmployeeEmployeeId.employeeLastnameTH}</td>
             <td class="border px-4 py-2">${
               item.TrainingEmployeeEmployeeId.employeeEmployment[0]
-                ?.EmploymentPositionId?.positionName || "-"
+                ?.EmploymentPositionId?.positionNameTH || "-"
             }</td>
             <td class="border px-4 py-2">${
               item.TrainingEmployeeEmployeeId.employeeEmployment[0]
@@ -498,7 +498,7 @@ export async function GET(request, context) {
               <div class="flex items-center justify-center w-full h-full p-0.5 ">
                 ( ${
                   training.TrainingCreateBy
-                    ? `${training.TrainingCreateBy.employeeFirstname} ${training.TrainingCreateBy.employeeLastname}`
+                    ? `${training.TrainingCreateBy.employeeFirstnameTH} ${training.TrainingCreateBy.employeeLastnameTH}`
                     : "-"
                 })
               </div>
@@ -531,7 +531,7 @@ export async function GET(request, context) {
               <div class="flex items-center justify-center w-full h-full p-0.5 ">
              (   ${
                training.TrainingHrApproveBy
-                 ? `${training.TrainingHrApproveBy.employeeFirstname} ${training.TrainingHrApproveBy.employeeLastname}`
+                 ? `${training.TrainingHrApproveBy.employeeFirstnameTH} ${training.TrainingHrApproveBy.employeeLastnameTH}`
                  : "-"
              })
               </div>
@@ -570,7 +570,7 @@ export async function GET(request, context) {
               <div class="flex items-center justify-center w-full h-full p-0.5 ">
               (  ${
                 training.TrainingMdApproveBy
-                  ? `${training.TrainingMdApproveBy.employeeFirstname} ${training.TrainingMdApproveBy.employeeLastname}`
+                  ? `${training.TrainingMdApproveBy.employeeFirstnameTH} ${training.TrainingMdApproveBy.employeeLastnameTH}`
                   : "-"
               })
               </div>

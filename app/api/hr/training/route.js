@@ -79,22 +79,22 @@ export async function GET(request) {
         employeeTrainingTraining: {
           include: {
             TrainingEmployeeEmployeeId: {
-              select: { employeeFirstname: true, employeeLastname: true },
+              select: { employeeFirstnameTH: true, employeeLastnameTH: true },
             },
           },
         },
         employeeTrainingCheckInTraining: {
           include: {
             TrainingEmployeeCheckInEmployeeId: {
-              select: { employeeFirstname: true, employeeLastname: true },
+              select: { employeeFirstnameTH: true, employeeLastnameTH: true },
             },
           },
         },
         TrainingCreateBy: {
           select: {
             employeeId: true,
-            employeeFirstname: true,
-            employeeLastname: true,
+            employeeFirstnameTH: true,
+            employeeLastnameTH: true,
             employeeEmployment: {
               select: {
                 employmentSignature: true,
@@ -104,7 +104,7 @@ export async function GET(request) {
           },
         },
         TrainingUpdateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
         },
       },
     });

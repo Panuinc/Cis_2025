@@ -28,10 +28,10 @@ export async function GET(request) {
           select: { departmentName: true },
         },
         PositionCreateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
         },
         PositionUpdateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
         },
       },
     });
@@ -71,13 +71,13 @@ export async function POST(request) {
     const parsedData = positionPostSchema.parse(data);
 
     const existingPosition = await prisma.position.findFirst({
-      where: { positionName: parsedData.positionName },
+      where: { positionNameTH: parsedData.positionNameTH },
     });
 
     if (existingPosition) {
       return NextResponse.json(
         {
-          error: `Position with name '${parsedData.positionName}' already exists.`,
+          error: `Position with name '${parsedData.positionNameTH}' already exists.`,
         },
         { status: 400 }
       );

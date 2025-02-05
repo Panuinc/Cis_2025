@@ -22,14 +22,24 @@ export const employeePostSchema = z.object({
     "Employee Title must be either 'Mr', 'Ms', 'Mrs'."
   ),
 
-  employeeFirstname: preprocessString(
-    "Please Enter Firstname",
-    "Please Enter Firstname"
+  employeeFirstnameTH: preprocessString(
+    "Please Enter Firstname TH",
+    "Please Enter Firstname TH"
   ),
 
-  employeeLastname: preprocessString(
-    "Please Enter Lastname",
-    "Please Enter Lastname"
+  employeeLastnameTH: preprocessString(
+    "Please Enter Lastname TH",
+    "Please Enter Lastname TH"
+  ),
+
+  employeeFirstnameEN: preprocessString(
+    "Please Enter Firstname TH",
+    "Please Enter Firstname TH"
+  ),
+
+  employeeLastnameEN: preprocessString(
+    "Please Enter Lastname EN",
+    "Please Enter Lastname EN"
   ),
 
   employeeNickname: preprocessString(
@@ -85,14 +95,24 @@ export const employeePutSchema = z.object({
     "Employee Title must be either 'Mr', 'Ms', 'Mrs'."
   ),
 
-  employeeFirstname: preprocessString(
+  employeeFirstnameTH: preprocessString(
     "Please Enter Firstname",
     "Please Enter Firstname"
   ),
 
-  employeeLastname: preprocessString(
+  employeeLastnameTH: preprocessString(
     "Please Enter Lastname",
     "Please Enter Lastname"
+  ),
+
+  employeeFirstnameEN: preprocessString(
+    "Please Enter Firstname TH",
+    "Please Enter Firstname TH"
+  ),
+
+  employeeLastnameEN: preprocessString(
+    "Please Enter Lastname EN",
+    "Please Enter Lastname EN"
   ),
 
   employeeNickname: preprocessString(

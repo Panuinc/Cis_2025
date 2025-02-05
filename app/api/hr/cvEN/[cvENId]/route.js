@@ -36,10 +36,10 @@ export async function GET(request, context) {
         },
         CvENLanguageSkill: true,
         CvENCreateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameEN: true, employeeLastnameEN: true },
         },
         CvENUpdateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameEN: true, employeeLastnameEN: true },
         },
       },
     });

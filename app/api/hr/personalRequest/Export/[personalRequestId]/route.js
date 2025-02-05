@@ -36,16 +36,16 @@ export async function GET(request, context) {
           select: { departmentName: true },
         },
         PersonalRequestPositionId: {
-          select: { positionName: true },
+          select: { positionNameTH: true },
         },
         PersonalRequestCreateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
           select: {
-            employeeFirstname: true,
-            employeeLastname: true,
+            employeeFirstnameTH: true,
+            employeeLastnameTH: true,
             employeeEmployment: {
               select: {
-                EmploymentPositionId: { select: { positionName: true } },
+                EmploymentPositionId: { select: { positionNameTH: true } },
                 EmploymentDepartmentId: { select: { departmentName: true } },
                 employmentSignature: true,
               },
@@ -54,18 +54,18 @@ export async function GET(request, context) {
           },
         },
         PersonalRequestUpdateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
         },
 
         //
         PersonalRequestManagerApproveBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
           select: {
-            employeeFirstname: true,
-            employeeLastname: true,
+            employeeFirstnameTH: true,
+            employeeLastnameTH: true,
             employeeEmployment: {
               select: {
-                EmploymentPositionId: { select: { positionName: true } },
+                EmploymentPositionId: { select: { positionNameTH: true } },
                 EmploymentDepartmentId: { select: { departmentName: true } },
                 employmentSignature: true,
               },
@@ -76,13 +76,13 @@ export async function GET(request, context) {
         //
         //
         PersonalRequestHrApproveBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
           select: {
-            employeeFirstname: true,
-            employeeLastname: true,
+            employeeFirstnameTH: true,
+            employeeLastnameTH: true,
             employeeEmployment: {
               select: {
-                EmploymentPositionId: { select: { positionName: true } },
+                EmploymentPositionId: { select: { positionNameTH: true } },
                 EmploymentDepartmentId: { select: { departmentName: true } },
                 employmentSignature: true,
               },
@@ -93,13 +93,13 @@ export async function GET(request, context) {
         //
         //
         PersonalRequestMdApproveBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
           select: {
-            employeeFirstname: true,
-            employeeLastname: true,
+            employeeFirstnameTH: true,
+            employeeLastnameTH: true,
             employeeEmployment: {
               select: {
-                EmploymentPositionId: { select: { positionName: true } },
+                EmploymentPositionId: { select: { positionNameTH: true } },
                 EmploymentDepartmentId: { select: { departmentName: true } },
                 employmentSignature: true,
               },
@@ -194,9 +194,9 @@ export async function GET(request, context) {
             <div class="flex items-center justify-center w-full h-full gap-2 border-b-2">
               ${
                 personalRequest.PersonalRequestCreateBy
-                  ? personalRequest.PersonalRequestCreateBy.employeeFirstname +
+                  ? personalRequest.PersonalRequestCreateBy.employeeFirstnameTH +
                     " " +
-                    personalRequest.PersonalRequestCreateBy.employeeLastname
+                    personalRequest.PersonalRequestCreateBy.employeeLastnameTH
                   : "-"
               }
             </div>
@@ -214,7 +214,7 @@ export async function GET(request, context) {
                 personalRequest.PersonalRequestCreateBy.employeeEmployment[0]
                   .EmploymentPositionId
                   ? personalRequest.PersonalRequestCreateBy
-                      .employeeEmployment[0].EmploymentPositionId.positionName
+                      .employeeEmployment[0].EmploymentPositionId.positionNameTH
                   : "-"
               }
             </div>
@@ -260,7 +260,7 @@ export async function GET(request, context) {
               ในตำแหน่ง
             </div>
             <div class="flex items-center justify-center w-full h-full gap-2 border-b-2">
-              ${personalRequest.PersonalRequestPositionId.positionName || "-"}
+              ${personalRequest.PersonalRequestPositionId.positionNameTH || "-"}
             </div>
           </div>
           <div class="flex flex-row items-center justify-center w-full h-full gap-2">

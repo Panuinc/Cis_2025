@@ -11,8 +11,10 @@ export default function Register() {
 
   const [formData, setFormData] = useState({
     employeeTitle: "",
-    employeeFirstname: "",
-    employeeLastname: "",
+    employeeFirstnameTH: "",
+    employeeLastnameTH: "",
+    employeeFirstnameEN: "",
+    employeeLastnameEN: "",
     employeeNickname: "",
     employeeEmail: "",
     employeeTel: "",

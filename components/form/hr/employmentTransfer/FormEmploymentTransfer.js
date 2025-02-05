@@ -59,7 +59,7 @@ export default function FormEmploymentTransfer({
   const renderCell = (item, columnKey) => {
     const employment = item.employeeEmployment?.[0] || {};
     const parentName = employment.EmploymentParentBy
-      ? `${employment.EmploymentParentBy.employeeFirstname} ${employment.EmploymentParentBy.employeeLastname}`
+      ? `${employment.EmploymentParentBy.employeeFirstnameTH} ${employment.EmploymentParentBy.employeeLastnameTH}`
       : "-";
 
     switch (columnKey) {
@@ -75,7 +75,7 @@ export default function FormEmploymentTransfer({
       case "id":
         return item.employeeId;
       case "name":
-        return `${item.employeeFirstname} ${item.employeeLastname}`;
+        return `${item.employeeFirstnameTH} ${item.employeeLastnameTH}`;
       case "branch":
         return employment.EmploymentBranchId?.branchName || "-";
       case "site":
@@ -262,7 +262,7 @@ export default function FormEmploymentTransfer({
                         key={parent.employeeId}
                         value={parent.employeeId.toString()}
                       >
-                        {`${parent.employeeFirstname} ${parent.employeeLastname}`}
+                        {`${parent.employeeFirstnameTH} ${parent.employeeLastnameTH}`}
                       </SelectItem>
                     ))}
                 </Select>
@@ -437,7 +437,7 @@ export default function FormEmploymentTransfer({
           >
             {filteredparent.map((parent) => (
               <SelectItem key={parent.employeeId} value={parent.employeeId}>
-                {`${parent.employeeFirstname} ${parent.employeeLastname}`}
+                {`${parent.employeeFirstnameTH} ${parent.employeeLastnameTH}`}
               </SelectItem>
             ))}
           </Select>

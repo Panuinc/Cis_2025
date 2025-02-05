@@ -17,8 +17,10 @@ const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
 
 const DEFAULT_FORM_DATA = {
   employeeTitle: "",
-  employeeFirstname: "",
-  employeeLastname: "",
+  employeeFirstnameTH: "",
+  employeeLastnameTH: "",
+  employeeFirstnameEN: "",
+  employeeLastnameEN: "",
   employeeNickname: "",
   employeeEmail: "",
   employeeTel: "",
@@ -36,8 +38,8 @@ export default function EmployeeUpdate({ params: paramsPromise }) {
 
   const operatedBy = useMemo(
     () =>
-      `${userData?.employee?.employeeFirstname || ""} ${
-        userData?.employee?.employeeLastname || ""
+      `${userData?.employee?.employeeFirstnameTH || ""} ${
+        userData?.employee?.employeeLastnameTH || ""
       }`,
     [userData]
   );

@@ -98,17 +98,32 @@ export default function FormPosition({
         </div>
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
-            name="positionName"
+            name="positionNameTH"
             type="text"
-            label="Position Name"
+            label="Position Name TH"
             placeholder="Please Enter Data"
             labelPlacement="outside"
             size="lg"
             variant="bordered"
-            value={formData.positionName || ""}
-            onChange={handleInputChange("positionName")}
-            isInvalid={!!errors.positionName}
-            errorMessage={errors.positionName}
+            value={formData.positionNameTH || ""}
+            onChange={handleInputChange("positionNameTH")}
+            isInvalid={!!errors.positionNameTH}
+            errorMessage={errors.positionNameTH}
+          />
+        </div>
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+          <Input
+            name="positionNameEN"
+            type="text"
+            label="Position Name EN"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            value={formData.positionNameEN || ""}
+            onChange={handleInputChange("positionNameEN")}
+            isInvalid={!!errors.positionNameEN}
+            errorMessage={errors.positionNameEN}
           />
         </div>
       </div>

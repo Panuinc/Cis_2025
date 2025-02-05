@@ -42,7 +42,7 @@ export default function FormCvEN({
       <div className="flex flex-col xl:flex-row items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
-            name="employeeFirstname"
+            name="employeeFirstnameEN"
             type="text"
             label="Firstname"
             placeholder="Please Enter Data"
@@ -50,15 +50,15 @@ export default function FormCvEN({
             size="lg"
             variant="flat"
             readOnly
-            value={formData.employeeFirstname || ""}
-            onChange={handleInputChange("employeeFirstname")}
-            isInvalid={!!errors.employeeFirstname}
-            errorMessage={errors.employeeFirstname}
+            value={formData.employeeFirstnameEN || ""}
+            onChange={handleInputChange("employeeFirstnameEN")}
+            isInvalid={!!errors.employeeFirstnameEN}
+            errorMessage={errors.employeeFirstnameEN}
           />
         </div>
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
           <Input
-            name="employeeLastname"
+            name="employeeLastnameEN"
             type="text"
             label="Lastname"
             placeholder="Please Enter Data"
@@ -66,10 +66,10 @@ export default function FormCvEN({
             size="lg"
             variant="flat"
             readOnly
-            value={formData.employeeLastname || ""}
-            onChange={handleInputChange("employeeLastname")}
-            isInvalid={!!errors.employeeLastname}
-            errorMessage={errors.employeeLastname}
+            value={formData.employeeLastnameEN || ""}
+            onChange={handleInputChange("employeeLastnameEN")}
+            isInvalid={!!errors.employeeLastnameEN}
+            errorMessage={errors.employeeLastnameEN}
           />
         </div>
       </div>

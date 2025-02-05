@@ -35,10 +35,10 @@ export async function GET(request, context) {
       where: { employmentId: employmentId },
       include: {
         EmploymentCreateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
         },
         EmploymentUpdateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
         },
         EmploymentEmployeeBy: {
           select: {

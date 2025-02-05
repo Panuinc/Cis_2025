@@ -100,16 +100,16 @@ export async function GET(request) {
           select: { departmentName: true },
         },
         PersonalRequestPositionId: {
-          select: { positionName: true },
+          select: { positionNameTH: true },
         },
         PersonalRequestCreateBy: {
           select: {
             employeeId: true,
-            employeeFirstname: true,
-            employeeLastname: true,
+            employeeFirstnameTH: true,
+            employeeLastnameTH: true,
             employeeEmployment: {
               select: {
-                EmploymentPositionId: { select: { positionName: true } },
+                EmploymentPositionId: { select: { positionNameTH: true } },
                 EmploymentDepartmentId: { select: { departmentName: true } },
                 employmentSignature: true,
               },
@@ -118,7 +118,7 @@ export async function GET(request) {
           },
         },
         PersonalRequestUpdateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
         },
       },
     });

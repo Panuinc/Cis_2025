@@ -27,8 +27,8 @@ export default function UserUpdate({ params: paramsPromise }) {
 
   const operatedBy = useMemo(
     () =>
-      `${userData?.employee?.employeeFirstname || ""} ${
-        userData?.employee?.employeeLastname || ""
+      `${userData?.employee?.employeeFirstnameTH || ""} ${
+        userData?.employee?.employeeLastnameTH || ""
       }`,
     [userData]
   );

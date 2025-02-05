@@ -37,22 +37,22 @@ export async function GET(request, context) {
         employeeTrainingTraining: {
           include: {
             TrainingEmployeeEmployeeId: {
-              select: { employeeFirstname: true, employeeLastname: true },
+              select: { employeeFirstnameTH: true, employeeLastnameTH: true },
             },
           },
         },
         employeeTrainingCheckInTraining: {
           include: {
             TrainingEmployeeCheckInEmployeeId: {
-              select: { employeeFirstname: true, employeeLastname: true },
+              select: { employeeFirstnameTH: true, employeeLastnameTH: true },
             },
           },
         },
         TrainingCreateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
         },
         TrainingUpdateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
         },
       },
     });
@@ -336,22 +336,22 @@ export async function PUT(request, context) {
         employeeTrainingTraining: {
           include: {
             TrainingEmployeeEmployeeId: {
-              select: { employeeFirstname: true, employeeLastname: true },
+              select: { employeeFirstnameTH: true, employeeLastnameTH: true },
             },
           },
         },
         employeeTrainingCheckInTraining: {
           include: {
             TrainingEmployeeCheckInEmployeeId: {
-              select: { employeeFirstname: true, employeeLastname: true },
+              select: { employeeFirstnameTH: true, employeeLastnameTH: true },
             },
           },
         },
         TrainingCreateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
         },
         TrainingUpdateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
         },
       },
     });

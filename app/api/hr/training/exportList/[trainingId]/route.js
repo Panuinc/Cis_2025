@@ -31,11 +31,11 @@ export async function GET(request, context) {
             TrainingEmployeeEmployeeId: {
               select: {
                 employeeId: true, // เพิ่มการเลือก employeeId
-                employeeFirstname: true,
-                employeeLastname: true,
+                employeeFirstnameTH: true,
+                employeeLastnameTH: true,
                 employeeEmployment: {
                   select: {
-                    EmploymentPositionId: { select: { positionName: true } },
+                    EmploymentPositionId: { select: { positionNameTH: true } },
                     EmploymentDivisionId: { select: { divisionName: true } },
                     employmentSignature: true, // เลือกลายเซ็น
                   },
@@ -50,8 +50,8 @@ export async function GET(request, context) {
             TrainingEmployeeCheckInEmployeeId: {
               select: {
                 employeeId: true, // เพิ่มการเลือก employeeId
-                employeeFirstname: true,
-                employeeLastname: true,
+                employeeFirstnameTH: true,
+                employeeLastnameTH: true,
                 employeeEmployment: {
                   select: {
                     employmentSignature: true,
@@ -64,8 +64,8 @@ export async function GET(request, context) {
         },
         TrainingCreateBy: {
           select: {
-            employeeFirstname: true,
-            employeeLastname: true,
+            employeeFirstnameTH: true,
+            employeeLastnameTH: true,
             employeeEmployment: {
               select: {
                 employmentSignature: true,
@@ -75,12 +75,12 @@ export async function GET(request, context) {
           },
         },
         TrainingUpdateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
         },
         TrainingHrApproveBy: {
           select: {
-            employeeFirstname: true,
-            employeeLastname: true,
+            employeeFirstnameTH: true,
+            employeeLastnameTH: true,
             employeeEmployment: {
               select: {
                 employmentSignature: true,
@@ -91,8 +91,8 @@ export async function GET(request, context) {
         },
         TrainingMdApproveBy: {
           select: {
-            employeeFirstname: true,
-            employeeLastname: true,
+            employeeFirstnameTH: true,
+            employeeLastnameTH: true,
             employeeEmployment: {
               select: {
                 employmentSignature: true,
@@ -177,11 +177,11 @@ export async function GET(request, context) {
               <tr>
                 <td class="border px-4 py-2 text-center">${index + 1}</td>
                 <td class="border px-4 py-2">${
-                  item.TrainingEmployeeEmployeeId.employeeFirstname
-                } ${item.TrainingEmployeeEmployeeId.employeeLastname}</td>
+                  item.TrainingEmployeeEmployeeId.employeeFirstnameTH
+                } ${item.TrainingEmployeeEmployeeId.employeeLastnameTH}</td>
                 <td class="border px-4 py-2">${
                   item.TrainingEmployeeEmployeeId.employeeEmployment[0]
-                    ?.EmploymentPositionId?.positionName || "-"
+                    ?.EmploymentPositionId?.positionNameTH || "-"
                 }</td>
                 <td class="border px-4 py-2">${
                   item.TrainingEmployeeEmployeeId.employeeEmployment[0]

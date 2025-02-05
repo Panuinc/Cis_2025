@@ -18,8 +18,8 @@ const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
 
 const DEFAULT_FORM_DATA = {
   cvTHEmployeeId: "",
-  employeeFirstname: "",
-  employeeLastname: "",
+  employeeFirstnameTH: "",
+  employeeLastnameTH: "",
   employeeBirthday: "",
   employeeEmail: "",
   educations: [],
@@ -35,8 +35,8 @@ export default function CvTHUpdate({ params: paramsPromise }) {
 
   const operatedBy = useMemo(
     () =>
-      `${userData?.employee?.employeeFirstname || ""} ${
-        userData?.employee?.employeeLastname || ""
+      `${userData?.employee?.employeeFirstnameTH || ""} ${
+        userData?.employee?.employeeLastnameTH || ""
       }`,
     [userData]
   );
@@ -64,8 +64,8 @@ export default function CvTHUpdate({ params: paramsPromise }) {
         const cvTH = cvTHData.cvTH[0];
         setFormData({
           cvTHEmployeeId: cvTH.cvTHEmployeeId,
-          employeeFirstname: cvTH.employee?.employeeFirstname || "",
-          employeeLastname: cvTH.employee?.employeeLastname || "",
+          employeeFirstnameTH: cvTH.employee?.employeeFirstnameTH || "",
+          employeeLastnameTH: cvTH.employee?.employeeLastnameTH || "",
           employeeBirthday: cvTH.employee?.employeeBirthday || "",
           employeeEmail: cvTH.employee?.employeeEmail || "",
           educations: cvTH.educations || [],

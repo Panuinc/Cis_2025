@@ -27,9 +27,9 @@ export default function FormTrainingResult({
 
     switch (columnKey) {
       case "firstName":
-        return employee?.employeeFirstname || "-";
+        return employee?.employeeFirstnameTH || "-";
       case "lastName":
-        return employee?.employeeLastname || "-";
+        return employee?.employeeLastnameTH || "-";
       case "result": {
         return (
           <Switch

@@ -58,18 +58,35 @@ export default function FormRegister({
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-success">
           <Input
             type="text"
-            name="employeeFirstname"
-            label="Firstname"
+            name="employeeFirstnameTH"
+            label="Firstname TH"
             placeholder="Please Enter Data"
             labelPlacement="outside"
             size="lg"
             variant="bordered"
             color="success"
             startContent={<User />}
-            value={formData.employeeFirstname || ""}
-            onChange={handleInputChange("employeeFirstname")}
-            isInvalid={!!errors.employeeFirstname}
-            errorMessage={errors.employeeFirstname}
+            value={formData.employeeFirstnameTH || ""}
+            onChange={handleInputChange("employeeFirstnameTH")}
+            isInvalid={!!errors.employeeFirstnameTH}
+            errorMessage={errors.employeeFirstnameTH}
+          />
+        </div>
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-success">
+          <Input
+            type="text"
+            name="employeeFirstnameEN"
+            label="Firstname EN"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            color="success"
+            startContent={<User />}
+            value={formData.employeeFirstnameEN || ""}
+            onChange={handleInputChange("employeeFirstnameEN")}
+            isInvalid={!!errors.employeeFirstnameEN}
+            errorMessage={errors.employeeFirstnameEN}
           />
         </div>
       </div>
@@ -77,18 +94,35 @@ export default function FormRegister({
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-success">
           <Input
             type="text"
-            name="employeeLastname"
-            label="Lastname"
+            name="employeeLastnameTH"
+            label="Lastname TH"
             placeholder="Please Enter Data"
             labelPlacement="outside"
             size="lg"
             variant="bordered"
             color="success"
             startContent={<User />}
-            value={formData.employeeLastname || ""}
-            onChange={handleInputChange("employeeLastname")}
-            isInvalid={!!errors.employeeLastname}
-            errorMessage={errors.employeeLastname}
+            value={formData.employeeLastnameTH || ""}
+            onChange={handleInputChange("employeeLastnameTH")}
+            isInvalid={!!errors.employeeLastnameTH}
+            errorMessage={errors.employeeLastnameTH}
+          />
+        </div>
+        <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-success">
+          <Input
+            type="text"
+            name="employeeLastnameEN"
+            label="Lastname EN"
+            placeholder="Please Enter Data"
+            labelPlacement="outside"
+            size="lg"
+            variant="bordered"
+            color="success"
+            startContent={<User />}
+            value={formData.employeeLastnameEN || ""}
+            onChange={handleInputChange("employeeLastnameEN")}
+            isInvalid={!!errors.employeeLastnameEN}
+            errorMessage={errors.employeeLastnameEN}
           />
         </div>
         <div className="flex items-center justify-center w-full h-full p-2 gap-2 text-success">

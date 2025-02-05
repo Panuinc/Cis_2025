@@ -26,9 +26,9 @@ export default function FormTrainingCheckIn({
 
     switch (columnKey) {
       case "firstName":
-        return employee?.employeeFirstname || "-";
+        return employee?.employeeFirstnameTH || "-";
       case "lastName":
-        return employee?.employeeLastname || "-";
+        return employee?.employeeLastnameTH || "-";
       case "morningCheck":
         return item.trainingEmployeeCheckInMorningCheck && signaturePath ? (
           <img

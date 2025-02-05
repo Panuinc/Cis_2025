@@ -17,8 +17,8 @@ const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
 
 const DEFAULT_FORM_DATA = {
   cvENEmployeeId: "",
-  employeeFirstname: "",
-  employeeLastname: "",
+  employeeFirstnameEN: "",
+  employeeLastnameEN: "",
   employeeBirthday: "",
   employeeEmail: "",
   educations: [],
@@ -34,8 +34,8 @@ export default function CvENUpdate({ params: paramsPromise }) {
 
   const operatedBy = useMemo(
     () =>
-      `${userData?.employee?.employeeFirstname || ""} ${
-        userData?.employee?.employeeLastname || ""
+      `${userData?.employee?.employeeFirstnameEN || ""} ${
+        userData?.employee?.employeeLastnameEN || ""
       }`,
     [userData]
   );
@@ -63,8 +63,8 @@ export default function CvENUpdate({ params: paramsPromise }) {
         const cvEN = cvENData.cvEN[0];
         setFormData({
           cvENEmployeeId: cvEN.cvENEmployeeId,
-          employeeFirstname: cvEN.employee?.employeeFirstname || "",
-          employeeLastname: cvEN.employee?.employeeLastname || "",
+          employeeFirstnameEN: cvEN.employee?.employeeFirstnameEN || "",
+          employeeLastnameEN: cvEN.employee?.employeeLastnameEN || "",
           employeeBirthday: cvEN.employee?.employeeBirthday || "",
           employeeEmail: cvEN.employee?.employeeEmail || "",
           educations: cvEN.educations || [],

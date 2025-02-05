@@ -68,7 +68,7 @@ export default function FormTraining({
   const renderCell = (item, columnKey) => {
     const employment = item.employeeEmployment?.[0] || {};
     const parentName = employment.EmploymentParentBy
-      ? `${employment.EmploymentParentBy.employeeFirstname} ${employment.EmploymentParentBy.employeeLastname}`
+      ? `${employment.EmploymentParentBy.employeeFirstnameTH} ${employment.EmploymentParentBy.employeeLastnameTH}`
       : "-";
 
     switch (columnKey) {
@@ -84,7 +84,7 @@ export default function FormTraining({
       case "id":
         return item.employeeId;
       case "name":
-        return `${item.employeeFirstname} ${item.employeeLastname}`;
+        return `${item.employeeFirstnameTH} ${item.employeeLastnameTH}`;
       case "branch":
         return employment.EmploymentBranchId?.branchName || "-";
       case "site":
@@ -658,7 +658,7 @@ export default function FormTraining({
                         key={p.employeeId}
                         value={p.employeeId.toString()}
                       >
-                        {`${p.employeeFirstname} ${p.employeeLastname}`}
+                        {`${p.employeeFirstnameTH} ${p.employeeLastnameTH}`}
                       </SelectItem>
                     ))}
                 </Select>

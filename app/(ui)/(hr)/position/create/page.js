@@ -17,7 +17,8 @@ const DEFAULT_FORM_DATA = {
   positionBranchId: "",
   positionDivisionId: "",
   positionDepartmentId: "",
-  positionName: "",
+  positionNameTH: "",
+  positionNameEN: "",
 };
 
 export default function PositionCreate() {
@@ -27,8 +28,8 @@ export default function PositionCreate() {
 
   const operatedBy = useMemo(
     () =>
-      `${userData?.employee?.employeeFirstname || ""} ${
-        userData?.employee?.employeeLastname || ""
+      `${userData?.employee?.employeeFirstnameTH || ""} ${
+        userData?.employee?.employeeLastnameTH || ""
       }`,
     [userData]
   );

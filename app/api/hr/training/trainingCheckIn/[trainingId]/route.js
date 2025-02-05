@@ -35,15 +35,15 @@ export async function GET(request, context) {
           include: {
             TrainingEmployeeCheckInEmployeeId: {
               select: {
-                employeeFirstname: true,
-                employeeLastname: true,
+                employeeFirstnameTH: true,
+                employeeLastnameTH: true,
                 employeeEmployment: {
                   select: {
                     employmentNumber: true,
                     employmentSignature: true,
                     EmploymentPositionId: {
                       select: {
-                        positionName: true,
+                        positionNameTH: true,
                       },
                     },
                     EmploymentDivisionId: {
@@ -58,10 +58,10 @@ export async function GET(request, context) {
           },
         },
         TrainingCreateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
         },
         TrainingUpdateBy: {
-          select: { employeeFirstname: true, employeeLastname: true },
+          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
         },
       },
     });

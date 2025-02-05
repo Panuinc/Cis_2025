@@ -16,7 +16,8 @@ import React, {
 const SECRET_TOKEN = process.env.NEXT_PUBLIC_SECRET_TOKEN;
 
 const DEFAULT_FORM_DATA = {
-  positionName: "",
+  positionNameTH: "",
+  positionNameEN: "",
   positionStatus: "",
 };
 
@@ -27,8 +28,8 @@ export default function PositionUpdate({ params: paramsPromise }) {
 
   const operatedBy = useMemo(
     () =>
-      `${userData?.employee?.employeeFirstname || ""} ${
-        userData?.employee?.employeeLastname || ""
+      `${userData?.employee?.employeeFirstnameTH || ""} ${
+        userData?.employee?.employeeLastnameTH || ""
       }`,
     [userData]
   );

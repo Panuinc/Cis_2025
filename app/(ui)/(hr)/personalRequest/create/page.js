@@ -43,14 +43,14 @@ export default function PersonalRequestCreate() {
 
   const operatedBy = useMemo(
     () =>
-      `${userData?.employee?.employeeFirstname || ""} ${
-        userData?.employee?.employeeLastname || ""
+      `${userData?.employee?.employeeFirstnameTH || ""} ${
+        userData?.employee?.employeeLastnameTH || ""
       }`,
     [userData]
   );
 
   const amPosition = useMemo(
-    () => `${userData?.positionName || ""}`,
+    () => `${userData?.positionNameTH || ""}`,
     [userData]
   );
 

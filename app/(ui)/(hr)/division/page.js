@@ -91,9 +91,9 @@ export default function DivisionList() {
 
   const getFullName = useCallback((user) => {
     if (!user) return null;
-    const { employeeFirstname, employeeLastname } = user;
-    return employeeFirstname && employeeLastname
-      ? `${employeeFirstname} ${employeeLastname}`
+    const { employeeFirstnameTH, employeeLastnameTH } = user;
+    return employeeFirstnameTH && employeeLastnameTH
+      ? `${employeeFirstnameTH} ${employeeLastnameTH}`
       : null;
   }, []);
 

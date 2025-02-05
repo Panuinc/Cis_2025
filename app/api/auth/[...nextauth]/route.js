@@ -38,7 +38,12 @@ export const authOptions = {
                       EmploymentDepartmentId: {
                         select: { departmentName: true },
                       },
-                      EmploymentPositionId: { select: { positionName: true } },
+                      EmploymentPositionId: {
+                        select: {
+                          positionNameTH: true,
+                          positionNameEN: true,
+                        },
+                      },
                     },
                   },
                 },
@@ -84,7 +89,10 @@ export const authOptions = {
             divisionName: firstEmployment?.EmploymentDivisionId?.divisionName,
             departmentName:
               firstEmployment?.EmploymentDepartmentId?.departmentName,
-            positionName: firstEmployment?.EmploymentPositionId?.positionName,
+            positionNameTH:
+              firstEmployment?.EmploymentPositionId?.positionNameTH,
+            positionNameEN:
+              firstEmployment?.EmploymentPositionId?.positionNameEN,
           };
         } catch (error) {
           throw error;
@@ -107,7 +115,8 @@ export const authOptions = {
         token.roleName = user.roleName;
         token.divisionName = user.divisionName;
         token.departmentName = user.departmentName;
-        token.positionName = user.positionName;
+        token.positionNameTH = user.positionNameTH;
+        token.positionNameEN = user.positionNameEN;
       }
       return token;
     },
@@ -123,7 +132,8 @@ export const authOptions = {
         roleName: token.roleName,
         divisionName: token.divisionName,
         departmentName: token.departmentName,
-        positionName: token.positionName,
+        positionNameTH: token.positionNameTH,
+        positionNameEN: token.positionNameEN,
       };
       return session;
     },

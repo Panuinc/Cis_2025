@@ -41,14 +41,14 @@ export default function PositionList() {
           { name: "Branch Name", uid: "branchName" },
           { name: "Division Name", uid: "divisionName" },
           { name: "Department Name", uid: "departmentName" },
-          { name: "Position Name", uid: "positionName" },
+          { name: "Position Name", uid: "positionNameTH" },
         ]
       : [
           { name: "No.", uid: "index" },
           { name: "Branch Name", uid: "branchName" },
           { name: "Division Name", uid: "divisionName" },
           { name: "Department Name", uid: "departmentName" },
-          { name: "Position Name", uid: "positionName" },
+          { name: "Position Name", uid: "positionNameTH" },
           { name: "Create By", uid: "createdBy" },
           { name: "Create At", uid: "positionCreateAt" },
           { name: "Update By", uid: "updatedBy" },
@@ -95,9 +95,9 @@ export default function PositionList() {
 
   const getFullName = useCallback((user) => {
     if (!user) return null;
-    const { employeeFirstname, employeeLastname } = user;
-    return employeeFirstname && employeeLastname
-      ? `${employeeFirstname} ${employeeLastname}`
+    const { employeeFirstnameTH, employeeLastnameTH } = user;
+    return employeeFirstnameTH && employeeLastnameTH
+      ? `${employeeFirstnameTH} ${employeeLastnameTH}`
       : null;
   }, []);
 
@@ -126,8 +126,8 @@ export default function PositionList() {
           return item.PositionDivisionId?.divisionName || null;
         case "departmentName":
           return item.PositionDepartmentId?.departmentName || null;
-        case "positionName":
-          return item.positionName || null;
+        case "positionNameTH":
+          return item.positionNameTH || null;
         case "positionStatus":
           return renderChip(item.positionStatus);
         case "createdBy":
@@ -181,7 +181,7 @@ export default function PositionList() {
   const { paginatedItems, pages } = useMemo(() => {
     const filtered = filterPositionValue
       ? position.filter((item) =>
-          item.positionName
+          item.positionNameTH
             ?.toLowerCase()
             .includes(filterPositionValue.toLowerCase())
         )

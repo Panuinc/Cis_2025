@@ -39,8 +39,8 @@ export default function EmployeeList() {
       ? [
           { name: "No.", uid: "index" },
           { name: "Employee Title", uid: "employeeTitle" },
-          { name: "Employee First Name", uid: "employeeFirstname" },
-          { name: "Employee Last Name", uid: "employeeLastname" },
+          { name: "Employee First Name", uid: "employeeFirstnameTH" },
+          { name: "Employee Last Name", uid: "employeeLastnameTH" },
           { name: "Employee Nick Name", uid: "employeeNickname" },
           { name: "Employee Email", uid: "employeeEmail" },
           { name: "Employee Telephone", uid: "employeeTel" },
@@ -54,8 +54,8 @@ export default function EmployeeList() {
       : [
           { name: "No.", uid: "index" },
           { name: "Employee Title", uid: "employeeTitle" },
-          { name: "Employee First Name", uid: "employeeFirstname" },
-          { name: "Employee Last Name", uid: "employeeLastname" },
+          { name: "Employee First Name", uid: "employeeFirstnameTH" },
+          { name: "Employee Last Name", uid: "employeeLastnameTH" },
           { name: "Employee Nick Name", uid: "employeeNickname" },
           { name: "Employee Email", uid: "employeeEmail" },
           { name: "Employee Telephone", uid: "employeeTel" },
@@ -111,9 +111,9 @@ export default function EmployeeList() {
 
   const getFullName = useCallback((user) => {
     if (!user) return null;
-    const { employeeFirstname, employeeLastname } = user;
-    return employeeFirstname && employeeLastname
-      ? `${employeeFirstname} ${employeeLastname}`
+    const { employeeFirstnameTH, employeeLastnameTH } = user;
+    return employeeFirstnameTH && employeeLastnameTH
+      ? `${employeeFirstnameTH} ${employeeLastnameTH}`
       : null;
   }, []);
 
@@ -136,8 +136,8 @@ export default function EmployeeList() {
       switch (columnKey) {
         case "index":
           return item._index;
-        case "employeeFirstname":
-          return item.employeeFirstname || null;
+        case "employeeFirstnameTH":
+          return item.employeeFirstnameTH || null;
         case "employeeStatus":
           return renderChip(item.employeeStatus);
         case "resumeLink":
@@ -240,7 +240,7 @@ export default function EmployeeList() {
   const { paginatedItems, pages } = useMemo(() => {
     const filtered = filterEmployeeValue
       ? employee.filter((item) =>
-          item.employeeFirstname
+          item.employeeFirstnameTH
             ?.toLowerCase()
             .includes(filterEmployeeValue.toLowerCase())
         )

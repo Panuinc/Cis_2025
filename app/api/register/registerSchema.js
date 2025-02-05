@@ -2,8 +2,10 @@ import { z } from "zod";
 
 export const registerSchema = z.object({
   employeeTitle: z.enum(["Mr", "Ms", "Mrs"], {errorMap: () => ({ message: "Employee status must be either 'Mr' or 'Ms' or 'Mrs'" }),}),  
-  employeeFirstname: z.string().min(1, { message: "Please Enter Firstname" }),
-  employeeLastname: z.string().min(1, { message: "Please Enter Lastname" }),
+  employeeFirstnameTH: z.string().min(1, { message: "Please Enter Firstname TH" }),
+  employeeLastnameTH: z.string().min(1, { message: "Please Enter Lastname TH" }),
+  employeeFirstnameEN: z.string().min(1, { message: "Please Enter Firstname EN" }),
+  employeeLastnameEN: z.string().min(1, { message: "Please Enter Lastname EN" }),
   employeeNickname: z.string().min(1, { message: "Please Enter Nickname" }),
   employeeEmail:  z.string().email("Invalid email address").max(255),
   employeeTel: z.string().regex(/^\d{10}$/, "Invalid phone number").optional(),
