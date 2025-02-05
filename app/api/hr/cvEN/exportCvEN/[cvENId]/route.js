@@ -355,19 +355,22 @@ export async function GET(request, context) {
       printBackground: true,
       displayHeaderFooter: true,
       margin: {
-        top: "110px",
+        top: "80",
         bottom: "60px",
-        left: "80px",
+        left: "40px",
         right: "20px",
       },
       headerTemplate: `
-        <div style="width: 100%; text-align: start; margin-top: 5px; margin-left: 80px;">
-          <img src="data:image/png;base64,${logoBase64}" style="width: 80px; margin: auto;" />        
+        <div style="position: fixed; top: 0; left: 40px; right: 0; width: 100%; display: flex; -webkit-print-color-adjust: exact;">
+          <div style="width: 50%; display: flex; margin-top: 30px; align-items: center;">
+            <img src="data:image/png;base64,${logoBase64}" style="width: 60px;" alt="Logo" />
+          </div>
+          <div style="width: 50%; background-color: rgb(3,153,76); height: 30px;"></div>
         </div>
       `,
       footerTemplate: `
         <div style="position: fixed; bottom: 0; left: 0; right: 0; width: 100%; font-size: 10px; -webkit-print-color-adjust: exact;">
-          <div style="background-color: rgb(3, 153, 76); color: white; padding: 10px; text-align: center;">
+          <div style="background-color: rgb(3, 153, 76); color: white; padding: 17px; text-align: center; font-size: 12px;">
             50/1 หมู่ 20 ซอยงามวงศ์วาน 57 ถนนงามวงศ์วาน แขวงลาดยาว เขตจตุจักร กรุงเทพฯ 10900 โทร 02-105-0999 (30 คู่สาย) แฟกซ์ 02-580-1852
           </div>
         </div>
