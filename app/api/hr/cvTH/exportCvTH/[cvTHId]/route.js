@@ -98,8 +98,8 @@ export async function GET(request, context) {
     let firstHistoryProjects = [];
     let remainingProjects = [];
     if (firstWorkHistory?.projects?.length > 0) {
-      firstHistoryProjects = firstWorkHistory.projects.slice(0, 12);
-      remainingProjects = firstWorkHistory.projects.slice(12);
+      firstHistoryProjects = firstWorkHistory.projects.slice(0, 10);
+      remainingProjects = firstWorkHistory.projects.slice(10);
     }
 
     const generateWorkExperienceItem = (wh, projectsArray) => {
