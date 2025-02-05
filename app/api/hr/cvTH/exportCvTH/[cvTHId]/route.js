@@ -4,6 +4,8 @@ import prisma from "@/lib/prisma";
 import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { getRequestIP } from "@/lib/GetRequestIp";
+import fs from "fs";
+import path from "path";
 
 export async function GET(request, context) {
   let ip;
@@ -96,21 +98,21 @@ export async function GET(request, context) {
     let firstHistoryProjects = [];
     let remainingProjects = [];
     if (firstWorkHistory?.projects?.length > 0) {
-      firstHistoryProjects = firstWorkHistory.projects.slice(0, 15);
-      remainingProjects = firstWorkHistory.projects.slice(15);
+      firstHistoryProjects = firstWorkHistory.projects.slice(0, 12);
+      remainingProjects = firstWorkHistory.projects.slice(12);
     }
 
     const generateWorkExperienceItem = (wh, projectsArray) => {
       const projectsHtml =
         projectsArray && projectsArray.length > 0
           ? `
-            <ul class="flex flex-col items-center justify-center w-full h-full gap-2 border-2">
+            <ul class="flex flex-col items-center justify-center w-full h-full gap-2">
               ${projectsArray
                 .map(
                   (proj) => `
-                    <div class="flex flex-row items-center justify-center w-full h-full gap-2 border-2">
-                      <span class="flex items-center justify-center h-full p-2 gap-2 border-2">●</span>
-                      <span class="flex items-center justify-start w-full h-full p-2 gap-2 border-2">
+                    <div class="flex flex-row items-center justify-center w-full h-full gap-2">
+                      <span class="flex items-center justify-center h-full p-2 gap-2">●</span>
+                      <span class="flex items-center justify-start w-full h-full p-2 gap-2">
                         ${proj.cvTHProjectName} , ${proj.cvTHProjectDescription}
                       </span>
                     </div>
@@ -122,9 +124,9 @@ export async function GET(request, context) {
           : '<div class="text-gray-500">No projects listed</div>';
 
       return `
-          <div class="flex flex-row items-start justify-start w-full h-full p-2 gap-2 border-2">
-            <div class="flex flex-col items-center justify-center w-4/12 h-full gap-2 border-2">
-              <div class="flex flex-col items-start justify-start w-full h-full p-2 gap-2 border-2">
+          <div class="flex flex-row items-start justify-start w-full h-full p-2 gap-2">
+            <div class="flex flex-col items-center justify-center w-4/12 h-full gap-2">
+              <div class="flex flex-col items-start justify-start w-full h-full p-2 gap-2">
                 <b>${wh.cvTHWorkHistoryCompanyName || ""}</b>
                 <b>${wh.cvTHWorkHistoryPosition || ""}</b>
                 <b>${wh.cvTHWorkHistoryStartDate || ""} - ${
@@ -132,7 +134,7 @@ export async function GET(request, context) {
       }</b>
               </div>
             </div>
-            <div class="flex flex-col items-center justify-center w-8/12 h-full p-2 gap-2 border-2 border-l-2">
+            <div class="flex flex-col items-center justify-center w-8/12 h-full p-2 gap-2 border-l-2">
               ${projectsHtml}
             </div>
           </div>
@@ -219,57 +221,52 @@ export async function GET(request, context) {
     `;
 
     const htmlPage1 = `
-        <div class="flex flex-row items-start justify-center w-full h-full gap-2 border-2">
-          <div class="flex flex-col items-center justify-start w-8/12 h-full p-2 gap-2 border-2">
-            <div class="flex flex-row items-center justify-center w-full gap-2 border-2">
-              <div class="flex items-center justify-center h-full py-2 gap-2 border-2">
-                <img src="${process.env.NEXT_PUBLIC_API_URL}/images/company_logo/company_logo.png" class="w-20 mx-auto" />
-              </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 text-blue">
-                ${fullname}
-              </div>
+        <div class="flex flex-row items-start justify-center w-full h-full gap-2">
+          <div class="flex flex-col items-center justify-start w-8/12 h-full p-2 gap-2">
+            <div class="flex items-center justify-center w-full p-2 gap-2 text-blue">
+              ${fullname}
             </div>
-            <div class="flex items-center justify-center w-full p-2 gap-2 border-2 bg-header text-white rounded-lg">
+            <div class="flex items-center justify-center w-full p-2 gap-2 bg-header text-white rounded-lg">
               ${positionNameTH}
             </div>
-            <div class="flex items-center justify-start w-full p-2 gap-2 border-2 text-dark-header">
+            <div class="flex items-center justify-start w-full p-2 gap-2 text-dark-header">
               Work Experience
             </div>
-            <div class="flex flex-col items-center justify-center w-full gap-2 border-2">
+            <div class="flex flex-col items-center justify-center w-full gap-2">
              ${firstWorkHistoryHtml}
             </div>
           </div>
-          <div class="flex flex-col items-center justify-start w-4/12 h-full p-2 gap-2 border-2 rounded-3xl bg-right">
-            <div class="flex items-center justify-center w-full p-2 gap-2 border-2">
+          <div class="flex flex-col items-center justify-start w-4/12 h-full p-2 gap-2 rounded-3xl bg-right">
+            <div class="flex items-center justify-center w-full p-2 gap-2">
                <img src="${process.env.NEXT_PUBLIC_API_URL}/images/user_picture/${employmentPicture}" class="w-28 mx-auto" />
             </div>
-            <div class="flex items-center justify-start w-full p-2 gap-2 border-2">
+            <div class="flex items-center justify-start w-full p-2 gap-2">
               <span class="text-green">${hrIcon}</span> ${formattedBirthday}
             </div>
-            <div class="flex items-center justify-start w-full p-2 gap-2 border-2 border-b-2">
+            <div class="flex items-center justify-start w-full p-2 gap-2 border-b-2">
               <span class="text-green">${emailIcon}</span> ${employeeEmail}
             </div>
-            <div class="flex flex-col items-center justify-center w-full gap-2 border-2 border-b-2">
-              <div class="flex items-center justify-center w-full p-2 gap-2 border-2 text-dark-header">
+            <div class="flex flex-col items-center justify-center w-full gap-2 border-b-2">
+              <div class="flex items-center justify-center w-full p-2 gap-2 text-dark-header">
                 Educations
               </div>
-              <div class="flex flex-col items-center justify-center w-full p-2 gap-2 border-2">
+              <div class="flex flex-col items-center justify-center w-full p-2 gap-2">
                 ${educationHtml}
               </div>
             </div>
-            <div class="flex flex-col items-center justify-center w-full gap-2 border-2 border-b-2">
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 text-dark-header">
+            <div class="flex flex-col items-center justify-center w-full gap-2 border-b-2">
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 text-dark-header">
                 License No
               </div>
-              <div class="flex flex-col items-center justify-center w-full p-2 gap-2 border-2">
+              <div class="flex flex-col items-center justify-center w-full p-2 gap-2">
                 ${licenseHtml}
               </div>
             </div>
-            <div class="flex flex-col items-center justify-center w-full gap-2 border-2 border-b-2">
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 text-dark-header">
+            <div class="flex flex-col items-center justify-center w-full gap-2 border-b-2">
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 text-dark-header">
                 Language Skills
               </div>
-              <div class="flex flex-col items-center justify-center w-full p-2 gap-2 border-2">
+              <div class="flex flex-col items-center justify-center w-full p-2 gap-2">
                 ${languageSkillHtml}
               </div>
             </div>
@@ -280,8 +277,8 @@ export async function GET(request, context) {
     const htmlPage2 = secondPageContentNeeded
       ? `
       <div class="page-break"></div>
-      <div class="flex flex-col items-start justify-start w-full p-2 gap-2 border-2">
-        <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 text-dark-header">
+      <div class="flex flex-col items-start justify-start w-full p-2 gap-2">
+        <div class="flex items-center justify-start w-full h-full p-2 gap-2 text-dark-header">
           Work Experience
         </div>        
         ${remainingProjectsHtml}
@@ -344,17 +341,30 @@ export async function GET(request, context) {
     const page = await browser.newPage();
     await page.setContent(fullHtmlContent, { waitUntil: "networkidle0" });
 
+    const logoPath = path.join(
+      process.cwd(),
+      "public",
+      "images",
+      "company_logo",
+      "company_logo.png"
+    );
+    const logoBuffer = fs.readFileSync(logoPath);
+    const logoBase64 = logoBuffer.toString("base64");
     const pdfBuffer = await page.pdf({
       format: "A4",
       printBackground: true,
       displayHeaderFooter: true,
       margin: {
-        top: "20px",
+        top: "110px",
         bottom: "20px",
         left: "80px",
         right: "20px",
       },
-      headerTemplate: "<div></div>",
+      headerTemplate: `
+        <div style="width: 100%; text-align: start; margin-top: 5px; margin-left: 80px;">
+          <img src="data:image/png;base64,${logoBase64}" style="width: 80px; margin: auto;" />        
+        </div>
+      `,
       footerTemplate: `
         <div style="position: fixed; bottom: 0; left: 0; right: 0; width: 100%; font-size: 10px; -webkit-print-color-adjust: exact;">
           <div style="background-color: rgb(3, 153, 76); color: white; padding: 10px; text-align: center;">
