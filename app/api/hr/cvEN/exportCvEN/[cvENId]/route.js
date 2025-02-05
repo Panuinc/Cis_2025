@@ -226,7 +226,7 @@ export async function GET(request, context) {
             <div class="flex items-center justify-center w-full p-2 gap-2 text-blue">
               ${fullname}
             </div>
-            <div class="flex items-center justify-center w-full p-2 gap-2 bg-header text-white rounded-lg">
+            <div class="flex items-center justify-start w-full p-2 gap-2 bg-header text-white rounded-lg">
               ${positionNameEN}
             </div>
             <div class="flex items-center justify-start w-full p-2 gap-2 text-dark-header">

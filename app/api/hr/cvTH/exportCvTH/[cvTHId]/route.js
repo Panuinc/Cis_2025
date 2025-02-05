@@ -154,7 +154,7 @@ export async function GET(request, context) {
       `;
       }).join("");
     } else {
-      educationHtml = '<div class="text-gray-500">No Educations found</div>';
+      educationHtml = '<div class="text-gray-500">No ประวัติการศึกษา found</div>';
     }
 
     let licenseHtml = "";
@@ -226,11 +226,11 @@ export async function GET(request, context) {
             <div class="flex items-center justify-center w-full p-2 gap-2 text-blue">
               ${fullname}
             </div>
-            <div class="flex items-center justify-center w-full p-2 gap-2 bg-header text-white rounded-lg">
+            <div class="flex items-center justify-start w-full p-2 gap-2 bg-header text-white rounded-lg">
               ${positionNameTH}
             </div>
             <div class="flex items-center justify-start w-full p-2 gap-2 text-dark-header">
-              Work Experience
+              ประวัติการทำงาน
             </div>
             <div class="flex flex-col items-center justify-center w-full gap-2">
              ${firstWorkHistoryHtml}
@@ -248,7 +248,7 @@ export async function GET(request, context) {
             </div>
             <div class="flex flex-col items-center justify-center w-full gap-2 border-b-2">
               <div class="flex items-center justify-center w-full p-2 gap-2 text-dark-header">
-                Educations
+                ประวัติการศึกษา
               </div>
               <div class="flex flex-col items-center justify-center w-full p-2 gap-2">
                 ${educationHtml}
@@ -256,7 +256,7 @@ export async function GET(request, context) {
             </div>
             <div class="flex flex-col items-center justify-center w-full gap-2 border-b-2">
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 text-dark-header">
-                License No
+                ใบอนุญาตประกอบวิชาชีพ
               </div>
               <div class="flex flex-col items-center justify-center w-full p-2 gap-2">
                 ${licenseHtml}
@@ -264,7 +264,7 @@ export async function GET(request, context) {
             </div>
             <div class="flex flex-col items-center justify-center w-full gap-2 border-b-2">
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 text-dark-header">
-                Language Skills
+                ความถนัดทางด้านภาษา
               </div>
               <div class="flex flex-col items-center justify-center w-full p-2 gap-2">
                 ${languageSkillHtml}
@@ -279,7 +279,7 @@ export async function GET(request, context) {
       <div class="page-break"></div>
       <div class="flex flex-col items-start justify-start w-full p-2 gap-2">
         <div class="flex items-center justify-start w-full h-full p-2 gap-2 text-dark-header">
-          Work Experience
+          ประวัติการทำงาน
         </div>        
         ${remainingProjectsHtml}
         ${otherWorkHistoryHtml}
