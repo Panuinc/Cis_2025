@@ -226,14 +226,14 @@ export async function GET(request, context) {
             font-size: 14px;
           }
           @media print {
-            .page-break {
-              page-break-after: always;
+            .pdf-container {
+              padding: 40px;
             }
           }
         </style>
       </head>
       <body class="font-sans text-sm" style="font-family: 'Sarabun', sans-serif;">
-        <div class="flex flex-row items-start justify-center w-full h-full p-10 gap-2 page-break">
+        <div class="flex flex-row items-start justify-center w-full h-full gap-2">
           <div class="flex flex-col items-center justify-start w-8/12 h-full p-2 gap-2">
             <div class="flex flex-row items-center justify-center w-full gap-2">
               <div class="flex items-center justify-center h-full py-2 gap-2">
@@ -249,8 +249,8 @@ export async function GET(request, context) {
             <div class="flex items-center justify-start w-full p-2 gap-2 text-dark-header">
               Work Experience
             </div>
-            <div class="flex flex-col items-center justify-center w-full gap-2 work-experience">
-              <div class="flex items-center justify-center w-full h-full gap-2 text-dark" id="first-page-work-history"></div>
+            <div class="flex flex-col items-center justify-center w-full gap-2">
+              ${workHistoryHtml}
             </div>
           </div>
           <div class="flex flex-col items-center justify-start w-4/12 h-full p-2 gap-2 rounded-3xl bg-right">
@@ -289,36 +289,6 @@ export async function GET(request, context) {
             </div>
           </div>
         </div>
-        <div class="flex flex-row items-start justify-center w-full h-full p-10 gap-2 page-break second-page">
-          <div class="flex flex-col items-center justify-start w-full h-full p-2 gap-2 border-2 border-dashed">
-            <div id="second-page-work-history" class="flex flex-col items-center justify-center w-full"></div>
-          </div>
-        </div>
-        <script>
-          function distributeWorkHistory() {
-            const firstPageWorkHistory = document.getElementById('first-page-work-history');
-            const secondPageWorkHistory = document.getElementById('second-page-work-history');
-            const fullWorkHistory = \`${workHistoryHtml}\`;
-            
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = fullWorkHistory;
-            const workHistoryItems = Array.from(tempDiv.children);
-
-            let firstPageHeight = 0;
-            const firstPageContainer = document.querySelector('.work-experience');
-            const maxFirstPageHeight = firstPageContainer.clientHeight;
-
-            for (let item of workHistoryItems) {
-              if (firstPageHeight + item.clientHeight <= maxFirstPageHeight) {
-                firstPageWorkHistory.appendChild(item);
-                firstPageHeight += item.clientHeight;
-              } else {
-                secondPageWorkHistory.appendChild(item);
-              }
-            }
-          }
-          window.onload = distributeWorkHistory;
-        </script>
       </body>
       </html>
     `;
@@ -332,6 +302,12 @@ export async function GET(request, context) {
       format: "A4",
       printBackground: true,
       displayHeaderFooter: true,
+      margin: {
+        top: "40px",
+        bottom: "40px",
+        left: "40px",
+        right: "40px",
+      },
       headerTemplate: "<div></div>",
       footerTemplate: `
         <div style="position: fixed; bottom: 0; left: 0; right: 0; width: 100%; font-size: 10px; -webkit-print-color-adjust: exact;">
