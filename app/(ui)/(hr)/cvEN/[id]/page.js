@@ -2,6 +2,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
+import { Button } from "@nextui-org/react";
 import TopicHeader from "@/components/form/TopicHeader";
 import FormCvEN from "@/components/form/hr/cvEN/FormCvEN";
 import React, {
@@ -347,10 +348,38 @@ export default function CvENUpdate({ params: paramsPromise }) {
     setErrors({});
   }, []);
 
+  const handleExportPdf = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/hr/cvEN/exportCvEN/${cvENId}`, {
+        method: "GET",
+        headers: {
+          "secret-token": SECRET_TOKEN,
+        },
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Export failed with status:", response.status, errorText);
+        throw new Error("Failed to export PDF");
+      }
+
+      const blob = await response.blob();
+      const blobURL = window.URL.createObjectURL(blob);
+      window.open(blobURL);
+    } catch (error) {
+      console.error("Export PDF error:", error);
+    }
+  }, [cvENId]);
+
   return (
     <>
       <TopicHeader topic="CvEN Update" />
       <Toaster position="top-right" />
+      <div className="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dark border-dashed">
+        <Button size="md" color="success" onPress={handleExportPdf}>
+          Export PDF CV
+        </Button>
+      </div>
       <FormCvEN
         formRef={formRef}
         onSubmit={handleSubmit}
