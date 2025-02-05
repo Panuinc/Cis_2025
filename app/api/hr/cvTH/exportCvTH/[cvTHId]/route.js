@@ -219,7 +219,7 @@ export async function GET(request, context) {
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed" id="first-page-work-history"></div>
             </div>
           </div>
-          <div class="flex flex-col items-center justify-center w-4/12 h-full p-2 gap-2 border-2 border-dashed bg-right">
+          <div class="flex flex-col items-center justify-center w-4/12 h-full p-2 gap-2 border-2 border-dashed rounded-3xl bg-right">
             <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 border-dashed">
               <img src="${process.env.NEXT_PUBLIC_API_URL}/images/company_logo/company_logo.png" class="w-28 mx-auto" />
             </div>
