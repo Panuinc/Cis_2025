@@ -89,48 +89,53 @@ export async function GET(request, context) {
         )
       : "-";
 
-    let workHistoryHtml = "";
-    if (cvth.CvTHWorkHistory && cvth.CvTHWorkHistory.length > 0) {
-      workHistoryHtml = cvth.CvTHWorkHistory.map((wh) => {
-        const projectsHtml =
-          wh.projects && wh.projects.length > 0
-            ? `
-                <ul class="flex flex-col items-center justify-center w-full h-full gap-2">
-                  ${wh.projects
-                    .map(
-                      (proj) => `
-                    <div class="flex flex-row items-center justify-center w-full h-full gap-2">
+    const allWorkHistory = cvth.CvTHWorkHistory || [];
+    const firstWorkHistory = allWorkHistory[0] || null;
+    const otherWorkHistory = allWorkHistory.slice(1);
+
+    let firstHistoryProjects = [];
+    let remainingProjects = [];
+    if (firstWorkHistory?.projects?.length > 0) {
+      firstHistoryProjects = firstWorkHistory.projects.slice(0, 15);
+      remainingProjects = firstWorkHistory.projects.slice(15);
+    }
+
+    const generateWorkExperienceItem = (wh, projectsArray) => {
+      const projectsHtml =
+        projectsArray && projectsArray.length > 0
+          ? `
+            <ul class="flex flex-col items-center justify-center w-full h-full gap-2 border-2">
+              ${projectsArray
+                .map(
+                  (proj) => `
+                    <div class="flex flex-row items-center justify-center w-full h-full gap-2 border-2">
                       <span class="flex items-center justify-center h-full p-2 gap-2">●</span>
-                      <span class="flex items-center justify-start w-full h-full p-2 gap-2">${proj.cvTHProjectName} , ${proj.cvTHProjectDescription}</span>
+                      <span class="flex items-center justify-start w-full h-full p-2 gap-2">
+                        ${proj.cvTHProjectName} , ${proj.cvTHProjectDescription}
+                      </span>
                     </div>
                   `
-                    )
-                    .join("")}
-                </ul>
-              `
-            : '<div class="text-gray-500">No projects listed</div>';
+                )
+                .join("")}
+            </ul>
+          `
+          : '<div class="text-gray-500">No projects listed</div>';
 
-        return `
-            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2">
-              <div class="flex flex-col items-center justify-center w-4/12 h-full gap-2">
-                <div class="flex flex-col items-start justify-start w-full h-full p-2 gap-2">
-                  <b>${wh.cvTHWorkHistoryCompanyName || ""}</b>
-                  <b>${wh.cvTHWorkHistoryPosition || ""}</b>
-                  <b>${wh.cvTHWorkHistoryStartDate || ""} - ${
-          wh.cvTHWorkHistoryEndDate || ""
-        }</b>
-                </div>
-              </div>
-              <div class="flex flex-col items-center justify-center w-8/12 h-full p-2 gap-2 border-l-2">
-                ${projectsHtml}
+      return `
+          <div class="flex flex-row items-start justify-start w-full h-full p-2 gap-2 border-2">
+            <div class="flex flex-col items-center justify-center w-4/12 h-full gap-2 border-2">
+              <div class="flex flex-col items-start justify-start w-full h-full p-2 gap-2 border-2">
+                <b>${wh.cvTHWorkHistoryCompanyName || ""}</b>
+                <b>${wh.cvTHWorkHistoryPosition || ""}</b>
+                <b>${wh.cvTHWorkHistoryStartDate || ""} - ${wh.cvTHWorkHistoryEndDate || ""}</b>
               </div>
             </div>
-          `;
-      }).join("");
-    } else {
-      workHistoryHtml =
-        '<div class="text-gray-500">No work experience data available</div>';
-    }
+            <div class="flex flex-col items-center justify-center w-8/12 h-full p-2 gap-2 border-l-2">
+              ${projectsHtml}
+            </div>
+          </div>
+    `;
+    };
 
     let educationHtml = "";
     if (cvth.CvTHEducation && cvth.CvTHEducation.length > 0) {
@@ -177,6 +182,25 @@ export async function GET(request, context) {
         '<div class="text-gray-500">No language skills data</div>';
     }
 
+    const firstWorkHistoryHtml = firstWorkHistory
+      ? generateWorkExperienceItem(firstWorkHistory, firstHistoryProjects)
+      : '<div class="text-gray-500">No work experience data available</div>';
+
+    const remainingProjectsHtml =
+      remainingProjects.length > 0
+        ? generateWorkExperienceItem(firstWorkHistory, remainingProjects)
+        : "";
+
+    const otherWorkHistoryHtml =
+      otherWorkHistory.length > 0
+        ? otherWorkHistory
+            .map((wh) => generateWorkExperienceItem(wh, wh.projects))
+            .join("")
+        : "";
+
+    const secondPageContentNeeded =
+      remainingProjects.length > 0 || otherWorkHistory.length > 0;
+
     const hrIcon = `
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
         <g fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -192,7 +216,79 @@ export async function GET(request, context) {
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M10.5 22v-2m4 2v-2"/><path fill="currentColor" d="M11 20v.75h.75V20zm3-.75a.75.75 0 0 0 0 1.5zm3.5-14a.75.75 0 0 0 0 1.5zM7 5.25a.75.75 0 0 0 0 1.5zm2 14a.75.75 0 0 0 0 1.5zm6 1.5a.75.75 0 0 0 0-1.5zm-4.75-9.5V20h1.5v-8.75zm.75 8H4.233v1.5H11zm-8.25-1.855V11.25h-1.5v6.145zm1.483 1.855c-.715 0-1.483-.718-1.483-1.855h-1.5c0 1.74 1.231 3.355 2.983 3.355zM6.5 6.75c1.967 0 3.75 1.902 3.75 4.5h1.5c0-3.201-2.246-6-5.25-6zm0-1.5c-3.004 0-5.25 2.799-5.25 6h1.5c0-2.598 1.783-4.5 3.75-4.5zm14.75 6v6.175h1.5V11.25zm-1.457 8H14v1.5h5.793zm1.457-1.825c0 1.12-.757 1.825-1.457 1.825v1.5c1.738 0 2.957-1.601 2.957-3.325zm1.5-6.175c0-3.201-2.246-6-5.25-6v1.5c1.967 0 3.75 1.902 3.75 4.5zM7 6.75h11v-1.5H7zm2 14h6v-1.5H9z"/><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M5 16h3m8-6.116V5.411m0 0V2.635c0-.236.168-.439.4-.484l.486-.093a3.2 3.2 0 0 1 1.755.156l.08.03c.554.214 1.16.254 1.737.115a.44.44 0 0 1 .542.427v2.221a.51.51 0 0 1-.393.499l-.066.016a3.2 3.2 0 0 1-1.9-.125a3.2 3.2 0 0 0-1.755-.156z"/></g></svg>
     `;
 
-    const htmlContent = `
+    const htmlPage1 = `
+        <div class="flex flex-row items-start justify-center w-full h-full gap-2 border-2">
+          <div class="flex flex-col items-center justify-start w-8/12 h-full p-2 gap-2 border-2">
+            <div class="flex flex-row items-center justify-center w-full gap-2 border-2">
+              <div class="flex items-center justify-center h-full py-2 gap-2 border-2">
+                <img src="${process.env.NEXT_PUBLIC_API_URL}/images/company_logo/company_logo.png" class="w-20 mx-auto" />
+              </div>
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 text-blue">
+                ${fullname}
+              </div>
+            </div>
+            <div class="flex items-center justify-center w-full p-2 gap-2 border-2 bg-header text-white rounded-lg">
+              ${positionNameTH}
+            </div>
+            <div class="flex items-center justify-start w-full p-2 gap-2 border-2 text-dark-header">
+              Work Experience
+            </div>
+            <div class="flex flex-col items-center justify-center w-full gap-2 border-2">
+             ${firstWorkHistoryHtml}
+            </div>
+          </div>
+          <div class="flex flex-col items-center justify-start w-4/12 h-full p-2 gap-2 border-2 rounded-3xl bg-right">
+            <div class="flex items-center justify-center w-full p-2 gap-2 border-2">
+               <img src="${process.env.NEXT_PUBLIC_API_URL}/images/user_picture/${employmentPicture}" class="w-28 mx-auto" />
+            </div>
+            <div class="flex items-center justify-start w-full p-2 gap-2 border-2">
+              <span class="text-green">${hrIcon}</span> ${formattedBirthday}
+            </div>
+            <div class="flex items-center justify-start w-full p-2 gap-2 border-2 border-b-2">
+              <span class="text-green">${emailIcon}</span> ${employeeEmail}
+            </div>
+            <div class="flex flex-col items-center justify-center w-full p-2 gap-2 border-2 border-b-2">
+              <div class="flex items-center justify-center w-full p-2 gap-2 border-2 text-dark-header">
+                Educations
+              </div>
+              <div class="flex flex-col items-center justify-center w-full p-2 gap-2 border-2">
+                ${educationHtml}
+              </div>
+            </div>
+            <div class="flex flex-col items-center justify-center w-full p-2 gap-2 border-2 border-b-2">
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 text-dark-header">
+                License No
+              </div>
+              <div class="flex flex-col items-center justify-center w-full p-2 gap-2 border-2">
+                ${licenseHtml}
+              </div>
+            </div>
+            <div class="flex flex-col items-center justify-center w-full p-2 gap-2 border-2 border-b-2">
+              <div class="flex items-center justify-center w-full h-full p-2 gap-2 border-2 text-dark-header">
+                Language Skills
+              </div>
+              <div class="flex flex-col items-center justify-center w-full p-2 gap-2 border-2">
+                ${languageSkillHtml}
+              </div>
+            </div>
+          </div>
+        </div>
+    `;
+
+    const htmlPage2 = secondPageContentNeeded
+      ? `
+      <div class="page-break"></div>
+      <div class="flex flex-col items-start justify-start w-full p-2 gap-2 border-2">
+        <div class="flex items-center justify-start w-full h-full p-2 gap-2 border-2 text-dark-header">
+          Work Experience
+        </div>        
+        ${remainingProjectsHtml}
+        ${otherWorkHistoryHtml}
+      </div>
+    `
+      : "";
+
+    const fullHtmlContent = `
       <html>
       <head>
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -229,74 +325,22 @@ export async function GET(request, context) {
             .pdf-container {
               padding: 40px;
             }
+            .page-break {
+              page-break-before: always;
+            }
           }
         </style>
       </head>
       <body class="font-sans text-sm" style="font-family: 'Sarabun', sans-serif;">
-        <div class="flex flex-row items-start justify-center w-full h-full gap-2">
-          <div class="flex flex-col items-center justify-start w-8/12 h-full p-2 gap-2">
-            <div class="flex flex-row items-center justify-center w-full gap-2">
-              <div class="flex items-center justify-center h-full py-2 gap-2">
-                <img src="${process.env.NEXT_PUBLIC_API_URL}/images/company_logo/company_logo.png" class="w-20 mx-auto" />
-              </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 text-blue">
-                ${fullname}
-              </div>
-            </div>
-            <div class="flex items-center justify-center w-full p-2 gap-2 bg-header text-white rounded-lg">
-              ${positionNameTH}
-            </div>
-            <div class="flex items-center justify-start w-full p-2 gap-2 text-dark-header">
-              Work Experience
-            </div>
-            <div class="flex flex-col items-center justify-center w-full gap-2">
-              ${workHistoryHtml}
-            </div>
-          </div>
-          <div class="flex flex-col items-center justify-start w-4/12 h-full p-2 gap-2 rounded-3xl bg-right">
-            <div class="flex items-center justify-center w-full p-2 gap-2">
-               <img src="${process.env.NEXT_PUBLIC_API_URL}/images/user_picture/${employmentPicture}" class="w-28 mx-auto" />
-            </div>
-            <div class="flex items-center justify-start w-full p-2 gap-2">
-              <span class="text-green">${hrIcon}</span> ${formattedBirthday}
-            </div>
-            <div class="flex items-center justify-start w-full p-2 gap-2 border-b-2">
-              <span class="text-green">${emailIcon}</span> ${employeeEmail}
-            </div>
-            <div class="flex flex-col items-center justify-center w-full p-2 gap-2 border-b-2">
-              <div class="flex items-center justify-center w-full p-2 gap-2 text-dark-header">
-                Educations
-              </div>
-              <div class="flex flex-col items-center justify-center w-full p-2 gap-2">
-                ${educationHtml}
-              </div>
-            </div>
-            <div class="flex flex-col items-center justify-center w-full p-2 gap-2 border-b-2">
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 text-dark-header">
-                License No
-              </div>
-              <div class="flex flex-col items-center justify-center w-full p-2 gap-2">
-                ${licenseHtml}
-              </div>
-            </div>
-            <div class="flex flex-col items-center justify-center w-full p-2 gap-2 border-b-2">
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 text-dark-header">
-                Language Skills
-              </div>
-              <div class="flex flex-col items-center justify-center w-full p-2 gap-2">
-                ${languageSkillHtml}
-              </div>
-            </div>
-          </div>
-        </div>
+        ${htmlPage1}
+        ${htmlPage2}
       </body>
       </html>
     `;
 
     const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
     const page = await browser.newPage();
-
-    await page.setContent(htmlContent, { waitUntil: "networkidle0" });
+    await page.setContent(fullHtmlContent, { waitUntil: "networkidle0" });
 
     const pdfBuffer = await page.pdf({
       format: "A4",
