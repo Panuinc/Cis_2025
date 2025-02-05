@@ -362,10 +362,10 @@ export async function GET(request, context) {
       },
       headerTemplate: `
         <div style="position: fixed; top: 0; left: 40px; right: 0; width: 100%; display: flex; -webkit-print-color-adjust: exact;">
-          <div style="width: 50%; display: flex; margin-top: 30px; align-items: center;">
+          <div style="width: 40%; display: flex; margin-top: 30px; align-items: center;">
             <img src="data:image/png;base64,${logoBase64}" style="width: 60px;" alt="Logo" />
           </div>
-          <div style="width: 50%; background-color: rgb(3,153,76); height: 30px;"></div>
+          <div style="width: 60%; background-color: rgb(3,153,76); height: 30px;"></div>
         </div>
       `,
       footerTemplate: `
