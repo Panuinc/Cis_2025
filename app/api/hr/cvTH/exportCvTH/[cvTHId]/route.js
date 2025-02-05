@@ -297,7 +297,7 @@ export async function GET(request, context) {
             background: rgba(3, 153, 76);
           }
           .bg-right {
-            background: rgba(239, 242, 240);
+            background: rgba(245, 245, 245);
           }
           .text-blue {
             color: rgba(64,89,146);
