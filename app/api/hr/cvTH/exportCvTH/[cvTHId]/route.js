@@ -356,7 +356,7 @@ export async function GET(request, context) {
       displayHeaderFooter: true,
       margin: {
         top: "110px",
-        bottom: "20px",
+        bottom: "60px",
         left: "80px",
         right: "20px",
       },
