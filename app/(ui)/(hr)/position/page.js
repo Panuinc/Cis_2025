@@ -41,14 +41,16 @@ export default function PositionList() {
           { name: "Branch Name", uid: "branchName" },
           { name: "Division Name", uid: "divisionName" },
           { name: "Department Name", uid: "departmentName" },
-          { name: "Position Name", uid: "positionNameTH" },
+          { name: "Position Name TH", uid: "positionNameTH" },
+          { name: "Position Name EN", uid: "positionNameEN" },
         ]
       : [
           { name: "No.", uid: "index" },
           { name: "Branch Name", uid: "branchName" },
           { name: "Division Name", uid: "divisionName" },
           { name: "Department Name", uid: "departmentName" },
-          { name: "Position Name", uid: "positionNameTH" },
+          { name: "Position Name TH", uid: "positionNameTH" },
+          { name: "Position Name EN", uid: "positionNameEN" },
           { name: "Create By", uid: "createdBy" },
           { name: "Create At", uid: "positionCreateAt" },
           { name: "Update By", uid: "updatedBy" },
@@ -128,6 +130,8 @@ export default function PositionList() {
           return item.PositionDepartmentId?.departmentName || null;
         case "positionNameTH":
           return item.positionNameTH || null;
+        case "positionNameEN":
+          return item.positionNameEN || null;
         case "positionStatus":
           return renderChip(item.positionStatus);
         case "createdBy":

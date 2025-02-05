@@ -29,8 +29,13 @@ export const positionPostSchema = z.object({
   ),
 
   positionNameTH: preprocessString(
-    "Please Enter Position Name",
-    "Please Enter Position Name"
+    "Please Enter Position Name TH",
+    "Please Enter Position Name TH"
+  ),
+
+  positionNameEN: preprocessString(
+    "Please Enter Position Name EN",
+    "Please Enter Position Name EN"
   ),
 
   positionCreateBy: preprocessInt(
@@ -46,8 +51,13 @@ export const positionPutSchema = z.object({
   ),
 
   positionNameTH: preprocessString(
-    "Please Enter Position Name",
-    "Please Enter Position Name"
+    "Please Enter Position Name TH",
+    "Please Enter Position Name TH"
+  ),
+
+  positionNameEN: preprocessString(
+    "Please Enter Position Name EN",
+    "Please Enter Position Name EN"
   ),
 
   positionStatus: preprocessEnum(
