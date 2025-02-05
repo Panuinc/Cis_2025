@@ -185,17 +185,6 @@ export async function GET(request, context) {
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
         <style>
-          .watermark {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            font-size: 80px;
-            font-weight: bold;
-            color: rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            pointer-events: none;
-          }
           .bg-header {
             background: rgba(3, 153, 76);
           }
