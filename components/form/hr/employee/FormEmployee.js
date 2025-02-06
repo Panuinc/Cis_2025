@@ -64,7 +64,7 @@ export default function FormEmployee({
           <Input
             type="text"
             name="employeeFirstnameEN"
-            label="Firstname TH"
+            label="Firstname EN"
             placeholder="Please Enter Data"
             labelPlacement="outside"
             size="lg"

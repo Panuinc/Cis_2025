@@ -4,6 +4,8 @@ import prisma from "@/lib/prisma";
 import { verifySecretToken } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { getRequestIP } from "@/lib/GetRequestIp";
+import fs from "fs";
+import path from "path";
 
 export async function GET(request, context) {
   let ip;
@@ -11,11 +13,11 @@ export async function GET(request, context) {
     ip = getRequestIP(request);
 
     const params = await context.params;
-    const cvTHId = parseInt(params.cvTHId, 10);
+    const cvENId = parseInt(params.cvENId, 10);
 
-    if (!cvTHId) {
+    if (!cvENId) {
       return NextResponse.json(
-        { error: "CVTH ID is required" },
+        { error: "CVEN ID is required" },
         { status: 400 }
       );
     }
@@ -23,10 +25,10 @@ export async function GET(request, context) {
     verifySecretToken(request.headers);
     await checkRateLimit(ip);
 
-    const cvth = await prisma.cvTH.findUnique({
-      where: { cvTHId: cvTHId },
+    const cvth = await prisma.cvEN.findUnique({
+      where: { cvENId: cvENId },
       include: {
-        CvTHEmployeeBy: {
+        CvENEmployeeBy: {
           include: {
             employeeEmployment: {
               where: {
@@ -34,53 +36,53 @@ export async function GET(request, context) {
               },
               include: {
                 EmploymentPositionId: {
-                  select: { positionNameTH: true },
+                  select: { positionNameEN: true },
                 },
               },
             },
           },
         },
-        CvTHEducation: true,
-        CvTHLicense: true,
-        CvTHWorkHistory: {
+        CvENEducation: true,
+        CvENLicense: true,
+        CvENWorkHistory: {
           include: {
             projects: true,
           },
         },
-        CvTHLanguageSkill: true,
-        CvTHCreateBy: {
-          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
+        CvENLanguageSkill: true,
+        CvENCreateBy: {
+          select: { employeeFirstnameEN: true, employeeLastnameEN: true },
         },
-        CvTHUpdateBy: {
-          select: { employeeFirstnameTH: true, employeeLastnameTH: true },
+        CvENUpdateBy: {
+          select: { employeeFirstnameEN: true, employeeLastnameEN: true },
         },
       },
     });
 
     if (!cvth) {
       return NextResponse.json(
-        { error: "No CvTH data found" },
+        { error: "No CvEN data found" },
         { status: 404 }
       );
     }
 
     const employmentPicture =
-      cvth.CvTHEmployeeBy?.employeeEmployment?.[0]?.employmentPicture ||
+      cvth.CvENEmployeeBy?.employeeEmployment?.[0]?.employmentPicture ||
       "default.png";
 
-    const fullname = cvth.CvTHEmployeeBy
-      ? `${cvth.CvTHEmployeeBy.employeeFirstnameTH} ${cvth.CvTHEmployeeBy.employeeLastnameTH}`
+    const fullname = cvth.CvENEmployeeBy
+      ? `${cvth.CvENEmployeeBy.employeeFirstnameEN} ${cvth.CvENEmployeeBy.employeeLastnameEN}`
       : "-";
 
-    const positionNameTH =
-      cvth.CvTHEmployeeBy?.employeeEmployment?.[0]?.EmploymentPositionId
-        ?.positionNameTH || "-";
+    const positionNameEN =
+      cvth.CvENEmployeeBy?.employeeEmployment?.[0]?.EmploymentPositionId
+        ?.positionNameEN || "-";
 
-    const employeeEmail = cvth.CvTHEmployeeBy?.employeeEmail || "-";
+    const employeeEmail = cvth.CvENEmployeeBy?.employeeEmail || "-";
 
-    const formattedBirthday = cvth.CvTHEmployeeBy?.employeeBirthday
-      ? new Date(cvth.CvTHEmployeeBy.employeeBirthday).toLocaleDateString(
-          "th-TH",
+    const formattedBirthday = cvth.CvENEmployeeBy?.employeeBirthday
+      ? new Date(cvth.CvENEmployeeBy.employeeBirthday).toLocaleDateString(
+          "th-EN",
           {
             day: "2-digit",
             month: "2-digit",
@@ -90,38 +92,38 @@ export async function GET(request, context) {
       : "-";
 
     let workHistoryHtml = "";
-    if (cvth.CvTHWorkHistory && cvth.CvTHWorkHistory.length > 0) {
-      workHistoryHtml = cvth.CvTHWorkHistory.map((wh) => {
+    if (cvth.CvENWorkHistory && cvth.CvENWorkHistory.length > 0) {
+      workHistoryHtml = cvth.CvENWorkHistory.map((wh) => {
         const projectsHtml =
           wh.projects && wh.projects.length > 0
             ? `
-                <ul class="flex flex-col items-center justify-center w-full h-full gap-2">
+                <div class="flex flex-col items-center justify-center w-full h-full p-1 gap-1">
                   ${wh.projects
                     .map(
                       (proj) => `
-                    <div class="flex flex-row items-center justify-center w-full h-full gap-2">
-                      <span class="flex items-center justify-center h-full p-2 gap-2">●</span>
-                      <span class="flex items-center justify-start w-full h-full p-2 gap-2">${proj.cvTHProjectName} , ${proj.cvTHProjectDescription}</span>
+                    <div class="flex flex-row items-center justify-center w-full h-full p-1 gap-1">
+                      <span class="flex items-center justify-center h-full p-1 gap-1">●</span>
+                      <span class="flex items-center justify-start w-full h-full p-1 gap-1">${proj.cvENProjectName} , ${proj.cvENProjectDescription}</span>
                     </div>
                   `
                     )
                     .join("")}
-                </ul>
+                </div>
               `
             : '<div class="text-gray-500">No projects listed</div>';
 
         return `
-            <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2">
-              <div class="flex flex-col items-center justify-center w-4/12 h-full gap-2">
-                <div class="flex flex-col items-start justify-start w-full h-full p-2 gap-2">
-                  <b>${wh.cvTHWorkHistoryCompanyName || ""}</b>
-                  <b>${wh.cvTHWorkHistoryPosition || ""}</b>
-                  <b>${wh.cvTHWorkHistoryStartDate || ""} - ${
-          wh.cvTHWorkHistoryEndDate || ""
+            <div class="flex flex-col items-start justify-start w-full h-full p-1 gap-1">
+              <div class="flex flex-col items-center justify-center w-full h-full p-1 gap-1">
+                <div class="flex flex-col items-center justify-start w-full h-full p-1 gap-1">
+                  <b>${wh.cvENWorkHistoryCompanyName || ""}</b>
+                  <b>${wh.cvENWorkHistoryPosition || ""}</b>
+                  <b>${wh.cvENWorkHistoryStartDate || ""} - ${
+          wh.cvENWorkHistoryEndDate || ""
         }</b>
                 </div>
               </div>
-              <div class="flex flex-col items-center justify-center w-8/12 h-full p-2 gap-2 border-l-2">
+              <div class="flex flex-col items-center justify-center w-full h-full p-1 gap-1 border-l-2">
                 ${projectsHtml}
               </div>
             </div>
@@ -133,14 +135,14 @@ export async function GET(request, context) {
     }
 
     let educationHtml = "";
-    if (cvth.CvTHEducation && cvth.CvTHEducation.length > 0) {
-      educationHtml = cvth.CvTHEducation.map((edu) => {
+    if (cvth.CvENEducation && cvth.CvENEducation.length > 0) {
+      educationHtml = cvth.CvENEducation.map((edu) => {
         return `
-        <div class="flex flex-col items-center w-full p-2">
-          <span>${edu.cvTHEducationDegree || "-"} ${
-          edu.cvTHEducationStartDate || "-"
+        <div class="flex flex-col items-start w-full h-full">
+          <span>${edu.cvENEducationDegree || "-"} ${
+          edu.cvENEducationStartDate || "-"
         }</span>
-          <span>${edu.cvTHEducationInstitution || "-"}</span>
+          <span>${edu.cvENEducationInstitution || "-"}</span>
         </div>
       `;
       }).join("");
@@ -149,12 +151,12 @@ export async function GET(request, context) {
     }
 
     let licenseHtml = "";
-    if (cvth.CvTHLicense && cvth.CvTHLicense.length > 0) {
-      licenseHtml = cvth.CvTHLicense.map((lic) => {
+    if (cvth.CvENLicense && cvth.CvENLicense.length > 0) {
+      licenseHtml = cvth.CvENLicense.map((lic) => {
         return `
-        <div class="flex flex-row items justify-between w-full p-2">
-          <span> ${lic.cvTHProfessionalLicenseName || "-"} , </span>
-          <span> ${lic.cvTHProfessionalLicenseNumber || "-"}</span>          
+        <div class="flex flex-row items justify-between w-full h-full">
+          <span> ${lic.cvENProfessionalLicenseName || "-"} , </span>
+          <span> ${lic.cvENProfessionalLicenseNumber || "-"}</span>          
         </div>
       `;
       }).join("");
@@ -163,12 +165,12 @@ export async function GET(request, context) {
     }
 
     let languageSkillHtml = "";
-    if (cvth.CvTHLanguageSkill && cvth.CvTHLanguageSkill.length > 0) {
-      languageSkillHtml = cvth.CvTHLanguageSkill.map((lang) => {
+    if (cvth.CvENLanguageSkill && cvth.CvENLanguageSkill.length > 0) {
+      languageSkillHtml = cvth.CvENLanguageSkill.map((lang) => {
         return `
-        <div class="flex flex-row items-center justify-between w-full p-2">
-          <span> ${lang.cvTHLanguageSkillName || "-"} : </span>
-         <span> ${lang.cvTHLanguageSkillProficiency || "-"}</span>
+        <div class="flex flex-row items-center justify-between w-full h-full">
+          <span> ${lang.cvENLanguageSkillName || "-"} : </span>
+         <span> ${lang.cvENLanguageSkillProficiency || "-"}</span>
         </div>
       `;
       }).join("");
@@ -198,28 +200,36 @@ export async function GET(request, context) {
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
         <style>
+          @font-face {
+          font-family: 'THSarabun';
+          src: url('${process.env.NEXT_PUBLIC_API_URL}/fonts/THSarabunNew.ttf') format('truetype');
+          font-weight: normal;
+          font-style: normal;
+          }
+          body {
+          font-family: 'THSarabun', sans-serif;
+          }
           .bg-header {
             background: rgba(3, 153, 76);
           }
-          .bg-right {
+          .bg-default {
             background: rgba(239, 242, 240);
           }
           .text-blue {
             color: rgba(64,89,146);
-            font-size: 30px;
+            font-size: 39px;
           }
           .text-green {
             color: rgba(3, 153, 76);
-            font-size: 30px;
+            font-size: 18px;
           }
           .text-white {
             color: rgba(255,255,255);
-            font-size: 18px;
+            font-size: 20px;
           }
           .text-dark-header {
             color: rgba(0,0,0);
             font-size: 16px;
-            font-weight: 900;
           }
           .text-dark {
             color: rgba(0,0,0);
@@ -232,60 +242,55 @@ export async function GET(request, context) {
           }
         </style>
       </head>
-      <body class="font-sans text-sm" style="font-family: 'Sarabun', sans-serif;">
-        <div class="flex flex-row items-start justify-center w-full h-full gap-2">
-          <div class="flex flex-col items-center justify-start w-8/12 h-full p-2 gap-2">
-            <div class="flex flex-row items-center justify-center w-full gap-2">
-              <div class="flex items-center justify-center h-full py-2 gap-2">
-                <img src="${process.env.NEXT_PUBLIC_API_URL}/images/company_logo/company_logo.png" class="w-20 mx-auto" />
-              </div>
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 text-blue">
-                ${fullname}
-              </div>
-            </div>
-            <div class="flex items-center justify-center w-full p-2 gap-2 bg-header text-white rounded-lg">
-              ${positionNameTH}
-            </div>
-            <div class="flex items-center justify-start w-full p-2 gap-2 text-dark-header">
-              Work Experience
-            </div>
-            <div class="flex flex-col items-center justify-center w-full gap-2">
-              ${workHistoryHtml}
-            </div>
-          </div>
-          <div class="flex flex-col items-center justify-start w-4/12 h-full p-2 gap-2 rounded-3xl bg-right">
-            <div class="flex items-center justify-center w-full p-2 gap-2">
+      <body class="font-sans text-sm">
+        <div class="flex flex-row items-center justify-center w-full h-full p-1 gap-1">
+          <div class="flex flex-col items-start justify-start w-4/12 h-full gap-1 bg-default">
+            <div class="flex items-center justify-center w-full p-1 gap-1">
                <img src="${process.env.NEXT_PUBLIC_API_URL}/images/user_picture/${employmentPicture}" class="w-28 mx-auto" />
             </div>
-            <div class="flex items-center justify-start w-full p-2 gap-2">
+            <div class="flex items-center justify-start w-full p-1 gap-1">
               <span class="text-green">${hrIcon}</span> ${formattedBirthday}
             </div>
-            <div class="flex items-center justify-start w-full p-2 gap-2 border-b-2">
+            <div class="flex items-center justify-start w-full p-1 gap-1 border-b-2">
               <span class="text-green">${emailIcon}</span> ${employeeEmail}
             </div>
-            <div class="flex flex-col items-center justify-center w-full p-2 gap-2 border-b-2">
-              <div class="flex items-center justify-center w-full p-2 gap-2 text-dark-header">
-                Educations
+            <div class="flex flex-col items-center justify-center w-full p-1 gap-1 border-b-2">
+              <div class="flex items-center justify-center w-full h-full p-2 gap-1 text-dark-header">
+                EDUCATIONS
               </div>
-              <div class="flex flex-col items-center justify-center w-full p-2 gap-2">
+              <div class="flex flex-col items-start justify-start w-full h-full p-1 gap-1">
                 ${educationHtml}
               </div>
             </div>
-            <div class="flex flex-col items-center justify-center w-full p-2 gap-2 border-b-2">
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 text-dark-header">
-                License No
+            <div class="flex flex-col items-center justify-center w-full p-1 gap-1 border-b-2">
+              <div class="flex items-center justify-center w-full h-full p-2 gap-1 text-dark-header">
+                LICENSE NO.
               </div>
-              <div class="flex flex-col items-center justify-center w-full p-2 gap-2">
+              <div class="flex flex-col items-start justify-start w-full h-full p-1 gap-1">
                 ${licenseHtml}
               </div>
             </div>
-            <div class="flex flex-col items-center justify-center w-full p-2 gap-2 border-b-2">
-              <div class="flex items-center justify-center w-full h-full p-2 gap-2 text-dark-header">
-                Language Skills
+            <div class="flex flex-col items-center justify-center w-full p-1 gap-1 border-b-2">
+              <div class="flex items-center justify-center w-full h-full p-2 gap-1 text-dark-header">
+                LANGUAGE SKILLS
               </div>
-              <div class="flex flex-col items-center justify-center w-full p-2 gap-2">
+              <div class="flex flex-col items-start justify-start w-full h-full p-1 gap-1">
                 ${languageSkillHtml}
               </div>
+            </div>
+          </div>
+          <div class="flex flex-col items-start justify-start w-8/12 h-full gap-1">
+            <div class="flex items-center justify-center w-full h-full p-2 gap-1 text-blue mb-2">
+              ${fullname}
+            </div>
+            <div class="flex items-center justify-center w-full p-2 gap-1 bg-header text-white">
+              ${positionNameEN}
+            </div>
+            <div class="flex items-center justify-start w-full p-2 gap-1 text-green">
+              WORK EXPERIENCE
+            </div>
+            <div class="flex flex-col items-center justify-center w-full p-1 gap-1">
+              ${workHistoryHtml}
             </div>
           </div>
         </div>
@@ -295,27 +300,40 @@ export async function GET(request, context) {
 
     const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
     const page = await browser.newPage();
-
     await page.setContent(htmlContent, { waitUntil: "networkidle0" });
 
+    const logoPath = path.join(
+      process.cwd(),
+      "public",
+      "images",
+      "company_logo",
+      "company_logo.png"
+    );
+    const logoBuffer = fs.readFileSync(logoPath);
+    const logoBase64 = logoBuffer.toString("base64");
     const pdfBuffer = await page.pdf({
       format: "A4",
       printBackground: true,
       displayHeaderFooter: true,
       margin: {
-        top: "40px",
-        bottom: "40px",
-        left: "40px",
-        right: "40px",
+        top: "80px",
+        bottom: "50px",
+        left: "30px",
+        right: "0px",
       },
-      headerTemplate: "<div></div>",
+      headerTemplate: `
+        <div style="position: fixed; top: 10px; left: 32px; right: 0; width: 100%; display: flex; -webkit-print-color-adjust: exact;">
+            <img src="data:image/png;base64,${logoBase64}" style="width: 60px;" alt="Logo" />
+        </div>
+      `,
       footerTemplate: `
-        <div style="position: fixed; bottom: 0; left: 0; right: 0; width: 100%; font-size: 10px; -webkit-print-color-adjust: exact;">
-          <div style="background-color: rgb(3, 153, 76); color: white; padding: 10px; text-align: center;">
-            50/1 หมู่ 20 ซอยงามวงศ์วาน 57 ถนนงามวงศ์วาน แขวงลาดยาว เขตจตุจักร กรุงเทพฯ 10900 โทร 02-105-0999 (30 คู่สาย) แฟกซ์ 02-580-1852
+        <div style="position: fixed; bottom: 0; left: 0; right: 0; width: 100%; font-size: 10px; font-family: 'THSarabunNew', sans-serif; -webkit-print-color-adjust: exact;">
+          <div style="background-color: rgb(3, 153, 76); color: white; padding: 11.5px; text-align: center;">
+            50/1 Moo 20 Soi Ngamwongwan 57 Ngamwongwan Rd., Ladyao Chatuchak, bangkok 10900 Tel 02-105-0999 TAX ID : 0105519001145
           </div>
         </div>
       `,
+
     });
 
     await browser.close();
@@ -324,7 +342,7 @@ export async function GET(request, context) {
       status: 200,
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="cvth_export_${cvTHId}.pdf"`,
+        "Content-Disposition": `attachment; filename="cvth_export_${cvENId}.pdf"`,
       },
     });
   } catch (error) {

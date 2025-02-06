@@ -101,11 +101,13 @@ export async function GET(request, context) {
                   ${wh.projects
                     .map(
                       (proj) => `
-                    <div class="flex flex-row items-center justify-center w-full h-full p-1 gap-1">
-                      <span class="flex items-center justify-center h-full p-1 gap-1">●</span>
-                      <span class="flex items-center justify-start w-full h-full p-1 gap-1">${proj.cvENProjectName} , ${proj.cvENProjectDescription}</span>
-                    </div>
-                  `
+                      <div class="flex flex-row items-center justify-center w-full h-full p-1 gap-1">
+                        <span class="flex items-center justify-center h-full p-1 gap-1">●</span>
+                        <span class="flex items-center justify-start w-full h-full p-1 gap-1">
+                          ${proj.cvENProjectName} , ${proj.cvENProjectDescription}
+                        </span>
+                      </div>
+                    `
                     )
                     .join("")}
                 </div>
@@ -138,13 +140,13 @@ export async function GET(request, context) {
     if (cvth.CvENEducation && cvth.CvENEducation.length > 0) {
       educationHtml = cvth.CvENEducation.map((edu) => {
         return `
-        <div class="flex flex-col items-start w-full h-full">
-          <span>${edu.cvENEducationDegree || "-"} ${
+          <div class="flex flex-col items-start w-full h-full">
+            <span>${edu.cvENEducationDegree || "-"} ${
           edu.cvENEducationStartDate || "-"
         }</span>
-          <span>${edu.cvENEducationInstitution || "-"}</span>
-        </div>
-      `;
+            <span>${edu.cvENEducationInstitution || "-"}</span>
+          </div>
+        `;
       }).join("");
     } else {
       educationHtml = '<div class="text-gray-500">No Educations found</div>';
@@ -154,11 +156,11 @@ export async function GET(request, context) {
     if (cvth.CvENLicense && cvth.CvENLicense.length > 0) {
       licenseHtml = cvth.CvENLicense.map((lic) => {
         return `
-        <div class="flex flex-row items justify-between w-full h-full">
-          <span> ${lic.cvENProfessionalLicenseName || "-"} , </span>
-          <span> ${lic.cvENProfessionalLicenseNumber || "-"}</span>          
-        </div>
-      `;
+          <div class="flex flex-row items justify-between w-full h-full">
+            <span> ${lic.cvENProfessionalLicenseName || "-"} , </span>
+            <span> ${lic.cvENProfessionalLicenseNumber || "-"}</span>          
+          </div>
+        `;
       }).join("");
     } else {
       licenseHtml = '<div class="text-gray-500">No License data</div>';
@@ -168,11 +170,11 @@ export async function GET(request, context) {
     if (cvth.CvENLanguageSkill && cvth.CvENLanguageSkill.length > 0) {
       languageSkillHtml = cvth.CvENLanguageSkill.map((lang) => {
         return `
-        <div class="flex flex-row items-center justify-between w-full h-full">
-          <span> ${lang.cvENLanguageSkillName || "-"} : </span>
-         <span> ${lang.cvENLanguageSkillProficiency || "-"}</span>
-        </div>
-      `;
+          <div class="flex flex-row items-center justify-between w-full h-full">
+            <span> ${lang.cvENLanguageSkillName || "-"} : </span>
+            <span> ${lang.cvENLanguageSkillProficiency || "-"}</span>
+          </div>
+        `;
       }).join("");
     } else {
       languageSkillHtml =
@@ -191,7 +193,12 @@ export async function GET(request, context) {
     `;
 
     const emailIcon = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M10.5 22v-2m4 2v-2"/><path fill="currentColor" d="M11 20v.75h.75V20zm3-.75a.75.75 0 0 0 0 1.5zm3.5-14a.75.75 0 0 0 0 1.5zM7 5.25a.75.75 0 0 0 0 1.5zm2 14a.75.75 0 0 0 0 1.5zm6 1.5a.75.75 0 0 0 0-1.5zm-4.75-9.5V20h1.5v-8.75zm.75 8H4.233v1.5H11zm-8.25-1.855V11.25h-1.5v6.145zm1.483 1.855c-.715 0-1.483-.718-1.483-1.855h-1.5c0 1.74 1.231 3.355 2.983 3.355zM6.5 6.75c1.967 0 3.75 1.902 3.75 4.5h1.5c0-3.201-2.246-6-5.25-6zm0-1.5c-3.004 0-5.25 2.799-5.25 6h1.5c0-2.598 1.783-4.5 3.75-4.5zm14.75 6v6.175h1.5V11.25zm-1.457 8H14v1.5h5.793zm1.457-1.825c0 1.12-.757 1.825-1.457 1.825v1.5c1.738 0 2.957-1.601 2.957-3.325zm1.5-6.175c0-3.201-2.246-6-5.25-6v1.5c1.967 0 3.75 1.902 3.75 4.5zM7 6.75h11v-1.5H7zm2 14h6v-1.5H9z"/><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M5 16h3m8-6.116V5.411m0 0V2.635c0-.236.168-.439.4-.484l.486-.093a3.2 3.2 0 0 1 1.755.156l.08.03c.554.214 1.16.254 1.737.115a.44.44 0 0 1 .542.427v2.221a.51.51 0 0 1-.393.499l-.066.016a3.2 3.2 0 0 1-1.9-.125a3.2 3.2 0 0 0-1.755-.156z"/></g></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <g fill="none">
+          <path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M10.5 22v-2m4 2v-2"/>
+          <path fill="currentColor" d="M11 20v.75h.75V20zm3-.75a.75.75 0 0 0 0 1.5zm3.5-14a.75.75 0 0 0 0 1.5zM7 5.25a.75.75 0 0 0 0 1.5zm2 14a.75.75 0 0 0 0 1.5zm6 1.5a.75.75 0 0 0 0-1.5zm-4.75-9.5V20h1.5v-8.75zm.75 8H4.233v1.5H11zm-8.25-1.855V11.25h-1.5v6.145zm1.483 1.855c-.715 0-1.483-.718-1.483-1.855h-1.5c0 1.74 1.231 3.355 2.983 3.355zM6.5 6.75c1.967 0 3.75 1.902 3.75 4.5h1.5c0-3.201-2.246-6-5.25-6zm0-1.5c-3.004 0-5.25 2.799-5.25 6h1.5c0-2.598 1.783-4.5 3.75-4.5zm14.75 6v6.175h1.5V11.25zm-1.457 8H14v1.5h5.793zm1.457-1.825c0 1.12-.757 1.825-1.457 1.825v1.5c1.738 0 2.957-1.601 2.957-3.325zm1.5-6.175c0-3.201-2.246-6-5.25-6v1.5c1.967 0 3.75 1.902 3.75 4.5zM7 6.75h11v-1.5H7zm2 14h6v-1.5H9z"/>
+        </g>
+      </svg>
     `;
 
     const htmlContent = `
@@ -201,13 +208,13 @@ export async function GET(request, context) {
         <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
         <style>
           @font-face {
-          font-family: 'THSarabun';
-          src: url('${process.env.NEXT_PUBLIC_API_URL}/fonts/THSarabunNew.ttf') format('truetype');
-          font-weight: normal;
-          font-style: normal;
+            font-family: 'THSarabun';
+            src: url('${process.env.NEXT_PUBLIC_API_URL}/fonts/THSarabunNew.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
           }
           body {
-          font-family: 'THSarabun', sans-serif;
+            font-family: 'THSarabun', sans-serif;
           }
           .bg-header {
             background: rgba(3, 153, 76);
@@ -235,18 +242,27 @@ export async function GET(request, context) {
             color: rgba(0,0,0);
             font-size: 14px;
           }
-          @media print {
-            .pdf-container {
-              padding: 40px;
-            }
+          /* CSS สำหรับการพิมพ์ (print) */
+         @media print {
+          body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 33.33%; /* เทียบเท่ากับ w-4/12 */
+            height: 100%;
+            background: rgba(239, 242, 240); /* หรือใช้สี bg-default ที่คุณต้องการ */
+            z-index: -1; /* วางไว้ด้านหลังเนื้อหา */
+            -webkit-print-color-adjust: exact; /* บังคับให้พิมพ์สีที่กำหนด */
           }
+        }
         </style>
       </head>
       <body class="font-sans text-sm">
         <div class="flex flex-row items-center justify-center w-full h-full p-1 gap-1">
-          <div class="flex flex-col items-start justify-start w-4/12 h-full gap-1 bg-default">
+          <div class="sidebar flex flex-col items-start justify-start w-4/12 h-full gap-1 bg-default">
             <div class="flex items-center justify-center w-full p-1 gap-1">
-               <img src="${process.env.NEXT_PUBLIC_API_URL}/images/user_picture/${employmentPicture}" class="w-28 mx-auto" />
+              <img src="${process.env.NEXT_PUBLIC_API_URL}/images/user_picture/${employmentPicture}" class="w-28 mx-auto" />
             </div>
             <div class="flex items-center justify-start w-full p-1 gap-1">
               <span class="text-green">${hrIcon}</span> ${formattedBirthday}
@@ -279,8 +295,8 @@ export async function GET(request, context) {
               </div>
             </div>
           </div>
-          <div class="flex flex-col items-start justify-start w-8/12 h-full gap-1">
-            <div class="flex items-center justify-center w-full h-full p-2 gap-1 text-blue mb-2">
+          <div class="content flex flex-col items-start justify-start w-8/12 h-full gap-1">
+            <div class="flex items-center justify-center w-full p-2 gap-1 text-blue mb-2">
               ${fullname}
             </div>
             <div class="flex items-center justify-center w-full p-2 gap-1 bg-header text-white">
@@ -333,7 +349,6 @@ export async function GET(request, context) {
           </div>
         </div>
       `,
-
     });
 
     await browser.close();
