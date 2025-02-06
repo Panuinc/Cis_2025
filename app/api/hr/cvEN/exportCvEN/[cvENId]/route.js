@@ -97,13 +97,13 @@ export async function GET(request, context) {
         const projectsHtml =
           wh.projects && wh.projects.length > 0
             ? `
-                <div class="flex flex-col items-center justify-center w-full h-full p-1 gap-1">
+                <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2">
                   ${wh.projects
                     .map(
                       (proj) => `
-                      <div class="flex flex-row items-center justify-center w-full h-full p-1 gap-1">
-                        <span class="flex items-center justify-center h-full p-1 gap-1">●</span>
-                        <span class="flex items-center justify-start w-full h-full p-1 gap-1">
+                      <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2">
+                        <span class="flex items-center justify-center h-full p-2 gap-2">●</span>
+                        <span class="flex items-center justify-start w-full h-full p-2 gap-2">
                           ${proj.cvENProjectName} , ${proj.cvENProjectDescription}
                         </span>
                       </div>
@@ -115,17 +115,13 @@ export async function GET(request, context) {
             : '<div class="text-gray-500">No projects listed</div>';
 
         return `
-            <div class="flex flex-col items-start justify-start w-full h-full p-1 gap-1">
-              <div class="flex flex-col items-center justify-center w-full h-full p-1 gap-1">
-                <div class="flex flex-col items-center justify-start w-full h-full p-1 gap-1">
-                  <b>${wh.cvENWorkHistoryCompanyName || ""}</b>
-                  <b>${wh.cvENWorkHistoryPosition || ""}</b>
-                  <b>${wh.cvENWorkHistoryStartDate || ""} - ${
-          wh.cvENWorkHistoryEndDate || ""
-        }</b>
-                </div>
+            <div class="flex flex-col items-start justify-start w-full h-full p-2 gap-2">
+              <div class="flex flex-col items-center justify-start w-full h-full p-2 gap-2">
+                <b>${wh.cvENWorkHistoryCompanyName || ""}</b>
+                <b>${wh.cvENWorkHistoryPosition || ""}</b>
+                <b>${wh.cvENWorkHistoryStartDate || ""} - ${wh.cvENWorkHistoryEndDate || ""}</b>
               </div>
-              <div class="flex flex-col items-center justify-center w-full h-full p-1 gap-1 border-l-2">
+              <div class="flex flex-col items-center justify-center w-full h-full p-2 border-2border-l-2">
                 ${projectsHtml}
               </div>
             </div>
@@ -259,53 +255,53 @@ export async function GET(request, context) {
         </style>
       </head>
       <body class="font-sans text-sm">
-        <div class="flex flex-row items-center justify-center w-full h-full p-1 gap-1">
-          <div class="sidebar flex flex-col items-start justify-start w-4/12 h-full gap-1 bg-default">
-            <div class="flex items-center justify-center w-full p-1 gap-1">
+        <div class="flex flex-row items-center justify-center w-full h-full p-2 gap-2">
+          <div class="sidebar flex flex-col items-start justify-start w-4/12 h-full border-2bg-default">
+            <div class="flex items-center justify-center w-full p-2 gap-2">
               <img src="${process.env.NEXT_PUBLIC_API_URL}/images/user_picture/${employmentPicture}" class="w-28 mx-auto" />
             </div>
-            <div class="flex items-center justify-start w-full p-1 gap-1">
+            <div class="flex items-center justify-start w-full p-2 gap-2">
               <span class="text-green">${hrIcon}</span> ${formattedBirthday}
             </div>
-            <div class="flex items-center justify-start w-full p-1 gap-1 border-b-2">
+            <div class="flex items-center justify-start w-full p-2 border-2border-b-2">
               <span class="text-green">${emailIcon}</span> ${employeeEmail}
             </div>
-            <div class="flex flex-col items-center justify-center w-full p-1 gap-1 border-b-2">
-              <div class="flex items-center justify-center w-full h-full p-2 gap-1 text-dark-header">
+            <div class="flex flex-col items-center justify-center w-full p-2 border-2border-b-2">
+              <div class="flex items-center justify-center w-full h-full p-2 border-2text-dark-header">
                 EDUCATIONS
               </div>
-              <div class="flex flex-col items-start justify-start w-full h-full p-1 gap-1">
+              <div class="flex flex-col items-start justify-start w-full h-full p-2 gap-2">
                 ${educationHtml}
               </div>
             </div>
-            <div class="flex flex-col items-center justify-center w-full p-1 gap-1 border-b-2">
-              <div class="flex items-center justify-center w-full h-full p-2 gap-1 text-dark-header">
+            <div class="flex flex-col items-center justify-center w-full p-2 border-2border-b-2">
+              <div class="flex items-center justify-center w-full h-full p-2 border-2text-dark-header">
                 LICENSE NO.
               </div>
-              <div class="flex flex-col items-start justify-start w-full h-full p-1 gap-1">
+              <div class="flex flex-col items-start justify-start w-full h-full p-2 gap-2">
                 ${licenseHtml}
               </div>
             </div>
-            <div class="flex flex-col items-center justify-center w-full p-1 gap-1 border-b-2">
-              <div class="flex items-center justify-center w-full h-full p-2 gap-1 text-dark-header">
+            <div class="flex flex-col items-center justify-center w-full p-2 border-2border-b-2">
+              <div class="flex items-center justify-center w-full h-full p-2 border-2text-dark-header">
                 LANGUAGE SKILLS
               </div>
-              <div class="flex flex-col items-start justify-start w-full h-full p-1 gap-1">
+              <div class="flex flex-col items-start justify-start w-full h-full p-2 gap-2">
                 ${languageSkillHtml}
               </div>
             </div>
           </div>
-          <div class="content flex flex-col items-start justify-start w-8/12 h-full gap-1">
-            <div class="flex items-center justify-center w-full p-2 gap-1 text-blue mb-2">
+          <div class="content flex flex-col items-start justify-start w-8/12 h-full gap-2">
+            <div class="flex items-center justify-center w-full p-2 border-2text-blue mb-2">
               ${fullname}
             </div>
-            <div class="flex items-center justify-center w-full p-2 gap-1 bg-header text-white">
+            <div class="flex items-center justify-center w-full p-2 border-2bg-header text-white">
               ${positionNameEN}
             </div>
-            <div class="flex items-center justify-start w-full p-2 gap-1 text-green">
+            <div class="flex items-center justify-start w-full p-2 border-2text-green">
               WORK EXPERIENCE
             </div>
-            <div class="flex flex-col items-center justify-center w-full p-1 gap-1">
+            <div class="flex flex-col items-center justify-center w-full p-2 gap-2">
               ${workHistoryHtml}
             </div>
           </div>
