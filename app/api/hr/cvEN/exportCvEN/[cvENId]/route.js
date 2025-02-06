@@ -154,7 +154,7 @@ export async function GET(request, context) {
       `;
       }).join("");
     } else {
-      educationHtml = '<div class="text-gray-500">No Educations found</div>';
+      educationHtml = '<div class="text-gray-500">No EDUCATIONS found</div>';
     }
 
     let licenseHtml = "";
@@ -230,7 +230,7 @@ export async function GET(request, context) {
              ${positionNameEN}
             </div>
             <div class="flex items-center justify-start w-full px-12 py-2 gap-2 text-dark-header">
-              Work Experience
+              WORK EXPERIENCE
             </div>
             <div class="flex flex-col items-end justify-center w-full gap-2">
              ${firstWorkHistoryHtml}
@@ -248,7 +248,7 @@ export async function GET(request, context) {
             </div>
             <div class="flex flex-col items-center justify-center w-full gap-2 border-b-2">
               <div class="flex items-center justify-center w-full p-2 gap-2 text-dark-header">
-                Educations
+                EDUCATIONS
               </div>
               <div class="flex flex-col items-center justify-center w-full p-2 gap-2">
                 ${educationHtml}
@@ -256,7 +256,7 @@ export async function GET(request, context) {
             </div>
             <div class="flex flex-col items-center justify-center w-full gap-2 border-b-2">
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 text-dark-header">
-                License No
+                LICENSE NO.
               </div>
               <div class="flex flex-col items-center justify-center w-full p-2 gap-2">
                 ${licenseHtml}
@@ -264,7 +264,7 @@ export async function GET(request, context) {
             </div>
             <div class="flex flex-col items-center justify-center w-full gap-2 border-b-2">
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 text-dark-header">
-                Language Skills
+                LANGUAGE SKILLS
               </div>
               <div class="flex flex-col items-center justify-center w-full p-2 gap-2">
                 ${languageSkillHtml}
@@ -279,7 +279,7 @@ export async function GET(request, context) {
       <div class="page-break"></div>
       <div class="flex flex-col items-start justify-start w-full p-2 gap-2">
         <div class="flex items-center justify-start w-full h-full px-12 py-2 gap-2 text-dark-header">
-          Work Experience
+          WORK EXPERIENCE
         </div>    
         <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2">
         ${remainingProjectsHtml}
@@ -300,7 +300,7 @@ export async function GET(request, context) {
             background: rgba(3, 153, 76);
           }
           .bg-right {
-            background: rgba(245, 245, 245);
+            background: rgba(239, 242, 240);
           }
           .text-blue {
             color: rgba(64,89,146);
@@ -373,7 +373,7 @@ export async function GET(request, context) {
       `,
       footerTemplate: `
         <div style="position: fixed; bottom: 0; left: 0; right: 0; width: 100%; font-size: 10px; -webkit-print-color-adjust: exact;">
-          <div style="background-color: rgb(3, 153, 76); color: white; padding: 17px; text-align: center; font-size: 12px;">
+          <div style="background-color: rgb(3, 153, 76); color: white; padding: 11.5px; text-align: center; font-size: 12px;">
             50/1 Moo 20 Soi Ngamwongwan 57 Ngamwongwan Rd., Ladyao Chatuchak, bangkok 10900 Tel 02-105-0999 TAX ID : 0105519001145
           </div>
         </div>

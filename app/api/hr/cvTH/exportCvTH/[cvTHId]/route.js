@@ -124,7 +124,7 @@ export async function GET(request, context) {
           : '<div class="text-gray-500">No projects listed</div>';
 
       return `
-          <div class="flex flex-row items-start justify-start w-full h-full p-2 gap-2">
+          <div class="flex flex-row items-start justify-start w-11/12 h-full p-2 gap-2 border-dashed">
             <div class="flex flex-col items-center justify-center w-4/12 h-full gap-2">
               <div class="flex flex-col items-start justify-start w-full h-full p-2 gap-2">
                 <b>${wh.cvTHWorkHistoryCompanyName || ""}</b>
@@ -154,7 +154,7 @@ export async function GET(request, context) {
       `;
       }).join("");
     } else {
-      educationHtml = '<div class="text-gray-500">No ประวัติการศึกษา found</div>';
+      educationHtml = '<div class="text-gray-500">No การศึกษา found</div>';
     }
 
     let licenseHtml = "";
@@ -226,13 +226,13 @@ export async function GET(request, context) {
             <div class="flex items-center justify-center w-full p-2 gap-2 text-blue">
               ${fullname}
             </div>
-            <div class="flex items-center justify-start w-full p-2 gap-2 bg-header text-white rounded-lg">
-              ${positionNameTH}
+            <div class="flex items-center justify-start w-full px-12 py-2 gap-2 bg-header text-white">
+             ${positionNameTH}
             </div>
-            <div class="flex items-center justify-start w-full p-2 gap-2 text-dark-header">
-              ประวัติการทำงาน
+            <div class="flex items-center justify-start w-full px-12 py-2 gap-2 text-dark-header">
+              ปรัวีติการทำงาน
             </div>
-            <div class="flex flex-col items-center justify-center w-full gap-2">
+            <div class="flex flex-col items-end justify-center w-full gap-2">
              ${firstWorkHistoryHtml}
             </div>
           </div>
@@ -248,7 +248,7 @@ export async function GET(request, context) {
             </div>
             <div class="flex flex-col items-center justify-center w-full gap-2 border-b-2">
               <div class="flex items-center justify-center w-full p-2 gap-2 text-dark-header">
-                ประวัติการศึกษา
+                การศึกษา
               </div>
               <div class="flex flex-col items-center justify-center w-full p-2 gap-2">
                 ${educationHtml}
@@ -256,7 +256,7 @@ export async function GET(request, context) {
             </div>
             <div class="flex flex-col items-center justify-center w-full gap-2 border-b-2">
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 text-dark-header">
-                ใบอนุญาตประกอบวิชาชีพ
+                ใบประกอบวิชาชีพ
               </div>
               <div class="flex flex-col items-center justify-center w-full p-2 gap-2">
                 ${licenseHtml}
@@ -264,7 +264,7 @@ export async function GET(request, context) {
             </div>
             <div class="flex flex-col items-center justify-center w-full gap-2 border-b-2">
               <div class="flex items-center justify-center w-full h-full p-2 gap-2 text-dark-header">
-                ความถนัดทางด้านภาษา
+                ภาษา
               </div>
               <div class="flex flex-col items-center justify-center w-full p-2 gap-2">
                 ${languageSkillHtml}
@@ -278,12 +278,15 @@ export async function GET(request, context) {
       ? `
       <div class="page-break"></div>
       <div class="flex flex-col items-start justify-start w-full p-2 gap-2">
-        <div class="flex items-center justify-start w-full h-full p-2 gap-2 text-dark-header">
-          ประวัติการทำงาน
-        </div>        
+        <div class="flex items-center justify-start w-full h-full px-12 py-2 gap-2 text-dark-header">
+          ปรัวีติการทำงาน
+        </div>    
+        <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2">
         ${remainingProjectsHtml}
         ${otherWorkHistoryHtml}
       </div>
+      </div>    
+
     `
       : "";
 
@@ -297,7 +300,7 @@ export async function GET(request, context) {
             background: rgba(3, 153, 76);
           }
           .bg-right {
-            background: rgba(245, 245, 245);
+            background: rgba(239, 242, 240);
           }
           .text-blue {
             color: rgba(64,89,146);
@@ -355,19 +358,22 @@ export async function GET(request, context) {
       printBackground: true,
       displayHeaderFooter: true,
       margin: {
-        top: "110px",
+        top: "90",
         bottom: "60px",
-        left: "80px",
+        left: "0px",
         right: "20px",
       },
       headerTemplate: `
-        <div style="width: 100%; text-align: start; margin-top: 5px; margin-left: 80px;">
-          <img src="data:image/png;base64,${logoBase64}" style="width: 80px; margin: auto;" />        
+        <div style="position: fixed; top: 0; left: 40px; right: 0; width: 100%; display: flex; -webkit-print-color-adjust: exact;">
+          <div style="width: 40%; display: flex; margin-top: 30px; margin-left: 8px; align-items: center;">
+            <img src="data:image/png;base64,${logoBase64}" style="width: 60px;" alt="Logo" />
+          </div>
+          <div style="width: 60%; background-color: rgb(3,153,76); height: 30px;"></div>
         </div>
       `,
       footerTemplate: `
         <div style="position: fixed; bottom: 0; left: 0; right: 0; width: 100%; font-size: 10px; -webkit-print-color-adjust: exact;">
-          <div style="background-color: rgb(3, 153, 76); color: white; padding: 10px; text-align: center;">
+          <div style="background-color: rgb(3, 153, 76); color: white; padding: 11.5px; text-align: center; font-size: 12px;">
             50/1 หมู่ 20 ซอยงามวงศ์วาน 57 ถนนงามวงศ์วาน แขวงลาดยาว เขตจตุจักร กรุงเทพฯ 10900 โทร 02-105-0999 (30 คู่สาย) แฟกซ์ 02-580-1852
           </div>
         </div>
