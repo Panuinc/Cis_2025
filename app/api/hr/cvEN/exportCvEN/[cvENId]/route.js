@@ -124,7 +124,7 @@ export async function GET(request, context) {
           : '<div class="text-gray-500">No projects listed</div>';
 
       return `
-          <div class="flex flex-row items-start justify-start w-full h-full p-2 gap-2">
+          <div class="flex flex-row items-start justify-start w-11/12 h-full p-2 gap-2 border-dashed">
             <div class="flex flex-col items-center justify-center w-4/12 h-full gap-2">
               <div class="flex flex-col items-start justify-start w-full h-full p-2 gap-2">
                 <b>${wh.cvENWorkHistoryCompanyName || ""}</b>
@@ -226,13 +226,13 @@ export async function GET(request, context) {
             <div class="flex items-center justify-center w-full p-2 gap-2 text-blue">
               ${fullname}
             </div>
-            <div class="flex items-center justify-start w-full p-2 gap-2 bg-header text-white rounded-lg">
-              ${positionNameEN}
+            <div class="flex items-center justify-start w-full px-12 py-2 gap-2 bg-header text-white">
+             ${positionNameEN}
             </div>
-            <div class="flex items-center justify-start w-full p-2 gap-2 text-dark-header">
+            <div class="flex items-center justify-start w-full px-12 py-2 gap-2 text-dark-header">
               Work Experience
             </div>
-            <div class="flex flex-col items-center justify-center w-full gap-2">
+            <div class="flex flex-col items-end justify-center w-full gap-2">
              ${firstWorkHistoryHtml}
             </div>
           </div>
@@ -278,12 +278,15 @@ export async function GET(request, context) {
       ? `
       <div class="page-break"></div>
       <div class="flex flex-col items-start justify-start w-full p-2 gap-2">
-        <div class="flex items-center justify-start w-full h-full p-2 gap-2 text-dark-header">
+        <div class="flex items-center justify-start w-full h-full px-12 py-2 gap-2 text-dark-header">
           Work Experience
-        </div>        
+        </div>    
+        <div class="flex flex-col items-center justify-center w-full h-full p-2 gap-2">
         ${remainingProjectsHtml}
         ${otherWorkHistoryHtml}
       </div>
+      </div>    
+
     `
       : "";
 
@@ -355,14 +358,14 @@ export async function GET(request, context) {
       printBackground: true,
       displayHeaderFooter: true,
       margin: {
-        top: "80",
+        top: "90",
         bottom: "60px",
-        left: "40px",
+        left: "0px",
         right: "20px",
       },
       headerTemplate: `
         <div style="position: fixed; top: 0; left: 40px; right: 0; width: 100%; display: flex; -webkit-print-color-adjust: exact;">
-          <div style="width: 40%; display: flex; margin-top: 30px; align-items: center;">
+          <div style="width: 40%; display: flex; margin-top: 30px; margin-left: 8px; align-items: center;">
             <img src="data:image/png;base64,${logoBase64}" style="width: 60px;" alt="Logo" />
           </div>
           <div style="width: 60%; background-color: rgb(3,153,76); height: 30px;"></div>
